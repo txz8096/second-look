@@ -182,15 +182,6 @@ function ExpandedPattern() {
           prototype sessions opened with a brief, vs 58% on claude.ai.
         </p>
       </div>
-      <div className="flex flex-col gap-2">
-        <FieldLabel>EXAMPLE AND LIMITS</FieldLabel>
-        <blockquote className="border-l-2 border-rule py-1 pl-4 font-body text-base leading-normal text-text-2">
-          “build the token panel for gloss, make it look good and export to css vars”
-        </blockquote>
-        <p className="font-body text-sm leading-normal text-text-3">
-          Opening of 3 of the 4 Gloss restarts. The next 5–8 turns each added a missing piece.
-        </p>
-      </div>
       <div className="flex flex-col gap-3.5 rounded-2xl bg-accent-tint px-6 py-[22px]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-col gap-1">
