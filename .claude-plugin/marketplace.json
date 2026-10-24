@@ -1,0 +1,14 @@
+{
+  "name": "second-look",
+  "description": "second look: a reflection coach for how you work with AI",
+  "owner": {
+    "name": "second look"
+  },
+  "plugins": [
+    {
+      "name": "second-look",
+      "source": "./plugin",
+      "description": "Reviews your Claude Code, Codex and Cursor sessions, finds prompting and context patterns, checks your skills for staleness, and tracks how your habits change."
+    }
+  ]
+}

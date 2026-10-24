@@ -4,19 +4,22 @@ import { Container, Kicker, PrimaryButton, SectionHeading } from "./ui";
 
 const steps = [
   {
-    title: "Install the skill",
-    prereq: "Requires a compatible AI coding assistant. [List to confirm]",
-    command: "git clone https://github.com/[org]/second-look",
+    title: "Install in Claude Code",
+    prereq: "Adds the second look marketplace, then installs the plugin.",
+    commands: [
+      "claude plugin marketplace add txz8096/second-look",
+      "claude plugin install second-look@second-look",
+    ],
   },
   {
-    title: "Select or provide your data",
-    prereq: "Point it at the conversations to read.",
-    command: "second-look --source [path-or-tool]",
+    title: "Or install for Codex and Cursor",
+    prereq: "Copies the skill to ~/.agents/skills, which both tools read. Needs git and Python 3.",
+    commands: ["curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash"],
   },
   {
-    title: "Run the reflection",
-    prereq: "Get a report you can check and correct.",
-    command: "second-look report",
+    title: "Ask for a reflection",
+    prereq: "In any of those tools. The first run asks four setup questions.",
+    commands: ["reflect on how I've been using AI"],
   },
 ];
 
@@ -64,16 +67,17 @@ export function Install() {
                   <h3 className="font-body text-lg font-semibold text-ink">{step.title}</h3>
                 </div>
                 <p className="font-body text-sm leading-[1.55] text-text-3">{step.prereq}</p>
-                <div className="flex items-center gap-3 overflow-x-auto rounded-md bg-dark px-4 py-3.5">
-                  <span className="font-code text-sm text-text-3 select-none">$</span>
-                  <code className="flex-1 font-code text-sm whitespace-nowrap text-code">{step.command}</code>
-                  <span className="shrink-0 font-mono text-xs text-warning">Untested</span>
-                </div>
+                {step.commands.map((command) => (
+                  <div key={command} className="flex items-center gap-3 overflow-x-auto rounded-md bg-dark px-4 py-3.5">
+                    <span className="font-code text-sm text-text-3 select-none">{i === 2 ? ">" : "$"}</span>
+                    <code className="flex-1 font-code text-sm whitespace-nowrap text-code">{command}</code>
+                  </div>
+                ))}
               </li>
             ))}
           </ol>
           <p className="font-body text-sm leading-[1.55] text-text-3">
-            Placeholder commands. Copy buttons appear once tested.
+            Your sessions stay on your computer. Reports quote your own prompts, with secrets removed.
           </p>
         </div>
       </Container>

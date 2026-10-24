@@ -1,0 +1,19 @@
+{
+  "name": "second-look",
+  "version": "0.1.0",
+  "description": "A reflection coach for how you work with AI: prompting and context patterns, stale skills, and how your habits change over time.",
+  "author": {
+    "name": "second look",
+    "url": "https://github.com/txz8096/second-look"
+  },
+  "homepage": "https://github.com/txz8096/second-look",
+  "repository": "https://github.com/txz8096/second-look",
+  "license": "MIT",
+  "keywords": [
+    "reflection",
+    "coaching",
+    "prompting",
+    "skills",
+    "context"
+  ]
+}
