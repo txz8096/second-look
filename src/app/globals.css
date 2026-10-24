@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+/* Tokens from second look.pen, "double-rule" brand theme. */
+@theme {
+  --color-paper: #16181d;
+  --color-surface: #1f2127;
+  --color-ink: #f2f3f5;
+  --color-text-2: #d3d4d7;
+  --color-text-3: #9fa1a6;
+  --color-rule: #3e4148;
+  --color-accent: #f2a7b8;
+  --color-accent-tint: #3c1e26;
+  --color-dark: #0d0f14;
+  --color-dark-text-2: #c4c6cb;
+  --color-on-accent: #0d0f14;
+  --color-pill: #2c2f36;
+  --color-code: #e5e6e8;
+  --color-warning: #e59b37;
+
+  --font-display: var(--font-familjen), system-ui, sans-serif;
+  --font-body: var(--font-familjen), system-ui, sans-serif;
+  --font-mono: var(--font-familjen), system-ui, sans-serif;
+  --font-code: var(--font-plex-mono), ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  color-scheme: dark;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
