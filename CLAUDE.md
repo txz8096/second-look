@@ -93,7 +93,7 @@ number says what it means. Tables for comparisons; bullets only for list-shaped 
 
 - `src/components/SampleReport.tsx` hand-copies the sample patterns; keep it in step with
   `report-template.html` or generate it from the template.
-- claude.ai support: chats are only read from exports; no live path.
+- claude.ai: the same SKILL.md works there (past-chat search, /mnt/skills/user, design summary instead of the template). No scripts or template on claude.ai, so its reports skip the design check.
 - "Did last cycle's fixes work?" depends on the coach parsing `log.md` `Bets:` lines; no
   script does this yet.
 - No evals for the skill itself. Good first set: first-run setup, an on-demand window, a

@@ -27,7 +27,8 @@ for a sample report with made-up data.
 | Claude Code | Plugin (below) | `~/.claude/projects` session logs |
 | Codex | `install.sh` | `~/.codex/sessions` |
 | Cursor | `install.sh` | Cursor's local chat database |
-| claude.ai, ChatGPT | Add your data export | `conversations.json` from each export |
+| claude.ai | Add the skill to your account (Settings → Capabilities → Skills) | Your past chats, via chat search; uploaded exports |
+| ChatGPT | Add your data export | `conversations.json` from the export |
 
 You need Python 3 for the log reader. The scripts use only the standard library.
 

@@ -1,6 +1,6 @@
 ---
 name: second-look
-description: A reflection coach for how you work with AI. Reads your Claude Code, Codex and Cursor sessions (plus claude.ai and ChatGPT exports), finds patterns in how you prompt and manage context, pairs each with a fix to try, checks the skills you wrote against new model and tool releases, and shows how your habits changed over the year. Use for /second-look, "reflect on how I've been using AI", "review my AI conversations", "are my skills stale", "coach me", or a reflection on a date range or project.
+description: A reflection coach for how you work with AI. Reads your Claude Code, Codex and Cursor sessions, your past claude.ai chats, and ChatGPT exports, finds patterns in how you prompt and manage context, pairs each with a fix to try, checks the skills you wrote against new model and tool releases, and shows how your habits changed over the year. Use for /second-look, "reflect on how I've been using AI", "review my AI conversations", "are my skills stale", "coach me", or a reflection on a date range or project.
 ---
 
 # second look
@@ -11,7 +11,22 @@ their skills have gone stale, and how their habits are changing. Talk like a sha
 over coffee: short sentences, no filler, no praise padding. Every claim points at evidence
 from their own sessions or a dated source.
 
-## Files
+## Where you're running
+
+Check first, then follow the matching column everywhere below.
+
+| | Local (Claude Code, Codex, Cursor) | claude.ai |
+|---|---|---|
+| How to tell | You can run shell commands on the user's computer and `~/.claude` or `~/.codex` exists | No access to their computer; you may have code execution in a sandbox, past-chat search, and memory |
+| Sessions to read | Local logs via `scripts/collect.py` | Their past chats (search and open them), plus any `conversations.json` export they upload |
+| Their skills | Folders in `skill_dirs` | `/mnt/skills/user` in the sandbox, if code execution is on; otherwise ask them to list their skills |
+| Profile and log | `~/.second-look/` files | Memory if it's on; otherwise the "Log" section at the end of the last second look report, found by searching past chats for "second look" |
+| Report | Built from `report-template.html` and checked | An artifact following the design summary below |
+
+On claude.ai, say in one line what you couldn't see ("I can't read your Claude Code or
+Cursor logs from here; run second look there for those, or upload the summary it saves").
+
+## Files (local)
 
 Everything lives in `~/.second-look/` on the user's computer. Nothing is uploaded unless
 the user publishes a report.
@@ -29,8 +44,10 @@ Scripts and the report template sit next to this file: `scripts/collect.py`,
 
 ## First run: set up the profile
 
-If `~/.second-look/profile.md` doesn't exist, ask these four questions in one message, then
-write the file. Keep it short; they can edit it later.
+If there's no profile (no `~/.second-look/profile.md` locally; nothing in memory or past
+second look reports on claude.ai), ask these four questions in one message. Locally, write
+the file. On claude.ai, repeat the profile in the report's footer so the next run can find
+it. Keep it short; they can edit it later.
 
 1. What should I call you, and what do you mostly build with AI? (e.g. "Sam, product
    engineer, building a habit-tracking app")
@@ -94,6 +111,13 @@ and still works on current models.
 
 ## 2. Habit evidence
 
+On claude.ai, skip steps 1, 3 and 4's script. Instead: search past chats in the window and
+open the real work chats (aim for 15–30); if they upload a `conversations.json` export and
+you have code execution, count the same metrics from it with a short script (opening
+message → kind of work; brief = goal + context + done criteria; corrections =
+"no / actually / I meant" openers; restarts = same topic again within 2 days). Say the
+numbers come from a sample when they do.
+
 1. **Local logs.** Run `python3 scripts/collect.py --days 14` (or the window). It reads
    Claude Code (`~/.claude/projects`), Codex (`~/.codex/sessions`) and Cursor's local
    database, and prints JSON: sessions, prompts, corrections, briefed starts, restarts,
@@ -116,6 +140,8 @@ Drop findings with weak evidence.
 ## The report
 
 Build every report from `report-template.html`, following `references/design-system.md`.
+On claude.ai, where those files aren't available, build the artifact from the design
+summary at the end of this section and skip the check.
 
 - Copy the template. Keep its `<style>` block, font links, logo and scripts exactly as they
   are. Don't add CSS, inline styles, colours or fonts. Change only content: text, cards,
@@ -164,6 +190,19 @@ last year" with the template's filters and charts, then "Usage this cycle".
 Reports contain real prompts. Keep them private unless the user chooses to share one, and
 remove anything about other people before they do.
 
+**Design summary (when the template isn't available).** One self-contained HTML page.
+Dark only: background `#16181D`, panels `#1C1F25`, text `#F2F3F5`, muted `#A8ADB7`, lines
+`#2B2F37`, accent Proof Pink `#F2A7B8` (dark text on pink fills). Familjen Grotesk from
+Google Fonts for everything, headings 700 with -0.025em tracking; IBM Plex Mono for code.
+Sizes: part titles 48px, pattern titles 24px, lead sentences and summary 20px, body 16px,
+small 14px, labels 12px uppercase. Radii: tables 4px, code 6px, buttons 8px, stat strip 12px,
+"Try this" blocks 20px, chips fully rounded. Logo: "second look" in 700 weight with two
+short pink bars under "look". Dividers only between major sections, none between cards.
+Changes in their numbers are plain text, never green or red. Never add: a goals box, slot
+labels like "Change now", "How sure" rows, "How we know this", "How we'll know it worked",
+part numbers, expand/collapse buttons. Full spec: https://github.com/txz8096/second-look
+(`plugin/skills/second-look/references/design-system.md`).
+
 ## Trend metrics
 
 | Metric | Formula | Meaning | Better |
@@ -197,7 +236,8 @@ Brainstorming, Career, Consultation.
 
 ## Log format
 
-Append to `~/.second-look/log.md` after each review:
+Locally, append to `~/.second-look/log.md` after each review. On claude.ai, put the same
+entry in a "Log" section at the end of the report so the next review can find it:
 
 ```
 ## 2026-10-25 (covers Oct 12 – 25)            ← add "(on demand)" for on-demand runs
