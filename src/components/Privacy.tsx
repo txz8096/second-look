@@ -1,5 +1,5 @@
 import { links } from "@/lib/site";
-import { ArrowRight, Ban } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Fragment } from "react";
 import { Container, Kicker, SectionHeading } from "./ui";
 
@@ -53,8 +53,7 @@ export function Privacy() {
           <Kicker>Privacy</Kicker>
           <SectionHeading>What it reads, and where it goes.</SectionHeading>
           <p className="font-body text-[17px] leading-[1.55] text-text-2">
-            second look has no server and no account. It runs inside the assistant you already use, reads files on your
-            computer, and saves its report next to them.
+            second look has no server and no account. Nothing about your sessions is sent to us.
           </p>
         </div>
 
@@ -79,10 +78,6 @@ export function Privacy() {
               </Fragment>
             ))}
           </ol>
-          <p className="flex items-center gap-2.5 font-body text-[15px] text-text-2">
-            <Ban size={16} className="shrink-0 text-accent" aria-hidden="true" />
-            second look servers: none. Nothing about your sessions is sent to us.
-          </p>
         </div>
 
         <ul className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">

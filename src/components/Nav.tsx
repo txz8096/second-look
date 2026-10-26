@@ -2,8 +2,7 @@ import { links } from "@/lib/site";
 import { Wordmark } from "./Wordmark";
 
 const navLinks = [
-  { label: "The opportunities", href: "#opportunities" },
-  { label: "The competitors", href: "#competitors" },
+  { label: "The approach", href: "#approach" },
   { label: "Sample report", href: "#sample-report" },
   { label: "FAQ", href: "#faq" },
   { label: "GitHub", href: links.github },

@@ -9,7 +9,7 @@ const INSTALL_COMMAND = "curl -fsSL https://raw.githubusercontent.com/txz8096/se
 
 const secondaryLinks = [
   { label: "Sample report", href: "#sample-report" },
-  { label: "Report an issue", href: links.issues },
+  { label: "Report an issue", href: links.newIssue },
 ];
 
 function Step({ n, title, prereq, children }: { n: number; title: string; prereq: string; children: ReactNode }) {
@@ -106,8 +106,9 @@ export function Install() {
               className="text-accent underline-offset-4 hover:underline"
             >
               second-look.zip
-            </a>
-            , turn on code execution in Settings → Capabilities, and upload it under Skills.
+            </a>{" "}
+            from the latest GitHub release, turn on code execution in Settings → Capabilities, and upload it under
+            Skills.
           </p>
         </div>
       </Container>
