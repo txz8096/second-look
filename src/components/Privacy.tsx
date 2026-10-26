@@ -41,7 +41,7 @@ const answers = [
   },
   {
     title: "Delete it any time",
-    desc: "Turn off the reminder, then remove ~/.second-look and the skill folder. If you kept a year of Claude Code history, set it back to 30 days in one setting.",
+    desc: "Stop recurring reviews, then remove ~/.second-look and the skill folder. If you kept a year of Claude Code history, set it back to 30 days in one setting.",
   },
 ];
 
