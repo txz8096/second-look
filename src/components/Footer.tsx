@@ -4,7 +4,6 @@ import { Wordmark } from "./Wordmark";
 const footerLinks = [
   { label: "GitHub", href: links.github },
   { label: "Issues", href: links.issues },
-  { label: "Contributing", href: links.contributing },
   { label: "FAQ", href: "#faq" },
 ];
 
