@@ -1,11 +1,9 @@
-import { links } from "@/lib/site";
 import { Wordmark } from "./Wordmark";
 
 const navLinks = [
   { label: "The approach", href: "#approach" },
   { label: "Sample report", href: "#sample-report" },
-  { label: "FAQ", href: "#faq" },
-  { label: "GitHub", href: links.github },
+  { label: "Privacy and FAQ", href: "#privacy" },
 ];
 
 export function Nav() {
