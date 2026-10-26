@@ -11,6 +11,7 @@ sessions it came from.
 [Website](https://txz8096.github.io/second-look/) ·
 [Sample report](https://txz8096.github.io/second-look/#sample-report) ·
 [Install](#install) ·
+[Privacy](#privacy) ·
 [FAQ](#faq)
 
 ## Why
@@ -60,6 +61,58 @@ better.
 
 See the [sample report](https://txz8096.github.io/second-look/#sample-report) for the full
 layout. It uses made-up data.
+
+## Privacy
+
+second look has no server and no account. It runs inside the assistant you already use,
+reads files on your computer, and saves its report next to them.
+
+```
+Your files  ──▶  Your assistant  ──▶  Your model provider
+```
+
+| | |
+|---|---|
+| **Your files** | `~/.claude`, `~/.codex`, Cursor's database, and the exports you add. Read only when you ask for a review |
+| **Your assistant** | Claude Code, Codex or Cursor runs the review on your computer and writes the report to `~/.second-look` |
+| **Your model provider** | Sees what the review reads, like any message you send your assistant, under your existing account settings |
+
+There are no second look servers. Nothing about your sessions is sent to us.
+
+**What it reads.** Claude Code, Codex and Cursor logs on this computer, the exports you add,
+and your skill files. To see the list for your machine without changing anything:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --check
+```
+
+**What gets removed.** API keys, emails, and token or password values are stripped before
+anything is quoted. It works by pattern, so it won't catch a client's name or confidential
+code. Read a report before you share it.
+
+**Who sees the report.** Only you. It's saved in `~/.second-look/` or published as a private
+artifact, and it's shared only if you choose to.
+
+**What you can leave out.** Scope any review to a window, a tool or a project: "only my
+Cursor sessions", "since Oct 1".
+
+**Check it yourself.** Everything is in this repo. The two scripts,
+[`collect.py`](plugins/second-look/skills/second-look/scripts/collect.py) and
+[`check_report.py`](plugins/second-look/skills/second-look/scripts/check_report.py), use
+Python's standard library and make no network calls. To see exactly what your assistant will
+read, run the collector yourself from the installed skill:
+
+```bash
+python3 ~/.agents/skills/second-look/scripts/collect.py --days 14
+```
+
+**Delete it any time.** Remove `~/.second-look/` and the skill folder (see
+[How do I uninstall it?](#faq)). If you kept a year of Claude Code history, set
+`cleanupPeriodDays` back to `30` in `~/.claude/settings.json`.
+
+Using AI tools at work? Check your company's AI policy before you review work sessions.
+Keeping a year of history also means more of it stays on your disk, which is why the
+installer asks before changing that.
 
 ## How it works
 
@@ -202,15 +255,17 @@ the skills check. Sources it can't open are marked "Not checked" in the report.
 <summary><b>Where does it run, and is anything uploaded?</b></summary>
 
 It runs on your machine, and reports are saved in `~/.second-look/`. Nothing goes to second
-look, because there's no second look server. Your assistant talks to its model provider as
-usual, under your own account settings.
+look, because there's no second look server. The review runs inside your assistant, so what
+it reads goes to your model provider like any other message you send, under your existing
+account settings. See [Privacy](#privacy).
 </details>
 
 <details>
 <summary><b>What is redacted?</b></summary>
 
-Secrets are removed and prompts are trimmed before anything is quoted. Keys, emails and
-other people's private details never appear in the report.
+Prompts are trimmed, and API keys, emails, and token or password values are removed before
+anything is quoted. This works by pattern, so it can miss things like a client's name.
+Read a report before you share it.
 </details>
 
 <details>
