@@ -1,5 +1,4 @@
 import { Approach } from "@/components/Approach";
-import { Competitors } from "@/components/Competitors";
 import { Coverage } from "@/components/Coverage";
 import { Faq } from "@/components/Faq";
 import { Footer } from "@/components/Footer";
@@ -18,7 +17,6 @@ export default function Home() {
       <main>
         <Hero />
         <Opportunities />
-        <Competitors />
         <Approach />
         <HowItWorks />
         <Privacy />
