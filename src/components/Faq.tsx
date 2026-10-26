@@ -4,7 +4,7 @@ import { Container, Kicker } from "./ui";
 const faqs = [
   {
     q: "Do I need to install it in every tool?",
-    a: "No. Install it once and it reads Codex and Cursor logs on the same computer too. A review runs only in the tool where you start it, but it reads every tool’s files.",
+    a: "No. The installer puts one copy on your computer and links it into Claude Code, Codex and Cursor, whichever you have. A review runs in the tool where you start it, and it reads every tool’s files from there.",
   },
   {
     q: "Does one report cover all my AI tools?",
@@ -16,11 +16,11 @@ const faqs = [
   },
   {
     q: "What do I need to run it on claude.ai?",
-    a: "Turn on chat search, code execution and memory in Settings, and upload the whole skill folder as a zip. Without chat search or a conversations.json export, habit numbers show as “Not measured” instead of a guess.",
+    a: "Download second-look.zip from the latest GitHub release, turn on code execution, chat search and memory in Settings, and upload the zip under Skills. Without chat search or a conversations.json export, habit numbers show as “Not measured” instead of a guess.",
   },
   {
     q: "What happens the first time I run it?",
-    a: "It asks four short questions: what you build, which areas to watch for new releases, where your standing rules live, and where your skills are. Your answers become a profile you can edit later.",
+    a: "It asks four short questions: what you build, which areas to watch for new releases, where your standing rules live, and where your skills are. Your answers become a profile in ~/.second-look/profile.md that you can edit later.",
   },
   {
     q: "How often should I run it?",
@@ -28,11 +28,11 @@ const faqs = [
   },
   {
     q: "How far back does the yearly view go?",
-    a: "As far as your logs do. Claude Code keeps 30 days by default; claude.ai and ChatGPT count up to the day you export. Each run saves weekly totals, so weeks your tools later delete stay in the trend. The sample report on this page uses made-up data.",
+    a: "As far as your logs do. Claude Code keeps 30 days by default, which is why the installer offers to keep a year. claude.ai and ChatGPT count up to the day you export. Each run saves weekly totals, so weeks your tools later delete stay in the trend. The sample report on this page uses made-up data.",
   },
   {
     q: "How accurate are the findings?",
-    a: "They’re estimates read from the wording of your sessions. Each finding shows its examples and how sure the review is.",
+    a: "They’re estimates read from the wording of your sessions. Each finding shows its examples and how sure the review is (Clear pattern, Likely pattern or Unconfirmed). Before trusting a number, the review spot-checks a sample of its own labels, and you can correct a label at the next review.",
   },
   {
     q: "Where does it run, and is anything uploaded?",
@@ -43,8 +43,12 @@ const faqs = [
     a: "Secrets are removed and prompts trimmed before anything is quoted. Keys, emails and other people’s private details never appear in the report.",
   },
   {
-    q: "Can I correct, edit or delete the report?",
-    a: "Every finding links to its examples, and you can relabel any of them. The report, your profile and history are files in ~/.second-look on your computer, so you can edit or delete them.",
+    q: "Can I edit or delete the report?",
+    a: "Yes. The report, your profile, the review log and your history are plain files in ~/.second-look on your computer. Edit or delete them whenever you like.",
+  },
+  {
+    q: "How do I uninstall it?",
+    a: "Delete ~/.agents/skills/second-look and the second-look links in ~/.claude/skills, ~/.codex/skills and ~/.cursor/skills. Delete ~/.second-look too if you don’t want to keep your reports. If you used the plugin, run /plugin uninstall second-look.",
   },
 ];
 
