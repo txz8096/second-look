@@ -31,7 +31,7 @@ export function Nav() {
           </ul>
           <a
             href="#install"
-            className="rounded-md bg-accent px-[18px] py-2.5 font-body text-[15px] font-medium whitespace-nowrap text-on-accent transition-colors hover:bg-accent/90"
+            className="rounded-md bg-accent px-[18px] py-2.5 font-body text-[15px] leading-[1.25] font-medium whitespace-nowrap text-on-accent transition-colors hover:bg-accent/90"
           >
             Get the skill
           </a>
