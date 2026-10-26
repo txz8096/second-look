@@ -1,18 +1,78 @@
 # second look
 
-Learn from the way you work with AI.
+**Learn from how you work with AI.**
 
-second look is a skill that reviews your sessions in Claude Code, Codex, Cursor, claude.ai
-and ChatGPT. Every two weeks, or whenever you ask, it builds a private report with:
+second look is an open-source skill that reviews your sessions across Claude Code, Codex,
+Cursor, claude.ai and ChatGPT, then suggests a few changes to test. Each suggestion cites the
+sessions it came from.
 
-- **Your prompts and context.** Patterns that cost you time, each with the evidence from
-  your own sessions and one fix to try.
-- **Your skills.** Which ones have wrong facts, which missed a useful update, and which
-  have no tests.
-- **Your habits over 12 months.** Briefed starts, corrections, output checking and restarts,
-  week by week, and whether last cycle's fixes worked.
+**Learn more on the website: [txz8096.github.io/second-look](https://txz8096.github.io/second-look/)**
 
-Everything is read on your computer. Nothing is uploaded unless you publish a report.
+[Website](https://txz8096.github.io/second-look/) ·
+[Sample report](https://txz8096.github.io/second-look/#sample-report) ·
+[Install](#install) ·
+[FAQ](#faq)
+
+## Why
+
+AI use is more than the prompt you type. It's also the context you give, the skills and
+config you've built, and habits that drift without you noticing. Most of that is invisible
+from inside a single chat. second look reads across all of it and hands back a short list of
+things to try, each with the evidence behind it.
+
+A closer look pays off in a few places:
+
+| | |
+|---|---|
+| **Less overhead** | Cut the setup and back-and-forth around each task |
+| **Better first results** | Find the habits behind rework, so output needs less fixing |
+| **More reliable code** | Ask for code with a clear scope and a way to check it |
+| **Your own judgment** | Notice when you accept polished output without checking it |
+| **Less repeated setup** | Stop retyping the same rules. Move them into memory and skills |
+| **Tools that work together** | See which tool you use for what, and match each task to the right one |
+| **Skills that last** | Keep your skills accurate as models and tools change |
+
+## What you get
+
+Every two weeks, or whenever you ask, second look builds one private report in three parts.
+
+**1. Improve your prompts and context.** It checks whether your first message gave the goal,
+the audience, the constraints and what done looks like, and whether your standing rules
+reach every tool. A finding looks like this:
+
+> **Pattern:** Your prototype requests name the feature but leave out the user.
+>
+> **Evidence:** In three sessions, that cost several turns of clarifying.
+>
+> **Change to try:** Add who it's for and what done means to the first message.
+
+Generic advice like "write clearer prompts" doesn't make the cut. Each card shows quotes from
+your own sessions, how sure the review is, and a fix you can paste.
+
+**2. Keep your skills current.** It reads the skills and config you've built and flags the
+ones with wrong facts, broken folders, duplicates, missed updates from recent releases, and
+no tests.
+
+**3. See how your habits change.** Briefed starts, corrections, output checking and restarts,
+charted week by week for up to 12 months and filterable by tool and kind of work. After your
+first review, it also checks whether last cycle's fixes stuck and whether the work got
+better.
+
+See the [sample report](https://txz8096.github.io/second-look/#sample-report) for the full
+layout. It uses made-up data.
+
+## How it works
+
+| Step | What happens |
+|---|---|
+| **Coach this cycle** | Pick up to three patterns to test. The rest waits |
+| **Maintain your setup** | Fix stale, broken or duplicate skills and config |
+| **Review change over time** | Compare habits and outcomes across tools |
+| **Return to the evidence** | Next review: did it stick, did it help, and what did it cost? |
+
+Compared with other AI reflection tools, second look covers several tools in one report,
+checks your skills and config as well as your prompts, and follows up on whether last
+cycle's changes worked.
 
 ## Install
 
@@ -35,7 +95,7 @@ The installer:
 1. Copies the skill to `~/.agents/skills/second-look`.
 2. Links it into `~/.claude/skills`, `~/.codex/skills` and `~/.cursor/skills` for each tool
    you have.
-3. Asks before changing one setting: Claude Code deletes sessions after 30 days by default,
+3. Asks before changing one setting. Claude Code deletes sessions after 30 days by default,
    and a 12-month view needs them kept for a year (`cleanupPeriodDays: 365`).
 4. Creates `~/.second-look/` for your profile, review log and exports.
 
@@ -80,6 +140,103 @@ Ask your assistant for "a second look", or type `/second-look` in Claude Code. T
 asks four questions to set up your profile. To run it every two weeks, ask your assistant to
 schedule it.
 
+## FAQ
+
+<details>
+<summary><b>Do I need to install it in every tool?</b></summary>
+
+No. The installer puts one copy on your computer and links it into each tool you have. A
+review runs in the tool where you start it, and it reads every tool's files from there.
+</details>
+
+<details>
+<summary><b>Does one report cover all my AI tools?</b></summary>
+
+Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the
+computer where you use them. One run reads all three tools' logs, plus claude.ai and ChatGPT
+if you add their data exports. Started from claude.ai in a browser or from a cloud session,
+it can't see those logs, so it covers only your claude.ai chats.
+</details>
+
+<details>
+<summary><b>What data does it read?</b></summary>
+
+Only what's on your computer or what you hand it: local Claude Code, Codex and Cursor logs,
+the claude.ai and ChatGPT exports you download yourself, and your skill and config files for
+the skills check. Sources it can't open are marked "Not checked" in the report.
+</details>
+
+<details>
+<summary><b>Where does it run, and is anything uploaded?</b></summary>
+
+It runs on your machine, and reports are saved in `~/.second-look/`. Nothing goes to second
+look, because there's no second look server. Your assistant talks to its model provider as
+usual, under your own account settings.
+</details>
+
+<details>
+<summary><b>What is redacted?</b></summary>
+
+Secrets are removed and prompts are trimmed before anything is quoted. Keys, emails and
+other people's private details never appear in the report.
+</details>
+
+<details>
+<summary><b>What do I need to run it on claude.ai?</b></summary>
+
+Turn on chat search, code execution and memory in Settings, and upload `second-look.zip`.
+Without chat search or a `conversations.json` export, habit numbers show as "Not measured"
+instead of a guess.
+</details>
+
+<details>
+<summary><b>What happens the first time I run it?</b></summary>
+
+It asks four short questions: what you build, which areas to watch for new releases, where
+your standing rules live, and where your skills are. Your answers become a profile in
+`~/.second-look/profile.md` that you can edit later.
+</details>
+
+<details>
+<summary><b>How often should I run it?</b></summary>
+
+Every two weeks. Each review checks last cycle's experiments, then suggests up to three new
+ones. You can also run it any time for a window you name, like "since Oct 1" or "my Cursor
+sessions", without moving the schedule.
+</details>
+
+<details>
+<summary><b>How far back does the yearly view go?</b></summary>
+
+As far as your logs do. Claude Code keeps 30 days by default, which is why the installer
+offers to keep a year. claude.ai and ChatGPT count up to the day you export. Each run saves
+weekly totals, so weeks your tools later delete stay in the trend.
+</details>
+
+<details>
+<summary><b>How accurate are the findings?</b></summary>
+
+They're estimates read from the wording of your sessions. Each finding shows its examples and
+how sure the review is (Clear pattern, Likely pattern or Unconfirmed). Before trusting a
+number, the review spot-checks a sample of its own labels, and you can correct a label at the
+next review.
+</details>
+
+<details>
+<summary><b>Can I edit or delete the report?</b></summary>
+
+Yes. The report, your profile, the review log and your history are plain files in
+`~/.second-look/`. Edit or delete them whenever you like.
+</details>
+
+<details>
+<summary><b>How do I uninstall it?</b></summary>
+
+Delete `~/.agents/skills/second-look` and the `second-look` links in `~/.claude/skills`,
+`~/.codex/skills` and `~/.cursor/skills`. Delete `~/.second-look/` too if you don't want to
+keep your reports. If you used the plugin, run `/plugin uninstall second-look`.
+</details>
+
 ## What's in the repo
 
 | Path | What it is |
@@ -87,9 +244,11 @@ schedule it.
 | `plugins/second-look/skills/second-look/` | The skill: `SKILL.md`, the report template, the design system and the scripts |
 | `install.sh` | The installer |
 | `.claude-plugin/marketplace.json` | Lets Claude Code install this repo as a plugin |
-| `src/` | The landing page (Next.js, deployed to GitHub Pages) |
+| `src/` | The [website](https://txz8096.github.io/second-look/) (Next.js, deployed to GitHub Pages) |
 
-To work on the landing page: `npm install`, then `npm run dev`.
+To work on the website: `npm install`, then `npm run dev`.
+
+Found a problem? [Open an issue](https://github.com/txz8096/second-look/issues).
 
 ## License
 
