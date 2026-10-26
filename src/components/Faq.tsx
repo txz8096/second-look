@@ -24,7 +24,11 @@ const faqs = [
   },
   {
     q: "How often should I run it?",
-    a: "Every two weeks. Each review checks last cycle’s experiments, then suggests up to three new ones. You can also run it any time for a window you name, like “since Oct 1” or “my Cursor sessions”, without moving the schedule.",
+    a: "Every two weeks works well. Each review checks last cycle’s experiments, then suggests up to three new ones. You can also run it any time for a window you name, like “since Oct 1” or “my Cursor sessions”, without moving your reminder.",
+  },
+  {
+    q: "Does it run by itself? Can I change or stop the reminder?",
+    a: "Only if you use the Claude desktop app. There, second look can set up a scheduled task that runs the full review on your Mac every two weeks, as a session you open afterwards. It uses your quota each time and runs while the app is open. Everywhere else it never runs a review by itself: if you turn on the reminder at install, a small daily job on your computer shows a notification when a review is due, then again every two days until you run one. Ask your assistant to change the interval (“remind me monthly”) or turn it off (“stop the reminders”). The reminder needs your computer to be on, and works on macOS and Linux.",
   },
   {
     q: "How far back does the yearly view go?",
@@ -48,7 +52,7 @@ const faqs = [
   },
   {
     q: "How do I uninstall it?",
-    a: "Delete ~/.agents/skills/second-look and the second-look links in ~/.claude/skills, ~/.codex/skills and ~/.cursor/skills. Delete ~/.second-look too if you don’t want to keep your reports. If you used the plugin, run /plugin uninstall second-look.",
+    a: "Ask your assistant to stop the reminders, if you set one. Then delete ~/.agents/skills/second-look and the second-look links in ~/.claude/skills, ~/.codex/skills and ~/.cursor/skills. Delete ~/.second-look too if you don’t want to keep your reports. If you used the plugin, run /plugin uninstall second-look.",
   },
 ];
 
