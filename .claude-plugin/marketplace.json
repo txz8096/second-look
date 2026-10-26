@@ -1,0 +1,14 @@
+{
+  "name": "second-look",
+  "owner": {
+    "name": "Melissa Tang"
+  },
+  "description": "second look: a skill that reviews how you work with AI.",
+  "plugins": [
+    {
+      "name": "second-look",
+      "source": "./plugins/second-look",
+      "description": "Reviews how you work with AI across Claude Code, Codex, Cursor, claude.ai and ChatGPT, and keeps your skills current."
+    }
+  ]
+}
