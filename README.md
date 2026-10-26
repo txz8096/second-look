@@ -320,6 +320,22 @@ it monthly") or stop it ("stop the reviews").
 </details>
 
 <details>
+<summary><b>Which apps can run it on a schedule?</b></summary>
+
+It depends on whether the app can run the review on your computer, because that's where your
+session logs are.
+
+| Where you use it | Runs by itself? | How it recurs | Needs |
+|---|---|---|---|
+| Claude desktop app | Yes | A scheduled task in the app runs the full review | The app open, computer on |
+| Codex app | Yes | A scheduled task in the app runs the full review | The app open, computer on |
+| Terminal (Claude Code or Codex CLI) | Yes | A daily job runs the review in the background, then tells you the report is ready | Computer on; file access approved in advance |
+| Cursor | No | A notification when a review is due; you start it | Computer on (macOS or Linux) |
+| claude.ai | Yes, claude.ai only | A claude.ai scheduled task. It can't see your coding tools | Chat search on |
+| ChatGPT | No | Reviews don't run here. Its history comes in through the data export | A `conversations.json` export |
+</details>
+
+<details>
 <summary><b>How far back does the yearly view go?</b></summary>
 
 As far as your logs do. Claude Code keeps 30 days by default, which is why the installer

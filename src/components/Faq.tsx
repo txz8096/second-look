@@ -1,7 +1,9 @@
 import { Minus, Plus } from "lucide-react";
 import { Container, Kicker } from "./ui";
 
-const faqs = [
+type Faq = { q: string; a: string; table?: { head: string[]; rows: string[][] } };
+
+const faqs: Faq[] = [
   {
     q: "Do I need to install it in every tool?",
     a: "No. The installer puts one copy on your computer and links it into Claude Code, Codex and Cursor, whichever you have. A review runs in the tool where you start it, and it reads every tool’s files from there.",
@@ -29,6 +31,26 @@ const faqs = [
   {
     q: "Does it run by itself? Can I change or stop it?",
     a: "Yes, if you say yes after your first report. In the Claude desktop app or the Codex app, a scheduled task runs the full review on your computer. In a terminal, a small daily job runs it in the background and tells you when the report is ready. In Cursor, which can’t schedule anything on your computer, you get a notification when a review is due instead. Each run uses your quota and needs your computer on. Ask your assistant to change the cadence (“make it monthly”) or stop it (“stop the reviews”).",
+  },
+  {
+    q: "Which apps can run it on a schedule?",
+    a: "It depends on whether the app can run the review on your computer, because that’s where your session logs are.",
+    table: {
+      head: ["Where you use it", "Runs by itself?", "How it recurs", "Needs"],
+      rows: [
+        ["Claude desktop app", "Yes", "A scheduled task in the app runs the full review", "The app open, computer on"],
+        ["Codex app", "Yes", "A scheduled task in the app runs the full review", "The app open, computer on"],
+        [
+          "Terminal (Claude Code or Codex CLI)",
+          "Yes",
+          "A daily job runs the review in the background, then tells you the report is ready",
+          "Computer on; file access approved in advance",
+        ],
+        ["Cursor", "No", "A notification when a review is due; you start it", "Computer on (macOS or Linux)"],
+        ["claude.ai", "Yes, claude.ai only", "A claude.ai scheduled task. It can’t see your coding tools", "Chat search on"],
+        ["ChatGPT", "No", "Reviews don’t run here. Its history comes in through the data export", "A conversations.json export"],
+      ],
+    },
   },
   {
     q: "How far back does the yearly view go?",
@@ -72,6 +94,32 @@ export function Faq() {
                 <Minus size={22} className="hidden shrink-0 text-accent group-open:block" aria-hidden="true" />
               </summary>
               <p className="max-w-[760px] pt-3.5 pb-1 font-body text-base leading-[1.55] text-dark-text-2">{item.a}</p>
+              {item.table && (
+                <div className="mt-4 overflow-x-auto">
+                  <table className="w-full min-w-[640px] text-left font-body text-sm leading-[1.5]">
+                    <thead>
+                      <tr className="border-b border-rule">
+                        {item.table.head.map((h) => (
+                          <th key={h} className="py-2.5 pr-6 font-mono text-[11px] font-normal tracking-[0.8px] text-accent uppercase">
+                            {h}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {item.table.rows.map((row) => (
+                        <tr key={row[0]} className="border-b border-rule last:border-b-0">
+                          {row.map((cell, j) => (
+                            <td key={j} className={`py-3 pr-6 align-top ${j === 0 ? "text-ink" : "text-dark-text-2"}`}>
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </details>
           ))}
         </div>
