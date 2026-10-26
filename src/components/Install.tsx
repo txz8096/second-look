@@ -4,8 +4,7 @@ import { CopyButton } from "./CopyButton";
 import { GithubIcon } from "./Icons";
 import { Container, Kicker, PrimaryButton, SectionHeading } from "./ui";
 
-const INSTALL_PROMPT =
-  "Install second look from github.com/txz8096/second-look. Run its install.sh, and tell me which folders it will read before you change anything.";
+const INSTALL_PROMPT = "Install second look from github.com/txz8096/second-look.";
 const INSTALL_COMMAND = "curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash";
 
 const secondaryLinks = [

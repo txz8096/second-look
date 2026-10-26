@@ -81,8 +81,11 @@ cycle's changes worked.
 Paste this into Claude Code, Codex or Cursor:
 
 ```
-Install second look from github.com/txz8096/second-look. Run its install.sh, and tell me which folders it will read before you change anything.
+Install second look from github.com/txz8096/second-look.
 ```
+
+Your assistant follows the steps in [For AI assistants](#for-ai-assistants): it shows you
+which tools it found and asks before changing anything.
 
 ### Terminal
 
@@ -100,7 +103,36 @@ The installer:
 4. Creates `~/.second-look/` for your profile, review log and exports.
 
 It needs `python3`, which macOS and most Linux systems already have. Pass `--yes` to accept
-the retention change without a prompt, or `--no-retention` to skip it.
+the retention change without a prompt, or `--no-retention` to skip it. To see what it found
+and what it would change without changing anything, run it with `--check`:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --check
+```
+
+### For AI assistants
+
+If a user asks you to install second look, follow these steps. Don't skip the first two.
+
+1. Run the installer in check mode. It changes nothing.
+
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --check
+   ```
+
+2. Show the user its output: the tools and exports it found, and what the install will
+   change. If it says it will ask about Claude Code's history setting, ask the user that
+   question yourself. The installer can't prompt them from your shell.
+3. Run the installer with the flag that matches their answer: `--yes` to keep a year of
+   Claude Code history, or `--no-retention` to leave the setting alone.
+
+   ```bash
+   curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --yes
+   ```
+
+4. Tell the user what was installed and where, and that they can start a review by asking
+   for "a second look" or typing `/second-look` in Claude Code. Mention that adding their
+   claude.ai and ChatGPT exports is optional (see below).
 
 ### Claude Code plugin
 
