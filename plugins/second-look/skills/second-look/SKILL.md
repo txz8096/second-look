@@ -122,6 +122,31 @@ On a first run with reminders off, offer them once: "Want a reminder every 14 da
 set a different interval, or none." Don't ask again unless they bring it up. On claude.ai you
 can't set a local reminder; say so and suggest a calendar reminder instead.
 
+### Scheduled reviews in the Claude desktop app
+
+If you're running in the Claude desktop app and have its scheduled-task tools
+(`create_scheduled_task`, `update_scheduled_task`, `list_scheduled_tasks`), offer a scheduled
+task in place of the notification. It runs the full review on their Mac by itself, as a
+session they can open afterwards to read the report and pick fixes. Say plainly what that
+means before creating it: it uses their quota each time, reads their sessions while they're
+away, and only runs while the app is open (a missed run starts on the next launch).
+
+- Check `list_scheduled_tasks` first and update an existing second look task in place of
+  adding a second one.
+- Cron can't count days, so map the cadence: every 2 weeks → `0 10 1,15 * *` (the 1st and
+  15th at 10:00); weekly → `0 10 * * 1`; monthly → `0 10 1 * *`. Tell them the dates.
+- Prompt: "Run a full second look review using the skill at ~/.agents/skills/second-look
+  (read its SKILL.md first). Window: since the last full review. If there's no profile yet,
+  ask the four profile questions and wait. Build and check the report, save it, write the
+  log entry, run `python3 ~/.agents/skills/second-look/scripts/reminder.py reviewed`, then
+  end with one question: which fixes they want to try this cycle."
+- Turn the notification reminder off (`reminder.py off`) so they aren't reminded twice.
+- If they also have a scheduled second look task on claude.ai, mention that it only sees
+  claude.ai chats and suggest keeping one of the two.
+
+To stop scheduled reviews, disable or delete the task in the app's scheduled tasks, or ask
+you to.
+
 ### The walkthrough (full reviews, 30 minutes)
 
 | Block | Time | What happens |

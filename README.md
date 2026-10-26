@@ -230,7 +230,9 @@ Each app emails you a zip, usually within a day.
 Ask your assistant for "a second look", or type `/second-look` in Claude Code. The first run
 asks four questions to set up your profile.
 
-If you turned on the reminder, a notification tells you when a review is due. To change it,
+In the Claude desktop app, second look offers to run the full review every two weeks as a
+scheduled task. Elsewhere, if you turned on the reminder, a notification tells you when a
+review is due. To change it,
 ask your assistant: "remind me every 3 weeks", "remind me monthly" or "stop the
 reminders". Reviews only run when you ask for one.
 
@@ -304,9 +306,13 @@ three new ones. You can also run it any time for a window you name, like "since 
 <details>
 <summary><b>Does it run by itself? Can I change or stop the reminder?</b></summary>
 
-It never runs a review by itself. If you turn on the reminder, a small daily job on your
-computer shows a notification when a review is due, then again every two days until you run
-one. Ask your assistant to change the interval ("remind me monthly") or turn it off ("stop
+Only if you use the Claude desktop app. There, second look can set up a scheduled task that
+runs the full review on your Mac every two weeks, as a session you open afterwards to read
+the report and pick fixes. It uses your quota each time and runs while the app is open.
+
+Everywhere else it never runs a review by itself. If you turn on the reminder, a small daily
+job on your computer shows a notification when a review is due, then again every two days
+until you run one. Ask your assistant to change the interval ("remind me monthly") or turn it off ("stop
 the reminders"). The reminder needs your computer to be on, and works on macOS and Linux.
 </details>
 

@@ -16,8 +16,8 @@ export function HowItWorks() {
           <Kicker>Every two weeks</Kicker>
           <SectionHeading>Review, plan, check back.</SectionHeading>
           <p className="font-body text-[17px] leading-[1.55] text-text-2">
-            Reviews run when you ask. If you like, a reminder on your computer nudges you every two weeks, and you can
-            change the timing or turn it off by asking your assistant.
+            Reviews run when you ask, or every two weeks as a scheduled task in the Claude desktop app. Elsewhere, an
+            optional reminder nudges you. Change the timing or turn it off by asking your assistant.
           </p>
         </div>
         <ol className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">

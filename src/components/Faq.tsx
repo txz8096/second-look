@@ -28,7 +28,7 @@ const faqs = [
   },
   {
     q: "Does it run by itself? Can I change or stop the reminder?",
-    a: "It never runs a review by itself. If you turn on the reminder at install, a small daily job on your computer shows a notification when a review is due, then again every two days until you run one. Ask your assistant to change the interval (“remind me monthly”) or turn it off (“stop the reminders”). The reminder needs your computer to be on, and works on macOS and Linux.",
+    a: "Only if you use the Claude desktop app. There, second look can set up a scheduled task that runs the full review on your Mac every two weeks, as a session you open afterwards. It uses your quota each time and runs while the app is open. Everywhere else it never runs a review by itself: if you turn on the reminder at install, a small daily job on your computer shows a notification when a review is due, then again every two days until you run one. Ask your assistant to change the interval (“remind me monthly”) or turn it off (“stop the reminders”). The reminder needs your computer to be on, and works on macOS and Linux.",
   },
   {
     q: "How far back does the yearly view go?",
