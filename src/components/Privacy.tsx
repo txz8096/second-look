@@ -32,14 +32,6 @@ const answers = [
     desc: "Only you. It’s saved in ~/.second-look or published as a private artifact, and it’s shared only if you choose to.",
   },
   {
-    title: "What you can leave out",
-    desc: "Scope any review to a window, a tool or a project: “only my Cursor sessions”, “since Oct 1”.",
-  },
-  {
-    title: "Check it yourself",
-    desc: "The skill is open source. Its two scripts use Python’s standard library and make no network calls.",
-  },
-  {
     title: "Delete it any time",
     desc: "Stop recurring reviews, then remove ~/.second-look and the skill folder. If you kept a year of Claude Code history, set it back to 30 days in one setting.",
   },
@@ -80,7 +72,7 @@ export function Privacy() {
           </ol>
         </div>
 
-        <ul className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {answers.map((a) => (
             <li key={a.title} className="flex flex-col gap-3 border-t-2 border-accent pt-[22px]">
               <h3 className="font-display text-[22px] leading-[1.2] font-bold tracking-[-0.5px] text-ink">{a.title}</h3>
