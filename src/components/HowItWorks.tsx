@@ -15,6 +15,10 @@ export function HowItWorks() {
         <div className="flex max-w-[720px] flex-col gap-5">
           <Kicker>Every two weeks</Kicker>
           <SectionHeading>Review, plan, check back.</SectionHeading>
+          <p className="font-body text-[17px] leading-[1.55] text-text-2">
+            Reviews run when you ask. If you like, a reminder on your computer nudges you every two weeks, and you can
+            change the timing or turn it off by asking your assistant.
+          </p>
         </div>
         <ol className="grid grid-cols-1 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((step, i) => (

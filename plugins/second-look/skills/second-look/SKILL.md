@@ -1,6 +1,6 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, claude.ai and ChatGPT, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project, and when a scheduled second look review fires."
+description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, claude.ai and ChatGPT, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their second look reminders (\"remind me monthly\", \"stop the reminders\")."
 ---
 
 # second look
@@ -40,8 +40,9 @@ Code or Cursor logs from here. Run second look there for those."
 
 ## Files
 
-Everything the user owns lives in `~/.second-look/`. Nothing leaves their machine unless
-they publish a report.
+Everything the user owns lives in `~/.second-look/`. second look has no server. What you read
+during a review reaches their model provider as part of this conversation, like any other
+message, so quote only what a finding needs.
 
 | File | What it holds |
 |---|---|
@@ -50,6 +51,7 @@ they publish a report.
 | `history.json` | Weekly habit rows, kept longer than the tools keep their own logs |
 | `exports/claude/conversations.json`, `exports/chatgpt/conversations.json` | Data exports for the 12-month view |
 | `reports/` | Saved reports, when they aren't published as artifacts |
+| `reminder.json` | Reminder setting: on or off, days between reviews, date of the last full review |
 
 Files that ship with this skill:
 
@@ -60,6 +62,7 @@ Files that ship with this skill:
 | `references/design-system.md` | Both | Tokens, type, layout and allowed labels. Read it; don't rebuild from it |
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
 | `scripts/collect.py` | Local | Reads Claude Code, Codex and Cursor logs and the two data exports |
+| `scripts/reminder.py` | Local | Turns the review reminder on, off or to a new cadence, and records full reviews |
 
 ## First run: the profile
 
@@ -81,21 +84,45 @@ builds: product engineer; prototypes and ships a habit-tracking app
 focus: prototyping, design-to-code, agents, writing
 context_file: ~/ai-context.md
 skill_dirs: ~/.agents/skills, ~/.claude/skills
-cadence: every 2 weeks
+cadence: every 14 days
 ```
+
+`cadence` mirrors the reminder setting. `reminder.py` keeps it up to date; don't edit it by
+hand.
 
 ## Two ways to run
 
-| | Scheduled | On demand |
+Nothing runs a review on its own. The optional reminder only tells the user a review is due.
+
+| | Full review | On demand |
 |---|---|---|
-| When | Every two weeks, if they set up a schedule | Whenever they ask |
-| Window | The 14 days since the last scheduled review | What they name ("since Oct 1", "my Cursor sessions", a project). If they name nothing, everything since the last review. Ask once if the scope is unclear and costly to guess |
+| When | They ask for a review after the reminder, or ask for "my review" or a full review | They ask about a window, tool or project |
+| Window | Since the last full review (`last_review` from `reminder.py status`), or the last 14 days if there's none | What they name ("since Oct 1", "my Cursor sessions", a project). If they name nothing, everything since the last review. Ask once if the scope is unclear and costly to guess |
 | Skill check | Full | Only if asked, or the last check is over 14 days old |
 | Report | Full | Same layout, scoped to the window |
 | Afterwards | Offer a 30-minute walkthrough (below) | Close with one question: which fix they want to try |
-| Log | New dated entry | Entry marked `(on demand)`. The schedule doesn't move |
+| Log | New dated entry, then run `python3 scripts/reminder.py reviewed` | Entry marked `(on demand)`. Don't run `reviewed`; the reminder doesn't move |
 
-### The walkthrough (scheduled runs, 30 minutes)
+## Reminders
+
+Locally, `scripts/reminder.py` runs a small daily job (launchd on macOS, cron on Linux) that
+shows a notification when a review is due. It never runs a review and never uses the network.
+
+| The user says | Run |
+|---|---|
+| "remind me every 3 weeks", "remind me monthly", "turn reminders on" | `python3 scripts/reminder.py set --days 21` (or 30, or 14) |
+| "stop the reminders", "no more reminders" | `python3 scripts/reminder.py off` |
+| "when's my next review?" | `python3 scripts/reminder.py status` |
+
+Confirm in one line what changed and the next due date. Use `next_due` from `status` for
+"Your plan until <date>" and "What the <date> review will check". With reminders off, use the
+last review plus the profile's old cadence, or 14 days.
+
+On a first run with reminders off, offer them once: "Want a reminder every 14 days? I can
+set a different interval, or none." Don't ask again unless they bring it up. On claude.ai you
+can't set a local reminder; say so and suggest a calendar reminder instead.
+
+### The walkthrough (full reviews, 30 minutes)
 
 | Block | Time | What happens |
 |---|---|---|

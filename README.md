@@ -35,7 +35,8 @@ A closer look pays off in a few places:
 
 ## What you get
 
-Every two weeks, or whenever you ask, second look builds one private report in three parts.
+Whenever you ask, second look builds one private report in three parts. If you like, a
+reminder on your computer nudges you to run one every two weeks.
 
 **1. Improve your prompts and context.** It checks whether your first message gave the goal,
 the audience, the constraints and what done looks like, and whether your standing rules
@@ -106,7 +107,7 @@ read, run the collector yourself from the installed skill:
 python3 ~/.agents/skills/second-look/scripts/collect.py --days 14
 ```
 
-**Delete it any time.** Remove `~/.second-look/` and the skill folder (see
+**Delete it any time.** Turn off the reminder, then remove `~/.second-look/` and the skill folder (see
 [How do I uninstall it?](#faq)). If you kept a year of Claude Code history, set
 `cleanupPeriodDays` back to `30` in `~/.claude/settings.json`.
 
@@ -154,9 +155,13 @@ The installer:
 3. Asks before changing one setting. Claude Code deletes sessions after 30 days by default,
    and a 12-month view needs them kept for a year (`cleanupPeriodDays: 365`).
 4. Creates `~/.second-look/` for your profile, review log and exports.
+5. Asks whether to remind you to run a review every 14 days, or at another interval. The
+   reminder is a notification from a small daily job on your computer (launchd on macOS,
+   cron on Linux). It never runs a review by itself.
 
 It needs `python3`, which macOS and most Linux systems already have. Pass `--yes` to accept
-the retention change without a prompt, or `--no-retention` to skip it. To see what it found
+the retention change without a prompt, or `--no-retention` to skip it. Pass `--remind 14`
+(or another number of days) to set the reminder, or `--no-remind` to skip it. To see what it found
 and what it would change without changing anything, run it with `--check`:
 
 ```bash
@@ -174,13 +179,14 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
    ```
 
 2. Show the user its output: the tools and exports it found, and what the install will
-   change. If it says it will ask about Claude Code's history setting, ask the user that
-   question yourself. The installer can't prompt them from your shell.
-3. Run the installer with the flag that matches their answer: `--yes` to keep a year of
-   Claude Code history, or `--no-retention` to leave the setting alone.
+   change. It may list two questions: Claude Code's history setting and a review reminder.
+   Ask the user each one yourself. The installer can't prompt them from your shell.
+3. Run the installer with the flags that match their answers: `--yes` to keep a year of
+   Claude Code history or `--no-retention` to leave it alone, and `--remind 14` (or the
+   number of days they chose) or `--no-remind`.
 
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --yes
+   curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --yes --remind 14
    ```
 
 4. Tell the user what was installed and where, and that they can start a review by asking
@@ -222,8 +228,11 @@ Each app emails you a zip, usually within a day.
 ## Run it
 
 Ask your assistant for "a second look", or type `/second-look` in Claude Code. The first run
-asks four questions to set up your profile. To run it every two weeks, ask your assistant to
-schedule it.
+asks four questions to set up your profile.
+
+If you turned on the reminder, a notification tells you when a review is due. To change it,
+ask your assistant: "remind me every 3 weeks", "remind me monthly" or "stop the
+reminders". Reviews only run when you ask for one.
 
 ## FAQ
 
@@ -287,9 +296,18 @@ your standing rules live, and where your skills are. Your answers become a profi
 <details>
 <summary><b>How often should I run it?</b></summary>
 
-Every two weeks. Each review checks last cycle's experiments, then suggests up to three new
-ones. You can also run it any time for a window you name, like "since Oct 1" or "my Cursor
-sessions", without moving the schedule.
+Every two weeks works well. Each review checks last cycle's experiments, then suggests up to
+three new ones. You can also run it any time for a window you name, like "since Oct 1" or
+"my Cursor sessions", without moving your reminder.
+</details>
+
+<details>
+<summary><b>Does it run by itself? Can I change or stop the reminder?</b></summary>
+
+It never runs a review by itself. If you turn on the reminder, a small daily job on your
+computer shows a notification when a review is due, then again every two days until you run
+one. Ask your assistant to change the interval ("remind me monthly") or turn it off ("stop
+the reminders"). The reminder needs your computer to be on, and works on macOS and Linux.
 </details>
 
 <details>
@@ -319,7 +337,9 @@ Yes. The report, your profile, the review log and your history are plain files i
 <details>
 <summary><b>How do I uninstall it?</b></summary>
 
-Delete `~/.agents/skills/second-look` and the `second-look` links in `~/.claude/skills`,
+First turn off the reminder, if you set one:
+`python3 ~/.agents/skills/second-look/scripts/reminder.py off`. Then delete
+`~/.agents/skills/second-look` and the `second-look` links in `~/.claude/skills`,
 `~/.codex/skills` and `~/.cursor/skills`. Delete `~/.second-look/` too if you don't want to
 keep your reports. If you used the plugin, run `/plugin uninstall second-look`.
 </details>
