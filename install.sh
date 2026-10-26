@@ -7,8 +7,6 @@
 #   --check          show what was found and what would change, then exit without changing anything
 #   --yes            keep Claude Code history for a year without asking
 #   --no-retention   leave Claude Code's history setting alone
-#   --remind DAYS    remind you to run a review every DAYS days (a local notification)
-#   --no-remind      don't set up a reminder
 set -euo pipefail
 
 REPO="txz8096/second-look"
@@ -19,17 +17,11 @@ SETTINGS="$HOME/.claude/settings.json"
 
 mode="install"
 retention="ask"
-remind="ask"
 while [ $# -gt 0 ]; do
   case "$1" in
     --check) mode="check" ;;
     --yes) retention="yes" ;;
     --no-retention) retention="no" ;;
-    --remind)
-      shift
-      case "${1:-}" in ''|*[!0-9]*) echo "--remind needs a number of days, like --remind 14" >&2; exit 1 ;; esac
-      remind="$1" ;;
-    --no-remind) remind="no" ;;
     *) echo "Unknown option: $1" >&2; exit 1 ;;
   esac
   shift
@@ -85,14 +77,11 @@ print("  Create ~/.second-look for your profile, reports and exports")
 if "Claude Code" in found and retention < 365:
     print(f"  Ask before changing Claude Code's history from {retention} to 365 days")
     print("    (Claude Code deletes older sessions; the 12-month view needs them kept)")
-reminder = os.path.join(home, ".second-look", "reminder.json")
-state = json.load(open(reminder)) if os.path.exists(reminder) else {}
+schedule = os.path.join(home, ".second-look", "schedule.json")
+state = json.load(open(schedule)) if os.path.exists(schedule) else {}
 if state.get("enabled"):
     n = state["every_days"]
-    print("  Keep your reminder to review " + ("every day" if n == 1 else f"every {n} days"))
-else:
-    print("  Ask whether to remind you to review every 14 days")
-    print("    (a notification on this computer; change or stop it any time)")
+    print("  Keep your recurring review " + ("every day" if n == 1 else f"every {n} days"))
 PY
 }
 
@@ -101,8 +90,8 @@ has_tty() { [ -t 0 ] || { [ -r /dev/tty ] && : < /dev/tty; } 2>/dev/null; }
 if [ "$mode" = "check" ]; then
   report
   echo
-  echo "Nothing was changed. To install, run without --check. To answer the questions up front, add"
-  echo "--yes or --no-retention (history) and --remind 14 or --no-remind (reminder)."
+  echo "Nothing was changed. To install, run without --check. To answer the history question up front, add"
+  echo "--yes or --no-retention."
   exit 0
 fi
 
@@ -169,38 +158,14 @@ fi
 
 mkdir -p "$HOME_DIR/exports/claude" "$HOME_DIR/exports/chatgpt" "$HOME_DIR/reports"
 
-# Optional reminder: a daily local job that shows a notification when a review is due.
-reminder="$SHARED/scripts/reminder.py"
-reminder_on="$(python3 "$reminder" status | python3 -c 'import json,sys; s=json.load(sys.stdin); print(s["every_days"] if s["enabled"] else "")')"
-if [ "$remind" = "ask" ]; then
-  if [ -n "$reminder_on" ]; then
-    remind="keep"
-  elif has_tty; then
-    printf "\nRemind you to run a review every 14 days? Enter another number of days, or n for no. [14] "
-    read -r reply < /dev/tty || reply="n"
-    case "$reply" in
-      ''|[yY]*) remind="14" ;;
-      [nN]*) remind="no" ;;
-      *[!0-9]*) echo "Not a number, so no reminder was set."; remind="no" ;;
-      *) remind="$reply" ;;
-    esac
-  else
-    remind="no"
-    echo "No reminder set. Run with --remind 14 to get a reminder every 14 days."
-  fi
-fi
-case "$remind" in
-  keep)
-    python3 "$reminder" set --days "$reminder_on" >/dev/null  # refreshes the job's copy of reminder.py
-    [ "$reminder_on" = 1 ] && echo "Reminder unchanged: every day." || echo "Reminder unchanged: every $reminder_on days." ;;
-  no) [ -n "$reminder_on" ] && python3 "$reminder" off ;;
-  *) python3 "$reminder" set --days "$remind" || echo "Couldn't set up the reminder on this system." ;;
-esac
+# A recurring review is set up after the first report, not here. On reinstall, refresh the
+# local job's copy of schedule.py if one is running.
+python3 "$SHARED/scripts/schedule.py" refresh
 
 cat <<EOF
 
 Done. Ask your assistant for "a second look", or type /second-look in Claude Code.
-To change or stop the reminder, ask your assistant ("remind me monthly", "stop the reminders").
+After your first report, second look asks whether to run the review every two weeks.
 
 Optional, for your claude.ai and ChatGPT history:
   claude.ai  Settings > Privacy > Export data

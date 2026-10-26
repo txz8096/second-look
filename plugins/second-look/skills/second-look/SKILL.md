@@ -1,6 +1,6 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, claude.ai and ChatGPT, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their second look reminders (\"remind me monthly\", \"stop the reminders\")."
+description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, claude.ai and ChatGPT, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\")."
 ---
 
 # second look
@@ -51,7 +51,7 @@ message, so quote only what a finding needs.
 | `history.json` | Weekly habit rows, kept longer than the tools keep their own logs |
 | `exports/claude/conversations.json`, `exports/chatgpt/conversations.json` | Data exports for the 12-month view |
 | `reports/` | Saved reports, when they aren't published as artifacts |
-| `reminder.json` | Reminder setting: on or off, days between reviews, date of the last full review |
+| `schedule.json` | Recurring review setting: on or off, days between reviews, how they run, date of the last review |
 
 Files that ship with this skill:
 
@@ -62,7 +62,7 @@ Files that ship with this skill:
 | `references/design-system.md` | Both | Tokens, type, layout and allowed labels. Read it; don't rebuild from it |
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
 | `scripts/collect.py` | Local | Reads Claude Code, Codex and Cursor logs and the two data exports |
-| `scripts/reminder.py` | Local | Turns the review reminder on, off or to a new cadence, and records full reviews |
+| `scripts/schedule.py` | Local | Sets up, changes or stops recurring reviews, and records each full review |
 
 ## First run: the profile
 
@@ -87,65 +87,72 @@ skill_dirs: ~/.agents/skills, ~/.claude/skills
 cadence: every 14 days
 ```
 
-`cadence` mirrors the reminder setting. `reminder.py` keeps it up to date; don't edit it by
+`cadence` mirrors the schedule. `scripts/schedule.py` keeps it up to date; don't edit it by
 hand.
 
-## Two ways to run
+## Running a review
 
-Nothing runs a review on its own. The optional reminder only tells the user a review is due.
+Every review is a full review: all their tools, everything since the last review (or the last
+14 days if there's none), the full skill check and the full report. Narrow it only when they
+name a narrower scope ("just my Cursor sessions", "since Oct 1"); then scope the window to what
+they named and mark the log entry `(scoped)`.
 
-| | Full review | On demand |
+| | Full review (default) | Scoped review (only when they ask) |
 |---|---|---|
-| When | They ask for a review after the reminder, or ask for "my review" or a full review | They ask about a window, tool or project |
-| Window | Since the last full review (`last_review` from `reminder.py status`), or the last 14 days if there's none | What they name ("since Oct 1", "my Cursor sessions", a project). If they name nothing, everything since the last review. Ask once if the scope is unclear and costly to guess |
+| Window | Since `last_review` from `schedule.py status`, or the last 14 days | What they name. Ask once if the scope is unclear and costly to guess |
 | Skill check | Full | Only if asked, or the last check is over 14 days old |
 | Report | Full | Same layout, scoped to the window |
-| Afterwards | Offer a 30-minute walkthrough (below) | Close with one question: which fix they want to try |
-| Log | New dated entry, then run `python3 scripts/reminder.py reviewed` | Entry marked `(on demand)`. Don't run `reviewed`; the reminder doesn't move |
+| Afterwards | Offer a 30-minute walkthrough (below), then set up the schedule on the first review | Close with one question: which fix they want to try |
+| Log | New dated entry, then run `python3 scripts/schedule.py reviewed` | Entry marked `(scoped)`. Don't run `reviewed`; the schedule doesn't move |
 
-## Reminders
+## Recurring reviews
 
-Locally, `scripts/reminder.py` runs a small daily job (launchd on macOS, cron on Linux) that
-shows a notification when a review is due. It never runs a review and never uses the network.
+### After the first report
 
-| The user says | Run |
+When `schedule.py status` shows no schedule yet (`method` is null), end the first full review
+with this question, once:
+
+"Want me to run this review every two weeks? I can pick a different cadence, like weekly or
+monthly, or none."
+
+Before setting anything up, say in one line what a scheduled review means: it reads their
+sessions and uses their quota each time, while they're away. Then set it up with the first
+option that works where you're running:
+
+| Where you're running | Set up | Then run |
+|---|---|---|
+| Claude desktop app (you have `create_scheduled_task`) | A scheduled task (details below) | `schedule.py set --days N --method app --app "Claude desktop"` |
+| Codex app | A scheduled task in Codex. If you can't create it yourself, walk them through it: Scheduled → New task, paste the task prompt below, set it to repeat every N days or weeks, choose this computer as where it runs | `schedule.py set --days N --method app --app "Codex app"` |
+| Terminal only, with the `claude` or `codex` command | A daily local job that runs the review without a window when it's due, then notifies them the report is ready. Tell them it runs with file access approved in advance | `schedule.py set --days N --method headless --agent claude` (or `codex`) |
+| Anything else (Cursor, or if they'd rather not run reviews unattended) | A notification when a review is due | `schedule.py set --days N --method notify` |
+| claude.ai | Suggest a claude.ai scheduled task with the task prompt below. Say it will only see their claude.ai chats | Nothing to run |
+
+Cursor's Automations run in the cloud and can't read the session logs on their computer, so
+don't use them for this. If they say "none", run nothing and don't ask again unless they bring
+it up.
+
+**Task prompt** (for app scheduled tasks): "Run a full second look review using the skill at
+~/.agents/skills/second-look (read its SKILL.md first). If there's no profile yet, ask the four
+profile questions and wait. Build and check the report, save it to ~/.second-look/reports/,
+write the log entry, run `python3 ~/.agents/skills/second-look/scripts/schedule.py reviewed`,
+then end with one question: which fixes they want to try this cycle."
+
+**Claude desktop scheduled tasks.** Check `list_scheduled_tasks` first and update an existing
+second look task instead of adding a second one. Cron can't count days, so map the cadence:
+every 2 weeks → `0 10 1,15 * *` (the 1st and 15th at 10:00); weekly → `0 10 * * 1`; monthly →
+`0 10 1 * *`. Tell them the dates, and that a missed run starts the next time the app opens.
+
+### Changing or stopping it
+
+| They say | Do |
 |---|---|
-| "remind me every 3 weeks", "remind me monthly", "turn reminders on" | `python3 scripts/reminder.py set --days 21` (or 30, or 14) |
-| "stop the reminders", "no more reminders" | `python3 scripts/reminder.py off` |
-| "when's my next review?" | `python3 scripts/reminder.py status` |
+| "make it monthly", "every 3 weeks" | Update the app task if `method` is `app`, then `schedule.py set --days N` (it keeps the method) |
+| "stop the reviews", "no more reminders" | `schedule.py off`. If `method` is `app`, also delete or disable the app task |
+| "when's my next review?" | `schedule.py status` |
 
 Confirm in one line what changed and the next due date. Use `next_due` from `status` for
-"Your plan until <date>" and "What the <date> review will check". With reminders off, use the
-last review plus the profile's old cadence, or 14 days.
-
-On a first run with reminders off, offer them once: "Want a reminder every 14 days? I can
-set a different interval, or none." Don't ask again unless they bring it up. On claude.ai you
-can't set a local reminder; say so and suggest a calendar reminder instead.
-
-### Scheduled reviews in the Claude desktop app
-
-If you're running in the Claude desktop app and have its scheduled-task tools
-(`create_scheduled_task`, `update_scheduled_task`, `list_scheduled_tasks`), offer a scheduled
-task in place of the notification. It runs the full review on their Mac by itself, as a
-session they can open afterwards to read the report and pick fixes. Say plainly what that
-means before creating it: it uses their quota each time, reads their sessions while they're
-away, and only runs while the app is open (a missed run starts on the next launch).
-
-- Check `list_scheduled_tasks` first and update an existing second look task in place of
-  adding a second one.
-- Cron can't count days, so map the cadence: every 2 weeks → `0 10 1,15 * *` (the 1st and
-  15th at 10:00); weekly → `0 10 * * 1`; monthly → `0 10 1 * *`. Tell them the dates.
-- Prompt: "Run a full second look review using the skill at ~/.agents/skills/second-look
-  (read its SKILL.md first). Window: since the last full review. If there's no profile yet,
-  ask the four profile questions and wait. Build and check the report, save it, write the
-  log entry, run `python3 ~/.agents/skills/second-look/scripts/reminder.py reviewed`, then
-  end with one question: which fixes they want to try this cycle."
-- Turn the notification reminder off (`reminder.py off`) so they aren't reminded twice.
-- If they also have a scheduled second look task on claude.ai, mention that it only sees
-  claude.ai chats and suggest keeping one of the two.
-
-To stop scheduled reviews, disable or delete the task in the app's scheduled tasks, or ask
-you to.
+"Your plan until <date>" and "What the <date> review will check". With no schedule, use the
+last review plus 14 days.
 
 ### The walkthrough (full reviews, 30 minutes)
 
@@ -265,7 +272,7 @@ Sections, in order. Each maps to a block in the template.
 much, then what slipped recently. With no history, say that plainly.
 
 **This cycle at a glance** (`#glance`). "Comparing <window> to <previous window>" next to
-the heading (on-demand runs compare with the same length of time before). Then exactly five
+the heading (scoped reviews compare with the same length of time before). Then exactly five
 stats in this order: Sessions, Briefed starts, Corrections (per 10 messages), Restarts,
 Rules retyped. Each has a value, a plain-text change and a one-line meaning. Use "—" and
 "Not measured" when there's no data.
@@ -337,7 +344,7 @@ Locally, append to `~/.second-look/log.md` after each review. On claude.ai, put 
 entry in a Log section at the end of the report.
 
 ```
-## 2026-10-25 (covers Oct 12 – 25)            ← add "(on demand)" for on-demand runs
+## 2026-10-25 (covers Oct 12 – 25)            ← add "(scoped)" for scoped reviews
 Skills: 1 stale · 3 review · 3 current
 Snapshot: 94 sessions · 54% briefed · 1.1 corrections/10 · 11 restarts · 17 rules retyped
 Report: <link or path>
