@@ -15,7 +15,7 @@ const faqs = [
   },
   {
     q: "Does one report cover all my AI tools?",
-    a: "Yes, when you run it on your computer: Claude Code, Codex and Cursor, plus claude.ai and ChatGPT if you add their data exports. Run from claude.ai, it only sees your claude.ai chats.",
+    a: "Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the computer where you use those tools. That one run reads all three tools’ logs on that computer, plus claude.ai and ChatGPT if you add their data exports. Started from claude.ai in a browser, or from a cloud session, it can’t see those logs, so it only covers your claude.ai chats.",
   },
   {
     q: "How far back does the yearly view go?",

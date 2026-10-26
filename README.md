@@ -99,9 +99,12 @@ or when a schedule you set up fires. That one run reads every tool's files, and 
 your computer shares the same notes in `~/.second-look`.
 
 **Does one report cover all my AI tools?**
-Yes, when you run it on your computer:
+Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the
+computer where you use those tools. That one run reads all three tools' logs on that
+computer. Started from claude.ai in a browser, or from a cloud session such as Claude Code on
+the web, it can't see those logs.
 
-| Source | Run on your computer | Run on claude.ai |
+| Source | Started from Claude Code, Codex or Cursor on your computer | Started from claude.ai |
 |---|---|---|
 | Claude Code | ✓ | ✗ |
 | Codex | ✓ | ✗ |
