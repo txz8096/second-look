@@ -36,11 +36,11 @@ const faqs = [
   },
   {
     q: "Where does it run, and is anything uploaded?",
-    a: "On your machine, and the report is saved next to your files. Nothing goes to Second Look, because there’s no Second Look server. Your agent talks to its model provider as usual, under your account settings.",
+    a: "On your machine, and the report is saved in ~/.second-look. Nothing goes to Second Look, because there’s no Second Look server. The review runs inside your assistant, so what it reads goes to your model provider like any other message you send, under your existing account settings.",
   },
   {
     q: "What is redacted?",
-    a: "Secrets are removed and prompts trimmed before anything is quoted. Keys, emails and other people’s private details never appear in the report.",
+    a: "Prompts are trimmed, and API keys, emails, and token or password values are removed before anything is quoted. This works by pattern, so it can miss things like a client’s name. Read a report before you share it.",
   },
   {
     q: "Can I edit or delete the report?",

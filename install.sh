@@ -56,7 +56,7 @@ tools = [
 exports = [(name, os.path.join(home, ".second-look/exports", d, "conversations.json")) for name, d in
            (("claude.ai export", "claude"), ("ChatGPT export", "chatgpt"))]
 
-print("Found on this computer (second look reads these; nothing leaves it):")
+print("Found on this computer (second look reads these when you ask for a review):")
 found = []
 for name, present, where, detail in tools:
     if present:

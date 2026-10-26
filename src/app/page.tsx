@@ -7,6 +7,7 @@ import { HowItWorks } from "@/components/HowItWorks";
 import { Install } from "@/components/Install";
 import { Nav } from "@/components/Nav";
 import { Opportunities } from "@/components/Opportunities";
+import { Privacy } from "@/components/Privacy";
 import { SampleReport } from "@/components/SampleReport";
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
         <HowItWorks />
         <SampleReport />
         <Install />
+        <Privacy />
         <Faq />
       </main>
       <Footer />
