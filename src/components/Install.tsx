@@ -22,7 +22,6 @@ const steps = [
 
 const secondaryLinks = [
   { label: "Sample report", href: "#sample-report" },
-  { label: "Supported tools", href: links.supportedTools },
   { label: "Report an issue", href: links.issues },
 ];
 
