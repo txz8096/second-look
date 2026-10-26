@@ -1,0 +1,1594 @@
+<title>AI Coach Review v2</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; summary strip → prioritized list → collapsible sections, each opening to evidence */
+/* second look design system: base layout layer. Tokens live in the Proof block below. */
+/* Proof tokens: dark only */
+:root {
+  --bg: #16181D; --surface: #1C1F25; --surface-2: #22252C; --fg: #F2F3F5; --muted: #A8ADB7; --faint: #7C828D;
+  --line: #2B2F37; --line-strong: #3A3F49;
+  --accent: #F2A7B8; --accent-fill: #F2A7B8; --accent-strong: #F8C8D3; --on-accent: #16181D;
+  --accent-soft: rgb(242 167 184 / .10); --accent-soft-2: rgb(242 167 184 / .18);
+  /* status: states only (a skill is broken, a fix was kept), never a grade of the person */
+  --p1: #FF8F85; --p1-soft: rgb(255 143 133 / .13); --p2: #F2C46D; --p2-soft: rgb(242 196 109 / .13);
+  --p3: #A8ADB7; --p3-soft: #2B2F37;
+  --good: #7FD1A1; --good-soft: rgb(127 209 161 / .13); --bad: #FF8F85; --code-bg: #111318;
+  --series: #F2A7B8; --grid: #2B2F37; --milestone: #5B616C; --cursor: #3A3F49;
+  --seg-track: #111318; --seg-on: #2B2F37;
+  --shadow-card: none; --shadow-sm: 0 1px 2px rgb(0 0 0 / .3);
+  --display: "Familjen Grotesk", ui-sans-serif, system-ui, sans-serif; --sans: "Familjen Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --r-4: 4px; --r-6: 6px; --r-8: 8px; --r-12: 12px; --r-20: 20px; --r-pill: 9999px;
+  --r-control: 8px; --r-panel: 20px; --r-surface: 20px;
+  color-scheme: dark;
+}
+/* always dark, whatever theme the host app sets */
+:root, :root[data-theme="light"], :root[data-theme="dark"] { color-scheme: dark; }
+html, body { background: #16181D; }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
+.wrap { max-width: 860px; margin: 0 auto; display: grid; gap: 28px; }
+h1, h2, h3 { text-wrap: balance; margin: 0; line-height: 1.2; }
+h1 { font-size: 1.9rem; font-weight: 500; letter-spacing: -0.01em; }
+h2 { font-size: 1.15rem; font-weight: 500; }
+p { margin: 0; }
+.mono, code, pre { font-family: var(--mono); font-size: 0.86em; }
+.muted { color: var(--muted); }
+.eyebrow { font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+
+header { display: grid; gap: 10px; }
+.head-row { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; }
+.sample { display: inline-block; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--p2); background: var(--p2-soft); padding: 3px 8px; border-radius: 4px; }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; }
+button { font: inherit; font-size: 0.85rem; color: var(--fg); background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+button:hover { border-color: var(--accent); color: var(--accent); }
+button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* snapshot */
+.snapshot { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border: 1px solid var(--line);
+  border-radius: 8px; background: var(--surface); overflow: hidden; }
+.stat { padding: 14px 16px; border-right: 1px solid var(--line); display: grid; gap: 2px; }
+.stat:last-child { border-right: none; }
+.stat b { font-size: 1.5rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+.stat .delta { font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.up-bad { color: var(--p1); } .down-good { color: var(--good); } .flat { color: var(--muted); }
+
+.thesis { font-size: 1.05rem; max-width: none; }
+
+/* sections */
+section { display: grid; gap: 12px; }
+.sec-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+
+details { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; }
+details > summary { list-style: none; cursor: pointer; padding: 12px 14px; display: grid;
+  grid-template-columns: auto 1fr auto; gap: 12px; align-items: start; }
+details > summary::-webkit-details-marker { display: none; }
+.chev { width: 16px; height: 16px; margin-top: 3px; color: var(--muted); transition: transform .15s; }
+details[open] > summary .chev { transform: rotate(90deg); }
+@media (prefers-reduced-motion: reduce) { .chev { transition: none; } }
+.sum-main { display: grid; gap: 3px; min-width: 0; }
+.sum-title { font-weight: 500; }
+.sum-meta { font-size: 0.84rem; color: var(--muted); }
+.body { padding: 0 14px 16px 42px; display: grid; gap: 14px; min-width: 0; }
+@media (max-width: 520px) { .body { padding-left: 14px; } }
+
+.pill { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.04em; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+.p1 { color: var(--p1); background: var(--p1-soft); } .p2 { color: var(--p2); background: var(--p2-soft); }
+.p3 { color: var(--p3); background: var(--p3-soft); } .ok { color: var(--good); background: var(--good-soft); }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.tag { font-size: 0.72rem; color: var(--muted); border: 1px solid var(--line); border-radius: 4px; padding: 2px 6px; white-space: nowrap; }
+
+.field { display: grid; gap: 4px; min-width: 0; }
+.field > .eyebrow { font-size: 0.68rem; }
+blockquote { margin: 0; padding: 8px 12px; border-left: 3px solid var(--line); color: var(--muted); font-style: italic; }
+pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px;
+  white-space: pre-wrap; word-break: break-word; line-height: 1.5; }
+.copy-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.copy { font-size: 0.75rem; padding: 3px 8px; }
+.diff .add { color: var(--good); } .diff .del { color: var(--p1); }
+.src { font-size: 0.84rem; }
+a { color: var(--accent); }
+
+details.nested { border-style: dashed; background: transparent; }
+details.nested > summary { padding: 8px 12px; grid-template-columns: auto 1fr; font-size: 0.88rem; color: var(--muted); }
+details.nested .body { padding: 0 12px 12px 36px; }
+
+/* tables */
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.88rem; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; background: var(--bg); }
+tr:last-child td { border-bottom: none; }
+td.num { font-variant-numeric: tabular-nums; text-align: right; }
+th.num { text-align: right; }
+.bar { display: inline-block; height: 8px; background: var(--accent); border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+
+.check { display: grid; gap: 8px; }
+.check-row { display: grid; grid-template-columns: auto 1fr; gap: 10px; align-items: start; }
+.agenda { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+.slot { border: 1px solid var(--line); border-radius: 8px; padding: 12px; background: var(--surface); display: grid; gap: 4px; }
+.slot b { font-variant-numeric: tabular-nums; }
+
+/* trends */
+.trend-intro { max-width: none; }
+.key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.8rem; color: var(--muted); align-items: center; }
+.key i { display: inline-block; vertical-align: middle; margin-right: 6px; }
+.k-thin { width: 18px; height: 0; border-top: 1px solid var(--series); opacity: .55; }
+.k-thick { width: 18px; height: 0; border-top: 2px solid var(--series); }
+.k-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--series); }
+.k-ms { width: 0; height: 12px; border-left: 1px dashed var(--milestone); }
+.multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 12px; }
+.chart { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 12px 6px; display: grid; gap: 4px; min-width: 0; position: relative; }
+.chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.chart-head h3 { font-size: 0.92rem; font-weight: 500; }
+.chart-now { font-variant-numeric: tabular-nums; font-size: 0.84rem; color: var(--muted); }
+.chart-now b { color: var(--fg); font-size: 1.05rem; }
+.chart svg { width: 100%; height: auto; display: block; overflow: visible; touch-action: pan-y; }
+.chart svg text { fill: var(--muted); font-family: var(--sans); font-size: 10px; font-variant-numeric: tabular-nums; }
+.tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); font-size: 0.78rem; line-height: 1.35;
+  padding: 6px 8px; border-radius: 6px; white-space: nowrap; font-variant-numeric: tabular-nums; z-index: 2; }
+.better { font-size: 0.72rem; color: var(--muted); }
+.chg-good { color: var(--good); } .chg-bad { color: var(--p1); }
+
+/* filters */
+.filters { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; background: var(--surface);
+  border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+.fgroup { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.flabel { font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-right: 2px; }
+.chip { font-size: 0.8rem; padding: 4px 10px; border-radius: 999px; }
+.chip[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+select { font: inherit; font-size: 0.82rem; color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
+.fsum { font-size: 0.8rem; color: var(--muted); margin-left: auto; font-variant-numeric: tabular-nums; }
+.def { font-size: 0.8rem; color: var(--muted); line-height: 1.45; max-width: none; }
+.gapnote { font-size: 0.75rem; color: var(--p2); }
+/* bars */
+.bars { display: grid; gap: 6px; }
+.brow { display: grid; grid-template-columns: 112px 1fr 92px; gap: 10px; align-items: center; font-size: 0.86rem; background: none; border: none; padding: 2px 0; text-align: left; border-radius: 4px; }
+button.brow:hover .btrack span { opacity: .85; } button.brow { cursor: pointer; }
+.brow.on .bname { color: var(--accent); font-weight: 500; }
+.btrack { height: 12px; background: var(--grid); border-radius: 0 4px 4px 0; position: relative; }
+.btrack span { position: absolute; inset: 0 auto 0 0; background: var(--series); border-radius: 0 4px 4px 0; }
+.bval { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 0.8rem; }
+.bval b { color: var(--fg); }
+.split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 12px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px; display: grid; gap: 10px; min-width: 0; }
+.panel h3 { font-size: 0.92rem; font-weight: 500; }
+.insight { font-size: 0.92rem; max-width: none; }
+td.worst { color: var(--p1); font-weight: 500; } td.best { color: var(--good); font-weight: 500; }
+footer { font-size: 0.82rem; color: var(--muted); border-top: 1px solid var(--line); padding-top: 14px; }
+
+/* ---- Board UI component recipes ---- */
+body { font-size: 14px; line-height: 20px; -webkit-font-smoothing: antialiased; }
+h1 { font-size: 1.5rem; line-height: 2.125rem; font-weight: 500; letter-spacing: 0; }
+h2 { font-size: 1.125rem; line-height: 1.5rem; font-weight: 500; }
+.chart-head h3, .panel h3 { font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; }
+.eyebrow, .flabel, th { font-size: 0.75rem; line-height: 1rem; letter-spacing: 0.15px; text-transform: none; font-weight: 500; color: var(--muted); }
+.thesis, .insight { font-size: 1rem; line-height: 1.375rem; }
+.trend-intro { font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
+.sum-meta, .def, .key, .chart-now, .bval { font-size: 0.8125rem; line-height: 1.125rem; }
+.sec-head { border-bottom: none; padding-bottom: 0; }
+
+/* cards: white, 1px neutral-200 border, card shadow, 10px radius */
+details, .snapshot, .chart, .panel, .slot, .tbl, .filters {
+  border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow-card); }
+details.nested { box-shadow: none; background: var(--surface-2); border-style: solid; }
+details > summary:hover { background: var(--surface-2); border-radius: var(--radius); }
+details[open] > summary:hover { border-radius: var(--radius) var(--radius) 0 0; }
+.stat { border-right-color: var(--line); }
+.stat b { font-size: 1.5rem; line-height: 2.125rem; font-weight: 500; }
+
+/* buttons: secondary = surface + neutral border; hover neutral-100; press scale */
+button { font-size: 0.8125rem; line-height: 1.125rem; font-weight: 500; color: var(--fg); background: var(--surface);
+  border: 1px solid var(--line); border-radius: var(--radius); padding: 7px 12px; box-shadow: var(--shadow-card);
+  transition: background-color .15s, border-color .15s, transform .42s cubic-bezier(.4, 0, .2, 1); }
+button:hover { background: var(--surface-2); border-color: var(--line-strong); color: var(--fg); }
+button:active { transform: scale(0.98); border-color: var(--faint); }
+button:focus-visible, summary:focus-visible, select:focus-visible { outline: 2px solid var(--accent-fill); outline-offset: 2px; }
+.copy { padding: 3px 8px; border-radius: 8px; font-size: 0.75rem; }
+@media (prefers-reduced-motion: reduce) { button { transition: none; } button:active { transform: none; } }
+
+/* status chips: hue-200 bg / hue-800 text (dark: hue-950 @60% / hue-500) */
+.pill, .sample { font-size: 0.75rem; line-height: 1rem; font-weight: 500; letter-spacing: 0.15px; text-transform: none;
+  padding: 2px 8px; border-radius: 6px; }
+.sample { color: var(--p2); background: var(--p2-soft); }
+.tag { font-size: 0.75rem; line-height: 1rem; border-radius: 6px; padding: 1px 7px; border-color: var(--line); }
+.up-bad, .chg-bad, td.worst { color: var(--bad); }
+.down-good, .chg-good, td.best { color: var(--good); }
+.gapnote { color: var(--p2); }
+
+/* filters: segmented control for time, pill tabs for source, input for work */
+.filters { padding: 10px 12px; }
+#f-range { background: var(--seg-track); border-radius: var(--radius); padding: 2px; gap: 2px; }
+#f-range .flabel { padding: 0 6px; }
+#f-range .chip { border: none; box-shadow: none; background: transparent; border-radius: 8px; padding: 5px 10px; color: var(--muted); }
+#f-range .chip:hover { color: var(--fg); background: transparent; }
+#f-range .chip[aria-pressed="true"] { background: var(--seg-on); color: var(--fg); box-shadow: var(--shadow-sm); }
+#f-source .chip { border: none; box-shadow: none; background: transparent; border-radius: 999px; padding: 5px 10px; color: var(--muted); }
+#f-source .chip:hover { background: var(--surface-2); color: var(--fg); }
+#f-source .chip[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
+select { font-size: 0.8125rem; border: 1px solid var(--line); border-radius: var(--radius); padding: 6px 10px; background: var(--surface); box-shadow: var(--shadow-card); }
+@media (max-width: 639px) { select { font-size: 16px; } }
+
+/* tables */
+.tbl { box-shadow: var(--shadow-card); }
+th { background: var(--surface-2); }
+th, td { border-bottom-color: var(--line); }
+pre { background: var(--code-bg); border-color: var(--line); border-radius: 8px; font-size: 0.8125rem; }
+blockquote { border-left-color: var(--line-strong); }
+
+/* bars + charts follow the chart tokens */
+.btrack { background: var(--grid); border-radius: 4px; }
+.btrack span { border-radius: 4px; }
+.brow.on .bname { color: var(--accent); }
+button.brow { box-shadow: none; border: none; background: none; border-radius: 6px; padding: 4px; }
+button.brow:hover { background: var(--surface-2); }
+.tip { background: var(--surface); color: var(--fg); border: 1px solid var(--line); box-shadow: var(--shadow-sm); border-radius: 8px; }
+.k-ms { border-left-color: var(--milestone); }
+
+/* collapsible rows: no card, just divider lines between them */
+details, details.nested { border: none; border-radius: 0; box-shadow: none; background: transparent; }
+section > details, .body > details { border-top: 1px solid var(--line); }
+section > details + details, .body > details + details { margin-top: -12px; }
+section > details:not(:has(+ details)), .body > details:not(:has(+ details)) { border-bottom: 1px solid var(--line); }
+details > summary { padding-inline: 4px; }
+details > summary:hover, details[open] > summary:hover { background: transparent; border-radius: 0; }
+details > summary:hover .sum-title { color: var(--accent); }
+.body { padding-left: 32px; padding-right: 4px; }
+@media (max-width: 520px) { .body { padding-left: 4px; } }
+details.nested > summary { padding-inline: 0; }
+details.nested .body { padding-left: 28px; }
+
+/* ---- report hierarchy: summary → three parts ---- */
+.thesis { font-size: 1.125rem; line-height: 1.625rem; }
+.moves { display: grid; gap: 10px; }
+.moves h2.eyebrow { font-size: 0.75rem; font-weight: 500; }
+.moves ol { margin: 0; padding: 0; list-style: none; counter-reset: mv; display: grid; }
+.moves li { counter-increment: mv; display: grid; grid-template-columns: 28px 1fr auto; gap: 4px 12px; align-items: start;
+  padding: 14px 0; border-top: 1px solid var(--line); }
+.moves li:last-child { border-bottom: 1px solid var(--line); }
+.moves li::before { content: counter(mv); font-weight: 500; font-size: 0.875rem; width: 24px; height: 24px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); font-variant-numeric: tabular-nums; }
+.mv-main { display: grid; gap: 2px; min-width: 0; }
+.mv-main b { font-weight: 500; font-size: 1rem; line-height: 1.375rem; }
+.mv-main span { color: var(--muted); }
+.mv-meta { display: flex; gap: 8px; align-items: center; white-space: nowrap; }
+.mv-meta a, .part-meta a { color: var(--accent); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 2px; }
+.mv-meta a:hover { text-decoration: underline; }
+.go { width: 14px; height: 14px; }
+@media (max-width: 560px) { .moves li { grid-template-columns: 28px 1fr; } .mv-meta { grid-column: 2; } }
+.glance { display: grid; gap: 8px; }
+.part { display: grid; gap: 24px; padding-top: 28px; border-top: 2px solid var(--fg); scroll-margin-top: 16px; }
+.part-head { display: grid; gap: 6px; }
+.part-head h2 { font-size: 1.5rem; line-height: 2.125rem; font-weight: 500; }
+.part-head .headline { font-size: 1rem; line-height: 1.5rem; color: var(--fg); }
+.part-meta { display: flex; flex-wrap: wrap; gap: 6px 8px; align-items: center; font-size: 0.8125rem; margin-top: 4px; }
+.sec-head h3 { font-size: 1rem; line-height: 1.375rem; font-weight: 500; margin: 0; }
+.method { font-size: 0.8125rem; line-height: 1.125rem; color: var(--muted); }
+.wrap { gap: 32px; }
+
+/* ---- v2: learning-loop report ---- */
+.head-row .controls { display: flex; gap: 8px; }
+.data-note { display: grid; grid-template-columns: auto 1fr; gap: 8px 10px; align-items: baseline; font-size: 0.8125rem; color: var(--muted);
+  background: var(--surface-2); border-radius: 8px; padding: 10px 12px; }
+.badge { display: inline-block; font-size: 0.75rem; line-height: 1rem; font-weight: 500; padding: 2px 8px; border-radius: 6px; white-space: nowrap; }
+.badge.sample { color: var(--p2); background: var(--p2-soft); }
+.badge.observed { color: var(--good); background: var(--good-soft); }
+.conf { display: inline-block; font-size: 0.75rem; line-height: 1rem; font-weight: 500; padding: 1px 7px; border-radius: 6px; border: 1px solid; white-space: nowrap; }
+.conf.strong { color: var(--good); }
+.conf.sugg { color: var(--p2); }
+.conf.val { color: var(--muted); border-style: dashed; }
+.layer { display: inline-block; font-family: var(--mono); font-size: 0.6875rem; line-height: 1rem; padding: 1px 6px; border-radius: 4px;
+  background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.lede { font-size: 0.875rem; color: var(--muted); }
+.goals { gap: 10px; }
+.goal-list { margin: 0; padding: 0; list-style: none; counter-reset: g; display: grid; }
+.goal-list li { counter-increment: g; display: grid; grid-template-columns: 28px 1fr auto; gap: 2px 12px; padding: 12px 0; border-top: 1px solid var(--line); align-items: baseline; }
+.goal-list li:last-child { border-bottom: 1px solid var(--line); }
+.goal-list li::before { content: counter(g); font-weight: 500; color: var(--accent); font-variant-numeric: tabular-nums; }
+.goal-list b { font-weight: 500; }
+.goal-list .gnote { grid-column: 2 / 4; color: var(--muted); }
+.conf-legend { display: grid; gap: 8px; }
+.conf-legend div { display: grid; grid-template-columns: 150px 1fr; gap: 10px; align-items: baseline; }
+.icard, .xcard { display: grid; gap: 14px; padding-block: 24px; border-top: none; }
+.part > .icard:last-child, .part > .xcard:last-of-type { border-bottom: 1px solid var(--line); }
+.ic-head { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: start; }
+.ic-title { display: grid; gap: 8px; min-width: 0; }
+.ic-title h3 { font-size: 1.125rem; line-height: 1.5rem; font-weight: 500; margin: 0; }
+.ic-tags { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.rank { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 500; background: var(--accent-soft); color: var(--accent); font-variant-numeric: tabular-nums; }
+.slot { display: inline-block; font-size: 0.75rem; line-height: 1rem; font-weight: 500; padding: 4px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+.ic-grid { display: grid; grid-template-columns: 150px 1fr; gap: 10px 16px; margin: 0; }
+.ic-grid dt { font-size: 0.8125rem; color: var(--muted); font-weight: 500; }
+.ic-grid dd { margin: 0; min-width: 0; }
+.ic-grid dd .layer { margin-right: 4px; }
+.fact-inf { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: var(--surface-2); border-radius: 8px; padding: 12px; font-size: 0.8125rem; }
+.fact-inf p { margin: 2px 0 0; }
+@media (max-width: 600px) { .ic-grid { grid-template-columns: 1fr; gap: 2px; } .ic-grid dd { margin-bottom: 8px; }
+  .fact-inf { grid-template-columns: 1fr; } .conf-legend div { grid-template-columns: 1fr; gap: 2px; } .goal-list li { grid-template-columns: 28px 1fr; } .goal-list .gnote { grid-column: 2; } }
+.plan { display: grid; gap: 12px; padding-top: 8px; }
+.plan h3 { font-size: 1rem; font-weight: 500; margin: 0; }
+.plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 16px; }
+.plan-grid > div { display: grid; gap: 6px; align-content: start; border-top: 2px solid var(--accent-fill); padding-top: 12px; }
+.plan-grid .slot { justify-self: start; }
+.plan-grid span:last-child { color: var(--muted); font-size: 0.8125rem; }
+table.eval td .def, table.eval td .conf { display: block; margin-top: 4px; }
+table.eval td .conf { display: inline-block; }
+.maint { border-top: 2px dashed var(--line-strong); }
+
+/* ===== layout layer ===== */
+
+
+body { font-family: var(--sans); font-size: 15px; line-height: 1.5; letter-spacing: -0.01em; }
+b, strong { font-weight: 500; color: var(--fg); }
+.wrap { gap: 48px; max-width: 920px; }
+
+/* display type */
+h1 { font-family: var(--display); font-size: 3.25rem; line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; }
+.part-head h2 { font-family: var(--display); font-size: 2.25rem; line-height: 1.1; letter-spacing: -0.03em; font-weight: 500; }
+.thesis { font-size: 1.375rem; line-height: 1.45; color: var(--fg); letter-spacing: -0.015em; }
+.part-head .headline { font-size: 1.125rem; line-height: 1.5; color: var(--muted); max-width: none; }
+.sec-head h2, .sec-head h3 { font-size: 1.125rem; font-weight: 500; }
+.ic-title h3 { font-size: 1.375rem; line-height: 1.3; font-weight: 500; letter-spacing: -0.015em; }
+.eyebrow, .flabel, th { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.head-row .eyebrow { font-size: 0.875rem; color: var(--muted); }
+
+/* parts: big accent numeral beside the title instead of an eyebrow line */
+.part { border-top: 1px solid var(--line); padding-top: 48px; gap: 28px; }
+.maint { border-top: 1px solid var(--line); }
+.part-head { grid-template-columns: auto 1fr; column-gap: 20px; row-gap: 10px; align-items: start; }
+.part-head > .eyebrow { grid-row: 1 / span 3; font-family: var(--display); font-size: 0; line-height: 1; color: var(--accent); }
+.part-head > .eyebrow::before { content: attr(data-num); font-size: 3.25rem; letter-spacing: -0.03em; font-weight: 500; }
+.part-head > :not(.eyebrow) { grid-column: 2; }
+.maint .part-head > .eyebrow::before { content: none; }
+.maint .part-head { grid-template-columns: 1fr; }
+.maint .part-head > .eyebrow { grid-row: auto; font-size: 0.875rem; font-family: var(--sans); color: var(--muted); }
+.maint .part-head > :not(.eyebrow) { grid-column: 1; }
+@media (max-width: 600px) { h1 { font-size: 2.25rem; } .part-head h2 { font-size: 1.75rem; font-family: var(--sans); letter-spacing: -0.02em; }
+  .part-head > .eyebrow::before { font-size: 2.25rem; } .thesis { font-size: 1.125rem; } }
+
+/* status marks: tinted pill + label, never color alone */
+.pill, .badge, .tag, .conf, .slot, .layer, .sample { border-radius: 9999px; font-weight: 500; }
+.badge, .conf { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border: none; font-size: 0.75rem; }
+.conf::before, .badge::before { content: none; }
+.conf.strong { color: var(--good); background: var(--good-soft); }
+.conf.sugg { color: var(--p2); background: var(--p2-soft); }
+.conf.val { color: var(--muted); background: transparent; box-shadow: inset 0 0 0 1px var(--line-strong); }
+
+.tag { padding: 3px 10px; border: 1px solid var(--line); color: var(--muted); font-weight: 400; }
+.layer { font-family: var(--mono); padding: 2px 8px; background: var(--surface-2); border: none; }
+.pill { padding: 3px 10px; }
+.slot { padding: 5px 12px; background: var(--accent-soft); color: var(--accent); font-size: 0.8125rem; }
+.rank { width: 36px; height: 36px; font-family: var(--display); font-size: 1.125rem; font-weight: 500; background: var(--accent-soft); color: var(--accent); }
+.goal-list li::before { color: var(--accent); font-family: var(--display); font-size: 1.125rem; }
+
+/* surfaces: radius by role, border instead of shadow */
+.tbl, .chart, .panel, .filters, .snapshot { border-radius: var(--r-panel); box-shadow: none; border-color: var(--line); }
+.tbl table th:first-child, .tbl table td:first-child { padding-left: 18px; }
+th { background: var(--surface-2); color: var(--muted); font-size: 0.8125rem; }
+pre { border-radius: 0; background: var(--code-bg); font-family: var(--mono); }
+.tbl { border-radius: 4px; overflow: hidden; overflow-x: auto; }
+.fact-inf { border-radius: 20px; padding: 14px 16px; }
+.data-note { border-radius: 18px; padding: 12px 16px; }
+button { border-radius: var(--r-control); height: 36px; padding: 0 14px; box-shadow: none; font-weight: 500; }
+.copy { height: 28px; border-radius: 14px; padding: 0 10px; }
+select { border-radius: var(--r-control); height: 36px; box-shadow: none; }
+#f-range { border-radius: var(--r-control); }
+#f-range .chip { border-radius: 14px; }
+#f-source .chip[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); }
+.ic-grid dt { color: var(--faint); font-weight: 400; }
+.icard, .xcard { padding-block: 28px; gap: 18px; }
+a { color: var(--accent); }
+
+/* the one focal surface: the plan */
+.plan { border: 1px solid var(--accent-soft-2); background: var(--accent-soft); border-radius: var(--r-surface); padding: 28px; gap: 16px; }
+.plan h3 { font-family: var(--display); font-size: 1.75rem; letter-spacing: -0.03em; font-weight: 500; }
+.plan-grid > div { border-top: none; padding: 16px; background: var(--surface); border-radius: 20px; }
+.plan .def { color: var(--muted); }
+@media (max-width: 600px) { .plan { padding: 18px; } }
+
+.conf.val { border: none; }
+.part > .icard:last-child, .part > .xcard:last-of-type { border-bottom: none; }
+
+/* ---- goals bar + dialog ---- */
+.goalbar { display: grid; gap: 14px; padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--surface); margin-block: -24px; }
+.gb-row { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; justify-content: space-between; }
+.gb-main { display: grid; gap: 2px; }
+.gb-main h2 { font-size: 1.125rem; font-weight: 500; margin: 0; }
+button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+button.primary:hover { background: var(--fg); color: var(--bg); opacity: .88; }
+.goal-chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.goal-chips li { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 9999px; background: var(--accent-soft); color: var(--fg); font-weight: 500; }
+.goal-chips li.none { padding: 6px 14px; background: var(--surface-2); color: var(--muted); font-weight: 400; }
+.gnum { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--accent); color: var(--bg); font-size: 0.75rem; font-variant-numeric: tabular-nums; }
+.gc { font-size: 0.6875rem; color: var(--accent); }
+.gaps { border-top: 1px solid var(--line); padding-top: 14px; display: grid; gap: 6px; font-size: 0.875rem; }
+.gap-h { margin: 0; color: var(--muted); }
+.gaps ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; }
+.ic-fit { margin: 0; font-size: 0.8125rem; color: var(--muted); }
+.ic-fit span { color: var(--accent); font-weight: 500; margin-right: 4px; }
+.icard.off .ic-fit span, .xcard.off .ic-fit span { color: var(--faint); }
+.icard.off .ic-title h3, .xcard.off .ic-title h3 { color: var(--muted); }
+.icard.off .rank, .xcard.off .rank { background: var(--surface-2); color: var(--muted); }
+td.fit { min-width: 120px; }
+td.fit .def { display: block; margin-top: 2px; }
+.lvl { font-weight: 500; }
+.lvl.high { color: var(--accent); } .lvl.not-tied { color: var(--faint); font-weight: 400; }
+.plan-fit { font-size: 0.75rem; color: var(--accent); }
+.plan-grid > div.off { opacity: .7; } .plan-grid > div.off .plan-fit { color: var(--muted); }
+dialog#goal-dialog { width: min(560px, calc(100% - 32px)); max-height: calc(100% - 48px); padding: 0; border: 1px solid var(--line); border-radius: var(--r-surface);
+  background: var(--surface); color: var(--fg); box-shadow: 0 20px 48px rgb(0 0 0 / .105), 0 3px 8px rgb(0 0 0 / .04); overflow: auto; }
+dialog#goal-dialog::backdrop { background: rgb(0 0 0 / .35); }
+#goal-form { display: grid; gap: 18px; padding: 28px; }
+.gd-head { display: grid; gap: 6px; }
+.gd-head h2 { font-family: var(--display); font-size: 1.75rem; line-height: 1.15; letter-spacing: -0.03em; font-weight: 500; margin: 0; }
+.gd-list { display: grid; gap: 8px; }
+button.gd-opt { height: auto; display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; text-align: left; padding: 12px 14px;
+  border-radius: var(--r-control); border: 1px solid var(--line); background: var(--surface); color: var(--fg); font-weight: 400; }
+button.gd-opt:hover { background: var(--surface-2); border-color: var(--line-strong); color: var(--fg); }
+button.gd-opt[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+button.gd-opt:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+.gd-num { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; border: 1.5px solid var(--line-strong); font-size: 0.8125rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+.gd-opt[aria-pressed="true"] .gd-num { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.gd-text { display: grid; gap: 2px; } .gd-text b { font-weight: 500; } .gd-text span { color: var(--muted); font-size: 0.8125rem; }
+.gd-custom { display: grid; gap: 6px; } .gd-custom label { font-size: 0.8125rem; color: var(--muted); }
+.gd-custom-row { display: flex; gap: 8px; }
+.gd-custom-row input { flex: 1; min-width: 0; height: 36px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--r-control); background: var(--surface); color: var(--fg); font: inherit; }
+.gd-custom-row input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.gd-foot { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; border-top: 1px solid var(--line); padding-top: 16px; }
+.gd-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+@media (max-width: 600px) { .goalbar { padding: 18px; } #goal-form { padding: 20px; } .gd-head h2 { font-size: 1.375rem; font-family: var(--sans); } .gd-custom-row input { font-size: 16px; } }
+
+#goal-form { grid-template-columns: minmax(0, 1fr); }
+#goal-form > *, .gd-list > * { min-width: 0; }
+button.gd-opt { white-space: normal; width: 100%; }
+
+[data-tip] { cursor: help; }
+[data-tip]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tip-pop { position: fixed; z-index: 60; max-width: 260px; padding: 8px 12px; border-radius: 12px; background: var(--fg); color: var(--bg);
+  font-size: 0.8125rem; line-height: 1.4; letter-spacing: -0.005em; pointer-events: none; box-shadow: 0 6px 18px rgb(0 0 0 / .12); }
+
+a.from-link { color: var(--accent); border-color: var(--accent-soft-2); background: var(--accent-soft); text-decoration: none; font-weight: 500; cursor: pointer; }
+a.from-link:hover { background: var(--accent-soft-2); }
+a.from-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.icard { scroll-margin-top: 24px; }
+.icard:focus { outline: none; }
+.icard.flash { animation: flash 1.6s ease-out; }
+@keyframes flash { 0%, 30% { background: var(--accent-soft); } 100% { background: transparent; } }
+@media (prefers-reduced-motion: reduce) { .icard.flash { animation: none; background: var(--accent-soft); } }
+
+
+/* floating table of contents */
+.toc { position: fixed; z-index: 40; right: max(20px, env(safe-area-inset-right, 0px)); bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+.toc-btn { width: 48px; height: 48px; padding: 0; border-radius: 50%; display: grid; place-items: center; background: var(--surface); color: var(--fg);
+  border: 1px solid var(--line); box-shadow: 0 6px 18px rgb(0 0 0 / .08), 0 1px 3px rgb(0 0 0 / .05); }
+.toc-btn:hover, .toc.open .toc-btn { background: var(--surface); color: var(--accent); border-color: var(--accent-soft-2); }
+.toc-panel { width: min(300px, calc(100vw - 40px)); padding: 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line);
+  box-shadow: 0 20px 48px rgb(0 0 0 / .105), 0 3px 8px rgb(0 0 0 / .04);
+  opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .16s, transform .16s, visibility 0s .16s; }
+.toc.open .toc-panel { opacity: 1; visibility: visible; transform: none; transition: opacity .16s, transform .16s; }
+@media (prefers-reduced-motion: reduce) { .toc-panel, .toc.open .toc-panel { transition: none; transform: none; } }
+.toc-h { margin: 0 0 8px 8px; font-size: 0.8125rem; color: var(--muted); }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.toc a { display: grid; grid-template-columns: 20px 1fr; gap: 8px; align-items: baseline; padding: 8px; border-radius: 12px; color: var(--fg); text-decoration: none; font-size: 0.875rem; }
+.toc a:hover { background: var(--surface-2); }
+.toc a.on { background: var(--accent-soft); color: var(--accent); }
+.toc a:focus-visible, .toc-top:focus-visible, .toc-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.toc-n { font-family: var(--display); color: var(--accent); font-variant-numeric: tabular-nums; }
+.toc-top { margin-top: 8px; width: 100%; height: 34px; font-size: 0.8125rem; color: var(--muted); }
+#goals, #part-1, #part-2, #part-3, #maintenance { scroll-margin-top: 20px; }
+@media print { .toc { display: none; } }
+
+/* dialog: ordered priorities + pool */
+.gd-sec { display: grid; gap: 8px; }
+.gd-label { margin: 0; font-size: 0.875rem; font-weight: 500; }
+.gd-label span { color: var(--muted); font-weight: 400; }
+.gd-hint { margin: 0; font-size: 0.8125rem; color: var(--muted); }
+.gd-order { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.gd-item { display: grid; grid-template-columns: 16px 26px 1fr auto; gap: 10px; align-items: center; padding: 10px 10px 10px 12px;
+  border: 1px solid var(--accent); background: var(--accent-soft); border-radius: var(--r-control); }
+.gd-item.dragging { opacity: .5; }
+.gd-item.over { box-shadow: 0 -3px 0 0 var(--accent); }
+.gd-grip { color: var(--muted); cursor: grab; display: grid; place-items: center; }
+.gd-item .gd-num { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+.gd-item .gd-text span { color: var(--accent); font-size: 0.75rem; }
+.gd-ctrls { display: flex; gap: 2px; }
+button.gd-ic { width: 32px; height: 32px; padding: 0; display: grid; place-items: center; border: none; background: transparent; color: var(--muted); border-radius: 10px; }
+button.gd-ic:hover { background: var(--surface); color: var(--fg); }
+button.gd-ic:disabled { opacity: .3; cursor: default; background: transparent; }
+.gd-plus { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; border: 1.5px dashed var(--line-strong); color: var(--muted); }
+button.gd-opt:hover .gd-plus { border-color: var(--accent); color: var(--accent); border-style: solid; }
+@media (max-width: 600px) { .gd-item { grid-template-columns: 26px 1fr auto; } .gd-grip { display: none; } button.gd-ic { width: 36px; height: 36px; } }
+
+/* text under each title starts at the left edge, not indented under the title */
+.ic-head { grid-template-columns: auto 1fr; row-gap: 10px; align-items: center; }
+.ic-title { display: contents; }
+.ic-title > h3 { grid-column: 2; }
+.ic-title > .ic-tags, .ic-title > .ic-fit { grid-column: 1 / -1; }
+.part-head { align-items: center; }
+.part-head > .eyebrow { grid-row: 1; }
+.part-head > h2 { grid-column: 2; grid-row: 1; }
+.part-head > .headline, .part-head > .part-meta, .part-head > .maint-note { grid-column: 1 / -1; }
+
+/* ===== design pass: clearer hierarchy, calmer density ===== */
+body { font-size: 16px; line-height: 1.55; }
+.wrap { max-width: 880px; gap: 56px; }
+.def { font-size: 0.875rem; line-height: 1.5; }
+h1 { margin-top: 8px; }
+.head-row .eyebrow { font-size: 0.875rem; }
+
+/* part headers */
+.part { padding-top: 56px; gap: 8px; }
+.part-head { margin-bottom: 16px; row-gap: 12px; }
+.part-head .headline { font-size: 1.1875rem; line-height: 1.5; color: var(--muted); }
+.sec-head { margin-top: 24px; }
+.sec-head h2, .sec-head h3 { font-size: 1.25rem; line-height: 1.3; letter-spacing: -0.01em; }
+section { gap: 14px; }
+
+/* cards: one lead sentence, then two columns of support */
+.icard, .xcard { padding-block: 40px; gap: 20px; }
+.ic-head { row-gap: 12px; }
+.ic-title > h3 { font-size: 1.5rem; line-height: 1.25; letter-spacing: -0.02em; }
+.rank { width: 32px; height: 32px; font-size: 1rem; }
+.ic-tags { gap: 8px; row-gap: 6px; }
+.ic-tags .ic-fit { margin: 0 0 0 4px; font-size: 0.8125rem; }
+.ic-tags .tag, .ic-tags .conf, .ic-tags a.from-link { font-size: 0.75rem; }
+
+.ic-grid { grid-template-columns: 1fr 1fr; gap: 4px 40px; }
+.ic-grid dt { font-size: 0.8125rem; font-weight: 500; color: var(--faint); margin-top: 14px; }
+.ic-grid dd { font-size: 0.9375rem; line-height: 1.55; color: var(--fg); }
+.ic-grid dt:nth-of-type(1) { display: none; }
+.ic-grid dd:nth-of-type(1) { grid-column: 1 / -1; grid-row: 1; font-size: 1.1875rem; line-height: 1.5; letter-spacing: -0.01em; margin-bottom: 6px; }
+
+/* patterns: evidence | why it matters, then a quiet "how sure" */
+.icard .ic-grid dt:nth-of-type(2) { grid-column: 1; grid-row: 2; }
+.icard .ic-grid dd:nth-of-type(2) { grid-column: 1; grid-row: 3; }
+.icard .ic-grid dt:nth-of-type(3) { grid-column: 2; grid-row: 2; }
+.icard .ic-grid dd:nth-of-type(3) { grid-column: 2; grid-row: 3; }
+.icard .ic-grid dt:nth-of-type(4) { grid-column: 1 / -1; grid-row: 4; margin-top: 20px; }
+.icard .ic-grid dd:nth-of-type(4) { grid-column: 1 / -1; grid-row: 5; color: var(--muted); font-size: 0.875rem; }
+
+/* experiments: the action stands out, then a 2×2 of how we'll judge it */
+.xcard .ic-grid dt:nth-of-type(2) { grid-column: 1 / -1; grid-row: 2; margin-top: 8px; padding: 16px 20px 0; background: var(--accent-soft); border-radius: 20px 20px 0 0; color: var(--accent); }
+.xcard .ic-grid dd:nth-of-type(2) { grid-column: 1 / -1; grid-row: 3; padding: 4px 20px 18px; background: var(--accent-soft); border-radius: 0 0 20px 20px; font-size: 1rem; }
+.xcard .ic-grid dt:nth-of-type(3) { grid-column: 1; grid-row: 4; }
+.xcard .ic-grid dd:nth-of-type(3) { grid-column: 1; grid-row: 5; }
+.xcard .ic-grid dt:nth-of-type(4) { grid-column: 2; grid-row: 4; }
+.xcard .ic-grid dd:nth-of-type(4) { grid-column: 2; grid-row: 5; }
+.xcard .ic-grid dt:nth-of-type(5) { grid-column: 1; grid-row: 6; }
+.xcard .ic-grid dd:nth-of-type(5) { grid-column: 1; grid-row: 7; }
+.xcard .ic-grid dt:nth-of-type(6) { grid-column: 2; grid-row: 6; }
+.xcard .ic-grid dd:nth-of-type(6) { grid-column: 2; grid-row: 7; }
+
+@media (max-width: 680px) {
+  .ic-grid { grid-template-columns: 1fr; }
+  .ic-grid dt, .ic-grid dd { grid-column: 1 / -1 !important; grid-row: auto !important; }
+  .ic-grid dt { margin-top: 12px; } .ic-grid dd { margin-bottom: 0; }
+  .ic-grid dd:nth-of-type(1) { font-size: 1.0625rem; }
+  .ic-title > h3 { font-size: 1.25rem; }
+  .ic-tags .ic-fit { flex-basis: 100%; margin-left: 0; }
+}
+
+/* collapsibles inside cards read as quiet links */
+details.nested > summary { padding: 6px 0; font-size: 0.875rem; color: var(--muted); }
+details.nested > summary:hover { color: var(--accent); }
+details.nested + details.nested { margin-top: -8px; }
+details.how .fact-inf { margin: 4px 0 8px; }
+.fact-inf { background: var(--surface-2); font-size: 0.875rem; }
+
+/* code blocks and tables breathe a little more */
+.field { gap: 8px; }
+pre { padding: 14px 16px; font-size: 0.8125rem; line-height: 1.6; }
+table { font-size: 0.875rem; }
+th, td { padding: 12px 14px; }
+th { font-size: 0.8125rem; font-weight: 500; }
+
+/* plan: the takeaway, a little larger */
+.plan { padding: 32px; gap: 20px; margin-top: 16px; }
+.plan h3 { font-size: 2rem; }
+.plan-grid { gap: 12px; }
+.plan-grid > div { padding: 20px; gap: 8px; }
+.plan-grid b { font-size: 1.0625rem; line-height: 1.35; }
+
+/* goals box */
+.goalbar { padding: 24px 28px; }
+.goal-chips li { font-size: 0.9375rem; }
+
+/* maintenance + footer */
+.maint .part-head .headline { color: var(--muted); }
+footer { font-size: 0.8125rem; line-height: 1.6; margin-top: 24px; }
+
+.xcard .ic-grid dd:nth-of-type(2) { margin-top: -4px; padding-top: 8px; }
+
+/* no big numerals on the part headers */
+.part-head > .eyebrow::before { content: none !important; }
+.part-head > .eyebrow { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.maint .part-head > .eyebrow { position: static; width: auto; height: auto; overflow: visible; clip: auto; }
+.part-head { grid-template-columns: 1fr; }
+.part-head > * { grid-column: 1 / -1 !important; grid-row: auto !important; justify-self: start; text-align: left; }
+.toc a { grid-template-columns: 1fr; }
+.toc-n { display: none; }
+
+/* fixes woven into each pattern */
+.try { display: grid; gap: 10px; margin-top: 8px; padding: 22px 24px; background: var(--accent-soft); border-radius: 20px; }
+.try-head { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.try-head .conf { font-size: 0.75rem; }
+.try h4 { margin: 4px 0 0; font-family: var(--display); font-size: 1.25rem; line-height: 1.3; letter-spacing: -0.015em; font-weight: 500; color: var(--fg); }
+.try .try-do { margin: 0; font-size: 1rem; line-height: 1.55; }
+.try pre { background: var(--surface); }
+.try details.nested > summary { color: var(--accent); }
+.try details.nested > summary:hover { color: var(--fg); }
+.try .tbl { background: var(--surface); }
+.try.later { background: var(--surface-2); }
+.try.later h4 { color: var(--muted); }
+.judge { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 32px; margin: 4px 0 0; }
+.judge dt { font-size: 0.8125rem; color: var(--muted); margin-top: 12px; }
+.judge dd { margin: 0; font-size: 0.9375rem; line-height: 1.55; }
+.judge dt:first-of-type, .judge dd:first-of-type { grid-column: 1 / -1; }
+.judge dt:nth-of-type(2) { grid-column: 1; grid-row: 3; } .judge dd:nth-of-type(2) { grid-column: 1; grid-row: 4; }
+.judge dt:nth-of-type(3) { grid-column: 2; grid-row: 3; } .judge dd:nth-of-type(3) { grid-column: 2; grid-row: 4; }
+.judge dt:nth-of-type(4) { grid-column: 1; grid-row: 5; } .judge dd:nth-of-type(4) { grid-column: 1; grid-row: 6; }
+.judge dt:nth-of-type(5) { grid-column: 2; grid-row: 5; } .judge dd:nth-of-type(5) { grid-column: 2; grid-row: 6; }
+@media (max-width: 680px) { .try { padding: 18px; } .judge { grid-template-columns: 1fr; } .judge dt, .judge dd { grid-column: 1 !important; grid-row: auto !important; } }
+a.row-link { color: var(--fg); font-weight: 500; text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 3px; display: block; margin-bottom: 6px; }
+a.row-link:hover { color: var(--accent); text-decoration-color: currentColor; }
+td a.from-link { font-size: 0.75rem; }
+.ondemand { margin: 0 0 12px; color: var(--muted); }
+.ondemand b { color: var(--fg); font-weight: 500; }
+.linkish { background: none; border: none; padding: 0; font: inherit; color: var(--accent); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+
+/* ===== Proof design system ===== */
+body { font-family: var(--sans); font-size: 16px; line-height: 1.55; letter-spacing: 0; background: var(--bg); color: var(--fg); }
+code, pre, .mono, .layer { font-family: var(--mono); }
+
+/* type scale: 76 · 48 · 32 · 24 · 20 · 16 · 14 · 12 */
+h1, h2, h3, h4, .plan h3, .gd-head h2, .try h4, .ic-title > h3, .sec-head h3, .chart-head h3, .panel h3 {
+  font-family: var(--display); font-weight: 700; letter-spacing: -0.025em; }
+h1 { font-size: 32px; line-height: 1.15; margin: 0; text-wrap: pretty; max-width: none; }
+.part-head h2 { font-size: 48px; line-height: 1.08; font-family: var(--display); }
+.plan h3, .gd-head h2 { font-size: 32px; line-height: 1.15; }
+.ic-title > h3 { font-size: 24px; line-height: 1.25; }
+.try h4, .sec-head h3, .panel h3, .chart-head h3 { font-size: 20px; line-height: 1.3; }
+.part-head .headline, .ic-grid dd:nth-of-type(1) { font-size: 20px; line-height: 1.5; letter-spacing: -0.005em; }
+.ic-grid dd, .judge dd, .try .try-do { font-size: 16px; }
+.def, table, .ic-tags .ic-fit, footer { font-size: 14px; }
+/* labels: 12px uppercase */
+.eyebrow, .head-row .eyebrow, th, .flabel, .ic-grid dt, .judge dt, .gd-label, .toc-h, .sum-meta-label {
+  font-size: 12px; line-height: 16px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600; color: var(--muted); }
+.maint .part-head > .eyebrow { font-size: 12px; font-family: var(--sans); }
+.sum-title { font-weight: 600; }
+@media (max-width: 680px) {
+  h1 { font-size: 24px; } .part-head h2 { font-size: 32px; font-family: var(--display); letter-spacing: -0.025em; }
+  .plan h3, .gd-head h2 { font-size: 24px; font-family: var(--display); } .ic-title > h3 { font-size: 20px; }
+  .part-head .headline, .ic-grid dd:nth-of-type(1) { font-size: 17px; }
+}
+
+/* radii: 4 · 6 · 8 · 12 · 20 · pill */
+.tag, .conf, .slot, .pill, .badge, a.from-link, .goal-chips li, .gc { border-radius: var(--r-pill); }
+button, select, input, .seg, .seg button, .copy { border-radius: var(--r-8); }
+.tbl, td .tbl { border-radius: var(--r-4); }
+pre { border-radius: var(--r-6); }
+.tip, .tip-pop { border-radius: var(--r-6); }
+.plan-grid > div, .panel, .chart, .filters, .fact-inf, .toc-panel, .gd-order li, .gd-opt { border-radius: var(--r-12); }
+.goalbar, .plan, .try, #goal-dialog, #goal-form { border-radius: var(--r-20); }
+.xcard .ic-grid dt:nth-of-type(2) { border-radius: var(--r-20) var(--r-20) 0 0; } .xcard .ic-grid dd:nth-of-type(2) { border-radius: 0 0 var(--r-20) var(--r-20); }
+
+/* accent: Proof Pink. Filled pink always carries dark text */
+button.primary { background: var(--accent-fill); color: var(--on-accent); border-color: var(--accent-fill); font-weight: 600; }
+button.primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: var(--on-accent); opacity: 1; }
+.gnum, .gd-opt[aria-pressed="true"] .gd-num, .gd-item .gd-num { background: var(--accent-fill); border-color: var(--accent-fill); color: var(--on-accent); }
+.rank { background: var(--accent-soft-2); color: var(--accent); font-family: var(--display); font-weight: 700; }
+.toc-btn { color: var(--accent); }
+a { color: var(--accent); }
+
+/* how-sure chips: degrees of evidence, not status colours */
+.conf { border: 1px solid transparent; }
+.conf.strong { color: var(--accent); background: var(--accent-soft); border-color: transparent; }
+.conf.sugg { color: var(--fg); background: var(--surface-2); border-color: transparent; }
+.conf.val { color: var(--muted); background: transparent; border: 1px solid var(--line-strong); }
+
+/* habit changes are information, not a grade: no green or red on the person's numbers */
+.up-bad, .down-good, .chg-good, .chg-bad, .flat { color: var(--fg); }
+td.worst { color: inherit; font-weight: inherit; }
+td.best { color: var(--accent); font-weight: 600; }
+
+/* surfaces */
+.goalbar { background: var(--surface); border: 1px solid var(--line); }
+.plan { background: var(--accent-soft); border: 1px solid var(--accent-soft-2); }
+.plan-grid > div { background: var(--surface); }
+.try { background: var(--accent-soft); }
+.try pre, .try .tbl { background: var(--surface); }
+.try.later { background: var(--surface-2); }
+th { background: var(--surface-2); }
+pre { background: var(--code-bg); }
+
+.wrap h1, .wrap h2, .wrap h3, .wrap h4, dialog h2 { font-family: var(--display); font-weight: 700 !important; letter-spacing: -0.025em; }
+.goalbar h2 { font-size: 20px; }
+
+td .def { display: block; margin-top: 6px; }
+
+.brand { display: inline-flex; line-height: 0; }
+.brand-logo { height: 30px; width: auto; display: block; }
+.head-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.head-meta { margin-top: 40px; }
+@media (max-width: 680px) { .brand-logo { height: 24px; } .head-meta { margin-top: 28px; } }
+
+.head-meta { margin: 10px 0 0; font-size: 14px; color: var(--muted); }
+.title-row { display: flex; flex-direction: column; align-items: flex-start; gap: 28px; margin-top: 0; }
+.title-row .brand-logo { height: 34px; }
+.title-sep { width: 1px; align-self: stretch; background: var(--line-strong); }
+@media (max-width: 680px) { .title-row { gap: 20px; } .title-row .brand-logo { height: 26px; } .title-sep { display: none; } .title-row h1 { flex-basis: 100%; } }
+
+.part-head > .head-meta { margin: 0 0 -4px; }
+
+.goalbar h1 { font-size: 24px; line-height: 1.25; margin: 0; }
+@media (max-width: 680px) { .goalbar h1 { font-size: 20px; } }
+
+.wrap h1.tagline { font-family: var(--sans); font-size: 16px; line-height: 1.4; font-weight: 400 !important; letter-spacing: -0.005em; color: var(--fg); margin: 0; }
+.title-row { gap: 6px !important; }
+@media (max-width: 680px) { .wrap h1.tagline { font-size: 15px; } }
+
+
+/* at a glance */
+.glance { display: grid; gap: 14px; margin-top: -8px; }
+.glance .sec-head { margin-top: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
+.glance h2 { font-size: 24px; line-height: 1.25; margin: 0; }
+.glance .head-meta { margin: 0; }
+.snapshot { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); border: 1px solid var(--line); border-radius: var(--r-12); background: var(--surface); overflow: hidden; }
+.stat { padding: 18px 18px 20px; gap: 4px; align-content: start; border-right: 1px solid var(--line); }
+.stat b { font-family: var(--display); font-size: 32px; line-height: 1.1; font-weight: 700; letter-spacing: -0.025em; }
+.stat .delta { font-size: 14px; color: var(--fg); }
+.stat .why { font-size: 13px; line-height: 1.45; color: var(--muted); margin-top: 6px; }
+@media (max-width: 680px) { .snapshot { grid-template-columns: 1fr 1fr; } .stat { border-bottom: 1px solid var(--line); } }
+#part-1 { border-top: 1px solid var(--line); padding-top: 56px; margin-top: 0; }
+#glance, #part-1, #part-2, #part-3 { scroll-margin-top: 20px; }
+
+.try .revisit { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
+
+
+.summary { margin: -8px 0 0; font-size: 20px; line-height: 1.5; letter-spacing: -0.005em; color: var(--fg); max-width: none; }
+@media (max-width: 680px) { .summary { font-size: 17px; } }
+</style>
+
+<div class="wrap">
+
+<header>
+  <div class="title-row">
+    <a class="brand" href="#" aria-label="second look"><svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="1.1 0 322.8 63.7" role="img" aria-label="second look">
+  <title>second look</title>
+  <path fill="var(--fg)" transform="translate(0 42.67)" d="M15.893333333333334 0.8Q10.56 0.8 7.386666666666667 -0.88Q4.213333333333334 -2.56 2.746666666666667 -5.12Q1.28 -7.680000000000001 1.0666666666666667 -10.24H9.280000000000001Q9.546666666666667 -8.853333333333333 10.426666666666666 -7.706666666666667Q11.306666666666667 -6.5600000000000005 12.773333333333333 -5.92Q14.24 -5.28 16.32 -5.28Q18.880000000000003 -5.28 20.0 -6.16Q21.12 -7.04 21.12 -8.426666666666668Q21.12 -9.706666666666667 20.080000000000002 -10.586666666666666Q19.040000000000003 -11.466666666666667 16.693333333333335 -12.213333333333335L12.853333333333333 -13.493333333333334Q10.08 -14.453333333333335 7.733333333333333 -15.600000000000001Q5.386666666666667 -16.746666666666666 3.9733333333333336 -18.560000000000002Q2.56 -20.373333333333335 2.56 -23.253333333333334Q2.56 -27.520000000000003 5.8133333333333335 -30.160000000000004Q9.066666666666666 -32.800000000000004 15.040000000000001 -32.800000000000004Q19.360000000000003 -32.800000000000004 22.10666666666667 -31.46666666666667Q24.853333333333335 -30.133333333333336 26.240000000000002 -27.92Q27.62666666666667 -25.706666666666667 27.840000000000003 -23.040000000000003H19.94666666666667Q19.68 -24.96 18.346666666666668 -26.0Q17.013333333333335 -27.040000000000003 14.72 -27.040000000000003Q12.64 -27.040000000000003 11.600000000000001 -26.240000000000002Q10.56 -25.44 10.56 -24.053333333333335Q10.56 -22.666666666666668 11.68 -21.76Q12.8 -20.853333333333335 15.093333333333334 -20.10666666666667L18.933333333333334 -18.880000000000003Q21.706666666666667 -18.026666666666667 24.026666666666667 -16.880000000000003Q26.346666666666668 -15.733333333333334 27.733333333333334 -13.893333333333334Q29.12 -12.053333333333335 29.12 -9.120000000000001Q29.12 -4.640000000000001 25.733333333333334 -1.9200000000000004Q22.346666666666668 0.8 15.893333333333334 0.8Z M46.13333333333334 0.8Q38.56 0.8 34.586666666666666 -3.733333333333334Q30.613333333333333 -8.266666666666667 30.613333333333333 -16.053333333333335Q30.613333333333333 -21.28 32.4 -25.013333333333335Q34.18666666666667 -28.74666666666667 37.626666666666665 -30.773333333333337Q41.06666666666667 -32.800000000000004 46.02666666666667 -32.800000000000004Q53.17333333333333 -32.800000000000004 56.986666666666665 -28.480000000000004Q60.8 -24.16 60.8 -15.786666666666667V-13.973333333333334H39.04Q39.30666666666667 -9.92 41.14666666666667 -7.6Q42.986666666666665 -5.28 46.13333333333334 -5.28Q48.64 -5.28 50.160000000000004 -6.773333333333333Q51.68000000000001 -8.266666666666667 52.160000000000004 -10.24H60.373333333333335Q59.89333333333333 -7.3066666666666675 58.24 -4.800000000000001Q56.58666666666667 -2.2933333333333334 53.60000000000001 -0.7466666666666667Q50.61333333333334 0.8 46.13333333333334 0.8ZM39.04 -19.413333333333334H52.373333333333335Q52.160000000000004 -23.040000000000003 50.56 -25.040000000000003Q48.96 -27.040000000000003 45.973333333333336 -27.040000000000003Q43.04 -27.040000000000003 41.25333333333333 -25.14666666666667Q39.46666666666667 -23.253333333333334 39.04 -19.413333333333334Z M77.81333333333333 0.8Q70.4 0.8 66.50666666666667 -3.733333333333334Q62.61333333333334 -8.266666666666667 62.61333333333334 -16.0Q62.61333333333334 -24.16 66.74666666666667 -28.480000000000004Q70.88000000000001 -32.800000000000004 77.92 -32.800000000000004Q84.26666666666668 -32.800000000000004 87.89333333333335 -29.440000000000005Q91.52000000000001 -26.080000000000002 92.21333333333334 -20.26666666666667H83.68Q83.30666666666667 -23.413333333333334 81.81333333333333 -25.06666666666667Q80.32000000000001 -26.720000000000002 77.97333333333334 -26.720000000000002Q74.88000000000001 -26.720000000000002 73.22666666666667 -23.94666666666667Q71.57333333333334 -21.173333333333336 71.57333333333334 -16.0Q71.57333333333334 -10.826666666666668 73.2 -8.053333333333335Q74.82666666666667 -5.28 77.92 -5.28Q80.32000000000001 -5.28 81.81333333333333 -6.960000000000001Q83.30666666666667 -8.64 83.68 -11.733333333333334H92.21333333333334Q91.46666666666667 -6.026666666666667 87.81333333333333 -2.6133333333333337Q84.16000000000001 0.8 77.81333333333333 0.8Z M109.86666666666667 0.8Q101.92 0.8 98.0 -3.7600000000000002Q94.08 -8.32 94.08 -16.0Q94.08 -23.680000000000003 98.0 -28.240000000000002Q101.92 -32.800000000000004 109.86666666666667 -32.800000000000004Q117.81333333333333 -32.800000000000004 121.73333333333333 -28.240000000000002Q125.65333333333334 -23.680000000000003 125.65333333333334 -16.0Q125.65333333333334 -8.32 121.73333333333333 -3.7600000000000002Q117.81333333333333 0.8 109.86666666666667 0.8ZM109.86666666666667 -4.96Q113.38666666666667 -4.96 115.03999999999999 -7.733333333333334Q116.69333333333333 -10.506666666666668 116.69333333333333 -16.053333333333335Q116.69333333333333 -21.546666666666667 115.03999999999999 -24.293333333333337Q113.38666666666667 -27.040000000000003 109.86666666666667 -27.040000000000003Q106.34666666666666 -27.040000000000003 104.69333333333333 -24.293333333333337Q103.03999999999999 -21.546666666666667 103.03999999999999 -16.053333333333335Q103.03999999999999 -10.506666666666668 104.69333333333333 -7.733333333333334Q106.34666666666666 -4.96 109.86666666666667 -4.96Z M129.81333333333333 0.0V-32.0H137.81333333333333V-27.200000000000003H139.09333333333333Q140.05333333333334 -29.6 142.05333333333334 -31.200000000000003Q144.05333333333334 -32.800000000000004 147.9466666666667 -32.800000000000004Q153.28 -32.800000000000004 155.94666666666666 -29.440000000000005Q158.61333333333334 -26.080000000000002 158.61333333333334 -20.32V0.0H149.97333333333336V-18.880000000000003Q149.97333333333336 -22.186666666666667 148.8 -23.973333333333336Q147.62666666666667 -25.76 144.96 -25.76Q141.86666666666667 -25.76 140.16000000000003 -23.333333333333336Q138.45333333333335 -20.906666666666666 138.45333333333335 -17.28V0.0Z M175.14666666666668 0.64Q170.77333333333334 0.64 167.94666666666666 -1.52Q165.12 -3.68 163.73333333333335 -7.466666666666667Q162.34666666666666 -11.253333333333334 162.34666666666666 -16.053333333333335Q162.34666666666666 -21.013333333333335 163.76 -24.74666666666667Q165.17333333333335 -28.48 168.02666666666667 -30.560000000000002Q170.88 -32.64 175.14666666666668 -32.64Q178.29333333333332 -32.64 180.29333333333332 -31.520000000000003Q182.29333333333332 -30.400000000000002 183.46666666666667 -28.48H184.74666666666667V-42.66666666666667H193.38666666666666V0.0H185.38666666666666V-4.16H184.10666666666665Q182.98666666666668 -2.1333333333333333 180.85333333333335 -0.7466666666666666Q178.72 0.64 175.14666666666668 0.64ZM177.6 -5.44Q180.85333333333332 -5.44 182.8 -8.293333333333333Q184.74666666666667 -11.146666666666667 184.74666666666667 -16.0Q184.74666666666667 -20.906666666666666 182.8 -23.733333333333334Q180.85333333333332 -26.560000000000002 177.6 -26.560000000000002Q174.66666666666666 -26.560000000000002 172.98666666666668 -23.92Q171.30666666666667 -21.28 171.30666666666667 -16.0Q171.30666666666667 -10.72 172.98666666666668 -8.08Q174.66666666666666 -5.44 177.6 -5.44Z M213.49333333333334 0.0Q212.0 -1.7066666666666668 211.38666666666666 -3.866666666666667Q210.77333333333334 -6.026666666666667 210.77333333333334 -9.546666666666667V-42.66666666666667H219.41333333333333V-10.453333333333333Q219.41333333333333 -6.4 220.32 -4.133333333333334Q221.22666666666666 -1.8666666666666667 222.72 -0.32V0.0Z M239.68 0.8Q231.73333333333335 0.8 227.81333333333333 -3.7600000000000002Q223.89333333333335 -8.32 223.89333333333335 -16.0Q223.89333333333335 -23.680000000000003 227.81333333333333 -28.240000000000002Q231.73333333333335 -32.800000000000004 239.68 -32.800000000000004Q247.62666666666667 -32.800000000000004 251.54666666666668 -28.240000000000002Q255.4666666666667 -23.680000000000003 255.4666666666667 -16.0Q255.4666666666667 -8.32 251.54666666666668 -3.7600000000000002Q247.62666666666667 0.8 239.68 0.8ZM239.68 -4.96Q243.20000000000002 -4.96 244.85333333333335 -7.733333333333334Q246.5066666666667 -10.506666666666668 246.5066666666667 -16.053333333333335Q246.5066666666667 -21.546666666666667 244.85333333333335 -24.293333333333337Q243.20000000000002 -27.040000000000003 239.68 -27.040000000000003Q236.16000000000003 -27.040000000000003 234.5066666666667 -24.293333333333337Q232.85333333333335 -21.546666666666667 232.85333333333335 -16.053333333333335Q232.85333333333335 -10.506666666666668 234.5066666666667 -7.733333333333334Q236.16000000000003 -4.96 239.68 -4.96Z M273.28000000000003 0.8Q265.3333333333333 0.8 261.4133333333333 -3.7600000000000002Q257.49333333333334 -8.32 257.49333333333334 -16.0Q257.49333333333334 -23.680000000000003 261.4133333333333 -28.240000000000002Q265.3333333333333 -32.800000000000004 273.28000000000003 -32.800000000000004Q281.2266666666667 -32.800000000000004 285.14666666666665 -28.240000000000002Q289.06666666666666 -23.680000000000003 289.06666666666666 -16.0Q289.06666666666666 -8.32 285.14666666666665 -3.7600000000000002Q281.2266666666667 0.8 273.28000000000003 0.8ZM273.28000000000003 -4.96Q276.8 -4.96 278.4533333333334 -7.733333333333334Q280.1066666666667 -10.506666666666668 280.1066666666667 -16.053333333333335Q280.1066666666667 -21.546666666666667 278.4533333333334 -24.293333333333337Q276.8 -27.040000000000003 273.28000000000003 -27.040000000000003Q269.76 -27.040000000000003 268.1066666666667 -24.293333333333337Q266.4533333333333 -21.546666666666667 266.4533333333333 -16.053333333333335Q266.4533333333333 -10.506666666666668 268.1066666666667 -7.733333333333334Q269.76 -4.96 273.28000000000003 -4.96Z M293.2266666666667 0.0V-42.66666666666667H301.8666666666667V-19.733333333333334H304.4266666666667L313.3866666666667 -32.0H322.56000000000006V-31.680000000000003L311.6266666666667 -17.066666666666666L323.84000000000003 -0.32V0.0H313.76000000000005L304.4266666666667 -13.333333333333334H301.8666666666667V0.0Z"/>
+  <rect x="206.9" y="50.7" width="116.9" height="4.5" fill="var(--accent-fill)"/>
+  <rect x="206.9" y="58.2" width="116.9" height="4.5" fill="var(--accent-fill)"/>
+</svg></a>
+      <h1 class="tagline">Learn from the way you work with AI</h1>
+  </div>
+</header>
+
+
+
+
+<p class="summary">You set up work far better than a year ago: about half your sessions now start with a real brief, up from one in five, and corrections fell by nearly half. Two things slipped in the last six weeks. You check prototypes less before accepting them, and restarts are back up since the Streak redesign started.</p>
+
+<section class="glance" id="glance" aria-labelledby="glance-h">
+  <div class="sec-head"><h2 id="glance-h">This cycle at a glance</h2><span class="muted">Comparing Oct 12–25 to Sep 28 – Oct 11, 2026</span></div>
+  <div class="snapshot">
+    <div class="stat"><span class="eyebrow">Sessions</span><b>94</b><span class="delta">+6</span><span class="why">How much you leaned on AI. Read the other numbers against it.</span></div>
+    <div class="stat"><span class="eyebrow">Briefed starts</span><b>54%</b><span class="delta">+6 pts</span><span class="why">Sessions that open with the goal, context and what done looks like.</span></div>
+    <div class="stat"><span class="eyebrow">Corrections</span><b>1.1</b><span class="delta">−0.3</span><span class="why">Per 10 messages. Each "no, I meant…" is a misunderstanding you paid for in time.</span></div>
+    <div class="stat"><span class="eyebrow">Restarts</span><b>11</b><span class="delta">+5</span><span class="why">Starting over on a task. Usually the first brief missed something.</span></div>
+    <div class="stat"><span class="eyebrow">Rules retyped</span><b>17</b><span class="delta">+3</span><span class="why">Preferences typed by hand that belong in a config file.</span></div>
+  </div>
+</section>
+
+<!-- PART 1: PROMPTS AND CONTEXT -->
+<div class="part" id="part-1">
+  <div class="part-head">
+    <h2>Improve your prompts and context</h2>
+    <p class="headline">Most corrections trace back to how a session starts. Fix the opening brief and stop retyping the same rules, and about a third of your corrections should go away.</p>
+  </div>
+
+  <article id="p-rules" class="icard">
+    <div class="ic-head"><span class="rank">1</span><div class="ic-title"><h3>You retype the same rules in every tool</h3>
+      <div class="ic-tags"><span class="tag">Claude Code · Codex · Cursor</span><span class="conf strong">Clear pattern</span></div></div></div>
+    <dl class="ic-grid">
+      <dt>What happens</dt><dd>You type the same formatting preferences by hand, because only some of your tools have them saved.</dd>
+      <dt>Evidence</dt><dd>Oct 12–25: "tables for comparisons, skip filler openers" showed up in 9 of 94 sessions across Claude Code, Codex and Cursor. Codex is missing 4 of your ai-context.md rules, Cursor 2. Claude Code is in sync.</dd>
+      <dt>Why it matters</dt><dd>Retyping costs time every session, and tools without the rules give you inconsistent output.</dd>
+    </dl>
+  
+    <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Which tools have which rules</span></summary>
+      <div class="body">
+        <div class="tbl"><table>
+          <thead><tr><th>Rule in ai-context.md</th><th>Claude Code</th><th>Codex</th><th>Cursor</th><th>claude.ai</th></tr></thead>
+          <tbody>
+            <tr><td>Ask clarifying questions first</td><td>✓</td><td>—</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Tables for comparisons</td><td>✓</td><td>—</td><td>—</td><td>✓</td></tr>
+            <tr><td>Cite sources, flag gaps</td><td>✓</td><td>—</td><td>—</td><td>✓</td></tr>
+            <tr><td>Prototype stack: React + Tailwind</td><td>✓</td><td>—</td><td>✓</td><td>n/a</td></tr>
+          </tbody></table></div>
+        <div class="field"><div class="copy-row"><span class="eyebrow">Paste into ChatGPT custom instructions</span><button type="button" class="copy">Copy</button></div>
+<pre>Ask clarifying questions before big tasks. Start with the answer, no
+filler. Tables for comparisons. Cite named sources; say when you don't
+have one. I'm a product engineer building a habit-tracking app in React + Tailwind.</pre></div>
+      </div></details>
+    <section class="try" id="try-rules" aria-label="What to try">
+      <div class="try-head"><span class="conf strong">Likely to help</span></div>
+      <h4>Try this: sync your standing rules to every tool</h4>
+      <p class="try-do">Add the four lines below to ai-context.md, then paste them into Codex's AGENTS.md and your Cursor rules.</p>
+      <div class="field"><div class="copy-row"><span class="eyebrow">Add to ai-context.md</span><button type="button" class="copy">Copy</button></div>
+<pre>## Output style
+- Start with the answer. No filler openers.
+- Tables for any comparison or tradeoff.
+- Short sentences. Prose by default.
+- Ask clarifying questions before large tasks.</pre></div>
+      
+      
+    </section>
+  </article>
+
+  <article id="p-brief" class="icard">
+    <div class="ic-head"><span class="rank">2</span><div class="ic-title"><h3>Prototype chats start vague, then restart</h3>
+      <div class="ic-tags"><span class="tag">Claude Code · Cursor · claude.ai</span><span class="conf sugg">Likely pattern</span></div></div></div>
+    <dl class="ic-grid">
+      <dt>What happens</dt><dd>Your first message names what to build, but not who it's for or what done looks like. You fill in the gaps over the next few turns, and sometimes start a new chat.</dd>
+      <dt>Evidence</dt><dd>Oct 12–25: 4 of 11 restarts were prototypes, including 4 new Streak settings-screen chats in 2 days. 35% of prototype sessions opened with a brief, vs 58% across claude.ai. Cursor: 12%. Claude Code: 48%.</dd>
+      <dt>Why it matters</dt><dd>Each restart repeats setup, and without a definition of done it's hard to tell when a prototype is finished.</dd>
+    </dl>
+    <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Example and limits</span></summary>
+      <div class="body">
+        <blockquote>"build the settings screen for streak, make it look good and hook up reminders"</blockquote>
+        <p class="def">The opening message of 3 of the 4 settings-screen restarts. Each of the next 5–8 turns added one missing piece: the user, the stack, what done meant.</p>
+        <p class="def"><b>Can't tell:</b> whether a restart was frustration or a deliberate fresh start, or whether the final prototype was any good.</p>
+      </div></details>
+  
+    <section class="try" id="try-brief" aria-label="What to try">
+      <div class="try-head"><span class="conf sugg">Might help</span></div>
+      <h4>Try this: brief before big prototype tasks</h4>
+      <p class="try-do">Before a prototype session you expect to run past 15 minutes, write the goal, the user, what done means and the constraints. A <code>/brief</code> skill can prompt you. Skip it for quick fixes. If you're exploring and don't know done yet, just say "exploring."</p>
+      <div class="field"><div class="copy-row"><span class="eyebrow">Brief template</span><button type="button" class="copy">Copy</button></div>
+<pre>Goal: [what this prototype should let someone do]
+User: [who uses it]
+Done when: [what you'll check to call it finished]
+Constraints: [stack, scope, what not to touch]
+Before building, list up to 3 questions you need answered.</pre></div>
+      
+      
+    </section>
+  </article>
+
+  <article id="p-trust" class="icard">
+    <div class="ic-head"><span class="rank">3</span><div class="ic-title"><h3>Finished-looking prototypes get waved through</h3>
+      <div class="ic-tags"><span class="tag">Claude Code · claude.ai</span><span class="conf val">Unconfirmed</span></div></div></div>
+    <dl class="ic-grid">
+      <dt>What happens</dt><dd>When a prototype looks done, you tend to accept it without asking for edge cases, a critique or a test. You push back on text answers far more.</dd>
+      <dt>Evidence</dt><dd>3 prototypes went into the Streak beta with "perfect, ship it" as the last message. Checking in prototype sessions fell from 46% to 18% once the redesign started. You challenge text-only answers 2.4× as often.</dd>
+      <dt>Why it matters</dt><dd>Beta testers use what you ship. A broken interaction there costs more than one in a sketch.</dd>
+    </dl>
+    
+  
+    <section class="try" id="try-trust" aria-label="What to try">
+      <div class="try-head"><span class="conf val">Worth testing</span></div>
+      <h4>Try this: check beta work before it ships</h4>
+      <p class="try-do">Only for work others will see: run your review checklist, or ask "What are the 3 most likely ways this breaks for a real user, and what did you assume that I didn't tell you?" Skip it for internal or throwaway work.</p>
+      
+      <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>How much to check, by type of work</span></summary>
+        <div class="body"><div class="tbl"><table>
+          <thead><tr><th>Type of work</th><th>Risk</th><th>What the sessions show</th><th>Light check</th></tr></thead>
+          <tbody>
+            <tr><td>Anything beta users will see</td><td><span class="pill p1">High</span></td><td>3 accepted with no visible check</td><td>Your checklist, or the "3 ways it breaks" question</td></tr>
+            <tr><td>Facts for decisions or docs</td><td><span class="pill p2">Medium</span></td><td>No data either way</td><td>Ask for sources; spot-check one</td></tr>
+            <tr><td>Code changes</td><td><span class="pill p2">Medium</span></td><td>No data either way</td><td>Run it, and ask what it assumed</td></tr>
+            <tr><td>Routine writing and formatting</td><td><span class="pill p3">Low</span></td><td>Can't tell if you over-check</td><td>None</td></tr>
+          </tbody></table></div>
+        <p class="def">Save the checking for work with real risk, and adjust this table as you learn.</p></div></details>
+      
+    </section>
+  </article>
+
+  <article id="p-long" class="icard">
+    <div class="ic-head"><span class="rank">4</span><div class="ic-title"><h3>Long Claude Code sessions drift between projects</h3>
+      <div class="ic-tags"><span class="tag">Claude Code</span><span class="conf sugg">Likely pattern</span></div></div></div>
+    <dl class="ic-grid">
+      <dt>What happens</dt><dd>Some sessions jump between projects without clearing context, and Claude keeps rereading files from the earlier one.</dd>
+      <dt>Evidence</dt><dd>2 sessions ran 60+ turns across the onboarding flow, a Streak sync bug and a pricing page, with 5 automatic compactions. After one, Claude reread the onboarding files twice.</dd>
+      <dt>Why it matters</dt><dd>Old context can steer the new task, and compaction summaries drop detail.</dd>
+    </dl>
+  
+    <section class="try later" id="try-long" aria-label="What to try">
+      
+      <h4>Not this cycle: clear context between projects</h4>
+      <p class="try-do">When you switch projects in Claude Code, run <code>/clear</code> or start a new session. Left out of this cycle so you're only testing three things at once.</p>
+    </section>
+  </article>
+
+  <section>
+    <div class="sec-head"><h3>Compare the fixes</h3><span class="muted">Three make this cycle's plan. Treat each one as a test.</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Fix</th><th>Will it help?</th><th>Effort</th><th>Risk</th></tr></thead>
+      <tbody>
+        <tr><td><a class="row-link" href="#try-rules" data-jump="try-rules">Sync your standing rules to every tool</a><a class="tag from-link" href="#p-rules" data-target="p-rules">From pattern <span aria-hidden="true">↑</span></a></td><td>Likely</td><td>5 min, once</td><td>Low</td></tr>
+        <tr><td><a class="row-link" href="#try-brief" data-jump="try-brief">Brief before big prototype tasks</a><a class="tag from-link" href="#p-brief" data-target="p-brief">From pattern <span aria-hidden="true">↑</span></a></td><td>Possibly</td><td>~1 min per session</td><td>Low</td></tr>
+        <tr><td><a class="row-link" href="#try-trust" data-jump="try-trust">Check beta work before it ships</a><a class="tag from-link" href="#p-trust" data-target="p-trust">From pattern <span aria-hidden="true">↑</span></a></td><td>Unproven</td><td>~5 min per piece</td><td>Low</td></tr>
+        <tr><td><a class="row-link" href="#try-long" data-jump="try-long">Clear context between projects</a><span class="def">Not in this cycle's plan</span><a class="tag from-link" href="#p-long" data-target="p-long">From pattern <span aria-hidden="true">↑</span></a></td><td>Possibly</td><td>Habit</td><td>Low</td></tr>
+      </tbody></table></div>
+  </section>
+
+  
+
+  
+
+  
+
+  <section class="plan" aria-labelledby="plan-h">
+    <h3 id="plan-h">Your plan until Nov 8</h3>
+    <div class="plan-grid">
+      <div><b>Sync your standing rules</b><span>5 minutes, once.</span></div>
+      <div><b>Brief before big prototype tasks</b><span>Every prototype session over 15 minutes.</span></div>
+      <div><b>Check beta work before it ships</b><span>Only on work others will see.</span></div>
+    </div>
+    <p class="def">That's it for this cycle. Everything else waits until we see how these go.</p>
+  </section>
+
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">What the Nov 8 review will check</span><span class="sum-meta">What you do, what happens to the work, and whether it sticks</span></span><span></span></summary>
+    <div class="body"><div class="tbl"><table>
+      <thead><tr><th>Experiment</th><th>What you do</th><th>What happens to the work</th><th>Does it stick?</th></tr></thead>
+      <tbody>
+        <tr><td>Sync standing rules</td><td>Rules retyped</td><td>Formatting corrections in Codex and Cursor</td><td>—</td></tr>
+        <tr><td>Brief before prototypes</td><td>Big prototype sessions that start with a brief; restarts per task</td><td>Your rating of 3 sample tasks; rework; time to a good result</td><td>Do you brief on other kinds of work without a nudge?</td></tr>
+        <tr><td>Check before shipping</td><td>Checks run before shipping</td><td>Problems caught before vs after shipping</td><td>—</td></tr>
+      </tbody></table></div></div>
+  </details>
+</div>
+
+<!-- PART 2: SKILLS -->
+<div class="part" id="part-2">
+  <div class="part-head">
+    <h2>Keep your skills current</h2>
+    <p class="headline">Two of your seven skills give wrong information today, and none has a test, so the next model update could break one without you noticing.</p>
+    <div class="part-meta"><span class="muted">Scanned Oct 21: 7 skills you wrote, 17 you installed. Couldn't read <code>~/.claude/skills</code> from here.</span></div>
+  </div>
+
+  <section>
+    <div class="sec-head"><h3>Skills you wrote</h3><span class="muted">Where each one stands</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Skill</th><th>Where</th><th>Status</th><th>What's out of date</th></tr></thead>
+      <tbody>
+        <tr><td>release-notes</td><td>claude.ai</td><td><span class="pill p1">Stale</span></td><td>Pricing tiers, description, no tests</td></tr>
+        <tr><td>pr-review</td><td>~/.agents</td><td><span class="pill p1">Stale</span></td><td>Tooling table names the wrong agent</td></tr>
+        <tr><td>user-interview-synth</td><td>claude.ai</td><td><span class="pill p2">Review</span></td><td>Team size, no tests</td></tr>
+        <tr><td>design-review</td><td>claude.ai</td><td><span class="pill p2">Review</span></td><td>Tool list; loads too much at once</td></tr>
+        <tr><td>critical-review</td><td>claude.ai</td><td><span class="pill p3">Minor</span></td><td>Checks math in prose</td></tr>
+        <tr><td>explain-concept</td><td>claude.ai</td><td><span class="pill ok">Current</span></td><td>Nothing found</td></tr>
+        <tr><td>design-workflow-to-agents</td><td>claude.ai</td><td><span class="pill ok">Current</span></td><td>Nothing found</td></tr>
+      </tbody></table></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h3>Fix first</h3><span class="muted">Broken today. Checked by reading each file.</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Issue</th><th>Impact</th><th>How sure</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td><b>release-notes</b> still lists last quarter's pricing tiers</td><td><span class="pill p1">High</span> Its output goes into every changelog</td><td><span class="conf strong">Confirmed</span></td><td>5 min</td></tr>
+        <tr><td><b>pr-review</b> points agents at tools that don't exist, so they may skip rendering</td><td><span class="pill p1">High</span> Blocks the beta check</td><td><span class="conf strong">Confirmed</span></td><td>5 min</td></tr>
+        <tr><td><b>user-interview-synth</b> says the team has 4 designers; your context file says 6</td><td><span class="pill p2">Medium</span></td><td><span class="conf strong">Confirmed</span></td><td>Fixed by the shared team file</td></tr>
+        <tr><td><b>api-docs</b> is installed twice; the claude.ai copy is older</td><td><span class="pill p2">Medium</span> Two versions give different advice</td><td><span class="conf strong">Confirmed</span></td><td>Replace the old copy</td></tr>
+        <tr><td><b>frontend-slides</b> has no SKILL.md, so it never loads</td><td><span class="pill p3">Low</span></td><td><span class="conf strong">Confirmed</span></td><td>Reinstall or remove</td></tr>
+      </tbody></table></div>
+    <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Fixes for the two big ones</span></summary>
+      <div class="body">
+        <div class="field"><div class="copy-row"><span class="eyebrow">release-notes, line 42 (current numbers go in the brackets)</span><button type="button" class="copy">Copy</button></div>
+<pre class="diff"><span class="del">- | Pro | $8 / month | 3 projects |</span>
+<span class="add">+ | Pro | [current price] | [current limits] |
++ Read prices from docs/pricing.md instead of keeping a copy here.</span></pre></div>
+        <div class="field"><div class="copy-row"><span class="eyebrow">pr-review, tooling table</span><button type="button" class="copy">Copy</button></div>
+<pre class="diff"><span class="del">- | Capability | Codex | Other agents (Cursor, Codex, …) |</span>
+<span class="add">+ | Capability | Claude desktop (built-in browser) | Claude Code, Codex, Cursor and others |</span></pre></div>
+      </div></details>
+  </section>
+
+  <section>
+    <div class="sec-head"><h3>Worth a look</h3><span class="muted">Not broken. Biggest first.</span></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Issue</th><th>Why it matters</th><th>How sure</th><th>Next step</th></tr></thead>
+      <tbody>
+        <tr><td>Your team details are copied into three skills</td><td>The copies already disagree</td><td><span class="conf strong">Clear</span></td><td>Move it into one shared file</td></tr>
+        <tr><td>No skill has a test</td><td>A model update could quietly change how a skill behaves. Hasn't happened yet.</td><td><span class="conf sugg">Possible</span></td><td>Write 3–5 test prompts for release-notes and design-review</td></tr>
+        <tr><td>Your skills only live where Claude looks</td><td>Codex and Cursor can run the same files, and the coach can't read <code>~/.claude/skills</code></td><td><span class="conf strong">Clear</span></td><td>Keep them in <code>~/.agents/skills</code> and link each tool to it</td></tr>
+        <tr><td>humanizer and pdf-tools are out of date</td><td>Newer isn't always better. Skim the changelog.</td><td><span class="conf sugg">Possible</span></td><td>Update if the changes help</td></tr>
+        <tr><td>design-review doesn't know about Claude Design, and loads all three platform guides every time</td><td>Misses a current tool and wastes context</td><td><span class="conf sugg">Possible</span></td><td>Add Claude Design; split the guides into separate files</td></tr>
+      </tbody></table></div>
+    <p class="def">11 installed skills don't link to a source, so I couldn't check them for updates. Sources: Claude Code changelog; Anthropic on plugin evals (Sep 2026), skill-creator evals (Mar 2026) and Claude Design (Jun 2026); Codex and Cursor skills docs.</p>
+  </section>
+
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">Skills you installed from others</span><span class="sum-meta">2 behind their source · 1 broken · 1 duplicate · 2 current · 11 not checked</span></span><span></span></summary>
+    <div class="body">
+      <div class="tbl"><table>
+        <thead><tr><th>Skill</th><th>Status</th><th>Detail</th></tr></thead>
+        <tbody>
+          <tr><td>humanizer</td><td><span class="pill p2">Behind</span></td><td>You have v2.7.0 from Jul 13. The source was rewritten through Oct 16.</td></tr>
+          <tr><td>pdf-tools</td><td><span class="pill p2">Behind</span></td><td>Source updated Jul 2, after you installed it Jun 4.</td></tr>
+          <tr><td>frontend-slides</td><td><span class="pill p1">Broken</span></td><td>No SKILL.md, so it never loads.</td></tr>
+          <tr><td>api-docs</td><td><span class="pill p2">Duplicate</span></td><td>The claude.ai copy is an older version of the one on your Mac.</td></tr>
+          <tr><td>skill-creator, beautiful-html-templates</td><td><span class="pill ok">Current</span></td><td>Match their sources.</td></tr>
+          <tr><td>11 others</td><td><span class="pill p3">Not checked</span></td><td>No source link in the files, so there's nothing to compare against.</td></tr>
+        </tbody></table></div>
+      <p class="def">Update installed skills from their source rather than editing them, so your changes don't get overwritten.</p>
+    </div>
+  </details>
+
+</div>
+
+<!-- PART 3: BEHAVIOR -->
+<div class="part" id="part-3">
+  <div class="part-head">
+    <h2>How your behavior is changing</h2>
+    <div class="part-meta"><span class="muted">12 months of sessions across claude.ai, Claude Code, Codex, Cursor and ChatGPT</span></div>
+  </div>
+
+  <section id="last-cycle" data-needs-prior hidden>
+    <div class="sec-head"><h3>Did last cycle's fixes work?</h3></div>
+    <div class="tbl"><table class="eval">
+      <thead><tr><th>Experiment</th><th>Tried?</th><th>Habit changed?</th><th>Work got better?</th><th>Costs</th><th>Decision</th></tr></thead>
+      <tbody>
+        <tr><td>Add "ask clarifying questions first" to CLAUDE.md</td><td>Yes</td><td>Corrections fell from 24 to 19 <span class="conf sugg">Cause unclear</span><span class="def">You did more writing this cycle, which needs fewer corrections anyway.</span></td><td><span class="conf val">Not measured</span></td><td>Maybe slower starts on simple tasks. Not checked.</td><td><span class="pill ok">Keep</span><span class="def">Rate the results next time</span></td></tr>
+        <tr><td>Research in a subagent for API comparisons</td><td>Yes</td><td>Compactions per session fell from 4 to 2 <span class="conf sugg">Cause unclear</span></td><td><span class="conf val">Not measured</span><span class="def">Did the comparisons miss anything?</span></td><td>None observed</td><td><span class="pill ok">Keep</span><span class="def">Ask at the next review</span></td></tr>
+        <tr><td>Write a one-page prototype brief template</td><td>No</td><td>—</td><td>—</td><td>—</td><td><span class="pill p2">Revise</span><span class="def">Now the brief template in this cycle's plan</span></td></tr>
+      </tbody></table></div>
+    <p class="def">"Not measured" means there's no data yet.</p>
+  </section>
+
+<section id="trends">
+  <div class="sec-head"><h3>Habits over the last year</h3><span class="muted" id="range-label">Last 12 months</span></div>
+
+  <div class="filters" role="group" aria-label="Filter the charts">
+    <div class="fgroup" id="f-range" role="group" aria-label="Time range"><span class="flabel">Time</span></div>
+    <div class="fgroup" id="f-source" role="group" aria-label="Source"><span class="flabel">Source</span></div>
+    <div class="fgroup"><label class="flabel" for="f-cat">Work</label><select id="f-cat"></select></div>
+    <span class="fsum" id="f-sum"></span>
+  </div>
+
+  <div class="key">
+    <span><i class="k-thin"></i>Each week</span><span><i class="k-thick"></i>4-week average</span>
+    <span><i class="k-dot"></i>Latest week</span><span><i class="k-ms"></i>Milestones: Mar, first skill · Jul, global CLAUDE.md · Sep, Streak redesign</span>
+  </div>
+  <div class="multiples" id="primary-charts"></div>
+
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+      <span class="sum-main"><span class="sum-title">More metrics</span><span class="sum-meta">Volume, skill use, rules retyped, refinement</span></span><span></span></summary>
+    <div class="body"><div class="multiples" id="more-charts"></div></div>
+  </details>
+
+  <div class="split">
+    <div class="panel">
+      <h3>What you used AI for</h3>
+      <p class="def">Share of sessions by kind of work, labeled from each session's opening message. Click a row to filter the charts.</p>
+      <div class="bars" id="cat-bars"></div>
+    </div>
+    <div class="panel">
+      <h3>Where you worked</h3>
+      <p class="def">Share of sessions by tool for the current filters.</p>
+      <div class="bars" id="src-bars"></div>
+    </div>
+  </div>
+  <p class="insight" id="cat-insight"></p>
+
+
+  <details open>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+      <span class="sum-main"><span class="sum-title">How each product's use is changing</span><span class="sum-meta">First 4 weeks with data vs the last 4, per product</span></span><span></span></summary>
+    <div class="body">
+      <p class="insight" id="prod-insight"></p>
+      <div class="tbl"><table id="prod-table">
+        <thead><tr><th>Product</th><th class="num">Sessions</th><th>Main uses now (change)</th><th class="num">Briefed starts</th><th class="num">Corrections / 10</th><th class="num">Output checking</th><th class="num">Restarts</th></tr></thead>
+        <tbody></tbody></table></div>
+      <p class="def">Each cell shows the last 4 weeks, with the change from that product's first 4 weeks in range in parentheses. Uses ignore the Work filter so the mix stays complete; habits follow it. Numbers need at least 10 sessions in a 4-week window; products below that, or with under 8 weeks of data, say so instead.</p>
+    </div>
+  </details>
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+      <span class="sum-main"><span class="sum-title">Habits by kind of work</span><span class="sum-meta">Where you brief, check and restart differently</span></span><span></span></summary>
+    <div class="body"><div class="tbl"><table id="cat-table">
+      <thead><tr><th>Work</th><th class="num">Sessions</th><th class="num">Briefed starts</th><th class="num">Corrections</th><th class="num">Output checking</th><th class="num">Restarts</th></tr></thead>
+      <tbody></tbody></table></div>
+      <p class="def">Pink marks where each habit is strongest. Kinds with fewer than 10 sessions in range are left out of the comparison.</p></div>
+  </details>
+
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+      <span class="sum-main"><span class="sum-title">Start vs end of range</span><span class="sum-meta" id="tn-meta">First 4 weeks compared with the last 4</span></span><span></span></summary>
+    <div class="body"><div class="tbl"><table id="then-now">
+      <thead><tr><th>Metric</th><th class="num" id="tn-a">Start</th><th class="num">Last 4 weeks</th><th class="num">Change</th><th>Better is</th></tr></thead>
+      <tbody></tbody></table></div></div>
+  </details>
+
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+      <span class="sum-main"><span class="sum-title">How these are measured</span><span class="sum-meta">Data coverage, gaps and labeling</span></span><span class="tags"><span class="pill p2">Gap</span></span></summary>
+    <div class="body">
+      <div class="tbl"><table>
+        <thead><tr><th>Source</th><th>From</th><th>How</th></tr></thead>
+        <tbody>
+          <tr><td>claude.ai</td><td>Oct 2025</td><td>Data export (conversations.json)</td></tr>
+          <tr><td>ChatGPT</td><td>Oct 2025</td><td>Data export (conversations.json)</td></tr>
+          <tr><td>Claude Code</td><td>Sep 21, 2026</td><td>Local logs. Older sessions were deleted by the 30-day cleanup; now kept for a year</td></tr>
+          <tr><td>Codex</td><td>Apr 2026</td><td>Local logs</td></tr>
+          <tr><td>Cursor</td><td>Feb 2026</td><td>Local database</td></tr>
+        </tbody></table></div>
+      <p class="def">These numbers are read from wording, so treat them as estimates. Each review, the coach spot-checks a dozen sessions before trusting them, and you can correct a label at the next review. The jump in late September is when Claude Code data starts; your habits didn't change that week.</p>
+    </div>
+  </details>
+</section>
+
+  <section>
+  <div class="sec-head"><h3>Usage this cycle</h3><span class="muted">Oct 12–25</span></div>
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">By tool</span><span class="sum-meta">Claude Code carried most of the build work; claude.ai most of the thinking.</span></span><span></span></summary>
+    <div class="body"><div class="tbl"><table>
+      <thead><tr><th>Tool</th><th class="num">Sessions</th><th class="num">Prompts</th><th class="num">Median length</th><th class="num">Corrections</th></tr></thead>
+      <tbody>
+        <tr><td>claude.ai</td><td class="num">21</td><td class="num">164</td><td class="num">212</td><td class="num">6</td></tr>
+        <tr><td>Claude Code</td><td class="num">17</td><td class="num">231</td><td class="num">148</td><td class="num">9</td></tr>
+        <tr><td>Codex</td><td class="num">5</td><td class="num">38</td><td class="num">96</td><td class="num">1</td></tr>
+        <tr><td>Cursor</td><td class="num">4</td><td class="num">29</td><td class="num">41</td><td class="num">3</td></tr>
+      </tbody></table></div></div>
+  </details>
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">Skills and commands</span><span class="sum-meta">5 used · 2 unused for 30+ days</span></span><span></span></summary>
+    <div class="body"><div class="tbl"><table>
+      <thead><tr><th>Skill</th><th class="num">Runs</th></tr></thead>
+      <tbody>
+        <tr><td>design-review</td><td class="num">7</td></tr>
+        <tr><td>pr-review</td><td class="num">5</td></tr>
+        <tr><td>user-interview-synth</td><td class="num">3</td></tr>
+        <tr><td>critical-review</td><td class="num">2</td></tr>
+        <tr><td>explain-concept</td><td class="num">1</td></tr>
+        <tr><td>release-notes</td><td class="num">0 <span class="muted">· unused 30 days</span></td></tr>
+        <tr><td>design-workflow-to-agents</td><td class="num">0 <span class="muted">· unused 30 days</span></td></tr>
+      </tbody></table></div></div>
+  </details>
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">Try next</span><span class="sum-meta">2 features that fit how you worked these two weeks</span></span><span></span></summary>
+    <div class="body">
+      <div class="field"><span class="eyebrow">Plan mode in Claude Code</span><p>4 of your 6 Claude Code restarts were multi-step builds. Planning before code would have surfaced the missing brief at turn 1.</p></div>
+      <div class="field"><span class="eyebrow">Subagents for research</span><p>One session read 31 files to answer one question. A research subagent returns just the answer and keeps your main context clean.</p></div>
+    </div>
+  </details>
+</section>
+
+</div>
+
+
+
+<footer>
+  How this works: this page uses sample data to show what the review will look like on your real sessions (Claude Code, Codex and Cursor logs, plus claude.ai and ChatGPT history). Prompts are trimmed and secrets removed. Habits are read from wording; results come from your ratings each session. Built on Anthropic's AI Fluency Index, prompting guide, Claude Code best practices and Agent Skills docs.
+</footer>
+
+</div>
+
+
+<nav class="toc" id="toc" aria-label="Sections">
+  <div class="toc-panel" id="toc-panel">
+    <p class="toc-h">On this page</p>
+    <ol>
+      <li><a href="#glance" data-target="glance">This cycle at a glance</a></li>
+      <li><a href="#part-1" data-target="part-1">Improve your prompts and context</a></li>
+      <li><a href="#part-2" data-target="part-2">Keep your skills current</a></li>
+      <li><a href="#part-3" data-target="part-3">How your behavior is changing</a></li>
+    </ol>
+    <button type="button" class="toc-top" id="toc-top">Back to top</button>
+  </div>
+  <button type="button" class="toc-btn" id="toc-btn" aria-expanded="false" aria-controls="toc-panel" aria-label="Table of contents">
+    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r=".6" fill="currentColor"/><circle cx="4" cy="12" r=".6" fill="currentColor"/><circle cx="4" cy="18" r=".6" fill="currentColor"/></svg>
+  </button>
+</nav>
+<script>
+
+document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', e => {
+  e.preventDefault();
+  const pre = btn.closest('.field').querySelector('pre');
+  const done = () => { btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy', 1500); };
+  navigator.clipboard.writeText(pre.innerText).then(done).catch(() => {
+    const r = document.createRange(); r.selectNodeContents(pre);
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected';
+  });
+}));
+
+// ---- trends with filters (sample data) ----
+(function () {
+  const WEEKS = 52, end = new Date(2026, 9, 19);
+  const weeks = Array.from({length: WEEKS}, (_, i) => new Date(end.getTime() - (WEEKS - 1 - i) * 7 * 864e5));
+  const SOURCES = [["claude_ai", "claude.ai"], ["claude_code", "Claude Code"], ["codex", "Codex"], ["cursor", "Cursor"], ["chatgpt", "ChatGPT"]];
+  const CATS = [["prototyping", "Prototyping"], ["creating", "Creating"], ["research", "Research"], ["brainstorming", "Brainstorming"], ["career", "Career"], ["consultation", "Consultation"]];
+  const BUILD = new Set(["prototyping", "creating", "research"]);
+  const name = (list, id) => list.find(x => x[0] === id)[1];
+
+  // ---- sample cube: week × source × kind of work (a real run reads the collector's "cube") ----
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const rr = v => Math.floor(v) + (rnd() < v - Math.floor(v) ? 1 : 0);
+  const ramp = (a, b, i, s0, s1) => i <= s0 ? a : i >= s1 ? b : a + (b - a) * (i - s0) / (s1 - s0);
+  const clamp = v => Math.max(0, Math.min(1, v));
+  const base = {
+    claude_ai: i => ramp(9, 19, i, 0, 51), chatgpt: i => ramp(7, 1.5, i, 0, 51),
+    claude_code: i => i < 47 ? 0 : 15, codex: i => i < 25 ? 0 : ramp(1, 3, i, 25, 51), cursor: i => i < 15 ? 0 : ramp(1, 3, i, 15, 51),
+  };
+  const mix = (src, i) => {
+    const careerShare = i >= 45 ? 0.12 : 0.04;
+    return {
+      claude_ai: {prototyping: .1, creating: .2, research: .2, brainstorming: .15, career: careerShare, consultation: .22},
+      chatgpt: {prototyping: .02, creating: .15, research: .2, brainstorming: .13, career: .02, consultation: .5},
+      claude_code: {prototyping: .72, creating: .14, research: .04, brainstorming: 0, career: .1, consultation: 0},
+      codex: {prototyping: .9, creating: .1, research: 0, brainstorming: 0, career: 0, consultation: 0},
+      cursor: {prototyping: .9, creating: .1, research: 0, brainstorming: 0, career: 0, consultation: 0},
+    }[src];
+  };
+  const rows = [];
+  weeks.forEach((_, i) => SOURCES.forEach(([src]) => {
+    const m = mix(src, i), tot = Object.values(m).reduce((a, b) => a + b, 0), n = base[src](i);
+    CATS.forEach(([c]) => {
+      const sessions = rr(n * m[c] / tot * (0.85 + rnd() * 0.3));
+      if (!sessions) return;
+      const proto = c === "prototyping";
+      const pps = proto ? 9 : c === "consultation" ? 3 : 6;
+      const prompts = rr(sessions * pps);
+      const brief = clamp(ramp(0.2, 0.56, i, 18, 32) - (proto ? 0.14 : 0) + (c === "career" ? 0.12 : 0));
+      const corr = ramp(0.19, 0.088, i, 19, 30) + (proto ? 0.05 : 0);
+      const check = BUILD.has(c) ? clamp(proto && i >= 45 ? 0.18 : ramp(0.3, 0.46, i, 10, 40)) : 0;
+      const restart = clamp(proto && i >= 45 ? 0.2 : ramp(0.13, 0.06, i, 18, 34));
+      const skill = clamp(i < 19 ? 0 : ramp(0.05, 0.45, i, 19, 51) + (c === "career" ? 0.15 : 0));
+      const retype = i < 37 ? 0.55 : 0.18;
+      rows.push({w: i, s: src, c, sessions, prompts,
+        briefed: rr(sessions * brief), corrections: rr(prompts * corr), refinements: rr(sessions * ramp(1.2, 2.4, i, 10, 40)),
+        build: BUILD.has(c) ? sessions : 0, checked: rr(sessions * check), restarts: rr(sessions * restart),
+        retyped: rr(sessions * retype), skilled: rr(sessions * skill)});
+    });
+  }));
+
+  // ---- metrics: every one has a one-line meaning ----
+  const pct = v => Math.round(v * 100) + "%";
+  const per10 = v => (v * 10).toFixed(1);
+  const METRICS = [
+    {id: "briefed", el: "primary-charts", title: "Briefed starts", num: "briefed", den: "sessions", fmt: pct, d: "pts", better: "up",
+     def: "Sessions whose first message gives the goal, the context and what done looks like. Higher means fewer detours."},
+    {id: "corrections", el: "primary-charts", title: "Corrections per 10 messages", num: "corrections", den: "prompts", fmt: per10, d: "per10", better: "down",
+     def: "How often you had to say “no, I meant…”. Each one is a misunderstanding you paid for in time."},
+    {id: "checked", el: "primary-charts", title: "Output checking", num: "checked", den: "build", fmt: pct, d: "pts", better: "up",
+     def: "Build and research sessions where you asked for sources, edge cases or a critique before accepting. It drops when output looks polished."},
+    {id: "restarts", el: "primary-charts", title: "Restarts", num: "restarts", den: "sessions", fmt: pct, d: "pts", better: "down",
+     def: "Sessions that start over on a task you began in the last 2 days. Usually the first brief was missing something."},
+    {id: "sessions", el: "more-charts", title: "Sessions per week", num: "sessions", den: null, fmt: v => Math.round(v), d: "rel", better: "none",
+     def: "How much you leaned on AI. Read the other numbers against it."},
+    {id: "skilled", el: "more-charts", title: "Skill use", num: "skilled", den: "sessions", fmt: pct, d: "pts", better: "up",
+     def: "Sessions that ran one of your skills or commands. Shows how much of your process is packaged and repeatable."},
+    {id: "retyped", el: "more-charts", title: "Rules retyped per week", num: "retyped", den: null, fmt: v => Math.round(v), d: "rel", better: "down",
+     def: "Standing preferences typed by hand, like “use tables”. Each repeat belongs in a config file once."},
+    {id: "refinements", el: "more-charts", title: "Refinements per session", num: "refinements", den: "sessions", fmt: v => v.toFixed(1), d: "abs", better: "up",
+     def: "Follow-ups that build on a good answer, like “now make it shorter”. Iterating on good output is a sign of skilled AI use."},
+  ];
+  const milestones = [{i: 19, label: "First skill"}, {i: 37, label: "Global CLAUDE.md"}, {i: 46, label: "Streak redesign starts"}];
+
+  // ---- filter state ----
+  const RANGES = [[4, "4 weeks"], [13, "3 months"], [26, "6 months"], [52, "12 months"]];
+  const state = {range: 52, sources: new Set(), cat: "all"};
+  const rangeEl = document.getElementById("f-range"), srcEl = document.getElementById("f-source"), catEl = document.getElementById("f-cat");
+  RANGES.forEach(([n, label]) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = label; b.dataset.n = n;
+    b.addEventListener("click", () => { state.range = n; render(); }); rangeEl.appendChild(b);
+  });
+  [["all", "All"], ...SOURCES].forEach(([id, label]) => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = label; b.dataset.id = id;
+    b.addEventListener("click", () => {
+      if (id === "all") state.sources.clear();
+      else if (state.sources.has(id)) state.sources.delete(id); else state.sources.add(id);
+      if (state.sources.size === SOURCES.length) state.sources.clear();
+      render();
+    });
+    srcEl.appendChild(b);
+  });
+  [["all", "All work"], ...CATS].forEach(([id, label]) => { const o = document.createElement("option"); o.value = id; o.textContent = label; catEl.appendChild(o); });
+  catEl.addEventListener("change", () => { state.cat = catEl.value; render(); });
+
+  const srcOk = r => !state.sources.size || state.sources.has(r.s);
+  const catOk = r => state.cat === "all" || r.c === state.cat;
+  const sumRows = (list, keys) => { const t = {}; keys.forEach(k => t[k] = 0); list.forEach(r => keys.forEach(k => t[k] += r[k])); return t; };
+  const KEYS = ["sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled"];
+  const weekTotals = filter => { const t = weeks.map(() => { const o = {}; KEYS.forEach(k => o[k] = 0); return o; }); rows.filter(filter).forEach(r => KEYS.forEach(k => t[r.w][k] += r[k])); return t; };
+  const value = (m, t) => m.den ? (t[m.den] ? t[m.num] / t[m.den] : null) : t[m.num];
+  const windowVal = (m, totals, a, b) => { // ratio of sums for rates, mean for counts
+    const slice = totals.slice(Math.max(0, a), b + 1); if (!slice.length) return null;
+    const s = sumRows(slice, KEYS);
+    return m.den ? (s[m.den] ? s[m.num] / s[m.den] : null) : s[m.num] / slice.length;
+  };
+  const deltaText = (m, a, b) => {
+    if (a == null || b == null) return null;
+    if (m.d === "pts") return {v: b - a, t: (b - a >= 0 ? "+" : "−") + Math.abs(Math.round((b - a) * 100)) + " pts"};
+    if (m.d === "per10") return {v: b - a, t: (b - a >= 0 ? "+" : "−") + Math.abs((b - a) * 10).toFixed(1)};
+    if (m.d === "abs") return {v: b - a, t: (b - a >= 0 ? "+" : "−") + Math.abs(b - a).toFixed(1)};
+    if (!a) return null;
+    return {v: b - a, t: (b - a >= 0 ? "+" : "−") + Math.abs(Math.round((b - a) / a * 100)) + "%"};
+  };
+  const tone = (m, dlt) => !dlt || m.better === "none" || Math.abs(dlt.v) < 1e-9 ? "" : ((m.better === "up") === (dlt.v > 0) ? "chg-good" : "chg-bad");
+  const mon = d => d.toLocaleDateString("en-US", {month: "short", day: "numeric"});
+  const NS = "http://www.w3.org/2000/svg", W = 340, H = 150, L = 36, R = 10, T = 12, B = 22;
+  const niceMax = v => { if (v <= 0) return 1; const p = Math.pow(10, Math.floor(Math.log10(v))); for (const k of [1, 2, 4, 5, 8, 10]) if (k * p >= v) return k * p; return 10 * p; };
+
+  function chart(m, totals, i0) {
+    const idx = []; for (let i = i0; i < WEEKS; i++) idx.push(i);
+    const raw = idx.map(i => value(m, totals[i]));
+    const avg = idx.map(i => windowVal(m, totals, Math.max(i0, i - 3), i));
+    const vals = raw.concat(avg).filter(v => v != null);
+    const ymax = niceMax(Math.max(...vals, m.den ? 0.05 : 1) * 1.08);
+    const x = k => L + (W - L - R) * (idx.length === 1 ? 0.5 : k / (idx.length - 1)), y = v => T + (H - T - B) * (1 - v / ymax);
+    const lastA = windowVal(m, totals, WEEKS - 4, WEEKS - 1);
+    const cmpA = state.range === 4 ? windowVal(m, totals, WEEKS - 8, WEEKS - 5) : windowVal(m, totals, i0, i0 + 3);
+    const dlt = deltaText(m, cmpA, lastA);
+    const card = document.createElement("div"); card.className = "chart";
+    const vs = state.range === 4 ? "vs previous 4 weeks" : "vs start of range";
+    card.innerHTML = `<div class="chart-head"><h3>${m.title}</h3><span class="chart-now"><b>${lastA == null ? "—" : m.fmt(lastA)}</b> now${dlt ? ` · <span class="${tone(m, dlt)}">${dlt.t}</span> ${vs}` : ""}</span></div><p class="def">${m.def}</p>`;
+    const firstData = raw.findIndex(v => v != null);
+    if (firstData > 0) { const g = document.createElement("span"); g.className = "gapnote"; g.textContent = `No data before ${mon(weeks[idx[firstData]])} for this filter`; card.appendChild(g); }
+    if (firstData === -1) { const g = document.createElement("span"); g.className = "gapnote"; g.textContent = "No sessions match these filters"; card.appendChild(g); document.getElementById(m.el).appendChild(card); return; }
+    const svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("role", "img");
+    svg.setAttribute("aria-label", `${m.title}, ${lastA == null ? "no data" : m.fmt(lastA)} over the last 4 weeks`);
+    const add = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; };
+    [0, 0.5, 1].forEach(f => { const v = ymax * f; add("line", {x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "var(--grid)", "stroke-width": 1}); add("text", {x: L - 6, y: y(v) + 3, "text-anchor": "end"}).textContent = m.fmt(v); });
+    idx.forEach((wi, k) => {
+      const d = weeks[wi];
+      const show = state.range <= 4 ? true : state.range <= 13 ? k % 4 === 0 : d.getDate() <= 7 && (state.range <= 26 ? d.getMonth() % 2 === 0 : [0, 3, 6, 9].includes(d.getMonth()));
+      if (show) add("text", {x: x(k), y: H - 6, "text-anchor": "middle"}).textContent = state.range <= 13 ? mon(d) : d.toLocaleDateString("en-US", {month: "short"});
+    });
+    milestones.filter(ms => ms.i >= i0).forEach(ms => add("line", {x1: x(ms.i - i0), x2: x(ms.i - i0), y1: T, y2: H - B, stroke: "var(--milestone)", "stroke-dasharray": "3 3", "stroke-width": 1}));
+    const path = arr => { let d = "", pen = false; arr.forEach((v, k) => { if (v == null) { pen = false; return; } d += (pen ? "L" : "M") + x(k).toFixed(1) + " " + y(v).toFixed(1); pen = true; }); return d; };
+    add("path", {d: path(raw), fill: "none", stroke: "var(--series)", "stroke-width": 1, opacity: 0.45, "stroke-linejoin": "round"});
+    add("path", {d: path(avg), fill: "none", stroke: "var(--series)", "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round"});
+    if (idx.length <= 13) raw.forEach((v, k) => { if (v != null) add("circle", {cx: x(k), cy: y(v), r: 2.5, fill: "var(--series)", opacity: 0.6}); });
+    if (raw[raw.length - 1] != null) add("circle", {cx: x(idx.length - 1), cy: y(raw[raw.length - 1]), r: 4, fill: "var(--series)", stroke: "var(--surface)", "stroke-width": 2});
+    const cross = add("line", {y1: T, y2: H - B, stroke: "var(--cursor)", "stroke-width": 1, visibility: "hidden"});
+    const hot = add("circle", {r: 4, fill: "var(--series)", stroke: "var(--surface)", "stroke-width": 2, visibility: "hidden"});
+    const hit = add("rect", {x: L, y: 0, width: W - L - R, height: H - B, fill: "transparent"});
+    const tip = document.createElement("div"); tip.className = "tip"; tip.hidden = true;
+    const move = ev => {
+      const r = svg.getBoundingClientRect(), sx = (ev.clientX - r.left) * W / r.width;
+      const k = Math.max(0, Math.min(idx.length - 1, Math.round((sx - L) / (W - L - R) * (idx.length - 1))));
+      cross.setAttribute("x1", x(k)); cross.setAttribute("x2", x(k)); cross.setAttribute("visibility", "visible");
+      if (raw[k] != null) { hot.setAttribute("cx", x(k)); hot.setAttribute("cy", y(raw[k])); hot.setAttribute("visibility", "visible"); } else hot.setAttribute("visibility", "hidden");
+      const ms = milestones.find(q => q.i === idx[k]);
+      tip.innerHTML = `Week of ${mon(weeks[idx[k]])}<br>${raw[k] == null ? "No sessions" : m.fmt(raw[k]) + " · avg " + m.fmt(avg[k])}${ms ? "<br>" + ms.label : ""}`;
+      tip.hidden = false;
+      const cr = card.getBoundingClientRect();
+      tip.style.top = (ev.clientY - cr.top - 56) + "px";
+      tip.style.left = Math.min(Math.max(8, ev.clientX - cr.left - tip.offsetWidth / 2), cr.width - tip.offsetWidth - 8) + "px";
+    };
+    const leave = () => { tip.hidden = true; cross.setAttribute("visibility", "hidden"); hot.setAttribute("visibility", "hidden"); };
+    hit.addEventListener("pointermove", move); hit.addEventListener("pointerdown", move); hit.addEventListener("pointerleave", leave);
+    card.appendChild(svg); card.appendChild(tip);
+    document.getElementById(m.el).appendChild(card);
+    return {m, cmpA, lastA, dlt};
+  }
+
+  function bars(el, list, total, prevTotals, onClick, selected) {
+    el.innerHTML = "";
+    list.sort((a, b) => b.n - a.n).forEach(item => {
+      const share = total ? item.n / total : 0, prev = prevTotals && prevTotals.total ? (prevTotals[item.id] || 0) / prevTotals.total : null;
+      const row = document.createElement(onClick ? "button" : "div"); row.className = "brow" + (selected === item.id ? " on" : "");
+      if (onClick) { row.type = "button"; row.setAttribute("aria-pressed", String(selected === item.id)); row.addEventListener("click", () => onClick(item.id)); }
+      const ch = prev == null ? "" : ` ${share - prev >= 0 ? "+" : "−"}${Math.abs(Math.round((share - prev) * 100))}`;
+      row.innerHTML = `<span class="bname">${item.label}</span><span class="btrack"><span style="width:${(share * 100).toFixed(1)}%"></span></span><span class="bval"><b>${pct(share)}</b>${prev == null ? "" : " · " + ch + " pts"}</span>`;
+      el.appendChild(row);
+    });
+  }
+
+  function render() {
+    const i0 = WEEKS - state.range;
+    rangeEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.n === state.range)));
+    srcEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === "all" ? !state.sources.size : state.sources.has(b.dataset.id))));
+    catEl.value = state.cat;
+    document.getElementById("range-label").textContent = "Last " + RANGES.find(r => r[0] === state.range)[1];
+    const totals = weekTotals(r => srcOk(r) && catOk(r));
+    const inRange = rows.filter(r => r.w >= i0 && srcOk(r) && catOk(r));
+    document.getElementById("f-sum").textContent = inRange.reduce((a, r) => a + r.sessions, 0).toLocaleString() + " sessions";
+
+    ["primary-charts", "more-charts"].forEach(id => document.getElementById(id).innerHTML = "");
+    const results = METRICS.map(m => chart(m, totals, i0)).filter(Boolean);
+
+    const tb = document.querySelector("#then-now tbody"); tb.innerHTML = "";
+    document.getElementById("tn-a").textContent = state.range === 4 ? "Previous 4 weeks" : "First 4 weeks";
+    document.getElementById("tn-meta").textContent = state.range === 4 ? "Last 4 weeks compared with the 4 before" : "First 4 weeks of the range compared with the last 4";
+    results.forEach(({m, cmpA, lastA, dlt}) => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${m.title}</td><td class="num">${cmpA == null ? "—" : m.fmt(cmpA)}</td><td class="num">${lastA == null ? "—" : m.fmt(lastA)}</td><td class="num ${tone(m, dlt)}">${dlt ? dlt.t : "—"}</td><td>${m.better === "up" ? "Higher" : m.better === "down" ? "Lower" : "Context only"}</td>`;
+      tb.appendChild(tr);
+    });
+
+    // what you used AI for: respects time + source, not the work filter (so you can compare kinds)
+    const prevRows = state.range < 52 ? rows.filter(r => r.w >= i0 - state.range && r.w < i0 && srcOk(r)) : null;
+    const catRows = rows.filter(r => r.w >= i0 && srcOk(r));
+    const catTotal = catRows.reduce((a, r) => a + r.sessions, 0);
+    const prevCat = prevRows && {total: prevRows.reduce((a, r) => a + r.sessions, 0)};
+    if (prevCat) CATS.forEach(([c]) => prevCat[c] = prevRows.filter(r => r.c === c).reduce((a, r) => a + r.sessions, 0));
+    bars(document.getElementById("cat-bars"), CATS.map(([id, label]) => ({id, label, n: catRows.filter(r => r.c === id).reduce((a, r) => a + r.sessions, 0)})).filter(x => x.n),
+      catTotal, prevCat, id => { state.cat = state.cat === id ? "all" : id; render(); }, state.cat);
+    const srcRows = rows.filter(r => r.w >= i0 && catOk(r));
+    const srcTotal = srcRows.reduce((a, r) => a + r.sessions, 0);
+    bars(document.getElementById("src-bars"), SOURCES.map(([id, label]) => ({id, label, n: srcRows.filter(r => r.s === id).reduce((a, r) => a + r.sessions, 0)})).filter(x => x.n), srcTotal, null, null, null);
+
+    // habits by kind of work
+    const ctb = document.querySelector("#cat-table tbody"); ctb.innerHTML = "";
+    const per = CATS.map(([c, label]) => { const t = sumRows(catRows.filter(r => r.c === c), KEYS); return {c, label, t,
+      briefed: t.sessions ? t.briefed / t.sessions : null, corr: t.prompts ? t.corrections / t.prompts : null,
+      checked: t.build ? t.checked / t.build : null, restarts: t.sessions ? t.restarts / t.sessions : null}; }).filter(p => p.t.sessions);
+    const eligible = per.filter(p => p.t.sessions >= 10);
+    const ext = (k, better) => { const v = eligible.map(p => p[k]).filter(x => x != null); return v.length < 2 ? {} : {best: better === "up" ? Math.max(...v) : Math.min(...v), worst: better === "up" ? Math.min(...v) : Math.max(...v)}; };
+    const E = {briefed: ext("briefed", "up"), corr: ext("corr", "down"), checked: ext("checked", "up"), restarts: ext("restarts", "down")};
+    const cell = (p, k, f) => { if (p[k] == null) return `<td class="num">—</td>`; const e = E[k], ok = p.t.sessions >= 10; const cls = ok && p[k] === e.best ? "best" : ok && p[k] === e.worst ? "worst" : ""; return `<td class="num ${cls}">${f(p[k])}</td>`; };
+    per.sort((a, b) => b.t.sessions - a.t.sessions).forEach(p => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${p.label}</td><td class="num">${p.t.sessions}</td>${cell(p, "briefed", pct)}${cell(p, "corr", v => per10(v) + " / 10")}${cell(p, "checked", pct)}${cell(p, "restarts", pct)}`;
+      ctb.appendChild(tr);
+    });
+
+    // ---- how each product's use and habits shifted ----
+    const ptb = document.querySelector("#prod-table tbody"); ptb.innerHTML = "";
+    const habit = t => ({briefed: t.sessions ? t.briefed / t.sessions : null, corr: t.prompts ? t.corrections / t.prompts : null,
+      checked: t.build ? t.checked / t.build : null, restarts: t.sessions ? t.restarts / t.sessions : null});
+    const prodStats = [];
+    SOURCES.forEach(([src, label]) => {
+      const mine = rows.filter(r => r.s === src && r.w >= i0);
+      const total = mine.reduce((a, r) => a + r.sessions, 0);
+      if (!total) return;
+      const dataWeeks = [...new Set(mine.map(r => r.w))].sort((a, b) => a - b);
+      const lastW = new Set(dataWeeks.slice(-4)), firstW = new Set(dataWeeks.slice(0, 4));
+      const nIn = ws => mine.filter(r => ws.has(r.w)).reduce((a, r) => a + r.sessions, 0);
+      const nowN = nIn(lastW), thenN = nIn(firstW);
+      const enoughNow = nowN >= 10;
+      const comparable = dataWeeks.length >= 8 && enoughNow && thenN >= 10;
+      const mixOf = ws => { const sel = mine.filter(r => ws.has(r.w)), n = sel.reduce((a, r) => a + r.sessions, 0); const m = {}; CATS.forEach(([c]) => m[c] = n ? sel.filter(r => r.c === c).reduce((a, r) => a + r.sessions, 0) / n : 0); return m; };
+      const mixNow = mixOf(lastW), mixThen = mixOf(firstW);
+      const hab = ws => habit(sumRows(mine.filter(r => ws.has(r.w) && catOk(r)), KEYS));
+      const now = hab(lastW), then = hab(firstW);
+      prodStats.push({label, total, comparable, enoughNow, mixNow, mixThen, now});
+      const uses = CATS.map(([c, l]) => ({l, v: mixNow[c], d: mixNow[c] - mixThen[c]})).filter(u => u.v >= 0.05).sort((a, b) => b.v - a.v).slice(0, 3)
+        .map(u => `${u.l} ${pct(u.v)}${comparable && Math.abs(u.d) >= 0.03 ? ` <span class="muted">(${u.d > 0 ? "+" : "−"}${Math.abs(Math.round(u.d * 100))})</span>` : ""}`).join(" · ");
+      const hc = (k, f, better, unit) => {
+        const v = now[k]; if (v == null || !enoughNow) return `<td class="num">—</td>`;
+        if (!comparable || then[k] == null) return `<td class="num">${f(v)}</td>`;
+        const d = v - then[k], good = better === "up" ? d > 0 : d < 0, show = unit === "per10" ? Math.abs(d * 10).toFixed(1) : Math.abs(Math.round(d * 100));
+        return `<td class="num">${f(v)} <span class="${Math.abs(d) < 0.005 ? "muted" : good ? "chg-good" : "chg-bad"}">(${d >= 0 ? "+" : "−"}${show})</span></td>`;
+      };
+      const tr = document.createElement("tr");
+      const note = !enoughNow ? `Only ${nowN} sessions in the last 4 weeks; too few to read` : dataWeeks.length < 8 ? `Data since ${mon(weeks[dataWeeks[0]])}; too new to compare` : !comparable ? `Too few early sessions to compare` : "";
+      tr.innerHTML = `<td>${label}${note ? `<br><span class="gapnote">${note}</span>` : ""}</td><td class="num">${total}</td><td>${enoughNow ? uses : "—"}</td>` +
+        hc("briefed", pct, "up", "pts") + hc("corr", per10, "down", "per10") + hc("checked", pct, "up", "pts") + hc("restarts", pct, "down", "pts");
+      ptb.appendChild(tr);
+    });
+    let shift = null;
+    prodStats.filter(p => p.comparable).forEach(p => CATS.forEach(([c, l]) => { const d = p.mixNow[c] - p.mixThen[c]; if (!shift || Math.abs(d) > Math.abs(shift.d)) shift = {p, l, d, from: p.mixThen[c], to: p.mixNow[c]}; }));
+    const briefRank = prodStats.filter(p => p.enoughNow && p.now.briefed != null).sort((a, b) => b.now.briefed - a.now.briefed);
+    document.getElementById("prod-insight").textContent =
+      (shift && Math.abs(shift.d) >= 0.05 ? `Biggest shift: ${shift.l.toLowerCase()} went from ${pct(shift.from)} to ${pct(shift.to)} of your ${shift.p.label} sessions. ` : "") +
+      (briefRank.length > 1 ? `You brief best in ${briefRank[0].label} (${pct(briefRank[0].now.briefed)}) and least in ${briefRank[briefRank.length - 1].label} (${pct(briefRank[briefRank.length - 1].now.briefed)}).` : "");
+    // one generated sentence that names the weakest spot for the current filters
+    const ins = document.getElementById("cat-insight");
+    const top = per.slice().sort((a, b) => b.t.sessions - a.t.sessions)[0];
+    const weakBrief = eligible.filter(p => p.briefed != null).sort((a, b) => a.briefed - b.briefed)[0];
+    const weakCheck = eligible.filter(p => p.checked != null).sort((a, b) => a.checked - b.checked)[0];
+    ins.textContent = !top ? "" : `${top.label} is your biggest kind of work in this view (${pct(top.t.sessions / catTotal)} of sessions).` +
+      (weakBrief && eligible.length > 1 ? ` ${weakBrief.label} has your lowest briefed-start rate at ${pct(weakBrief.briefed)}.` : "") +
+      (weakCheck && eligible.length > 1 && weakCheck.c !== weakBrief?.c ? ` You check output least in ${weakCheck.label.toLowerCase()} (${pct(weakCheck.checked)}).` : weakCheck && eligible.length > 1 ? ` It also has the least output checking (${pct(weakCheck.checked)}).` : "");
+  }
+  render();
+})();
+
+
+
+// ---- hover / focus explanations for evidence and data tags ----
+(function () {
+  const TIPS = [
+    [/^Clear pattern$/, "Clear pattern: seen again and again in your sessions, with consistent examples."],
+    [/^Likely pattern$/, "Likely pattern: shows up repeatedly, but something else could explain it."],
+    [/^Unconfirmed$/, "Unconfirmed: a hunch from limited evidence. Worth checking with you before acting on it."],
+    [/^Likely to help$/, "Likely to help: a simple, direct fix with clear evidence behind it."],
+    [/^Might help$/, "Might help: a reasonable bet, but the result hasn't been measured yet."],
+    [/^Worth testing$/, "Worth testing: we don't know yet whether it helps. This experiment will find out."],
+    [/^Cause unclear$/, "Cause unclear: the number moved, but other changes happened at the same time, so we can't credit this change alone."],
+    [/^Not measured$/, "Not measured: there's no data on the result yet, so this counts as neither a success nor a failure."],
+    [/^Confirmed$/, "Confirmed: verified by reading the skill file directly."],
+    [/^Clear$/, "Clear: directly visible in your files."],
+    [/^Possible$/, "Possible: could matter, but nothing has gone wrong because of it yet."],
+  ];
+  const pop = document.createElement("div"); pop.className = "tip-pop"; pop.id = "tip-pop"; pop.setAttribute("role", "tooltip"); pop.hidden = true;
+  document.body.appendChild(pop);
+  let current = null;
+  const show = el => {
+    current = el; pop.textContent = el.dataset.tip; pop.hidden = false; el.setAttribute("aria-describedby", "tip-pop");
+    const r = el.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
+    let left = Math.min(Math.max(8, r.left + r.width / 2 - w / 2), window.innerWidth - w - 8);
+    let top = r.top - h - 8; if (top < 8) top = r.bottom + 8;
+    pop.style.left = left + "px"; pop.style.top = top + "px";
+  };
+  const hide = () => { if (current) current.removeAttribute("aria-describedby"); current = null; pop.hidden = true; };
+  document.querySelectorAll(".conf, .badge").forEach(el => {
+    const t = el.textContent.trim(), hit = TIPS.find(([re]) => re.test(t));
+    if (!hit) return;
+    el.dataset.tip = hit[1]; el.tabIndex = 0;
+    el.addEventListener("mouseenter", () => show(el)); el.addEventListener("mouseleave", hide);
+    el.addEventListener("focus", () => show(el)); el.addEventListener("blur", hide);
+    el.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); current === el ? hide() : show(el); });
+  });
+  window.addEventListener("scroll", hide, {passive: true});
+  document.addEventListener("keydown", e => { if (e.key === "Escape") hide(); });
+  document.addEventListener("click", hide);
+})();
+
+// ---- "From pattern N" links: keep numbers in sync with the current ranking, jump and highlight ----
+(function () {
+  const sync = () => document.querySelectorAll(".from-link").forEach(a => {
+    const card = document.getElementById(a.dataset.target);
+    const n = card && card.querySelector(".rank") ? card.querySelector(".rank").textContent : "";
+    a.firstChild.textContent = "From pattern " + n + " ";
+    a.setAttribute("aria-label", "Go to pattern " + n + ": " + (card ? card.querySelector("h3").textContent : ""));
+  });
+  sync();
+  document.querySelectorAll(".from-link").forEach(a => a.addEventListener("click", e => {
+    e.preventDefault();
+    const card = document.getElementById(a.dataset.target); if (!card) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    card.scrollIntoView({behavior: reduce ? "auto" : "smooth", block: "start"});
+    card.classList.remove("flash"); void card.offsetWidth; card.classList.add("flash");
+    card.setAttribute("tabindex", "-1"); card.focus({preventScroll: true});
+  }));
+})();
+
+// ---- table rows jump to the fix inside its pattern; preview of a later review ----
+(function () {
+  const reduce = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  document.querySelectorAll("a.row-link").forEach(a => a.addEventListener("click", e => {
+    e.preventDefault();
+    const el = document.getElementById(a.dataset.jump); if (!el) return;
+    el.scrollIntoView({behavior: reduce() ? "auto" : "smooth", block: "center"});
+    el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+  }));
+  const btn = document.getElementById("preview-p3"), p3 = document.getElementById("part-3"), li = document.getElementById("toc-p3");
+  if (btn) btn.addEventListener("click", () => {
+    const show = p3.hidden; p3.hidden = !show; li.hidden = !show;
+    btn.textContent = show ? "Hide the later-review preview" : "Preview a later review";
+    if (show) p3.scrollIntoView({behavior: reduce() ? "auto" : "smooth", block: "start"});
+  });
+})();
+
+// ---- floating table of contents ----
+(function () {
+  const toc = document.getElementById("toc"), btn = document.getElementById("toc-btn"), links = [...toc.querySelectorAll("a[data-target]")];
+  const setOpen = on => { toc.classList.toggle("open", on); btn.setAttribute("aria-expanded", String(on)); };
+  let closeTimer;
+  toc.addEventListener("mouseenter", () => { clearTimeout(closeTimer); setOpen(true); });
+  toc.addEventListener("mouseleave", () => { closeTimer = setTimeout(() => setOpen(false), 180); });
+  btn.addEventListener("click", e => { e.stopPropagation(); setOpen(!toc.classList.contains("open")); });
+  toc.addEventListener("focusout", e => { if (!toc.contains(e.relatedTarget)) setOpen(false); });
+  document.addEventListener("click", e => { if (!toc.contains(e.target)) setOpen(false); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && toc.classList.contains("open")) { setOpen(false); btn.focus(); } });
+  const reduce = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  links.forEach(a => a.addEventListener("click", e => {
+    e.preventDefault();
+    const el = document.getElementById(a.dataset.target); if (!el) return;
+    el.scrollIntoView({behavior: reduce() ? "auto" : "smooth", block: "start"});
+    setOpen(false);
+  }));
+  document.getElementById("toc-top").addEventListener("click", () => { window.scrollTo({top: 0, behavior: reduce() ? "auto" : "smooth"}); setOpen(false); });
+  // highlight the section you're in
+  const spy = () => {
+    let cur = links[0];
+    links.forEach(a => { const el = document.getElementById(a.dataset.target); if (el && el.getBoundingClientRect().top < window.innerHeight * 0.35) cur = a; });
+    links.forEach(a => a.classList.toggle("on", a === cur));
+  };
+  window.addEventListener("scroll", spy, {passive: true}); spy();
+})();
+</script>
