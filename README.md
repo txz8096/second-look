@@ -6,6 +6,8 @@ second look is an open-source skill that reviews your sessions across Claude Cod
 Cursor, claude.ai and ChatGPT, then suggests a few changes to test. Each suggestion cites the
 sessions it came from.
 
+**Learn more on the website: [txz8096.github.io/second-look](https://txz8096.github.io/second-look/)**
+
 [Website](https://txz8096.github.io/second-look/) ·
 [Sample report](https://txz8096.github.io/second-look/#sample-report) ·
 [Install](#install) ·
