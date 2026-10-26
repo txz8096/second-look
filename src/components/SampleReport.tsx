@@ -203,7 +203,7 @@ function ExpandedPattern() {
 
 export function SampleReport() {
   return (
-    <section id="sample-report" className="scroll-mt-4 border-y border-rule bg-surface">
+    <section id="sample-report" className="border-y border-rule bg-surface">
       <Container className="flex flex-col gap-14 py-20 lg:py-28">
         <Kicker>Sample report</Kicker>
 

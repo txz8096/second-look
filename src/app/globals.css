@@ -25,6 +25,8 @@
 
 html {
   scroll-behavior: smooth;
+  /* Keeps anchored sections clear of the sticky nav. */
+  scroll-padding-top: 96px;
   color-scheme: dark;
 }
 

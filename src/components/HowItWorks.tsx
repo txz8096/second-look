@@ -10,7 +10,7 @@ const steps: { title: string; desc: string; icon: LucideIcon }[] = [
 
 export function HowItWorks() {
   return (
-    <section id="how-it-works" className="scroll-mt-4 border-t border-rule bg-paper">
+    <section id="how-it-works" className="border-t border-rule bg-paper">
       <Container className="flex flex-col gap-16 py-20 lg:py-28">
         <div className="flex max-w-[720px] flex-col gap-5">
           <Kicker>Every two weeks</Kicker>

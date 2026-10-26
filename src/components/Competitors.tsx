@@ -15,7 +15,7 @@ const additions = [
 
 export function Competitors() {
   return (
-    <section id="competitors" className="scroll-mt-4 bg-surface">
+    <section id="competitors" className="bg-surface">
       <Container className="flex flex-col gap-14 py-20 lg:py-28">
         <div className="flex max-w-[1030px] flex-col gap-5">
           <Kicker>The competitors</Kicker>

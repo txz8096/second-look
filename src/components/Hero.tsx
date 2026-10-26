@@ -6,9 +6,9 @@ import { Sparkline } from "./Sparkline";
 import { Container, PrimaryButton, SecondaryButton } from "./ui";
 
 const yLabels = [
-  { label: "0%", y: 137 },
-  { label: "40%", y: 77 },
-  { label: "80%", y: 17 },
+  { label: "0", y: 137 },
+  { label: "1", y: 77 },
+  { label: "2", y: 17 },
 ];
 
 const xLabels = [
@@ -19,18 +19,18 @@ const xLabels = [
 ];
 
 const signals = [
-  { label: "Corrections / 10 msgs", value: "1.1", delta: "−0.8", tone: "muted", d: SPARKLINES.corrections },
+  { label: "Briefed starts", value: "56%", delta: "+39 pts", tone: "muted", d: SPARKLINES.briefedStarts },
   { label: "Output checking", value: "29%", delta: "−1 pt", tone: "accent", d: SPARKLINES.outputChecking },
   { label: "Restarts", value: "10%", delta: "+3 pts", tone: "muted", d: SPARKLINES.restarts },
 ] as const;
 
-function BriefedStartsPlot() {
+function CorrectionsPlot() {
   return (
     <svg
       viewBox={HERO_PLOT.viewBox}
       className="block h-auto w-full"
       role="img"
-      aria-label="Briefed starts by week over the last 12 months, rising from about 20% to 56%"
+      aria-label="Corrections per 10 messages by week over the last 12 months, falling from about 1.9 to 1.1"
     >
       <path d={HERO_PLOT.gridlines} fill="none" strokeWidth={1} className="stroke-rule" vectorEffect="non-scaling-stroke" />
       <path
@@ -82,17 +82,17 @@ function AnnotatedTrace() {
         <div className="flex flex-col gap-3.5">
           <div className="flex items-end justify-between gap-4">
             <div className="flex flex-col gap-1">
-              <p className="font-body text-base text-ink">Briefed starts</p>
+              <p className="font-body text-base text-ink">Corrections per 10 messages</p>
               <p className="font-body text-xs leading-[1.45] text-text-3">
-                First message gives the goal, the context and what done looks like.
+                How often you redirect or fix the AI. Lower means it understood you sooner.
               </p>
             </div>
             <div className="flex shrink-0 flex-col items-end gap-0.5">
-              <p className="font-display text-[30px] leading-none font-medium text-ink">56%</p>
-              <p className="font-mono text-[11px] text-accent">+39 pts since Nov</p>
+              <p className="font-display text-[30px] leading-none font-medium text-ink">1.1</p>
+              <p className="font-mono text-[11px] text-accent">−0.8 since Nov</p>
             </div>
           </div>
-          <BriefedStartsPlot />
+          <CorrectionsPlot />
         </div>
 
         <div className="grid grid-cols-3 gap-6 border-t border-rule pt-[18px]">

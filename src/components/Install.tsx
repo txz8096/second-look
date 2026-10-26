@@ -29,7 +29,7 @@ const secondaryLinks = [
 
 export function Install() {
   return (
-    <section id="install" className="scroll-mt-4 bg-paper">
+    <section id="install" className="bg-paper">
       <Container className="flex flex-col gap-14 py-20 lg:flex-row lg:gap-24 lg:py-28">
         <div className="flex flex-col items-start gap-6 lg:w-[460px] lg:shrink-0">
           <Kicker>Getting started</Kicker>

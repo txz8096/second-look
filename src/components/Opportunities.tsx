@@ -1,19 +1,19 @@
 import { Container, Kicker, SectionHeading } from "./ui";
 
 const benefits = [
-  { title: "Less overhead", body: "Cut the setup and re-explaining around each task." },
-  { title: "Fewer errors", body: "Find the habit behind repeated rework." },
-  { title: "Better code help", body: "Ask for code with a clear scope and a way to check it." },
-  { title: "Less retyping", body: "Move repeated context into memory and skills." },
-  { title: "Your own judgment", body: "See where you hand off thinking that should stay yours." },
-  { title: "Deeper research", body: "Learn what made your best sessions go further." },
-  { title: "Habits that transfer", body: "Turn one-off wins into habits across tools and models." },
-  { title: "The right tool", body: "Match each task to the assistant that suits it." },
+  { title: "Less overhead for tasks", body: "Cut the administrative overhead around each task so work moves faster." },
+  { title: "Better output, fewer errors", body: "Find the habits behind rework, so first results need less fixing." },
+  { title: "More reliable code", body: "Ask for code with a clear scope and a way to check it." },
+  { title: "Keep your own judgement", body: "Depend less on AI for the thinking." },
+  { title: "Deeper research", body: "Get more thorough research and sharper reasoning from each session." },
+  { title: "Skills that transfer", body: "Build skills that carry over to new tools and models." },
+  { title: "Bring tools together", body: "Get more from several AI tools by matching each task to the right one." },
+  { title: "Less repeated setup", body: "Stop retyping context. Move it into memory and skills." },
 ];
 
 export function Opportunities() {
   return (
-    <section id="opportunities" className="scroll-mt-4 border-t border-rule bg-paper">
+    <section id="opportunities" className="border-t border-rule bg-paper">
       <Container className="flex flex-col gap-16 py-20 lg:py-28">
         <div className="flex max-w-[760px] flex-col gap-5">
           <Kicker>The opportunities</Kicker>

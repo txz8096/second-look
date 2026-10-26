@@ -38,7 +38,7 @@ export function Approach() {
   const [open, setOpen] = useState(0);
 
   return (
-    <section id="approach" className="scroll-mt-4 border-t border-rule bg-paper">
+    <section id="approach" className="border-t border-rule bg-paper">
       <Container className="flex flex-col gap-14 py-20 lg:flex-row lg:gap-24 lg:py-28">
         <div className="flex flex-col gap-6 lg:w-[440px] lg:shrink-0">
           <Kicker>Our approach</Kicker>
