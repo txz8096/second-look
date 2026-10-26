@@ -86,6 +86,47 @@ where your rules and skills live) and saves them to `~/.second-look/profile.md`.
 Ask Claude to set up a scheduled task that runs second look every other Sunday, or add a cron
 job that runs `claude -p "reflect on how I've been using AI over the last two weeks"`.
 
+## FAQ
+
+**Do I need to install it in every tool?**
+No. Install it once, say in Claude Code, and it still reads your Codex and Cursor sessions
+on the same computer, because it opens each tool's log files directly. Install it in another
+tool only if you want to start reviews from there.
+
+**Does running it in one tool start it in the others?**
+No. Nothing runs in the background or between tools. A review runs only where you start it,
+or when a schedule you set up fires. That one run reads every tool's files, and every run on
+your computer shares the same notes in `~/.second-look`.
+
+**Does one report cover all my AI tools?**
+Yes, when you run it on your computer:
+
+| Source | Run on your computer | Run on claude.ai |
+|---|---|---|
+| Claude Code | ✓ | ✗ |
+| Codex | ✓ | ✗ |
+| Cursor | ✓ | ✗ |
+| claude.ai | From a data export | ✓ (a sample of recent chats) |
+| ChatGPT | From a data export | If you upload the export |
+
+**How far back does the yearly view go?**
+As far back as your logs do. Claude Code keeps 30 days by default; `--keep-history` keeps a
+year from then on. Codex and Cursor go back as far as their files. claude.ai and ChatGPT
+count up to the day you exported. The sample report uses made-up data. To see what your own
+data covers:
+
+```bash
+python3 ~/.agents/skills/second-look/scripts/collect.py --days 365 --trend \
+  | python3 -c "import json,sys; print(json.dumps(json.load(sys.stdin)['coverage'], indent=2))"
+```
+
+With only the Claude Code plugin installed, ask Claude Code to "run the second look collector
+and show me the coverage" instead.
+
+**Are cloud sessions included?**
+No. Claude Code on the web, Codex cloud tasks and Cursor cloud agents don't leave logs on
+your computer, so second look can't see them.
+
 ## Where your data goes
 
 | Location | What |
