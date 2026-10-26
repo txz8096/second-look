@@ -88,7 +88,8 @@ if "Claude Code" in found and retention < 365:
 reminder = os.path.join(home, ".second-look", "reminder.json")
 state = json.load(open(reminder)) if os.path.exists(reminder) else {}
 if state.get("enabled"):
-    print(f"  Keep your reminder to review every {state['every_days']} days")
+    n = state["every_days"]
+    print("  Keep your reminder to review " + ("every day" if n == 1 else f"every {n} days"))
 else:
     print("  Ask whether to remind you to review every 14 days")
     print("    (a notification on this computer; change or stop it any time)")
@@ -189,7 +190,9 @@ if [ "$remind" = "ask" ]; then
   fi
 fi
 case "$remind" in
-  keep) echo "Reminder unchanged: every $reminder_on days." ;;
+  keep)
+    python3 "$reminder" set --days "$reminder_on" >/dev/null  # refreshes the job's copy of reminder.py
+    [ "$reminder_on" = 1 ] && echo "Reminder unchanged: every day." || echo "Reminder unchanged: every $reminder_on days." ;;
   no) [ -n "$reminder_on" ] && python3 "$reminder" off ;;
   *) python3 "$reminder" set --days "$remind" || echo "Couldn't set up the reminder on this system." ;;
 esac

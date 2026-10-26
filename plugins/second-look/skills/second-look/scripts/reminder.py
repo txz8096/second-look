@@ -21,11 +21,18 @@ LABEL = "dev.secondlook.reminder"
 PLIST = os.path.join(HOME, "Library", "LaunchAgents", LABEL + ".plist")
 CRON_MARKER = "# second-look-reminder"
 SCRIPT = os.path.abspath(__file__)
+# The job runs a copy kept here: macOS blocks background jobs from reading ~/Documents and
+# ~/Desktop, where a cloned skill may live.
+JOB_SCRIPT = os.path.join(HOME, ".second-look", "reminder.py")
 NAG_EVERY_DAYS = 2  # once due, remind again every 2 days until a review is logged
 
 
 def today():
     return dt.date.today()
+
+
+def every(days):
+    return "every day" if days == 1 else "every %d days" % days
 
 
 def load():
@@ -57,7 +64,10 @@ def run(cmd, dry, check=True):
 
 def schedule_on(dry):
     """Run `check` daily at 10:00. Returns a short description of the job."""
-    cmd = [sys.executable, SCRIPT, "check"]
+    os.makedirs(os.path.dirname(JOB_SCRIPT), exist_ok=True)
+    if not (os.path.exists(JOB_SCRIPT) and os.path.samefile(SCRIPT, JOB_SCRIPT)):
+        shutil.copy2(SCRIPT, JOB_SCRIPT)
+    cmd = [sys.executable, JOB_SCRIPT, "check"]
     if sys.platform == "darwin":
         os.makedirs(os.path.dirname(PLIST), exist_ok=True)
         with open(PLIST, "wb") as f:
@@ -93,6 +103,8 @@ def schedule_off(dry):
                 print("would remove the second look crontab line")
             else:
                 subprocess.run(["crontab", "-"], input="\n".join(lines) + "\n", text=True, check=True)
+    if os.path.exists(JOB_SCRIPT) and not dry:
+        os.remove(JOB_SCRIPT)
 
 
 def set_profile_cadence(value):
@@ -142,8 +154,8 @@ def main():
             sys.exit("No scheduler found (needs macOS launchd or cron). Reminders are off.")
         s.update(enabled=True, every_days=a.days, start=s.get("start") or today().isoformat(), last_notified=None)
         save(s)
-        set_profile_cadence("every %d days" % a.days)
-        print("Reminders on: every %d days, next on %s (%s)." % (a.days, next_due(s), job))
+        set_profile_cadence(every(a.days))
+        print("Reminders on: %s, next on %s (%s)." % (every(a.days), next_due(s), job))
     elif a.command == "off":
         schedule_off(a.dry_run)
         s.update(enabled=False, last_notified=None)
