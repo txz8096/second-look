@@ -361,7 +361,7 @@ keep your reports. If you used the plugin, run `/plugin uninstall second-look`.
 
 To work on the website: `npm install`, then `npm run dev`.
 
-Found a problem? [Open an issue](https://github.com/txz8096/second-look/issues).
+Found a problem? [Open an issue](https://github.com/txz8096/second-look/issues/new).
 
 ## License
 
