@@ -3,7 +3,7 @@ import { Wordmark } from "./Wordmark";
 const navLinks = [
   { label: "The approach", href: "#approach" },
   { label: "Sample report", href: "#sample-report" },
-  { label: "Privacy and FAQ", href: "#privacy" },
+  { label: "FAQ", href: "#faq" },
 ];
 
 export function Nav() {
