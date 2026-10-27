@@ -488,6 +488,10 @@ a.from-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 .toc a.toc-top:hover { background: var(--surface-2); border-color: var(--line-strong); color: var(--fg); }
 #goals, #part-1, #part-2, #part-3, #maintenance { scroll-margin-top: 20px; }
 @media print { .toc { display: none; } }
+/* charts drawn at build time (scripts/prerender.py): filters need scripts, so hide them until the script takes over */
+#trends[data-static] .filters { display: none; }
+.static-note { display: none; }
+#trends[data-static] .static-note { display: block; }
 
 /* dialog: ordered priorities + pool */
 .gd-sec { display: grid; gap: 8px; }
@@ -1095,6 +1099,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
     <span><i class="k-thin"></i>Each week</span><span><i class="k-thick"></i>4-week average</span>
     <span><i class="k-dot"></i>Latest week</span><span><i class="k-ms"></i>Milestones: Mar, first skill · Jul, global CLAUDE.md · Sep, Streak redesign</span>
   </div>
+  <p class="def static-note">Showing the last 12 months across every tool. Open this file in Chrome, Safari or another browser to filter the charts.</p>
   <div class="multiples" id="primary-charts"></div>
 
   <details>
@@ -1319,6 +1324,12 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
   ];
   const milestones = [{i: 19, label: "First skill"}, {i: 37, label: "Global CLAUDE.md"}, {i: 46, label: "Streak redesign starts"}];
 
+  // charts drawn at build time: drop their filter controls, then redraw live
+  const trendsEl = document.getElementById("trends");
+  if (trendsEl.hasAttribute("data-static")) {
+    trendsEl.querySelectorAll("#f-range .chip, #f-source .chip, #f-cat option").forEach(n => n.remove());
+    trendsEl.removeAttribute("data-static");
+  }
   // ---- filter state ----
   const RANGES = [[4, "4 weeks"], [13, "3 months"], [26, "6 months"], [52, "12 months"]];
   const state = {range: 52, sources: new Set(), cat: "all"};

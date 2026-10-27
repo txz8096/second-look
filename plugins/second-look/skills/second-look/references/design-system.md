@@ -55,7 +55,9 @@ cards, panels · 20px "Try this" blocks and the plan · fully rounded chips.
    first", "Worth a look", collapsed installed skills.
 6. How your behavior is changing (`#part-3`): scan line, "Did last cycle's fixes work?"
    (only after a review with logged fixes), "Habits over the last year" (`#trends`),
-   "Usage this cycle".
+   "Usage this cycle". `scripts/prerender.py` saves the drawn charts, bars and tables into
+   the file and marks the section `data-static`, which hides the filters and shows a note.
+   The script clears the mark and redraws with live filters.
 7. Report an issue (`#report-issue`): one line linking to
    https://github.com/txz8096/second-look/issues/new. Keep it as the template has it.
 8. Footer: method and sources.

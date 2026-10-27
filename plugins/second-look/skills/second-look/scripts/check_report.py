@@ -57,6 +57,8 @@ def main():
     ap.add_argument("--template", default=DEFAULT_TEMPLATE)
     a = ap.parse_args()
     html = open(a.report, encoding="utf-8").read()
+    # charts drawn by prerender.py are the template script's own output; check only what was written
+    html = re.sub(r'(<section id="trends" data-static="">).*?(</section>)', r"\1\2", html, count=1, flags=re.S)
     problems = []
 
     styles = style_of(html)

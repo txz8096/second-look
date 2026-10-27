@@ -60,6 +60,7 @@ Files that ship with this skill:
 | `report-template.html` | Both | The only source for the report's design. Copy it and change content only |
 | `second-look-logo.svg` | Both | The wordmark. The template already inlines it |
 | `references/design-system.md` | Both | Tokens, type, layout and allowed labels. Read it; don't rebuild from it |
+| `scripts/prerender.py` | Local | Draws the year charts into the report so they show where scripts are blocked |
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
 | `scripts/collect.py` | Local | Reads Claude Code, Codex and Cursor logs and the two data exports |
 | `scripts/schedule.py` | Local | Sets up, changes or stops recurring reviews, and records each full review |
@@ -255,6 +256,11 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
   existing component or leave it out.
 - Change only content: text, cards, table rows, chip labels from the allowed list, and the
   trend data in the script (replace the sample cube with the collector's `cube`).
+- Locally, run `python3 scripts/prerender.py <report.html>` once the cube is in. It opens the
+  report in headless Chrome and saves the drawn charts into the file, so they show in viewers
+  that block scripts, like the Claude app's preview pane. Without Chrome it says so and
+  changes nothing. Rerun it after any change to the cube. Skip it on claude.ai, where
+  artifacts run scripts.
 - Run `python3 scripts/check_report.py <report.html>`. Fix every problem it lists and run it
   again. Publish only when it prints "Design check passed."
 - If the template is missing, say so and stop.
