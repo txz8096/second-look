@@ -754,6 +754,38 @@ td .def { display: block; margin-top: 6px; }
 
 .summary { margin: -8px 0 0; font-size: 20px; line-height: 1.5; letter-spacing: -0.005em; color: var(--fg); max-width: none; }
 @media (max-width: 680px) { .summary { font-size: 17px; } }
+
+/* Habit terms: a dashed underline that opens a definition card on hover or focus. Pure CSS, so it also works where scripts are off. */
+.term { position: relative; display: inline-block; cursor: help; text-decoration: underline dashed var(--faint); text-decoration-thickness: 1px; text-underline-offset: 4px; border-radius: var(--r-4); }
+.term:hover, .term:focus-visible { text-decoration-color: var(--accent); }
+.term:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.term-card { position: absolute; z-index: 50; top: calc(100% + 8px); left: 0; width: max-content; max-width: min(280px, calc(100vw - 32px)); padding: 10px 12px; border-radius: var(--r-6);
+  background: var(--fg); color: var(--bg); box-shadow: 0 6px 18px rgb(0 0 0 / .12); font: 400 0.8125rem/1.45 var(--sans); letter-spacing: -0.005em; text-transform: none; text-align: left; white-space: normal;
+  opacity: 0; visibility: hidden; transition: opacity .12s, visibility 0s .12s; }
+.term-card::before { content: ""; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
+.term:hover .term-card, .term:focus .term-card { opacity: 1; visibility: visible; transition: opacity .12s; }
+.term.dismissed .term-card { opacity: 0; visibility: hidden; }
+/* In the glance the card hangs from its stat box, under the label, and opens leftward from stats in the rightmost column. */
+.snapshot { overflow: visible; container-type: inline-size; }
+.stat { position: relative; }
+.stat .term { position: static; }
+.stat .term-card { top: 42px; left: 18px; right: auto; }
+.stat .term-card::before { top: -12px; height: 12px; }
+@media (min-width: 681px) {
+  @container (min-width: 800px) { .stat:nth-child(5) .term-card { left: auto; right: 12px; } }
+  @container (max-width: 799.98px) { .stat:nth-child(4) .term-card { left: auto; right: 12px; } }
+}
+@media (max-width: 680px) { .stat:nth-child(even) .term-card { left: auto; right: 12px; } .stat:last-child { border-bottom: none; } }
+/* In running text the card hangs from the paragraph's left edge, under the term's line, so it can't run off screen. */
+p:has(> .term) { position: relative; }
+p > .term { position: static; }
+p > .term > .term-card { top: auto; left: 0; right: auto; margin-top: calc(2.4em + 7px); }
+p > .term > .term-card::before { top: calc(-2.4em - 7px); height: calc(2.4em + 7px); }
+.term[data-align="start"] .term-card { left: 0; right: auto; }
+.term[data-align="end"] .term-card { left: auto; right: 0; }
+.stat .term[data-align="start"] .term-card { left: 18px; right: auto; }
+.stat .term[data-align="end"] .term-card { left: auto; right: 12px; }
+@media (prefers-reduced-motion: reduce) { .term-card { transition: none; } }
 </style>
 
 <div class="wrap">
@@ -773,16 +805,16 @@ td .def { display: block; margin-top: 6px; }
 
 
 
-<p class="summary">You set up work far better than a year ago: about half your sessions now start with a real brief, up from one in five, and corrections fell by nearly half. Two things slipped in the last six weeks. You check prototypes less before accepting them, and restarts are back up since the Streak redesign started.</p>
+<p class="summary">You set up work far better than a year ago: about half your sessions now start with a real brief, up from one in five, and corrections fell by nearly half. Two things slipped in the last six weeks. <span class="term" tabindex="0" aria-describedby="def-checking">Output checking<span class="term-card" role="tooltip" id="def-checking">In build and research sessions, the share where you asked for sources, edge cases or a critique before accepting the result. It tends to drop when output looks finished.</span></span> on prototypes dropped, and restarts are back up since the Streak redesign started.</p>
 
 <section class="glance" id="glance" aria-labelledby="glance-h">
   <div class="sec-head"><h2 id="glance-h">This cycle at a glance</h2><span class="muted">Comparing Oct 12–25 to Sep 28 – Oct 11, 2026</span></div>
   <div class="snapshot">
     <div class="stat"><span class="eyebrow">Sessions</span><b>94</b><span class="delta">+6</span><span class="why">How much you leaned on AI. Read the other numbers against it.</span></div>
-    <div class="stat"><span class="eyebrow">Briefed starts</span><b>54%</b><span class="delta">+6 pts</span><span class="why">Sessions that open with the goal, context and what done looks like.</span></div>
-    <div class="stat"><span class="eyebrow">Corrections</span><b>1.1</b><span class="delta">−0.3</span><span class="why">Per 10 messages. Each "no, I meant…" is a misunderstanding you paid for in time.</span></div>
-    <div class="stat"><span class="eyebrow">Restarts</span><b>11</b><span class="delta">+5</span><span class="why">Starting over on a task. Usually the first brief missed something.</span></div>
-    <div class="stat"><span class="eyebrow">Rules retyped</span><b>17</b><span class="delta">+3</span><span class="why">Preferences typed by hand that belong in a config file.</span></div>
+    <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-briefed">Briefed starts<span class="term-card" role="tooltip" id="def-briefed">Your first message gives at least two of three things: the goal, the context, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.”</span></span></span><b>54%</b><span class="delta">+6 pts</span><span class="why">Sessions that open with the goal, context and what done looks like.</span></div>
+    <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-corrections">Corrections<span class="term-card" role="tooltip" id="def-corrections">Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly.</span></span></span><b>1.1</b><span class="delta">−0.3</span><span class="why">Per 10 messages. Each "no, I meant…" is a misunderstanding you paid for in time.</span></div>
+    <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-restarts">Restarts<span class="term-card" role="tooltip" id="def-restarts">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span></span><b>11</b><span class="delta">+5</span><span class="why">Starting over on a task. Usually the first brief missed something.</span></div>
+    <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-retyped">Rules retyped<span class="term-card" role="tooltip" id="def-retyped">A standing preference typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in your CLAUDE.md, AGENTS.md or Cursor rules.</span></span></span><b>17</b><span class="delta">+3</span><span class="why">Preferences typed by hand that belong in a config file.</span></div>
   </div>
 </section>
 
@@ -1590,5 +1622,21 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     links.forEach(a => a.classList.toggle("on", a === cur));
   };
   window.addEventListener("scroll", spy, {passive: true}); spy();
+})();
+
+// ---- habit terms: keep each definition card on screen; Escape closes it ----
+(function () {
+  const terms = [...document.querySelectorAll(".term")];
+  const place = t => {
+    delete t.dataset.align;
+    const r = t.querySelector(".term-card").getBoundingClientRect();
+    if (r.right > window.innerWidth - 8) t.dataset.align = "end";
+    else if (r.left < 8) t.dataset.align = "start";
+  };
+  const open = t => { t.classList.remove("dismissed"); place(t); };
+  terms.forEach(t => { t.addEventListener("pointerenter", () => open(t)); t.addEventListener("focus", () => open(t)); });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") terms.forEach(t => { if (t.matches(":hover, :focus")) t.classList.add("dismissed"); });
+  });
 })();
 </script>

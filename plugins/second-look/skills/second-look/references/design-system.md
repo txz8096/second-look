@@ -66,6 +66,28 @@ in two columns; optional collapsed extras ("Example and limits", "Which tools ha
 rules"); then the tinted "Try this" block: how-likely chip, "Try this: <fix>", the action, a
 paste-ready block with Copy. A fix left out of the plan uses the gray "Not this cycle" block.
 
+## Habit terms
+
+Habit names carry a dashed underline. Hover or keyboard focus opens a card that says how the
+habit is counted. It's pure CSS, so it works in viewers that block scripts; the script only
+keeps the card on screen and lets Escape close it.
+
+```html
+<span class="term" tabindex="0" aria-describedby="def-briefed">Briefed starts<span class="term-card" role="tooltip" id="def-briefed">…</span></span>
+```
+
+Every glance stat except Sessions keeps its card from the template. In prose, wrap the first
+mention of a habit that isn't in the glance (usually Output checking). Keep each `id` unique.
+Use these definitions word for word:
+
+| Term | Definition |
+|---|---|
+| Briefed starts | Your first message gives at least two of three things: the goal, the context, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.” |
+| Corrections | Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly. |
+| Restarts | A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track. |
+| Rules retyped | A standing preference typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in your CLAUDE.md, AGENTS.md or Cursor rules. |
+| Output checking | In build and research sessions, the share where you asked for sources, edge cases or a critique before accepting the result. It tends to drop when output looks finished. |
+
 ## Chip labels (and nothing else)
 
 - Patterns: Clear pattern · Likely pattern · Unconfirmed

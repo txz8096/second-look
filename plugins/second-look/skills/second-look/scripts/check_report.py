@@ -104,6 +104,9 @@ def main():
         whys = g.group(0).count('class="why"')
         if stats != 5 or whys != 5:
             problems.append(f"the glance needs 5 stats each with a meaning line (found {stats} stats, {whys} lines)")
+        cards = g.group(0).count('class="term-card"')
+        if cards < 4:
+            problems.append(f"each habit stat in the glance needs its term card from the template (found {cards} of 4)")
 
     if problems:
         try:
