@@ -2,43 +2,39 @@ import { Container, Kicker, SectionHeading } from "./ui";
 
 const INSTALLER_SETUP = "None. The installer links the skill in";
 
-const columns = ["What’s read", "Setup needed", "History optional?"];
+const columns = ["What’s read", "Setup needed", "How far back"];
 
 const tools = [
   {
     name: "Claude Code",
     reads: "Session logs in ~/.claude/projects, your skills and CLAUDE.md",
     setup: INSTALLER_SETUP,
-    history: "Yes. Keeping a year instead of 30 days is your call",
-    optional: true,
+    history:
+      "Last 30 days only. Claude Code deletes older sessions unless you raise cleanupPeriodDays in ~/.claude/settings.json",
   },
   {
     name: "Codex",
     reads: "Session logs in ~/.codex/sessions, your skills and AGENTS.md",
     setup: INSTALLER_SETUP,
-    history: "Always included",
-    optional: false,
+    history: "Full history. Nothing to change",
   },
   {
     name: "Cursor",
     reads: "Chats in Cursor’s local database, plus .cursor/rules",
     setup: INSTALLER_SETUP,
-    history: "Always included",
-    optional: false,
+    history: "Full history. Nothing to change",
   },
   {
     name: "claude.ai",
     reads: "conversations.json from your data export",
     setup: "Export it from Settings → Privacy, then put it in ~/.second-look/exports/claude",
-    history: "Yes. Add it any time",
-    optional: true,
+    history: "Optional. Covers everything up to your export date",
   },
   {
     name: "ChatGPT",
     reads: "conversations.json from your data export",
     setup: "Export it from Settings → Data controls, then put it in ~/.second-look/exports/chatgpt",
-    history: "Yes. Add it any time",
-    optional: true,
+    history: "Optional. Covers everything up to your export date",
   },
 ];
 
@@ -48,7 +44,7 @@ export function Coverage() {
       <Container className="flex flex-col gap-12 py-20 lg:py-28">
         <div className="flex max-w-[760px] flex-col gap-5">
           <Kicker>Coverage</Kicker>
-          <SectionHeading>What each tool needs.</SectionHeading>
+          <SectionHeading>Supported AI tools</SectionHeading>
           <p className="font-body text-[17px] leading-[1.55] text-text-2">
             Start a review from Claude Code, Codex or Cursor, and one run covers every source below that’s on this
             computer.
@@ -90,7 +86,7 @@ export function Coverage() {
                   <td
                     key={columns[i]}
                     className={`py-4 align-top font-body text-[15px] leading-normal max-md:flex max-md:flex-col max-md:gap-1 max-md:p-0 ${
-                      i === 2 ? (t.optional ? "text-accent" : "text-text-2") : "pr-8 text-text-2"
+                      i === 2 ? "text-text-2" : "pr-8 text-text-2"
                     }`}
                   >
                     <span className="font-mono text-[11px] tracking-[1px] text-text-3 uppercase md:hidden" aria-hidden="true">
