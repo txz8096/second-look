@@ -275,8 +275,9 @@ much, then what slipped recently. With no history, say that plainly.
 the heading (scoped reviews compare with the same length of time before). Then exactly five
 stats in this order: Sessions, Briefed starts, Corrections (per 10 messages), Restarts,
 Rules retyped. Each has a value, a plain-text change and a one-line meaning. Use "—" and
-"Not measured" when there's no data. Keep each stat's term card from the template, and use the same component
-on the first mention of Output checking in prose (see "Habit terms" in the design system).
+"Not measured" when there's no data. Keep each stat's term card from the template, and wrap the first mention of
+each habit in the summary and in each part with the same component, even when the prose
+words it differently ("misread you", "a real brief"). See "Habit terms" in the design system.
 
 **Improve your prompts and context** (`#part-1`). A headline with the biggest finding. Then
 one card per prompting, context or memory pattern, biggest first (time lost × how often).

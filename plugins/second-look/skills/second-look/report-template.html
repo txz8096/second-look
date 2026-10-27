@@ -777,10 +777,10 @@ td .def { display: block; margin-top: 6px; }
 }
 @media (max-width: 680px) { .stat:nth-child(even) .term-card { left: auto; right: 12px; } .stat:last-child { border-bottom: none; } }
 /* In running text the card hangs from the paragraph's left edge, under the term's line, so it can't run off screen. */
-p:has(> .term) { position: relative; }
-p > .term { position: static; }
-p > .term > .term-card { top: auto; left: 0; right: auto; margin-top: calc(2.4em + 7px); }
-p > .term > .term-card::before { top: calc(-2.4em - 7px); height: calc(2.4em + 7px); }
+p:has(> .term), dd:has(> .term) { position: relative; }
+p > .term, dd > .term { position: static; }
+p > .term > .term-card, dd > .term > .term-card { top: auto; left: 0; right: auto; margin-top: calc(2.4em + 7px); }
+p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4em - 7px); height: calc(2.4em + 7px); }
 .term[data-align="start"] .term-card { left: 0; right: auto; }
 .term[data-align="end"] .term-card { left: auto; right: 0; }
 .stat .term[data-align="start"] .term-card { left: 18px; right: auto; }
@@ -805,7 +805,7 @@ p > .term > .term-card::before { top: calc(-2.4em - 7px); height: calc(2.4em + 7
 
 
 
-<p class="summary">You set up work far better than a year ago: about half your sessions now start with a real brief, up from one in five, and corrections fell by nearly half. Two things slipped in the last six weeks. <span class="term" tabindex="0" aria-describedby="def-checking">Output checking<span class="term-card" role="tooltip" id="def-checking">In build and research sessions, the share where you asked for sources, edge cases or a critique before accepting the result. It tends to drop when output looks finished.</span></span> on prototypes dropped, and restarts are back up since the Streak redesign started.</p>
+<p class="summary">You set up work far better than a year ago: about half your sessions now <span class="term" tabindex="0" aria-describedby="def-briefed-summary">start with a real brief<span class="term-card" role="tooltip" id="def-briefed-summary">Your first message gives at least two of three things: the goal, the context, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.”</span></span>, up from one in five, and <span class="term" tabindex="0" aria-describedby="def-corrections-summary">corrections<span class="term-card" role="tooltip" id="def-corrections-summary">Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly.</span></span> fell by nearly half. Two things slipped in the last six weeks. <span class="term" tabindex="0" aria-describedby="def-checking">Output checking<span class="term-card" role="tooltip" id="def-checking">In build and research sessions, the share where you asked for sources, edge cases or a critique before accepting the result. It tends to drop when output looks finished.</span></span> on prototypes dropped, and <span class="term" tabindex="0" aria-describedby="def-restarts-summary">restarts<span class="term-card" role="tooltip" id="def-restarts-summary">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span> are back up since the Streak redesign started.</p>
 
 <section class="glance" id="glance" aria-labelledby="glance-h">
   <div class="sec-head"><h2 id="glance-h">This cycle at a glance</h2><span class="muted">Comparing Oct 12–25 to Sep 28 – Oct 11, 2026</span></div>
@@ -822,7 +822,7 @@ p > .term > .term-card::before { top: calc(-2.4em - 7px); height: calc(2.4em + 7
 <div class="part" id="part-1">
   <div class="part-head">
     <h2>Improve your prompts and context</h2>
-    <p class="headline">Most corrections trace back to how a session starts. Fix the opening brief and stop retyping the same rules, and about a third of your corrections should go away.</p>
+    <p class="headline">Most <span class="term" tabindex="0" aria-describedby="def-corrections-part1">corrections<span class="term-card" role="tooltip" id="def-corrections-part1">Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly.</span></span> trace back to how a session starts. Fix the <span class="term" tabindex="0" aria-describedby="def-briefed-part1">opening brief<span class="term-card" role="tooltip" id="def-briefed-part1">Your first message gives at least two of three things: the goal, the context, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.”</span></span> and stop <span class="term" tabindex="0" aria-describedby="def-retyped-part1">retyping the same rules<span class="term-card" role="tooltip" id="def-retyped-part1">A standing preference typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in your CLAUDE.md, AGENTS.md or Cursor rules.</span></span>, and about a third of your corrections should go away.</p>
   </div>
 
   <article id="p-rules" class="icard">
@@ -869,7 +869,7 @@ have one. I'm a product engineer building a habit-tracking app in React + Tailwi
       <div class="ic-tags"><span class="tag">Claude Code · Cursor · claude.ai</span><span class="conf sugg">Likely pattern</span></div></div></div>
     <dl class="ic-grid">
       <dt>What happens</dt><dd>Your first message names what to build, but not who it's for or what done looks like. You fill in the gaps over the next few turns, and sometimes start a new chat.</dd>
-      <dt>Evidence</dt><dd>Oct 12–25: 4 of 11 restarts were prototypes, including 4 new Streak settings-screen chats in 2 days. 35% of prototype sessions opened with a brief, vs 58% across claude.ai. Cursor: 12%. Claude Code: 48%.</dd>
+      <dt>Evidence</dt><dd>Oct 12–25: 4 of 11 <span class="term" tabindex="0" aria-describedby="def-restarts-part1">restarts<span class="term-card" role="tooltip" id="def-restarts-part1">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span> were prototypes, including 4 new Streak settings-screen chats in 2 days. 35% of prototype sessions opened with a brief, vs 58% across claude.ai. Cursor: 12%. Claude Code: 48%.</dd>
       <dt>Why it matters</dt><dd>Each restart repeats setup, and without a definition of done it's hard to tell when a prototype is finished.</dd>
     </dl>
     <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Example and limits</span></summary>
@@ -1190,7 +1190,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
   <details>
     <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">Try next</span><span class="sum-meta">2 features that fit how you worked these two weeks</span></span><span></span></summary>
     <div class="body">
-      <div class="field"><span class="eyebrow">Plan mode in Claude Code</span><p>4 of your 6 Claude Code restarts were multi-step builds. Planning before code would have surfaced the missing brief at turn 1.</p></div>
+      <div class="field"><span class="eyebrow">Plan mode in Claude Code</span><p>4 of your 6 Claude Code <span class="term" tabindex="0" aria-describedby="def-restarts-part3">restarts<span class="term-card" role="tooltip" id="def-restarts-part3">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span> were multi-step builds. Planning before code would have surfaced the missing brief at turn 1.</p></div>
       <div class="field"><span class="eyebrow">Subagents for research</span><p>One session read 31 files to answer one question. A research subagent returns just the answer and keeps your main context clean.</p></div>
     </div>
   </details>

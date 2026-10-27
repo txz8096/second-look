@@ -77,7 +77,12 @@ keeps the card on screen and lets Escape close it.
 ```
 
 Every glance stat except Sessions keeps its card from the template. In prose, wrap the first
-mention of a habit that isn't in the glance (usually Output checking). Keep each `id` unique.
+mention of each habit in the summary, in each part's headline and cards, and in "Usage this
+cycle". Wrap the words the sentence uses, even when they aren't the habit's name: "corrections",
+"Claude misread you only six times", "start with a real brief". Skip headings, table cells and
+chart text (charts carry their own definition line). One card per habit per section, so a
+paragraph never shows the same card twice. Ids are `def-<habit>-<section>`, for example
+`def-corrections-summary`, and must be unique. Cards work inside `p` and `dd`.
 Use these definitions word for word:
 
 | Term | Definition |
@@ -86,6 +91,7 @@ Use these definitions word for word:
 | Corrections | Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly. |
 | Restarts | A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track. |
 | Rules retyped | A standing preference typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in your CLAUDE.md, AGENTS.md or Cursor rules. |
+| Skill use | Sessions that ran at least one of your skills or slash commands. Each session counts once, however many it ran. |
 | Output checking | In build and research sessions, the share where you asked for sources, edge cases or a critique before accepting the result. It tends to drop when output looks finished. |
 
 ## Chip labels (and nothing else)
