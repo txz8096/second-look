@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Weekly evidence collector for the second look skill.
 
-Reads local session logs from Claude Code, Codex and Cursor and prints a compact JSON
+Reads local session logs from Claude Code, Codex, Cursor and Antigravity and prints a compact JSON
 summary: counts, tool and skill usage, unused skills, repeated instructions, correction
 signals and a few trimmed prompt samples. Nothing leaves the machine.
 
@@ -46,7 +46,7 @@ CATEGORIES = [  # order breaks ties
     ("brainstorming", re.compile(r"brainstorm|ideas?\b|what if|explore|options|how might|could we|name for|"
                                  r"concepts?|directions", re.I)),
 ]
-CODING_TOOLS = {"claude_code", "codex", "cursor"}
+CODING_TOOLS = {"claude_code", "codex", "cursor", "antigravity"}
 BUILD_CATEGORIES = {"prototyping", "creating", "research"}
 
 
@@ -61,7 +61,8 @@ def parse_ts(v):
     try:
         if isinstance(v, (int, float)):
             return dt.datetime.fromtimestamp(v / 1000 if v > 1e12 else v, dt.timezone.utc)
-        return dt.datetime.fromisoformat(str(v).replace("Z", "+00:00"))
+        # trim sub-microsecond digits, which fromisoformat rejects
+        return dt.datetime.fromisoformat(re.sub(r"(\.\d{6})\d+", r"\1", str(v).replace("Z", "+00:00")))
     except Exception:
         return None
 
@@ -218,6 +219,42 @@ def cursor(home, since):
                 continue
             a.add_prompt(ts, key.split(":")[1], b.get("text", ""))
         con.close()
+    return a
+
+
+USER_REQUEST = re.compile(r"<USER_REQUEST>(.*?)</USER_REQUEST>", re.S)
+AG_BLOCKS = re.compile(r"<(ADDITIONAL_METADATA|USER_SETTINGS_CHANGE)>.*?</\1>", re.S)
+
+
+def antigravity(home, since):
+    """Antigravity CLI (agy), plus the app on versions that write the same transcripts."""
+    a = Agg("antigravity")
+    seen = set()
+    # the backup folder only duplicates conversations, so it's left out
+    for root in (".gemini/antigravity-cli", ".gemini/antigravity", ".gemini/antigravity-ide"):
+        for conv in glob.glob(os.path.join(home, root, "brain/*/")):
+            session = os.path.basename(conv.rstrip("/"))
+            logs = os.path.join(conv, ".system_generated/logs")
+            # the short transcript trims content, so prefer the full one
+            path = next((p for p in (os.path.join(logs, "transcript_full.jsonl"),
+                                     os.path.join(logs, "transcript.jsonl")) if os.path.exists(p)), None)
+            if session in seen or not path or os.path.getmtime(path) < since.timestamp():
+                continue
+            seen.add(session)
+            fallback = dt.datetime.fromtimestamp(os.path.getmtime(path), dt.timezone.utc)
+            for e in iter_jsonl(path):
+                ts = parse_ts(e.get("created_at")) or fallback
+                if ts < since:
+                    continue
+                if e.get("type") == "USER_INPUT" and e.get("source") == "USER_EXPLICIT":
+                    text = str(e.get("content") or "")
+                    m = USER_REQUEST.search(text)
+                    a.add_prompt(ts, session, (m.group(1) if m else AG_BLOCKS.sub("", text)).strip())
+                elif e.get("type") == "PLANNER_RESPONSE":
+                    for c in e.get("tool_calls") or []:
+                        name = c.get("name", "?") if isinstance(c, dict) else "?"
+                        a.tools[name] += 1
+                        a.events.append((ts, "tool", name))
     return a
 
 
@@ -434,7 +471,8 @@ def installed_skills(home):
 def context_files(home):
     out = {}
     for label, rel in (("claude_global", ".claude/CLAUDE.md"), ("codex_global", ".codex/AGENTS.md"),
-                       ("agents_global", ".agents/AGENTS.md"), ("cursor_rules", ".cursor/rules")):
+                       ("agents_global", ".agents/AGENTS.md"), ("cursor_rules", ".cursor/rules"),
+                       ("antigravity_global", ".gemini/GEMINI.md")):
         p = os.path.join(home, rel)
         if os.path.isdir(p):
             files = sorted(glob.glob(os.path.join(p, "*.md*")))
@@ -517,7 +555,8 @@ def main():
     args = ap.parse_args()
     since = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=args.days)
 
-    aggs = [claude_code(args.home, since), codex(args.home, since), cursor(args.home, since)]
+    aggs = [claude_code(args.home, since), codex(args.home, since), cursor(args.home, since),
+            antigravity(args.home, since)]
     if args.claude_export:
         aggs.append(claude_export(os.path.expanduser(args.claude_export), since))
     if args.chatgpt_export:

@@ -1,6 +1,6 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, claude.ai and ChatGPT, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\")."
+description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai and ChatGPT, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\")."
 ---
 
 # second look
@@ -25,7 +25,7 @@ Check first, then follow the matching column everywhere below.
 | Report | Built from `report-template.html` and checked | Same, then published as an artifact |
 
 On claude.ai, say in one line what you can't see, for example: "I can't read your Claude
-Code or Cursor logs from here. Run second look there for those."
+Code, Cursor or Antigravity logs from here. Run second look there for those."
 
 **claude.ai preflight.** Before any work, check three things and say which are missing:
 
@@ -62,7 +62,7 @@ Files that ship with this skill:
 | `references/design-system.md` | Both | Tokens, type, layout and allowed labels. Read it; don't rebuild from it |
 | `scripts/prerender.py` | Local | Draws the year charts into the report so they show where scripts are blocked |
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
-| `scripts/collect.py` | Local | Reads Claude Code, Codex and Cursor logs and the two data exports |
+| `scripts/collect.py` | Local | Reads Claude Code, Codex, Cursor and Antigravity logs and the two data exports |
 | `scripts/open_report.py` | Local | Opens a finished report in the user's own browser |
 | `scripts/schedule.py` | Local | Sets up, changes or stops recurring reviews, and records each full review |
 
@@ -192,10 +192,10 @@ and still works on current models.
    shared reference file.
 3. **Release scan.** Search what changed since the last review (look back 4 weeks to be
    safe), scoped to their `focus`. Sources, newest first: the Claude Code changelog,
-   Anthropic news, Claude model releases, the Agent Skills docs, the Codex changelog and the
-   Cursor changelog. Use practitioner posts only to confirm details. Keep an item only if it
-   changes one of their skills or their process, and name the skill, the exact edit, and
-   the source with its date. "Nothing relevant" is a fine result.
+   Anthropic news, Claude model releases, the Agent Skills docs, the Codex changelog, the
+   Cursor changelog and the Antigravity release notes. Use practitioner posts only to
+   confirm details. Keep an item only if it changes one of their skills or their process,
+   and name the skill, the exact edit, and the source with its date. "Nothing relevant" is a fine result.
 4. **Health check.** The description says when to trigger, in the user's words. SKILL.md is
    lean, with long material in references. Deterministic steps are scripts.
 5. **Tests.** If a skill has evals, rerun them when a model changed since the last review
@@ -208,14 +208,17 @@ and still works on current models.
 **Local:**
 
 1. Run `python3 scripts/collect.py --days 14` (or the window) from this skill's folder. It
-   reads Claude Code (`~/.claude/projects`), Codex (`~/.codex/sessions`) and Cursor's local
-   database and prints JSON: sessions, prompts, corrections, briefed starts, restarts, rules
-   retyped, skill runs, and trimmed prompt samples with secrets removed.
+   reads Claude Code (`~/.claude/projects`), Codex (`~/.codex/sessions`), Cursor's local
+   database and Antigravity transcripts (`~/.gemini/antigravity-cli/brain`, plus the app's
+   folders when it writes the same files) and prints JSON: sessions, prompts, corrections,
+   briefed starts, restarts, rules retyped, skill runs, and trimmed prompt samples with
+   secrets removed.
 2. If you can also search their past Claude chats, open the real work chats in the window.
    Note restarts, corrections, restated preferences, and polished output accepted without a
    check.
 3. **Context drift.** Compare `context_file` with `~/.claude/CLAUDE.md`,
-   `~/.codex/AGENTS.md` and Cursor rules. Note which rules each tool is missing.
+   `~/.codex/AGENTS.md`, Cursor rules and `~/.gemini/GEMINI.md` (Antigravity). Note which rules
+   each tool is missing.
 4. **12-month trend.** Run `python3 scripts/collect.py --days 365 --trend`, adding
    `--claude-export ~/.second-look/exports/claude/conversations.json` and
    `--chatgpt-export ~/.second-look/exports/chatgpt/conversations.json` when those files

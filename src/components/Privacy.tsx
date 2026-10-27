@@ -6,7 +6,7 @@ import { Container, Kicker, SectionHeading } from "./ui";
 const flow = [
   {
     title: "Your files",
-    desc: "~/.claude, ~/.codex, Cursor’s database, and the exports you add. Read only when you ask for a review.",
+    desc: "~/.claude, ~/.codex, Cursor’s database, ~/.gemini, and the exports you add. Read only when you ask for a review.",
   },
   {
     title: "Your assistant",
@@ -21,7 +21,7 @@ const flow = [
 const answers = [
   {
     title: "What it reads",
-    desc: "Claude Code, Codex and Cursor logs on this computer, the exports you add, and your skill files. Run install.sh --check to see the list for your machine.",
+    desc: "Claude Code, Codex, Cursor and Antigravity logs on this computer, the exports you add, and your skill files. Run install.sh --check to see the list for your machine.",
   },
   {
     title: "What gets removed",

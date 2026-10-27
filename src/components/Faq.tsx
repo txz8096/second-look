@@ -10,11 +10,11 @@ const faqs: Faq[] = [
   },
   {
     q: "Does one report cover all my AI tools?",
-    a: "Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the computer where you use them. One run reads all three tools’ logs, plus claude.ai and ChatGPT if you add their data exports. Started from claude.ai in a browser or from a cloud session, it can’t see those logs, so it covers only your claude.ai chats.",
+    a: "Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the computer where you use them. One run reads their logs and Antigravity’s, plus claude.ai and ChatGPT if you add their data exports. Started from claude.ai in a browser or from a cloud session, it can’t see those logs, so it covers only your claude.ai chats.",
   },
   {
     q: "What data does it read?",
-    a: "Only what you point it at: local Claude Code, Codex and Cursor logs, the claude.ai and ChatGPT data exports you download yourself, and your skill and config files for the upkeep check. Cloud sessions aren’t included.",
+    a: "Only what you point it at: local Claude Code, Codex, Cursor and Antigravity logs, the claude.ai and ChatGPT data exports you download yourself, and your skill and config files for the upkeep check. Cloud sessions aren’t included.",
   },
   {
     q: "What do I need to run it on claude.ai?",
@@ -100,7 +100,7 @@ export function Faq() {
                     <thead>
                       <tr className="border-b border-rule">
                         {item.table.head.map((h) => (
-                          <th key={h} className="py-2.5 pr-6 font-mono text-[11px] font-normal tracking-[0.8px] text-accent uppercase">
+                          <th key={h} className="py-2.5 pr-6 font-mono text-xs font-normal tracking-[0.8px] text-accent uppercase">
                             {h}
                           </th>
                         ))}

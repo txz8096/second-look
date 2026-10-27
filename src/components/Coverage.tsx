@@ -25,6 +25,12 @@ const tools = [
     history: "Full history. Nothing to change",
   },
   {
+    name: "Antigravity",
+    reads: "Agent transcripts in ~/.gemini/antigravity-cli, plus ~/.gemini/GEMINI.md",
+    setup: "None. Reviews start from one of the tools above",
+    history: "Full history for the CLI. App chats saved only in its own format aren’t read",
+  },
+  {
     name: "claude.ai",
     reads: "conversations.json from your data export",
     setup: "Export it from Settings → Privacy, then put it in ~/.second-look/exports/claude",
@@ -89,7 +95,7 @@ export function Coverage() {
                       i === 2 ? "text-text-2" : "pr-8 text-text-2"
                     }`}
                   >
-                    <span className="font-mono text-[11px] tracking-[1px] text-text-3 uppercase md:hidden" aria-hidden="true">
+                    <span className="font-mono text-xs tracking-[1px] text-text-3 uppercase md:hidden" aria-hidden="true">
                       {columns[i]}
                     </span>
                     {value}

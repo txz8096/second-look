@@ -1255,7 +1255,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
 (function () {
   const WEEKS = 52, end = new Date(2026, 9, 19);
   const weeks = Array.from({length: WEEKS}, (_, i) => new Date(end.getTime() - (WEEKS - 1 - i) * 7 * 864e5));
-  const SOURCES = [["claude_ai", "claude.ai"], ["claude_code", "Claude Code"], ["codex", "Codex"], ["cursor", "Cursor"], ["chatgpt", "ChatGPT"]];
+  const SOURCES = [["claude_ai", "claude.ai"], ["claude_code", "Claude Code"], ["codex", "Codex"], ["cursor", "Cursor"], ["antigravity", "Antigravity"], ["chatgpt", "ChatGPT"]];
   const CATS = [["prototyping", "Prototyping"], ["creating", "Creating"], ["research", "Research"], ["brainstorming", "Brainstorming"], ["career", "Career"], ["consultation", "Consultation"]];
   const BUILD = new Set(["prototyping", "creating", "research"]);
   const name = (list, id) => list.find(x => x[0] === id)[1];
@@ -1280,7 +1280,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     }[src];
   };
   const rows = [];
-  weeks.forEach((_, i) => SOURCES.forEach(([src]) => {
+  weeks.forEach((_, i) => SOURCES.filter(([src]) => base[src]).forEach(([src]) => {
     const m = mix(src, i), tot = Object.values(m).reduce((a, b) => a + b, 0), n = base[src](i);
     CATS.forEach(([c]) => {
       const sessions = rr(n * m[c] / tot * (0.85 + rnd() * 0.3));
@@ -1338,12 +1338,13 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = label; b.dataset.n = n;
     b.addEventListener("click", () => { state.range = n; render(); }); rangeEl.appendChild(b);
   });
-  [["all", "All"], ...SOURCES].forEach(([id, label]) => {
+  const present = SOURCES.filter(([id]) => rows.some(r => r.s === id));
+  [["all", "All"], ...present].forEach(([id, label]) => {
     const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = label; b.dataset.id = id;
     b.addEventListener("click", () => {
       if (id === "all") state.sources.clear();
       else if (state.sources.has(id)) state.sources.delete(id); else state.sources.add(id);
-      if (state.sources.size === SOURCES.length) state.sources.clear();
+      if (state.sources.size === present.length) state.sources.clear();
       render();
     });
     srcEl.appendChild(b);

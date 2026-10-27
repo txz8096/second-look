@@ -3,8 +3,8 @@
 **Learn from how you work with AI.**
 
 second look is an open-source skill that reviews your sessions across Claude Code, Codex,
-Cursor, claude.ai and ChatGPT, then suggests a few changes to test. Each suggestion cites the
-sessions it came from.
+Cursor, Antigravity, claude.ai and ChatGPT, then suggests a few changes to test. Each
+suggestion cites the sessions it came from.
 
 **Learn more on the website: [txz8096.github.io/second-look](https://txz8096.github.io/second-look/)**
 
@@ -74,14 +74,14 @@ Your files  ──▶  Your assistant  ──▶  Your model provider
 
 | | |
 |---|---|
-| **Your files** | `~/.claude`, `~/.codex`, Cursor's database, and the exports you add. Read only when you ask for a review |
+| **Your files** | `~/.claude`, `~/.codex`, Cursor's database, `~/.gemini`, and the exports you add. Read only when you ask for a review |
 | **Your assistant** | Claude Code, Codex or Cursor runs the review on your computer and writes the report to `~/.second-look` |
 | **Your model provider** | Sees what the review reads, like any message you send your assistant, under your existing account settings |
 
 There are no second look servers. Nothing about your sessions is sent to us.
 
-**What it reads.** Claude Code, Codex and Cursor logs on this computer, the exports you add,
-and your skill files. To see the list for your machine without changing anything:
+**What it reads.** Claude Code, Codex, Cursor and Antigravity logs on this computer, the
+exports you add, and your skill files. To see the list for your machine without changing anything:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --check
@@ -262,8 +262,8 @@ it can't see those logs, so it covers only your claude.ai chats.
 <details>
 <summary><b>What data does it read?</b></summary>
 
-Only what's on your computer or what you hand it: local Claude Code, Codex and Cursor logs,
-the claude.ai and ChatGPT exports you download yourself, and your skill and config files for
+Only what's on your computer or what you hand it: local Claude Code, Codex, Cursor and
+Antigravity logs, the claude.ai and ChatGPT exports you download yourself, and your skill and config files for
 the skills check. Sources it can't open are marked "Not checked" in the report.
 </details>
 

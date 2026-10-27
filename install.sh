@@ -53,7 +53,11 @@ tools = [
     ("Codex", os.path.isdir(os.path.join(home, ".codex")), "~/.codex/sessions", lambda: sessions(".codex/sessions/**/*.jsonl")),
     ("Cursor", os.path.isdir(os.path.join(home, ".cursor")) or bool(cursor_db), "Cursor's local database",
      lambda: "chat database found" if cursor_db else "no chat database yet"),
+    ("Antigravity", any(os.path.isdir(os.path.join(home, ".gemini", d)) for d in ("antigravity-cli", "antigravity", "antigravity-ide")),
+     "~/.gemini/antigravity-cli", lambda: sessions(".gemini/antigravity*/brain/*/.system_generated/logs")),
 ]
+# second look reads Antigravity's logs but doesn't install into it
+LINKED = {"Claude Code": "~/.claude", "Codex": "~/.codex", "Cursor": "~/.cursor"}
 exports = [(name, os.path.join(home, ".second-look/exports", d, "conversations.json")) for name, d in
            (("claude.ai export", "claude"), ("ChatGPT export", "chatgpt"))]
 
@@ -71,7 +75,9 @@ for name, path in exports:
 print("\nAn install will:")
 print("  Copy the skill to ~/.agents/skills/second-look")
 for name in found:
-    folder = {"Claude Code": "~/.claude", "Codex": "~/.codex", "Cursor": "~/.cursor"}[name]
+    if name not in LINKED:
+        continue
+    folder = LINKED[name]
     print(f"  Link it into {folder}/skills for {name}")
 print("  Create ~/.second-look for your profile, reports and exports")
 if "Claude Code" in found and retention < 365:
