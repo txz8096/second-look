@@ -56,8 +56,12 @@ cards, panels · 20px "Try this" blocks and the plan · fully rounded chips.
 6. How your behavior is changing (`#part-3`): scan line, "Did last cycle's fixes work?"
    (only after a review with logged fixes), "Habits over the last year" (`#trends`),
    "Usage this cycle".
-7. Footer: method and sources.
-8. Floating contents menu (`#toc`) bottom right, listing the glance and the three parts.
+7. Report an issue (`#report-issue`): one line linking to
+   https://github.com/txz8096/second-look/issues/new. Keep it as the template has it.
+8. Footer: method and sources.
+9. Floating contents menu (`#toc`) bottom right, listing the glance, the three parts and
+   Report an issue. It opens on hover and keyboard focus with CSS alone, so it works in
+   viewers that block scripts; the script adds click, Escape and the current-section highlight.
 
 ## Pattern card
 

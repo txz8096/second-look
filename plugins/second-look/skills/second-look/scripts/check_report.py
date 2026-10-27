@@ -10,13 +10,15 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_TEMPLATE = os.path.join(os.path.dirname(HERE), "report-template.html")
 
 FONT_LINK = "family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500"
-REQUIRED_IDS = ["glance", "part-1", "part-2", "part-3", "trends", "toc"]
+REQUIRED_IDS = ["glance", "part-1", "part-2", "part-3", "trends", "report-issue", "toc"]
 REQUIRED_TEXT = [
     "Learn from the way you work with AI",
     "This cycle at a glance",
     "Improve your prompts and context",
     "Keep your skills current",
     "How your behavior is changing",
+    "Report an issue",
+    "github.com/txz8096/second-look/issues/new",
 ]
 CHIPS = {
     "Clear pattern", "Likely pattern", "Unconfirmed",

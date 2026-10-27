@@ -468,10 +468,12 @@ a.from-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
 .toc-btn { width: 48px; height: 48px; padding: 0; border-radius: 50%; display: grid; place-items: center; background: var(--surface); color: var(--fg);
   border: 1px solid var(--line); box-shadow: 0 6px 18px rgb(0 0 0 / .08), 0 1px 3px rgb(0 0 0 / .05); }
-.toc-btn:hover, .toc.open .toc-btn { background: var(--surface); color: var(--accent); border-color: var(--accent-soft-2); }
+.toc-btn:hover, .toc.open .toc-btn, .toc:not(.scripted):focus-within .toc-btn { background: var(--surface); color: var(--accent); border-color: var(--accent-soft-2); }
 .toc-panel { width: min(300px, calc(100vw - 40px)); padding: 16px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line);
   box-shadow: 0 20px 48px rgb(0 0 0 / .105), 0 3px 8px rgb(0 0 0 / .04);
   opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .16s, transform .16s, visibility 0s .16s; }
+/* without scripts the menu opens on hover and keyboard focus; the script adds .scripted and takes over */
+.toc:not(.scripted):hover .toc-panel, .toc:not(.scripted):focus-within .toc-panel,
 .toc.open .toc-panel { opacity: 1; visibility: visible; transform: none; transition: opacity .16s, transform .16s; }
 @media (prefers-reduced-motion: reduce) { .toc-panel, .toc.open .toc-panel { transition: none; transform: none; } }
 .toc-h { margin: 0 0 8px 8px; font-size: 0.8125rem; color: var(--muted); }
@@ -481,7 +483,9 @@ a.from-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 .toc a.on { background: var(--accent-soft); color: var(--accent); }
 .toc a:focus-visible, .toc-top:focus-visible, .toc-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .toc-n { font-family: var(--display); color: var(--accent); font-variant-numeric: tabular-nums; }
-.toc-top { margin-top: 8px; width: 100%; height: 34px; font-size: 0.8125rem; color: var(--muted); }
+.toc a.toc-top { display: flex; align-items: center; justify-content: center; margin-top: 8px; height: 34px; padding: 0 14px; border: 1px solid var(--line); border-radius: var(--r-control);
+  background: var(--surface); color: var(--muted); font-size: 0.8125rem; font-weight: 500; }
+.toc a.toc-top:hover { background: var(--surface-2); border-color: var(--line-strong); color: var(--fg); }
 #goals, #part-1, #part-2, #part-3, #maintenance { scroll-margin-top: 20px; }
 @media print { .toc { display: none; } }
 
@@ -1198,6 +1202,13 @@ Before building, list up to 3 questions you need answered.</pre></div>
 
 </div>
 
+<div class="part" id="report-issue">
+  <div class="part-head">
+    <h2>Report an issue</h2>
+    <p class="headline">Spotted a wrong number, a broken chart or a finding that missed? <a href="https://github.com/txz8096/second-look/issues/new" target="_blank" rel="noopener">Open an issue on GitHub</a>. This report holds your real prompts, so leave them out of the issue.</p>
+  </div>
+</div>
+
 
 
 <footer>
@@ -1215,8 +1226,9 @@ Before building, list up to 3 questions you need answered.</pre></div>
       <li><a href="#part-1" data-target="part-1">Improve your prompts and context</a></li>
       <li><a href="#part-2" data-target="part-2">Keep your skills current</a></li>
       <li><a href="#part-3" data-target="part-3">How your behavior is changing</a></li>
+      <li><a href="#report-issue" data-target="report-issue">Report an issue</a></li>
     </ol>
-    <button type="button" class="toc-top" id="toc-top">Back to top</button>
+    <a href="#" class="toc-top" id="toc-top">Back to top</a>
   </div>
   <button type="button" class="toc-btn" id="toc-btn" aria-expanded="false" aria-controls="toc-panel" aria-label="Table of contents">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r=".6" fill="currentColor"/><circle cx="4" cy="12" r=".6" fill="currentColor"/><circle cx="4" cy="18" r=".6" fill="currentColor"/></svg>
@@ -1599,6 +1611,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
 // ---- floating table of contents ----
 (function () {
   const toc = document.getElementById("toc"), btn = document.getElementById("toc-btn"), links = [...toc.querySelectorAll("a[data-target]")];
+  toc.classList.add("scripted");
   const setOpen = on => { toc.classList.toggle("open", on); btn.setAttribute("aria-expanded", String(on)); };
   let closeTimer;
   toc.addEventListener("mouseenter", () => { clearTimeout(closeTimer); setOpen(true); });
@@ -1614,7 +1627,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     el.scrollIntoView({behavior: reduce() ? "auto" : "smooth", block: "start"});
     setOpen(false);
   }));
-  document.getElementById("toc-top").addEventListener("click", () => { window.scrollTo({top: 0, behavior: reduce() ? "auto" : "smooth"}); setOpen(false); });
+  document.getElementById("toc-top").addEventListener("click", e => { e.preventDefault(); window.scrollTo({top: 0, behavior: reduce() ? "auto" : "smooth"}); setOpen(false); });
   // highlight the section you're in
   const spy = () => {
     let cur = links[0];

@@ -304,6 +304,9 @@ explain it), did the work get better ("Not measured" when there's no data yet), 
 decision (Keep, Revise, Drop). Then "Habits over the last year" (`#trends`), filled from the
 cube, and "Usage this cycle" (by tool, skills and commands, and "Try next").
 
+**Report an issue** (`#report-issue`). Keep the template's line and link to
+https://github.com/txz8096/second-look/issues/new as they are.
+
 **Footer.** Method and sources, the profile (on claude.ai) and the Log entry (on claude.ai).
 
 Reports contain real prompts. Keep them private unless the user chooses to share one, and
