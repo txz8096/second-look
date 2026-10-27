@@ -63,6 +63,7 @@ Files that ship with this skill:
 | `scripts/prerender.py` | Local | Draws the year charts into the report so they show where scripts are blocked |
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
 | `scripts/collect.py` | Local | Reads Claude Code, Codex and Cursor logs and the two data exports |
+| `scripts/open_report.py` | Local | Opens a finished report in the user's own browser |
 | `scripts/schedule.py` | Local | Sets up, changes or stops recurring reviews, and records each full review |
 
 ## First run: the profile
@@ -134,7 +135,7 @@ it up.
 
 **Task prompt** (for app scheduled tasks): "Run a full second look review using the skill at
 ~/.agents/skills/second-look (read its SKILL.md first). If there's no profile yet, ask the four
-profile questions and wait. Build and check the report, save it to ~/.second-look/reports/,
+profile questions and wait. Build and check the report, save it to ~/.second-look/reports/ (don't open it),
 write the log entry, run `python3 ~/.agents/skills/second-look/scripts/schedule.py reviewed`,
 then end with one question: which fixes they want to try this cycle."
 
@@ -269,6 +270,12 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
   `<html>`, `<head>` and `<body>` wrapper tags.
 - Keep it private. Locally, if you can't publish, save it to
   `~/.second-look/reports/<end-date>.html` and say where it is.
+- Locally, once the design check passes, run `python3 scripts/open_report.py <report.html>`
+  so the report opens in their own browser. App preview panes, like the Claude desktop app's,
+  can show a local file without its scripts or keep an old copy after a rebuild. In your
+  closing message, give the path and the command to open it again (`open <path>` on macOS).
+  Skip this on scheduled runs, so a private report never pops up while they're away; the
+  notification tells them it's ready.
 
 Sections, in order. Each maps to a block in the template.
 
