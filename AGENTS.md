@@ -1,3 +1,7 @@
+## Layout
+
+This repo holds two things. The skill lives in `plugins/second-look/skills/second-look/`, starting from `SKILL.md`, and `install.sh` installs it. The website lives in `src/`, built with Next.js and deployed to GitHub Pages. The Next.js notes below apply only to `src/`.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know
