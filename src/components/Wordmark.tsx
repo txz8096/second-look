@@ -1,11 +1,9 @@
 import { WORDMARK_DOUBLE_RULE, WORDMARK_LETTERS, WORDMARK_VIEWBOX } from "@/lib/paths";
 
-// `stretch` fills the box exactly instead of keeping proportions, matching the footer instance in Pencil.
-export function Wordmark({ className = "h-8 w-auto", stretch = false }: { className?: string; stretch?: boolean }) {
+export function Wordmark({ className = "h-8 w-auto" }: { className?: string }) {
   return (
     <svg
       viewBox={WORDMARK_VIEWBOX}
-      preserveAspectRatio={stretch ? "none" : undefined}
       className={className}
       role="img"
       aria-label="Second Look"
