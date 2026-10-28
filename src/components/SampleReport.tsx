@@ -2,12 +2,13 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import type { ReactNode } from "react";
 import { SPARKLINES } from "@/lib/paths";
 import { Sparkline } from "./Sparkline";
+import { Term } from "./Term";
 import { Container, Kicker, Pill } from "./ui";
 
-const glance = [
+const glance: { label: string; term?: "corrections"; value: string; delta: string; note: string }[] = [
   { label: "Sessions", value: "94", delta: "+6", note: "Shown for context." },
   { label: "Briefed starts", value: "54%", delta: "+6 pts", note: "Opens with goal, context and done." },
-  { label: "Corrections", value: "1.1", delta: "−0.3", note: "Per 10 messages." },
+  { label: "Corrections", term: "corrections", value: "1.1", delta: "−0.3", note: "Per 10 messages." },
   { label: "Restarts", value: "11", delta: "+5", note: "Starting a task over." },
   { label: "Rules retyped", value: "17", delta: "+3", note: "Rules that belong in a config file." },
 ];
@@ -178,7 +179,7 @@ function ExpandedPattern() {
       <div className="flex flex-col gap-2">
         <FieldLabel>EVIDENCE</FieldLabel>
         <p className="font-body text-base leading-normal text-ink">
-          Oct 12–25: 4 of 11 restarts were prototypes, including 4 Gloss token-panel chats in 2 days. 35% of
+          Oct 12–25: 4 of 11 <Term name="restarts">restarts</Term> were prototypes, including 4 Gloss token-panel chats in 2 days. 35% of
           prototype sessions opened with a brief, vs 58% on claude.ai.
         </p>
       </div>
@@ -217,9 +218,10 @@ export function SampleReport() {
             <div className="flex flex-col gap-2.5">
               <h3 className="font-display text-[32px] font-bold tracking-[-0.8px] text-ink">Your two-week review</h3>
               <p className="max-w-[820px] font-body text-base leading-normal text-text-2">
-                Your briefs got much better this year. Half your sessions now start with one, up from one in
-                five, and corrections nearly halved. Two things slipped: you check prototypes less, and Gloss
-                keeps restarting.
+                Your <Term name="briefedStarts">briefs</Term> got much better this year. Half your sessions now
+                start with one, up from one in five, and <Term name="corrections">corrections</Term> nearly halved.
+                Two things slipped: you <Term name="outputChecking">check prototypes</Term> less, and Gloss keeps{" "}
+                <Term name="restarts">restarting</Term>.
               </p>
             </div>
             <div className="flex flex-col gap-3.5">
@@ -230,7 +232,9 @@ export function SampleReport() {
               <dl className="grid grid-cols-1 divide-y divide-rule border-y border-rule md:grid-cols-5 md:divide-x md:divide-y-0">
                 {glance.map((m, i) => (
                   <div key={m.label} className={`flex flex-col gap-1.5 py-4 ${i === 0 ? "md:pr-5" : "md:px-5"}`}>
-                    <dt className="font-body text-[13px] text-text-3">{m.label}</dt>
+                    <dt className="font-body text-[13px] text-text-3">
+                      {m.term ? <Term name={m.term}>{m.label}</Term> : m.label}
+                    </dt>
                     <dd className="flex items-end gap-2">
                       <span className="font-display text-[30px] leading-none font-bold text-ink">{m.value}</span>
                       <span className="pb-[3px] font-body text-[13px] text-text-2">{m.delta}</span>
@@ -246,7 +250,7 @@ export function SampleReport() {
           <section className="flex flex-col gap-4 px-5 pt-8 pb-9 md:px-10">
             <PartTitle>Improve your prompts and context</PartTitle>
             <p className="font-body text-[15px] leading-normal text-text-2">
-              Most corrections start at the first message. Fix the brief and stop retyping rules to cut about a
+              Most <Term name="corrections">corrections</Term> start at the first message. Fix the brief and stop retyping rules to cut about a
               third of them.
             </p>
             <ol className="flex flex-col gap-4">

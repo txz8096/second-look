@@ -3,6 +3,7 @@ import { HERO_PLOT, SPARKLINES } from "@/lib/paths";
 import { links } from "@/lib/site";
 import { GithubIcon } from "./Icons";
 import { Sparkline } from "./Sparkline";
+import { Term } from "./Term";
 import { Container, PrimaryButton, SecondaryButton } from "./ui";
 
 // Axis labels sit in HTML over the plot so they keep their size when the SVG scales down on phones.
@@ -24,9 +25,9 @@ const xLabels = [
 ];
 
 const signals = [
-  { label: "Briefed starts", value: "56%", delta: "+39 pts", tone: "muted", d: SPARKLINES.briefedStarts },
-  { label: "Output checking", value: "29%", delta: "−1 pt", tone: "accent", d: SPARKLINES.outputChecking },
-  { label: "Restarts", value: "10%", delta: "+3 pts", tone: "muted", d: SPARKLINES.restarts },
+  { label: "Briefed starts", term: "briefedStarts", value: "56%", delta: "+39 pts", tone: "muted", d: SPARKLINES.briefedStarts },
+  { label: "Output checking", term: "outputChecking", value: "29%", delta: "−1 pt", tone: "accent", d: SPARKLINES.outputChecking },
+  { label: "Restarts", term: "restarts", value: "10%", delta: "+3 pts", tone: "muted", d: SPARKLINES.restarts },
 ] as const;
 
 function CorrectionsPlot() {
@@ -113,7 +114,9 @@ function AnnotatedTrace() {
         <div className="grid grid-cols-3 gap-6 border-t border-rule pt-[18px]">
           {signals.map((s) => (
             <div key={s.label} className="flex flex-col gap-2">
-              <p className="font-mono text-xs text-text-3">{s.label}</p>
+              <p className="font-mono text-xs text-text-3">
+                <Term name={s.term}>{s.label}</Term>
+              </p>
               <p className="flex items-end gap-1.5">
                 <span className="font-display text-[22px] leading-none font-medium text-ink">{s.value}</span>
                 <span className={`font-mono text-xs ${s.tone === "accent" ? "text-accent" : "text-text-2"}`}>
@@ -128,7 +131,8 @@ function AnnotatedTrace() {
         <figcaption className="flex gap-3 rounded-lg bg-accent-tint px-4 py-3.5">
           <CornerDownRight size={16} className="mt-[3px] shrink-0 text-accent" aria-hidden="true" />
           <p className="font-body text-sm leading-[1.55] text-ink">
-            Observed: briefs keep improving, but output checks fell from about half in July to 29%.
+            Observed: <Term name="briefedStarts">briefs</Term> keep improving, but{" "}
+            <Term name="outputChecking">output checks</Term> fell from about half in July to 29%.
           </p>
         </figcaption>
       </div>
