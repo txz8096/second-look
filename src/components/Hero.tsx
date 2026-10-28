@@ -5,10 +5,15 @@ import { GithubIcon } from "./Icons";
 import { Sparkline } from "./Sparkline";
 import { Container, PrimaryButton, SecondaryButton } from "./ui";
 
+// Axis labels sit in HTML over the plot so they keep their size when the SVG scales down on phones.
+// Positions are in viewBox units: y is the gridline each label centers on, x is the label's left edge.
+const PLOT_WIDTH = 492;
+const PLOT_HEIGHT = 150;
+
 const yLabels = [
-  { label: "0", y: 137 },
-  { label: "1", y: 77 },
-  { label: "2", y: 17 },
+  { label: "0", y: 144 },
+  { label: "1", y: 84 },
+  { label: "2", y: 24 },
 ];
 
 const xLabels = [
@@ -26,49 +31,59 @@ const signals = [
 
 function CorrectionsPlot() {
   return (
-    <svg
-      viewBox={HERO_PLOT.viewBox}
-      className="block h-auto w-full"
-      role="img"
-      aria-label="Corrections per 10 messages by week over the last 12 months, falling from about 1.9 to 1.1"
-    >
-      <path d={HERO_PLOT.gridlines} fill="none" strokeWidth={1} className="stroke-rule" vectorEffect="non-scaling-stroke" />
-      <path
-        d={HERO_PLOT.eachWeek}
-        fill="none"
-        strokeWidth={1}
-        strokeLinejoin="round"
-        className="stroke-accent opacity-40"
-        vectorEffect="non-scaling-stroke"
-      />
-      <path
-        d={HERO_PLOT.fourWeekAverage}
-        fill="none"
-        strokeWidth={2.25}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        className="stroke-accent"
-        vectorEffect="non-scaling-stroke"
-      />
-      <circle
-        cx={HERO_PLOT.latestWeek.cx}
-        cy={HERO_PLOT.latestWeek.cy}
-        r={4.5}
-        className="fill-accent stroke-surface"
-      />
-      <g className="fill-text-3 font-mono text-[10px]" dominantBaseline="text-before-edge">
-        {yLabels.map((t) => (
-          <text key={t.label} x={0} y={t.y}>
-            {t.label}
-          </text>
-        ))}
+    <div>
+      <div className="relative">
+        <svg
+          viewBox={`0 0 ${PLOT_WIDTH} ${PLOT_HEIGHT}`}
+          className="block h-auto w-full"
+          role="img"
+          aria-label="Corrections per 10 messages by week over the last 12 months, falling from about 1.9 to 1.1"
+        >
+          <path d={HERO_PLOT.gridlines} fill="none" strokeWidth={1} className="stroke-rule" vectorEffect="non-scaling-stroke" />
+          <path
+            d={HERO_PLOT.eachWeek}
+            fill="none"
+            strokeWidth={1}
+            strokeLinejoin="round"
+            className="stroke-accent opacity-40"
+            vectorEffect="non-scaling-stroke"
+          />
+          <path
+            d={HERO_PLOT.fourWeekAverage}
+            fill="none"
+            strokeWidth={2.25}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="stroke-accent"
+            vectorEffect="non-scaling-stroke"
+          />
+          <circle
+            cx={HERO_PLOT.latestWeek.cx}
+            cy={HERO_PLOT.latestWeek.cy}
+            r={4.5}
+            className="fill-accent stroke-surface"
+          />
+        </svg>
+        <div className="font-mono text-xs text-text-3" aria-hidden="true">
+          {yLabels.map((t) => (
+            <span
+              key={t.label}
+              className="absolute left-0 -translate-y-1/2 leading-none"
+              style={{ top: `${(t.y / PLOT_HEIGHT) * 100}%` }}
+            >
+              {t.label}
+            </span>
+          ))}
+        </div>
+      </div>
+      <div className="relative mt-1.5 h-4 font-mono text-xs text-text-3" aria-hidden="true">
         {xLabels.map((t) => (
-          <text key={t.label} x={t.x} y={156}>
+          <span key={t.label} className="absolute top-0" style={{ left: `${(t.x / PLOT_WIDTH) * 100}%` }}>
             {t.label}
-          </text>
+          </span>
         ))}
-      </g>
-    </svg>
+      </div>
+    </div>
   );
 }
 
@@ -89,7 +104,7 @@ function AnnotatedTrace() {
             </div>
             <div className="flex shrink-0 flex-col items-end gap-0.5">
               <p className="font-display text-[30px] leading-none font-medium text-ink">1.1</p>
-              <p className="font-mono text-[11px] text-accent">−0.8 since Nov</p>
+              <p className="font-mono text-xs text-accent">−0.8 since Nov</p>
             </div>
           </div>
           <CorrectionsPlot />
@@ -98,10 +113,10 @@ function AnnotatedTrace() {
         <div className="grid grid-cols-3 gap-6 border-t border-rule pt-[18px]">
           {signals.map((s) => (
             <div key={s.label} className="flex flex-col gap-2">
-              <p className="font-mono text-[11px] text-text-3">{s.label}</p>
+              <p className="font-mono text-xs text-text-3">{s.label}</p>
               <p className="flex items-end gap-1.5">
                 <span className="font-display text-[22px] leading-none font-medium text-ink">{s.value}</span>
-                <span className={`font-mono text-[11px] ${s.tone === "accent" ? "text-accent" : "text-text-2"}`}>
+                <span className={`font-mono text-xs ${s.tone === "accent" ? "text-accent" : "text-text-2"}`}>
                   {s.delta}
                 </span>
               </p>

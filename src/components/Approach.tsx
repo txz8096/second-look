@@ -31,7 +31,7 @@ const behaviors: Behavior[] = [
 ];
 
 function SmallLabel({ children }: { children: string }) {
-  return <p className="font-mono text-[11px] tracking-[0.8px] text-accent">{children}</p>;
+  return <p className="font-mono text-xs tracking-[0.8px] text-accent">{children}</p>;
 }
 
 export function Approach() {
@@ -100,7 +100,7 @@ export function Approach() {
                                 key={row.tag}
                                 className="flex flex-col gap-1 border-l-2 border-accent py-0.5 pl-3.5 sm:flex-row sm:gap-5"
                               >
-                                <dt className="font-mono text-[11px] leading-[1.9] tracking-[0.8px] text-accent sm:w-[104px] sm:shrink-0">
+                                <dt className="font-mono text-xs leading-[1.9] tracking-[0.8px] text-accent sm:w-[104px] sm:shrink-0">
                                   {row.tag}
                                 </dt>
                                 <dd className="font-display text-[17px] leading-[1.35] font-bold tracking-[-0.3px] text-ink">

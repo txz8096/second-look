@@ -326,16 +326,16 @@ export function SampleReport() {
             <div className="grid grid-cols-1 gap-8 pt-2 pb-4 sm:grid-cols-2 lg:grid-cols-4">
               {trends.map((t) => (
                 <div key={t.label} className="flex flex-col gap-2.5 pt-4">
-                  <p className="font-mono text-[11px] text-text-3">{t.label}</p>
+                  <p className="font-mono text-xs text-text-3">{t.label}</p>
                   <p className="flex items-end gap-1.5">
                     <span className="font-display text-[22px] leading-none font-medium text-ink">{t.value}</span>
-                    <span className={`font-mono text-[11px] ${t.tone === "accent" ? "text-accent" : "text-text-2"}`}>
+                    <span className={`font-mono text-xs ${t.tone === "accent" ? "text-accent" : "text-text-2"}`}>
                       {t.delta}
                     </span>
                   </p>
                   <div className="flex flex-col gap-1 pt-1.5">
                     <Sparkline d={t.d} tone={t.tone} className="h-12" />
-                    <div className="flex justify-between font-mono text-[10px] text-text-3">
+                    <div className="flex justify-between font-mono text-xs text-text-3">
                       <span>Nov</span>
                       <span>Oct</span>
                     </div>
