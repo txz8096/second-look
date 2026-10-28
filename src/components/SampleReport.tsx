@@ -49,7 +49,6 @@ const trends = [
     label: "Briefed starts",
     value: "56%",
     delta: "+39 pts",
-    tone: "accent",
     d: SPARKLINES.briefedStarts,
     explanation: "Share of sessions where your first message gives the goal, the context and what done looks like.",
   },
@@ -57,7 +56,6 @@ const trends = [
     label: "Corrections / 10 msgs",
     value: "1.1",
     delta: "−0.8",
-    tone: "muted",
     d: SPARKLINES.corrections,
     explanation: "How often you redirect or fix the AI, per 10 messages. Lower means it understood you sooner.",
   },
@@ -65,7 +63,6 @@ const trends = [
     label: "Output checking",
     value: "29%",
     delta: "−1 pt",
-    tone: "accent",
     d: SPARKLINES.outputChecking,
     explanation: "Share of sessions where you test, review or question the output before accepting it.",
   },
@@ -73,7 +70,6 @@ const trends = [
     label: "Restarts",
     value: "10%",
     delta: "+3 pts",
-    tone: "muted",
     d: SPARKLINES.restarts,
     explanation: "Share of tasks you abandoned and started over in a fresh session.",
   },
@@ -258,12 +254,12 @@ export function SampleReport() {
                   <p className="font-mono text-xs text-text-3">{t.label}</p>
                   <p className="flex items-end gap-1.5">
                     <span className="font-display text-[22px] leading-none font-medium text-ink">{t.value}</span>
-                    <span className={`font-mono text-xs ${t.tone === "accent" ? "text-accent" : "text-text-2"}`}>
+                    <span className="font-mono text-xs text-text-2">
                       {t.delta}
                     </span>
                   </p>
                   <div className="flex flex-col gap-1 pt-1.5">
-                    <Sparkline d={t.d} tone={t.tone} className="h-12" />
+                    <Sparkline d={t.d} className="h-12" />
                     <div className="flex justify-between font-mono text-xs text-text-3">
                       <span>Nov</span>
                       <span>Oct</span>

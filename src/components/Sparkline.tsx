@@ -2,12 +2,10 @@ import type { CSSProperties } from "react";
 
 export function Sparkline({
   d,
-  tone,
   className = "h-[34px]",
   delay,
 }: {
   d: string;
-  tone: "accent" | "muted";
   className?: string;
   // When set, the line wipes in after this many milliseconds.
   delay?: number;
@@ -27,7 +25,7 @@ export function Sparkline({
         strokeLinecap="round"
         strokeLinejoin="round"
         vectorEffect="non-scaling-stroke"
-        className={tone === "accent" ? "stroke-accent" : "stroke-text-2"}
+        className="stroke-accent"
       />
     </svg>
   );

@@ -16,7 +16,6 @@ const PLOT_HEIGHT = 150;
 const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties;
 const CARD_IN = 240;
 const PLOT_IN = CARD_IN + 300;
-const PLOT_DRAW = 1100;
 
 const yLabels = [
   { label: "0", y: 144 },
@@ -32,9 +31,9 @@ const xLabels = [
 ];
 
 const signals = [
-  { label: "Briefed starts", term: "briefedStarts", value: "56%", delta: "+39 pts", tone: "muted", d: SPARKLINES.briefedStarts },
-  { label: "Output checking", term: "outputChecking", value: "29%", delta: "−1 pt", tone: "accent", d: SPARKLINES.outputChecking },
-  { label: "Restarts", term: "restarts", value: "10%", delta: "+3 pts", tone: "muted", d: SPARKLINES.restarts },
+  { label: "Briefed starts", term: "briefedStarts", value: "56%", delta: "+39 pts", d: SPARKLINES.briefedStarts },
+  { label: "Output checking", term: "outputChecking", value: "29%", delta: "−1 pt", d: SPARKLINES.outputChecking },
+  { label: "Restarts", term: "restarts", value: "10%", delta: "+3 pts", d: SPARKLINES.restarts },
 ] as const;
 
 function CorrectionsPlot() {
@@ -52,28 +51,13 @@ function CorrectionsPlot() {
             <path
               d={HERO_PLOT.eachWeek}
               fill="none"
-              strokeWidth={1}
-              strokeLinejoin="round"
-              className="stroke-accent opacity-40"
-              vectorEffect="non-scaling-stroke"
-            />
-            <path
-              d={HERO_PLOT.fourWeekAverage}
-              fill="none"
-              strokeWidth={2.25}
+              strokeWidth={1.75}
               strokeLinecap="round"
               strokeLinejoin="round"
               className="stroke-accent"
               vectorEffect="non-scaling-stroke"
             />
           </g>
-          <circle
-            cx={HERO_PLOT.latestWeek.cx}
-            cy={HERO_PLOT.latestWeek.cy}
-            r={4.5}
-            className="dot-in fill-accent stroke-surface"
-            style={delay(PLOT_IN + PLOT_DRAW - 120)}
-          />
         </svg>
         <div className="font-mono text-xs text-text-3" aria-hidden="true">
           {yLabels.map((t) => (
@@ -117,7 +101,7 @@ function AnnotatedTrace() {
             </div>
             <div className="flex shrink-0 flex-col items-end gap-0.5">
               <p className="font-display text-[30px] leading-none font-medium text-ink">1.1</p>
-              <p className="font-mono text-xs text-accent">−0.8 since Nov</p>
+              <p className="font-mono text-xs text-text-2">−0.8 since Nov</p>
             </div>
           </div>
           <CorrectionsPlot />
@@ -131,11 +115,11 @@ function AnnotatedTrace() {
               </p>
               <p className="flex items-end gap-1.5">
                 <span className="font-display text-[22px] leading-none font-medium text-ink">{s.value}</span>
-                <span className={`font-mono text-xs ${s.tone === "accent" ? "text-accent" : "text-text-2"}`}>
+                <span className="font-mono text-xs text-text-2">
                   {s.delta}
                 </span>
               </p>
-              <Sparkline d={s.d} tone={s.tone} delay={PLOT_IN + 400 + i * 80} />
+              <Sparkline d={s.d} delay={PLOT_IN + 400 + i * 80} />
             </div>
           ))}
         </div>

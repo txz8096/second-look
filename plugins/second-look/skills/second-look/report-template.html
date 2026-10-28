@@ -120,7 +120,6 @@ th.num { text-align: right; }
 .trend-intro { max-width: none; }
 .key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.8rem; color: var(--muted); align-items: center; }
 .key i { display: inline-block; vertical-align: middle; margin-right: 6px; }
-.k-thin { width: 18px; height: 0; border-top: 1px solid var(--series); opacity: .55; }
 .k-thick { width: 18px; height: 0; border-top: 2px solid var(--series); }
 .k-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--series); }
 .k-ms { width: 0; height: 12px; border-left: 1px dashed var(--milestone); }
@@ -861,10 +860,6 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
     <span class="fsum" id="f-sum"></span>
   </div>
 
-  <div class="key">
-    <span><i class="k-thin"></i>Each week</span><span><i class="k-thick"></i>4-week average</span>
-    <span><i class="k-dot"></i>Latest week</span><span><i class="k-ms"></i>Milestones: Mar, first skill · Jul, global CLAUDE.md · Sep, Streak redesign</span>
-  </div>
   <p class="def static-note">Showing the last 12 months across every tool. Open this file in Chrome, Safari or another browser to filter the charts.</p>
   <div class="multiples" id="primary-charts"></div>
 
@@ -1396,16 +1391,16 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
   function chart(m, totals, i0) {
     const idx = []; for (let i = i0; i < WEEKS; i++) idx.push(i);
     const raw = idx.map(i => value(m, totals[i]));
-    const avg = idx.map(i => windowVal(m, totals, Math.max(i0, i - 3), i));
-    const vals = raw.concat(avg).filter(v => v != null);
+    const sessionsIn = idx.map(i => totals[i].sessions);
+    const vals = raw.filter(v => v != null);
     const ymax = niceMax(Math.max(...vals, m.den ? 0.05 : 1) * 1.08);
     const x = k => L + (W - L - R) * (idx.length === 1 ? 0.5 : k / (idx.length - 1)), y = v => T + (H - T - B) * (1 - v / ymax);
     const lastA = windowVal(m, totals, WEEKS - 4, WEEKS - 1);
     const cmpA = state.range === 4 ? windowVal(m, totals, WEEKS - 8, WEEKS - 5) : windowVal(m, totals, i0, i0 + 3);
     const dlt = deltaText(m, cmpA, lastA);
     const card = document.createElement("div"); card.className = "chart";
-    const vs = state.range === 4 ? "vs previous 4 weeks" : "vs start of range";
-    card.innerHTML = `<div class="chart-head"><h3>${m.title}</h3><span class="chart-now"><b>${lastA == null ? "—" : m.fmt(lastA)}</b> now${dlt ? ` · <span class="${tone(m, dlt)}">${dlt.t}</span> ${vs}` : ""}</span></div><p class="def">${m.def}</p>`;
+    const vs = state.range === 4 ? "vs previous 4 weeks" : "vs first 4 weeks";
+    card.innerHTML = `<div class="chart-head"><h3>${m.title}</h3><span class="chart-now"><b>${lastA == null ? "—" : m.fmt(lastA)}</b> last 4 weeks${dlt ? ` · <span class="${tone(m, dlt)}">${dlt.t}</span> ${vs}` : ""}</span></div><p class="def">${m.def}</p>`;
     const firstData = raw.findIndex(v => v != null);
     if (firstData > 0) { const g = document.createElement("span"); g.className = "gapnote"; g.textContent = `No data before ${mon(weeks[idx[firstData]])} for this filter`; card.appendChild(g); }
     if (firstData === -1) { const g = document.createElement("span"); g.className = "gapnote"; g.textContent = "No sessions match these filters"; card.appendChild(g); document.getElementById(m.el).appendChild(card); return; }
@@ -1420,10 +1415,9 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     });
     milestones.filter(ms => ms.i >= i0).forEach(ms => add("line", {x1: x(ms.i - i0), x2: x(ms.i - i0), y1: T, y2: H - B, stroke: "var(--milestone)", "stroke-dasharray": "3 3", "stroke-width": 1}));
     const path = arr => { let d = "", pen = false; arr.forEach((v, k) => { if (v == null) { pen = false; return; } d += (pen ? "L" : "M") + x(k).toFixed(1) + " " + y(v).toFixed(1); pen = true; }); return d; };
-    add("path", {d: path(raw), fill: "none", stroke: "var(--series)", "stroke-width": 1, opacity: 0.45, "stroke-linejoin": "round"});
-    add("path", {d: path(avg), fill: "none", stroke: "var(--series)", "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round"});
-    if (idx.length <= 13) raw.forEach((v, k) => { if (v != null) add("circle", {cx: x(k), cy: y(v), r: 2.5, fill: "var(--series)", opacity: 0.6}); });
-    if (raw[raw.length - 1] != null) add("circle", {cx: x(idx.length - 1), cy: y(raw[raw.length - 1]), r: 4, fill: "var(--series)", stroke: "var(--surface)", "stroke-width": 2});
+    add("path", {d: path(raw), fill: "none", stroke: "var(--series)", "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round"});
+    // a week with no data on either side has no line to sit on, so it gets a dot
+    raw.forEach((v, k) => { if (v != null && raw[k - 1] == null && raw[k + 1] == null) add("circle", {cx: x(k), cy: y(v), r: 2.5, fill: "var(--series)"}); });
     const cross = add("line", {y1: T, y2: H - B, stroke: "var(--cursor)", "stroke-width": 1, visibility: "hidden"});
     const hot = add("circle", {r: 4, fill: "var(--series)", stroke: "var(--surface)", "stroke-width": 2, visibility: "hidden"});
     const hit = add("rect", {x: L, y: 0, width: W - L - R, height: H - B, fill: "transparent"});
@@ -1434,7 +1428,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
       cross.setAttribute("x1", x(k)); cross.setAttribute("x2", x(k)); cross.setAttribute("visibility", "visible");
       if (raw[k] != null) { hot.setAttribute("cx", x(k)); hot.setAttribute("cy", y(raw[k])); hot.setAttribute("visibility", "visible"); } else hot.setAttribute("visibility", "hidden");
       const ms = milestones.find(q => q.i === idx[k]);
-      tip.innerHTML = `Week of ${mon(weeks[idx[k]])}<br>${raw[k] == null ? "No sessions" : m.fmt(raw[k]) + " · avg " + m.fmt(avg[k])}${ms ? "<br>" + ms.label : ""}`;
+      tip.innerHTML = `Week of ${mon(weeks[idx[k]])}<br>${raw[k] == null ? "No sessions" : m.fmt(raw[k]) + " · " + sessionsIn[k] + (sessionsIn[k] === 1 ? " session" : " sessions")}${ms ? "<br>" + ms.label : ""}`;
       tip.hidden = false;
       const cr = card.getBoundingClientRect();
       tip.style.top = (ev.clientY - cr.top - 56) + "px";
