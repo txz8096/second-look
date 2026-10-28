@@ -4,7 +4,8 @@
 Usage: python3 prerender.py REPORT.html
 
 Runs the report once in headless Chrome (or Chromium, Edge, Brave), takes the rendered
-"Habits over the last year" section and writes it back into the file, marked data-static.
+"Habits over the last year" section and the data-scope line above it, and writes them back
+into the file, marked data-static.
 In a normal browser the script clears the marker and redraws with working filters.
 Without a browser it changes nothing, says so and exits 0: the charts then draw only when
 scripts run.
@@ -19,6 +20,7 @@ MAC_APPS = [
 ]
 COMMANDS = ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "microsoft-edge", "brave-browser"]
 SECTION = re.compile(r'<section id="trends"[^>]*>.*?</section>', re.S)
+SCOPE_LINE = re.compile(r'<p class="scope-line" id="scope-line">.*?</p>', re.S)
 
 
 def find_browser():
@@ -61,6 +63,9 @@ def main():
 
     static = re.sub(r'^<section id="trends"[^>]*>', '<section id="trends" data-static="">', drawn.group(0))
     html = SECTION.sub(lambda _: static, html, count=1)
+    line = SCOPE_LINE.search(run.stdout)
+    if line:
+        html = SCOPE_LINE.sub(lambda _: line.group(0), html, count=1)
     open(report, "w", encoding="utf-8").write(html)
     print(f"Charts drawn into {report}.")
 

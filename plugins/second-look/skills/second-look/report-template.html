@@ -794,6 +794,38 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
 .stat .term[data-align="start"] .term-card { left: 18px; right: auto; }
 .stat .term[data-align="end"] .term-card { left: auto; right: 12px; }
 @media (prefers-reduced-motion: reduce) { .term-card { transition: none; } }
+
+/* Data scope: what each trend can and can't show. Dashed terms open a card with why and how to add the data. */
+[hidden] { display: none !important; }
+.scope-line { margin: 0; font-size: 0.9375rem; line-height: 1.6; color: var(--muted); }
+.term-card .card-h { display: block; font-weight: 600; margin-bottom: 4px; }
+.term-card .card-step { display: block; margin-top: 6px; }
+.term-card code { font-family: var(--mono); font-size: 0.75rem; background: rgb(0 0 0 / .08); padding: 0 4px; border-radius: 4px; }
+.tl-row, .tl-axis { display: grid; grid-template-columns: 112px minmax(0, 1fr) 190px; gap: 16px; }
+.tl-row { align-items: center; padding: 11px 0; border-top: 1px solid var(--line); }
+.tl-row:first-child { border-top: none; }
+.tl-name { font-size: 0.875rem; }
+.tl-status { font-size: 0.8125rem; color: var(--muted); text-align: right; }
+.track { position: relative; height: 12px; border-radius: 3px; background: var(--seg-track); }
+.track i { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
+.seg-data { background: var(--accent); }
+.seg-out { background: repeating-linear-gradient(135deg, transparent 0 4px, rgb(168 173 183 / .22) 4px 6px); border: 1px dashed var(--faint); box-sizing: border-box; }
+.tl-axis { font: 0.75rem var(--mono); color: var(--faint); padding-top: 6px; }
+.tl-axis > span:nth-child(2) { display: flex; justify-content: space-between; }
+.tl-group { margin: 18px 0 2px; }
+.tl-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 0.8125rem; color: var(--muted); margin-top: 10px; }
+.tl-legend i { display: inline-block; width: 22px; height: 10px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
+.chart-plot { position: relative; }
+.scope-at { position: absolute; top: -4px; font-size: 0.75rem; color: var(--muted); white-space: nowrap; margin-left: 6px; z-index: 3; }
+.scope-at.late { margin-left: 0; margin-right: 6px; }
+.scope-out { display: grid; place-items: center; min-height: 120px; border: 1px dashed var(--line-strong); border-radius: 8px; color: var(--muted); font-size: 0.875rem; text-align: center; padding: 16px;
+  background: repeating-linear-gradient(135deg, transparent 0 5px, rgb(168 173 183 / .08) 5px 7px); }
+@media (max-width: 680px) {
+  .tl-row, .tl-axis { grid-template-columns: 1fr; gap: 6px; }
+  .tl-status { text-align: left; }
+  .tl-status .term[data-align="end"] .term-card { left: 0; right: auto; }
+  .tl-axis > span:first-child, .tl-axis > span:last-child { display: none; }
+}
 /* side-by-side panels share a height; keep their rows packed at the top so headings and bars line up */
 .panel { align-content: start; }
 /* on phones, tables scroll sideways instead of squeezing cells to a word per line */
@@ -835,10 +867,10 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
 <div class="part" id="part-1">
   <div class="part-head">
     <h2>How your behavior is changing</h2>
-    <div class="part-meta"><span class="muted">12 months of sessions across claude.ai, Claude Code, Codex, Cursor and ChatGPT</span></div>
+    <p class="scope-line" id="scope-line">12 months of sessions across claude.ai, Claude Code, Codex, Cursor and ChatGPT</p>
   </div>
 
-  <section id="last-cycle" data-needs-prior hidden>
+  <section id="last-cycle" data-needs-prior>
     <div class="sec-head"><h3>Did last cycle's fixes work?</h3></div>
     <div class="tbl"><table class="eval">
       <thead><tr><th>Experiment</th><th>Tried?</th><th>Habit changed?</th><th>Work got better?</th><th>Costs</th><th>Decision</th></tr></thead>
@@ -852,6 +884,17 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
 
 <section id="trends">
   <div class="sec-head"><h3>Habits over the last year</h3><span class="muted" id="range-label">Last 12 months</span></div>
+
+  <details id="scope-details">
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">What each trend covers</span><span class="sum-meta">12 months by source. Dashed means second look can't see it</span></span><span></span></summary>
+    <div class="body">
+      <div class="tl" id="tl-sources"></div>
+      <p class="eyebrow tl-group">Token usage</p>
+      <div class="tl" id="tl-usage"></div>
+      <div class="tl-axis" id="tl-axis"></div>
+      <div class="tl-legend"><span><i class="seg-data"></i>Data</span><span><i style="background:var(--seg-track)"></i>No sessions</span><span><i class="seg-out"></i>Outside what second look can see</span></div>
+    </div>
+  </details>
 
   <div class="filters" role="group" aria-label="Filter the charts">
     <div class="fgroup" id="f-range" role="group" aria-label="Time range"><span class="flabel">Time</span></div>
@@ -1309,6 +1352,86 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     });
   }));
 
+  // ---- data scope: what each source can show (a real run reads the collector's "scope") ----
+  // state: logs | export | missing (an export not added) | not_found (tool not on this computer) | not_readable (a claude.ai run)
+  // cut: the first day second look has for a source whose earlier data was deleted
+  const SCOPE = {"retention_days": 30, "sources": [
+    {"id": "claude_ai", "state": "export", "to": "2026-10-19"}, {"id": "claude_code", "state": "logs", "cut": "2026-09-21"},
+    {"id": "codex", "state": "logs"}, {"id": "cursor", "state": "logs"}, {"id": "antigravity", "state": "not_found"},
+    {"id": "chatgpt", "state": "export", "to": "2026-10-12"}, {"id": "gemini_web", "state": "missing"}]};
+  const METERED = new Set(["claude_code", "codex"]);
+  const EXPORT_STEPS = {
+    claude_ai: ["Settings → Privacy → Export data. It arrives by email, usually within a day.", "Then say <code>add my claude.ai export</code>."],
+    chatgpt: ["Settings → Data controls → Export data. It arrives by email, usually within a day.", "Then say <code>add my ChatGPT export</code>."],
+    gemini_web: ["takeout.google.com → My Activity, filtered to Gemini Apps, format JSON.", "Then say <code>add my Gemini export</code>."],
+  };
+  const idxOf = iso => WEEKS - 1 - Math.round((end - new Date(iso + "T00:00:00")) / (7 * 864e5));
+  const dayLabel = iso => new Date(iso + "T00:00:00").toLocaleDateString("en-US", {month: "short", day: "numeric"});
+  const scopeCard = (label, title, body, steps = [], align = "") =>
+    `<span class="term" tabindex="0"${align ? ` data-align="${align}"` : ""}>${label}<span class="term-card" role="tooltip"><span class="card-h">${title}</span>${body}${steps.map(s => `<span class="card-step">${s}</span>`).join("")}</span></span>`;
+  const keepSteps = () => SCOPE.retention_days < 365 ? ["Say <code>keep a year of logs</code> and second look raises it to 365 days for you."] : ["Earlier weeks can't be recovered."];
+  const cutCard = (src, label, align) => scopeCard(label, `${name(SOURCES, src.id)}: weeks before ${dayLabel(src.cut)} are gone`,
+    `${name(SOURCES, src.id)} deletes its logs after ${SCOPE.retention_days} days unless you raise <code>cleanupPeriodDays</code>. second look saves weekly totals at each review, so nothing more is lost from here.`, keepSteps(), align);
+  const activeWeeks = (id, key) => { const s = new Set(); rows.forEach(r => { if (r.s === id && r[key] > 0) s.add(r.w); }); return s; };
+  // weeks with sessions but no token counts: usage for them was never recorded
+  const usageCut = id => { const sess = activeWeeks(id, "sessions"), met = activeWeeks(id, "metered"); if (!met.size) return null;
+    const f = Math.min(...met); return [...sess].some(w => w < f) ? f : null; };
+  const cutIdx = (id, usage) => { const src = SCOPE.sources.find(s => s.id === id); if (!src) return null;
+    if (usage) { const u = usageCut(id); if (u != null) return u; }
+    return src.cut ? Math.max(0, idxOf(src.cut)) : null; };
+
+  function renderScope() {
+    const segs = (on, out) => { const parts = []; if (out > 0) parts.push(`<i class="seg-out" style="left:0;width:${out / WEEKS * 100}%"></i>`);
+      let a = null; for (let w = 0; w <= WEEKS; w++) { const has = on.has(w) && w >= out; if (has && a == null) a = w; if (!has && a != null) { parts.push(`<i class="seg-data" style="left:${a / WEEKS * 100}%;width:${(w - a) / WEEKS * 100}%"></i>`); a = null; } }
+      return parts.join(""); };
+    const row = (label, track, status) => `<div class="tl-row"><span class="tl-name">${label}</span><div class="track">${track}</div><span class="tl-status">${status}</span></div>`;
+    const status = (src, on) => {
+      const label = name(SOURCES, src.id), first = on.size ? Math.min(...on) : null, last = on.size ? Math.max(...on) : null;
+      if (src.state === "missing") return scopeCard("Not added", `${label}: add your export to see it here`, `second look reads ${label} from a data export, so your full history can join every trend.`, EXPORT_STEPS[src.id] || [], "end");
+      if (src.state === "not_found") return scopeCard("Not found", `${label} isn't on this computer`, `second look looked for ${label}'s files and found none. Nothing to do if you don't use it.`, [], "end");
+      if (src.state === "not_readable") return scopeCard("Not readable here", "Run second look on your computer", `${label} keeps its history on your computer, which a claude.ai run can't open.`, [], "end");
+      if (src.state === "export") return scopeCard(`Export, ${dayLabel(src.to)}`, `${label}: from your export`, `Covers every chat up to ${dayLabel(src.to)}. Later chats appear after a fresh export.`, EXPORT_STEPS[src.id] || [], "end");
+      if (src.cut) return cutCard(src, `Since ${dayLabel(src.cut)}`, "end");
+      if (first == null) return "No sessions";
+      if (last < WEEKS - 3) return `No sessions since ${mon(weeks[last])}`;
+      return first === 0 ? "Full year" : `Since ${mon(weeks[first])}`;
+    };
+    const srcRows = SCOPE.sources.map(src => {
+      const on = activeWeeks(src.id, "sessions"), whole = ["missing", "not_readable"].includes(src.state);
+      return row(name(SOURCES, src.id), whole ? `<i class="seg-out" style="left:0;width:100%"></i>` : segs(on, src.cut ? Math.max(0, idxOf(src.cut)) : 0), status(src, on));
+    });
+    document.getElementById("tl-sources").innerHTML = srcRows.join("");
+    const usageRows = SCOPE.sources.filter(s => METERED.has(s.id) && s.state === "logs").map(src => {
+      const on = activeWeeks(src.id, "metered"), out = cutIdx(src.id, true) || 0, label = name(SOURCES, src.id);
+      const st = !on.size ? "No sessions" : usageCut(src.id) != null
+        ? scopeCard(`From ${mon(weeks[out])}`, `${label}: token usage starts ${mon(weeks[out])}`, "Token counts come from the tool's own logs. Earlier weeks were saved without them.", ["This moves back as history builds. Nothing to do."], "end")
+        : src.cut ? cutCard(src, `Since ${dayLabel(src.cut)}`, "end") : (Math.min(...on) === 0 ? "Full year" : `Since ${mon(weeks[Math.min(...on)])}`);
+      return row(label, segs(on, out), st);
+    });
+    usageRows.push(row("Other tools", `<i class="seg-out" style="left:0;width:100%"></i>`, scopeCard("Not recorded", "Other tools don't log tokens", "Cursor, Antigravity, claude.ai, ChatGPT and Gemini don't record token counts, so usage covers Claude Code and Codex only.", [], "end")));
+    document.getElementById("tl-usage").innerHTML = usageRows.join("");
+    const q = [0, 13, 26, 39, WEEKS - 1].map(i => weeks[i].toLocaleDateString("en-US", {month: "short", year: i === 0 || i === WEEKS - 1 ? "numeric" : undefined}));
+    document.getElementById("tl-axis").innerHTML = `<span></span><span>${q.map(t => `<span>${t}</span>`).join("")}</span><span></span>`;
+
+    // the one-line summary under the part title
+    const seen = [], absent = [];
+    SCOPE.sources.forEach(src => {
+      const label = name(SOURCES, src.id), on = activeWeeks(src.id, "sessions");
+      if (["missing", "not_readable"].includes(src.state)) { absent.push(src); return; }
+      if (src.state === "not_found" || !on.size) return;
+      if (src.cut) seen.push(`${label} ${cutCard(src, `since ${dayLabel(src.cut)}`)}`);
+      else if (Math.min(...on) === 0) seen.push(`a full year of ${label}`);
+      else seen.push(`${label} since ${mon(weeks[Math.min(...on)])}`);
+    });
+    let line = seen.length ? seen.join("; ").replace(/^./, c => c.toUpperCase()) + "." : "";
+    if (absent.length) {
+      const names = absent.map(s => name(SOURCES, s.id)), list = names.length > 1 ? names.slice(0, -1).join(", ") + " and " + names[names.length - 1] : names[0];
+      const steps = absent.flatMap(s => (EXPORT_STEPS[s.id] || []).slice(0, 1).map(t => `${name(SOURCES, s.id)}: ${t}`));
+      line += ` ${scopeCard(`${list} ${names.length > 1 ? "aren't" : "isn't"} added`, names.length > 1 ? "These sources aren't added yet" : `${list} isn't added yet`, "Add them and their history joins every trend below.", steps)}.`;
+    }
+    document.getElementById("scope-line").innerHTML = line;
+  }
+
   // ---- metrics: every one has a one-line meaning ----
   const pct = v => Math.round(v * 100) + "%";
   const per10 = v => (v * 10).toFixed(1);
@@ -1402,7 +1525,19 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     const vs = state.range === 4 ? "vs previous 4 weeks" : "vs first 4 weeks";
     card.innerHTML = `<div class="chart-head"><h3>${m.title}</h3><span class="chart-now"><b>${lastA == null ? "—" : m.fmt(lastA)}</b> last 4 weeks${dlt ? ` · <span class="${tone(m, dlt)}">${dlt.t}</span> ${vs}` : ""}</span></div><p class="def">${m.def}</p>`;
     const firstData = raw.findIndex(v => v != null);
-    if (firstData > 0) { const g = document.createElement("span"); g.className = "gapnote"; g.textContent = `No data before ${mon(weeks[idx[firstData]])} for this filter`; card.appendChild(g); }
+    const usageMetric = m.den === "usage" || m.den === "metered";
+    const chosen = (state.sources.size ? [...state.sources] : SOURCES.map(([id]) => id));
+    if (firstData === -1 && usageMetric && idx.some(i => totals[i].sessions > 0)) {
+      const box = document.createElement("div"); box.className = "scope-out";
+      box.innerHTML = scopeCard("Not measured for these sources", "These tools don't log tokens", "Usage comes from Claude Code and Codex logs. Pick one of them to see this chart.");
+      card.appendChild(box); document.getElementById(m.el).appendChild(card); return {m, cmpA, lastA, dlt};
+    }
+    // a dashed start line only when a scope limit explains the gap, not when there were simply no sessions
+    let scopeAt = null;
+    if (firstData > 0) {
+      const hit = chosen.map(id => [id, cutIdx(id, usageMetric)]).find(([, c]) => c != null && Math.abs(c - idx[firstData]) <= 1);
+      if (hit) scopeAt = {k: firstData, id: hit[0]};
+    }
     if (firstData === -1) { const g = document.createElement("span"); g.className = "gapnote"; g.textContent = "No sessions match these filters"; card.appendChild(g); document.getElementById(m.el).appendChild(card); return; }
     const svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("role", "img");
     svg.setAttribute("aria-label", `${m.title}, ${lastA == null ? "no data" : m.fmt(lastA)} over the last 4 weeks`);
@@ -1413,6 +1548,13 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
       const show = state.range <= 4 ? true : state.range <= 13 ? k % 4 === 0 : d.getDate() <= 7 && (state.range <= 26 ? d.getMonth() % 2 === 0 : [0, 3, 6, 9].includes(d.getMonth()));
       if (show) add("text", {x: x(k), y: H - 6, "text-anchor": "middle"}).textContent = state.range <= 13 ? mon(d) : d.toLocaleDateString("en-US", {month: "short"});
     });
+    if (scopeAt) {
+      const pid = "hatch-" + m.id, pat = add("pattern", {id: pid, width: 6, height: 6, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)"});
+      const ln = document.createElementNS(NS, "line"); ln.setAttribute("x1", 0); ln.setAttribute("y1", 0); ln.setAttribute("x2", 0); ln.setAttribute("y2", 6);
+      ln.setAttribute("stroke", "var(--faint)"); ln.setAttribute("stroke-width", 1); ln.setAttribute("opacity", 0.35); pat.appendChild(ln);
+      add("rect", {x: L, y: T, width: x(scopeAt.k) - L, height: H - T - B, fill: `url(#${pid})`});
+      add("line", {x1: x(scopeAt.k), x2: x(scopeAt.k), y1: T, y2: H - B, stroke: "var(--faint)", "stroke-dasharray": "3 3", "stroke-width": 1.5});
+    }
     milestones.filter(ms => ms.i >= i0).forEach(ms => add("line", {x1: x(ms.i - i0), x2: x(ms.i - i0), y1: T, y2: H - B, stroke: "var(--milestone)", "stroke-dasharray": "3 3", "stroke-width": 1}));
     const path = arr => { let d = "", pen = false; arr.forEach((v, k) => { if (v == null) { pen = false; return; } d += (pen ? "L" : "M") + x(k).toFixed(1) + " " + y(v).toFixed(1); pen = true; }); return d; };
     add("path", {d: path(raw), fill: "none", stroke: "var(--series)", "stroke-width": 2, "stroke-linejoin": "round", "stroke-linecap": "round"});
@@ -1436,7 +1578,17 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     };
     const leave = () => { tip.hidden = true; cross.setAttribute("visibility", "hidden"); hot.setAttribute("visibility", "hidden"); };
     hit.addEventListener("pointermove", move); hit.addEventListener("pointerdown", move); hit.addEventListener("pointerleave", leave);
-    card.appendChild(svg); card.appendChild(tip);
+    const plot = document.createElement("div"); plot.className = "chart-plot"; plot.appendChild(svg);
+    if (scopeAt) {
+      const src = SCOPE.sources.find(s => s.id === scopeAt.id), at = x(scopeAt.k) / W * 100, label = name(SOURCES, scopeAt.id), d = mon(weeks[idx[scopeAt.k]]);
+      const lab = document.createElement("span"), late = at > 55; lab.className = "scope-at" + (late ? " late" : "");
+      if (late) lab.style.right = (100 - at) + "%"; else lab.style.left = at + "%";
+      lab.innerHTML = usageMetric && usageCut(scopeAt.id) != null
+        ? scopeCard(`Usage starts ${d}`, `${label}: why the line starts here`, `Token counts come from ${label}'s own logs, and weeks before ${d} were saved without them.`, ["This moves back as history builds."], late ? "end" : "")
+        : scopeCard(`Data starts ${d}`, `${label}: why the line starts here`, `${label} deletes its logs after ${SCOPE.retention_days} days, so weeks before ${d} are gone.`, keepSteps(), late ? "end" : "");
+      plot.appendChild(lab);
+    }
+    card.appendChild(plot); card.appendChild(tip);
     document.getElementById(m.el).appendChild(card);
     return {m, cmpA, lastA, dlt};
   }
@@ -1454,6 +1606,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
   }
 
   function render() {
+    renderScope();
     const i0 = WEEKS - state.range;
     rangeEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.n === state.range)));
     srcEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === "all" ? !state.sources.size : state.sources.has(b.dataset.id))));

@@ -1,6 +1,6 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in your prompting and context, shows where your token usage goes, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\"), or add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\")."
+description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in your prompting and context, shows where your token usage goes, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\"), add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\"), or keep more history (\"keep a year of logs\")."
 ---
 
 # second look
@@ -60,7 +60,7 @@ Files that ship with this skill:
 | `report-template.html` | Both | The only source for the report's design. Copy it and change content only |
 | `second-look-logo.svg` | Both | The wordmark. The template already inlines it |
 | `references/design-system.md` | Both | Tokens, type, layout and allowed labels. Read it; don't rebuild from it |
-| `scripts/prerender.py` | Local | Draws the year charts into the report so they show where scripts are blocked |
+| `scripts/prerender.py` | Local | Draws the year charts and the data-scope line into the report so they show where scripts are blocked |
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
 | `scripts/collect.py` | Local | Reads Claude Code, Codex, Cursor and Antigravity logs and the three data exports |
 | `scripts/open_report.py` | Local | Opens a finished report in the user's own browser |
@@ -318,20 +318,24 @@ Sections, in order. Each maps to a block in the template.
 **Header.** The logo, then "Learn from the way you work with AI".
 
 **Summary.** One paragraph telling the year's story in plain words: what improved and by how
-much, then what slipped recently. With no history, say that plainly.
+much, then what slipped recently. With no history, say that plainly: on a first review, say
+it's the first and what it covers ("It covers the 26 days your tools kept").
 
 **This cycle at a glance** (`#glance`). "Comparing <window> to <previous window>" next to
 the heading (scoped reviews compare with the same length of time before). Then exactly six
 stats in this order: Sessions, Briefed starts, Corrections (per 10 messages), Restarts,
-Rules retyped, Long-session share. Each has a value, a plain-text change and a one-line meaning. Use "—" and
-"Not measured" when there's no data. Keep each stat's term card from the template, and wrap the first mention of
+Rules retyped, Long-session share. Each has a value, a plain-text change and a one-line
+meaning. When there's no earlier window to compare with (a first review, or a measure with no
+earlier data), leave the change empty: no "—", no "Baseline". Use "Not measured" only for a
+measure the sources can't give, like long-session share from claude.ai alone. Keep each stat's term card from the template, and wrap the first mention of
 each habit in the summary and in each part with the same component, even when the prose
 words it differently ("misread you", "a real brief"). See "Habit terms" in the design system.
 
 **How your behavior is changing** (`#part-1`). First, so the review opens where the
 walkthrough does: did last cycle's fixes work, and how are the habits trending. No headline;
-the summary already tells the story. "Did last cycle's fixes work?" appears only when an earlier review logged fixes. One
-row per fix: tried?, did the habit change ("Cause unclear" when something else could
+the summary already tells the story. Fill the scope line and "What each trend covers" from
+`SCOPE` (see "Data scope"). "Did last cycle's fixes work?" appears only when an earlier
+review logged fixes; on a first review, delete that section. One row per fix: tried?, did the habit change ("Cause unclear" when something else could
 explain it), did the work get better ("Not measured" when there's no data yet), costs,
 decision (Keep, Revise, Drop). Then "Habits over the last year" (`#trends`), filled from the
 cube, and "Usage this cycle" (by tool, skills and commands, and "Try next"). Open "Usage this
@@ -391,6 +395,34 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
 - **Usage breakdown.** Doing the work, re-reading long conversations, redoing work. Show it in
   "Usage this cycle" only when `limit_hits` is 3 or more; otherwise keep the one-line note.
 - Cursor, Antigravity, claude.ai, ChatGPT and Gemini don't record tokens. Say so once.
+
+## Data scope
+
+Every report marks the edges of its data, so no one reads a gap as a habit. The template draws
+it from one `SCOPE` object in its trends script, next to the cube: a dashed one-line summary
+under "How your behavior is changing", the collapsed "What each trend covers" timeline, a dashed
+start line on any chart whose data begins at a scope limit, and a dashed "Not measured" panel
+for a chart its sources can't give. Each dashed term opens a card with the reason and the
+steps to add the data. Write none of this by hand.
+
+- **Locally,** copy `scope` from `collect.py` into `SCOPE`. Each source has a `state`: `logs`,
+  `export` (with `to`, the export date), `missing` (an export not added), or `not_found` (the
+  tool isn't on this computer). `cut` marks the first day second look has for a source whose
+  older logs were deleted. `collect.py` sets it for Claude Code when its logs reach back to the
+  `cleanupPeriodDays` limit. When `history.json` holds Claude Code weeks from before
+  `oldest_claude_log`, set `cut` to the first of those weeks instead.
+- **On claude.ai,** mark Claude Code, Codex, Cursor and Antigravity `not_readable`, and
+  claude.ai `export` only when they uploaded `conversations.json`.
+- Keep "no sessions" apart from "can't see". A tool they didn't use yet is an empty track with
+  no card. Only data second look can't reach is dashed.
+- **First review.** Same report, no extra sections. The glance leaves changes empty when there's
+  nothing earlier, "Did last cycle's fixes work?" is deleted, and each chart shows whatever
+  weeks exist. A first review usually still has earlier data: Claude Code keeps 30 days, Codex
+  and Cursor keep everything, so compare with the window before from logs whenever it exists.
+
+**"Keep a year of logs."** When they ask, or say yes after a scope card suggests it, set
+`cleanupPeriodDays` to 365 in `~/.claude/settings.json`, keeping every other setting. Confirm
+in one line. It stops Claude Code deleting logs after 30 days. Weeks already deleted stay gone.
 
 ## Trend metrics
 

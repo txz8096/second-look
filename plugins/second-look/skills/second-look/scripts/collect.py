@@ -554,6 +554,44 @@ def coverage(aggs):
     return cov
 
 
+def data_scope(home, aggs, export_paths):
+    """What each source can show, so the report can mark data it can't see and say why."""
+    now = dt.datetime.now()
+    cov = coverage(aggs)
+    try:
+        retention = json.load(open(os.path.join(home, ".claude/settings.json"))).get("cleanupPeriodDays", 30)
+    except Exception:
+        retention = 30
+    logs = glob.glob(os.path.join(home, ".claude/projects/*/*.jsonl"))
+    oldest = dt.datetime.fromtimestamp(min(os.path.getmtime(p) for p in logs)) if logs else None
+    # logs reaching back to the retention limit mean older ones were deleted
+    at_edge = bool(oldest and (now - oldest).days >= retention - 3)
+    local = {
+        "claude_code": os.path.isdir(os.path.join(home, ".claude/projects")),
+        "codex": os.path.isdir(os.path.join(home, ".codex/sessions")),
+        "cursor": any(os.path.exists(os.path.join(home, p)) for p in (
+            "Library/Application Support/Cursor/User/globalStorage/state.vscdb", ".config/Cursor/User/globalStorage/state.vscdb")),
+        "antigravity": os.path.isdir(os.path.join(home, ".gemini/antigravity-cli")),
+    }
+    sources = []
+    for sid, present in local.items():
+        row = {"id": sid, "state": "logs" if present else "not_found"}
+        if sid == "claude_code" and present and at_edge:
+            row["cut"] = oldest.date().isoformat()
+        sources.append(row)
+    for sid, path in (("claude_ai", export_paths.get("claude")), ("chatgpt", export_paths.get("chatgpt")),
+                      ("gemini_web", export_paths.get("gemini"))):
+        path = os.path.expanduser(path) if path else None
+        if path and os.path.exists(path):
+            c = cov.get(sid)
+            sources.append({"id": sid, "state": "export",
+                            "to": (c or {}).get("last") or dt.date.fromtimestamp(os.path.getmtime(path)).isoformat()})
+        else:
+            sources.append({"id": sid, "state": "missing"})
+    return {"retention_days": retention, "oldest_claude_log": oldest.date().isoformat() if oldest else None,
+            "at_retention_edge": at_edge, "sources": sources}
+
+
 def classify(source, prompts):
     """Label a session by what the work was for, mainly from its opening message."""
     # opening message first; follow-ups only as fallback, minus "check your work" phrasing
@@ -787,6 +825,8 @@ def main():
     sessions = sessions_of(aggs, metered)
     result["usage"] = usage_summary([r for r in sessions if r["start"] >= since], metered, limit_hits, args.home)
     result["label_samples"] = label_samples(sessions)
+    result["scope"] = data_scope(args.home, aggs, {"claude": args.claude_export, "chatgpt": args.chatgpt_export,
+                                                   "gemini": args.gemini_export})
     if args.trend:
         result["cube"] = session_cube(sessions)
     text = json.dumps(result, indent=2, default=str)

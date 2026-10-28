@@ -49,7 +49,7 @@ cards, panels · 20px "Try this" blocks and the plan · fully rounded chips.
 2. Summary paragraph (20px): the year's story.
 3. This cycle at a glance (`#glance`): heading, "Comparing <window> to <previous window>",
    six stats in a 3 × 2 grid (2 columns on phones), each with value, plain-text change and a one-line meaning.
-4. How your behavior is changing (`#part-1`): scan line, "Did last cycle's fixes work?"
+4. How your behavior is changing (`#part-1`): data-scope line, "Did last cycle's fixes work?"
    (only after a review with logged fixes), "Habits over the last year" (`#trends`),
    "Usage this cycle". `scripts/prerender.py` saves the drawn charts, bars and tables into
    the file and marks the section `data-static`, which hides the filters and shows a note.
