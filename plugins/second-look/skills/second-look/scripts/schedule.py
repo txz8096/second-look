@@ -36,6 +36,10 @@ SCRIPT = os.path.abspath(__file__)
 # ~/Desktop, where a cloned skill may live.
 JOB_SCRIPT = os.path.join(DIR, "schedule.py")
 RETRY_DAYS = 2  # once due, notify or retry every 2 days until a review is recorded
+STALE_EXPORT_DAYS = 90
+# web apps that can't run the review: their history only arrives through these exports
+EXPORTS = (("claude.ai", "claude/conversations.json"), ("ChatGPT", "chatgpt/conversations.json"),
+           ("Gemini", "gemini/MyActivity.json"))
 HEADLESS_TIMEOUT = 45 * 60
 
 HEADLESS_PROMPT = (
@@ -161,11 +165,26 @@ def notify(message, dry):
         print(message)
 
 
+def stale_exports():
+    """A reminder line for exports over STALE_EXPORT_DAYS old, or "" when all are fresh."""
+    old = []
+    for name, rel in EXPORTS:
+        path = os.path.join(DIR, "exports", rel)
+        if os.path.exists(path):
+            age = (dt.datetime.now().timestamp() - os.path.getmtime(path)) / 86400
+            if age > STALE_EXPORT_DAYS:
+                old.append(name)
+    if not old:
+        return ""
+    names = old[0] if len(old) == 1 else ", ".join(old[:-1]) + " and " + old[-1]
+    return " Your %s export is over %d days old; download a fresh one." % (names, STALE_EXPORT_DAYS)
+
+
 def run_headless(s, dry):
     cmd = agent_command(s["agent"], s["agent_path"])
     if dry:
         print("would run:", " ".join(cmd[:2]), "...")
-        notify("Your second look report is ready in ~/.second-look/reports.", dry)
+        notify("Your second look report is ready in ~/.second-look/reports." + stale_exports(), dry)
         return
     os.makedirs(os.path.join(DIR, "reports"), exist_ok=True)
     log = os.path.join(DIR, "reports", "run-%s.log" % today().isoformat())
@@ -177,7 +196,7 @@ def run_headless(s, dry):
             out.write("\n%s\n" % e)
             code = 1
     if code == 0 and load().get("last_review") == today().isoformat():
-        notify("Your second look report is ready in ~/.second-look/reports.", dry)
+        notify("Your second look report is ready in ~/.second-look/reports." + stale_exports(), dry)
     else:
         notify("Your scheduled review didn't finish. Ask your assistant for a second look. Details: " + log, dry)
 
@@ -259,7 +278,7 @@ def main():
         if s.get("method") == "headless":
             run_headless(s, a.dry_run)
         else:
-            notify("Your review is due. Ask your assistant for a second look.", a.dry_run)
+            notify("Your review is due. Ask your assistant for a second look." + stale_exports(), a.dry_run)
 
 
 if __name__ == "__main__":

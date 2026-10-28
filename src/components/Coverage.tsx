@@ -42,6 +42,13 @@ const tools = [
     setup: "Export it from Settings → Data controls, then put it in ~/.second-look/exports/chatgpt",
     history: "Optional. Covers everything up to your export date",
   },
+  {
+    name: "Gemini",
+    reads: "MyActivity.json from a Google Takeout export of your Gemini Apps activity",
+    setup:
+      "In Google Takeout, pick My Activity → Gemini Apps, format JSON, then put the file in ~/.second-look/exports/gemini",
+    history: "Optional. Covers chats saved with Gemini Apps Activity on, up to your export date",
+  },
 ];
 
 export function Coverage() {

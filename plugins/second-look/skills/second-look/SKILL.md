@@ -1,6 +1,6 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai and ChatGPT, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\")."
+description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\")."
 ---
 
 # second look
@@ -49,7 +49,7 @@ message, so quote only what a finding needs.
 | `profile.md` | Name, what they build, focus areas, where their context file and skills live |
 | `log.md` | One entry per review: snapshot, findings, the fixes they picked and how each will be judged |
 | `history.json` | Weekly habit rows, kept longer than the tools keep their own logs |
-| `exports/claude/conversations.json`, `exports/chatgpt/conversations.json` | Data exports for the 12-month view |
+| `exports/claude/conversations.json`, `exports/chatgpt/conversations.json`, `exports/gemini/MyActivity.json` | Data exports for the 12-month view |
 | `reports/` | Saved reports, when they aren't published as artifacts |
 | `schedule.json` | Recurring review setting: on or off, days between reviews, how they run, date of the last review |
 
@@ -62,7 +62,7 @@ Files that ship with this skill:
 | `references/design-system.md` | Both | Tokens, type, layout and allowed labels. Read it; don't rebuild from it |
 | `scripts/prerender.py` | Local | Draws the year charts into the report so they show where scripts are blocked |
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
-| `scripts/collect.py` | Local | Reads Claude Code, Codex, Cursor and Antigravity logs and the two data exports |
+| `scripts/collect.py` | Local | Reads Claude Code, Codex, Cursor and Antigravity logs and the three data exports |
 | `scripts/open_report.py` | Local | Opens a finished report in the user's own browser |
 | `scripts/schedule.py` | Local | Sets up, changes or stops recurring reviews, and records each full review |
 
@@ -126,8 +126,13 @@ option that works where you're running:
 | Claude desktop app (you have `create_scheduled_task`) | A scheduled task (details below) | `schedule.py set --days N --method app --app "Claude desktop"` |
 | Codex app | A scheduled task in Codex. If you can't create it yourself, walk them through it: Scheduled → New task, paste the task prompt below, set it to repeat every N days or weeks, choose this computer as where it runs | `schedule.py set --days N --method app --app "Codex app"` |
 | Terminal only, with the `claude` or `codex` command | A daily local job that runs the review without a window when it's due, then notifies them the report is ready. Tell them it runs with file access approved in advance | `schedule.py set --days N --method headless --agent claude` (or `codex`) |
-| Anything else (Cursor, or if they'd rather not run reviews unattended) | A notification when a review is due | `schedule.py set --days N --method notify` |
+| Anything else (Cursor, Antigravity, or if they'd rather not run reviews unattended) | A notification when a review is due | `schedule.py set --days N --method notify` |
 | claude.ai | Suggest a claude.ai scheduled task with the task prompt below. Say it will only see their claude.ai chats | Nothing to run |
+
+Every option reads all their local tools, Antigravity included, and the exports in
+`~/.second-look/exports`. ChatGPT and Gemini (the web app) have no way to run the review, so
+their history only updates when they download a fresh export. The daily job's notifications
+remind them when an export is over 90 days old.
 
 Cursor's Automations run in the cloud and can't read the session logs on their computer, so
 don't use them for this. If they say "none", run nothing and don't ask again unless they bring
@@ -221,11 +226,15 @@ and still works on current models.
    each tool is missing.
 4. **12-month trend.** Run `python3 scripts/collect.py --days 365 --trend`, adding
    `--claude-export ~/.second-look/exports/claude/conversations.json` and
-   `--chatgpt-export ~/.second-look/exports/chatgpt/conversations.json` when those files
+   `--chatgpt-export ~/.second-look/exports/chatgpt/conversations.json` and
+   `--gemini-export ~/.second-look/exports/gemini/MyActivity.json` when those files
    exist. It returns `cube` (weekly rows by source and kind of work), `coverage` and
    `label_samples`. Spot-check the labels against the samples before trusting a number.
    Merge the cube into `~/.second-look/history.json`, keeping older weeks the tools have
-   deleted. If the newest export is over 90 days old, add a P3 asking for a fresh export.
+   deleted. If any export is over 90 days old, add a P3 asking for a fresh one. Gemini's
+   export (Google Takeout → My Activity → Gemini Apps, format JSON) has no conversation
+   ids, so the collector groups prompts less than 30 minutes apart into one session: call
+   its session-based numbers (restarts, briefed starts) estimates.
 5. Read `~/.second-look/log.md` for last cycle's fixes.
 
 **claude.ai:**

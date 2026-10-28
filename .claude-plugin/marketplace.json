@@ -8,7 +8,7 @@
     {
       "name": "second-look",
       "source": "./plugins/second-look",
-      "description": "Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai and ChatGPT, and keeps your skills current."
+      "description": "Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current."
     }
   ]
 }

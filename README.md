@@ -3,8 +3,8 @@
 **Learn from how you work with AI.**
 
 second look is an open-source skill that reviews your sessions across Claude Code, Codex,
-Cursor, Antigravity, claude.ai and ChatGPT, then suggests a few changes to test. Each
-suggestion cites the sessions it came from.
+Cursor, Antigravity, claude.ai, ChatGPT and Gemini, then suggests a few changes to test.
+Each suggestion cites the sessions it came from.
 
 **Learn more on the website: [txz8096.github.io/second-look](https://txz8096.github.io/second-look/)**
 
@@ -186,7 +186,7 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
 
 4. Tell the user what was installed and where, and that they can start a review by asking
    for "a second look" or typing `/second-look` in Claude Code. Mention that adding their
-   claude.ai and ChatGPT exports is optional (see below).
+   claude.ai, ChatGPT and Gemini exports is optional (see below).
 
 ### Claude Code plugin
 
@@ -209,16 +209,19 @@ Cursor, or to change the retention setting.
 On claude.ai it can read your claude.ai chats only. Run it in Claude Code, Codex or Cursor
 to include those tools.
 
-## Add your claude.ai and ChatGPT history
+## Add your claude.ai, ChatGPT and Gemini history
 
 This step is optional. You can add it any time.
 
-| App | Where | Put `conversations.json` in |
-|---|---|---|
-| claude.ai | Settings > Privacy > Export data | `~/.second-look/exports/claude/` |
-| ChatGPT | Settings > Data controls > Export data | `~/.second-look/exports/chatgpt/` |
+| App | Where | File | Put it in |
+|---|---|---|---|
+| claude.ai | Settings > Privacy > Export data | `conversations.json` | `~/.second-look/exports/claude/` |
+| ChatGPT | Settings > Data controls > Export data | `conversations.json` | `~/.second-look/exports/chatgpt/` |
+| Gemini | takeout.google.com > My Activity, filtered to Gemini Apps, format JSON | `My Activity/Gemini Apps/MyActivity.json` | `~/.second-look/exports/gemini/` |
 
-Each app emails you a zip, usually within a day.
+Each app sends you a zip, usually within a day. For Gemini, pick "My Activity" rather than
+"Gemini", which exports your Gems only. It includes chats saved while Gemini Apps Activity
+was on.
 
 ## Run it
 
@@ -251,11 +254,23 @@ review runs in the tool where you start it, and it reads every tool's files from
 </details>
 
 <details>
+<summary><b>Which AI apps does it support?</b></summary>
+
+Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is
+read directly but can't start a review, so start one from another tool on the same computer.
+claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they
+count up to the day you export. Gemini's export has no conversation boundaries, so its
+sessions are grouped by time and its numbers are estimates. Antigravity support is new and
+built on an undocumented file format, so a release that changes it can hide your sessions
+until second look is updated.
+</details>
+
+<details>
 <summary><b>Does one report cover all my AI tools?</b></summary>
 
 Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the
-computer where you use them. One run reads all three tools' logs, plus claude.ai and ChatGPT
-if you add their data exports. Started from claude.ai in a browser or from a cloud session,
+computer where you use them. One run reads their logs and Antigravity's, plus claude.ai,
+ChatGPT and Gemini if you add their data exports. Started from claude.ai in a browser or from a cloud session,
 it can't see those logs, so it covers only your claude.ai chats.
 </details>
 
@@ -263,8 +278,8 @@ it can't see those logs, so it covers only your claude.ai chats.
 <summary><b>What data does it read?</b></summary>
 
 Only what's on your computer or what you hand it: local Claude Code, Codex, Cursor and
-Antigravity logs, the claude.ai and ChatGPT exports you download yourself, and your skill and config files for
-the skills check. Sources it can't open are marked "Not checked" in the report.
+Antigravity logs, the claude.ai, ChatGPT and Gemini exports you download yourself, and your
+skill and config files for the skills check. Sources it can't open are marked "Not checked" in the report.
 </details>
 
 <details>
@@ -313,8 +328,10 @@ one. Name a narrower scope, like "my Cursor sessions", if that's all you want.
 
 Yes, if you say yes after your first report. In the Claude desktop app or the Codex app, a
 scheduled task runs the full review on your computer. In a terminal, a small daily job runs
-it in the background and tells you when the report is ready. In Cursor, which can't schedule
-anything on your computer, you get a notification when a review is due instead. Each run
+it in the background and tells you when the report is ready. In Cursor or Antigravity, which
+can't schedule anything on your computer, you get a notification when a review is due
+instead. Every scheduled review includes Antigravity sessions and your exports, and the
+notification tells you when an export is over 90 days old. Each run
 uses your quota and needs your computer on. Ask your assistant to change the cadence ("make
 it monthly") or stop it ("stop the reviews").
 </details>
@@ -331,15 +348,17 @@ session logs are.
 | Codex app | Yes | A scheduled task in the app runs the full review | The app open, computer on |
 | Terminal (Claude Code or Codex CLI) | Yes | A daily job runs the review in the background, then tells you the report is ready | Computer on; file access approved in advance |
 | Cursor | No | A notification when a review is due; you start it | Computer on (macOS or Linux) |
+| Antigravity | No | A notification when a review is due; start it from Claude Code, Codex or Cursor. Any scheduled review includes your Antigravity sessions | Computer on, and one of those tools installed |
 | claude.ai | Yes, claude.ai only | A claude.ai scheduled task. It can't see your coding tools | Chat search on |
 | ChatGPT | No | Reviews don't run here. Its history comes in through the data export | A `conversations.json` export |
+| Gemini (web app) | No | Reviews don't run here. Its history comes in through the Takeout export, and you're reminded when it's 90 days old | A `MyActivity.json` export |
 </details>
 
 <details>
 <summary><b>How far back does the yearly view go?</b></summary>
 
 As far as your logs do. Claude Code keeps 30 days by default, which is why the installer
-offers to keep a year. claude.ai and ChatGPT count up to the day you export. Each run saves
+offers to keep a year. claude.ai, ChatGPT and Gemini count up to the day you export. Each run saves
 weekly totals, so weeks your tools later delete stay in the trend.
 </details>
 

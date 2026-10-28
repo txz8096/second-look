@@ -58,8 +58,9 @@ tools = [
 ]
 # second look reads Antigravity's logs but doesn't install into it
 LINKED = {"Claude Code": "~/.claude", "Codex": "~/.codex", "Cursor": "~/.cursor"}
-exports = [(name, os.path.join(home, ".second-look/exports", d, "conversations.json")) for name, d in
-           (("claude.ai export", "claude"), ("ChatGPT export", "chatgpt"))]
+exports = [(name, os.path.join(home, ".second-look/exports", rel)) for name, rel in
+           (("claude.ai export", "claude/conversations.json"), ("ChatGPT export", "chatgpt/conversations.json"),
+            ("Gemini export", "gemini/MyActivity.json"))]
 
 print("Found on this computer (second look reads these when you ask for a review):")
 found = []
@@ -162,7 +163,7 @@ PY
   fi
 fi
 
-mkdir -p "$HOME_DIR/exports/claude" "$HOME_DIR/exports/chatgpt" "$HOME_DIR/reports"
+mkdir -p "$HOME_DIR/exports/claude" "$HOME_DIR/exports/chatgpt" "$HOME_DIR/exports/gemini" "$HOME_DIR/reports"
 
 # A recurring review is set up after the first report, not here. On reinstall, refresh the
 # local job's copy of schedule.py if one is running.
@@ -173,9 +174,12 @@ cat <<EOF
 Done. Ask your assistant for "a second look", or type /second-look in Claude Code.
 After your first report, second look asks whether to run the review every two weeks.
 
-Optional, for your claude.ai and ChatGPT history:
+Optional, for your claude.ai, ChatGPT and Gemini history:
   claude.ai  Settings > Privacy > Export data
   ChatGPT    Settings > Data controls > Export data
-Each one emails you a zip. Put its conversations.json in
+  Gemini     takeout.google.com > My Activity > Gemini Apps only, format JSON
+Each one sends you a zip. Put its conversations.json in
   $HOME_DIR/exports/claude/   or   $HOME_DIR/exports/chatgpt/
+and Gemini's My Activity/Gemini Apps/MyActivity.json in
+  $HOME_DIR/exports/gemini/
 EOF

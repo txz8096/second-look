@@ -1255,7 +1255,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
 (function () {
   const WEEKS = 52, end = new Date(2026, 9, 19);
   const weeks = Array.from({length: WEEKS}, (_, i) => new Date(end.getTime() - (WEEKS - 1 - i) * 7 * 864e5));
-  const SOURCES = [["claude_ai", "claude.ai"], ["claude_code", "Claude Code"], ["codex", "Codex"], ["cursor", "Cursor"], ["antigravity", "Antigravity"], ["chatgpt", "ChatGPT"]];
+  const SOURCES = [["claude_ai", "claude.ai"], ["claude_code", "Claude Code"], ["codex", "Codex"], ["cursor", "Cursor"], ["antigravity", "Antigravity"], ["chatgpt", "ChatGPT"], ["gemini_web", "Gemini"]];
   const CATS = [["prototyping", "Prototyping"], ["creating", "Creating"], ["research", "Research"], ["brainstorming", "Brainstorming"], ["career", "Career"], ["consultation", "Consultation"]];
   const BUILD = new Set(["prototyping", "creating", "research"]);
   const name = (list, id) => list.find(x => x[0] === id)[1];

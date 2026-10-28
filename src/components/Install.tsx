@@ -83,10 +83,10 @@ export function Install() {
             </Step>
             <Step
               n={2}
-              title="Add your claude.ai and ChatGPT history"
-              prereq="Optional, and you can add it any time. In claude.ai, go to Settings → Privacy → Export data. In ChatGPT, go to Settings → Data controls → Export data. Each emails you a zip, usually within a day. Put its conversations.json here:"
+              title="Add your claude.ai, ChatGPT and Gemini history"
+              prereq="Optional, and you can add it any time. In claude.ai, go to Settings → Privacy → Export data. In ChatGPT, go to Settings → Data controls → Export data. For Gemini, use Google Takeout: My Activity → Gemini Apps, format JSON. Each sends you a zip, usually within a day. Put its conversations.json (or Gemini’s MyActivity.json) here:"
             >
-              <CodeBlock prompt="→" text="~/.second-look/exports/claude  or  /chatgpt" />
+              <CodeBlock prompt="→" text="~/.second-look/exports/claude  or  /chatgpt  or  /gemini" />
             </Step>
             <Step
               n={3}

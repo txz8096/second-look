@@ -9,12 +9,16 @@ const faqs: Faq[] = [
     a: "No. The installer puts one copy on your computer and links it into Claude Code, Codex and Cursor, whichever you have. A review runs in the tool where you start it, and it reads every tool’s files from there.",
   },
   {
+    q: "Which AI apps does it support?",
+    a: "Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is read directly but can’t start a review, so start one from another tool on the same computer. claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they count up to the day you export. Gemini’s export has no conversation boundaries, so its sessions are grouped by time and its numbers are estimates. Antigravity support is new and built on an undocumented file format, so a release that changes it can hide your sessions until second look is updated.",
+  },
+  {
     q: "Does one report cover all my AI tools?",
-    a: "Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the computer where you use them. One run reads their logs and Antigravity’s, plus claude.ai and ChatGPT if you add their data exports. Started from claude.ai in a browser or from a cloud session, it can’t see those logs, so it covers only your claude.ai chats.",
+    a: "Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the computer where you use them. One run reads their logs and Antigravity’s, plus claude.ai, ChatGPT and Gemini if you add their data exports. Started from claude.ai in a browser or from a cloud session, it can’t see those logs, so it covers only your claude.ai chats.",
   },
   {
     q: "What data does it read?",
-    a: "Only what you point it at: local Claude Code, Codex, Cursor and Antigravity logs, the claude.ai and ChatGPT data exports you download yourself, and your skill and config files for the upkeep check. Cloud sessions aren’t included.",
+    a: "Only what you point it at: local Claude Code, Codex, Cursor and Antigravity logs, the claude.ai, ChatGPT and Gemini data exports you download yourself, and your skill and config files for the upkeep check. Cloud sessions aren’t included.",
   },
   {
     q: "What do I need to run it on claude.ai?",
@@ -30,7 +34,7 @@ const faqs: Faq[] = [
   },
   {
     q: "Does it run by itself? Can I change or stop it?",
-    a: "Yes, if you say yes after your first report. In the Claude desktop app or the Codex app, a scheduled task runs the full review on your computer. In a terminal, a small daily job runs it in the background and tells you when the report is ready. In Cursor, which can’t schedule anything on your computer, you get a notification when a review is due instead. Each run uses your quota and needs your computer on. Ask your assistant to change the cadence (“make it monthly”) or stop it (“stop the reviews”).",
+    a: "Yes, if you say yes after your first report. In the Claude desktop app or the Codex app, a scheduled task runs the full review on your computer. In a terminal, a small daily job runs it in the background and tells you when the report is ready. In Cursor or Antigravity, which can’t schedule anything on your computer, you get a notification when a review is due instead. Every scheduled review includes Antigravity sessions and your exports, and the notification tells you when an export is over 90 days old. Each run uses your quota and needs your computer on. Ask your assistant to change the cadence (“make it monthly”) or stop it (“stop the reviews”).",
   },
   {
     q: "Which apps can run it on a schedule?",
@@ -47,14 +51,26 @@ const faqs: Faq[] = [
           "Computer on; file access approved in advance",
         ],
         ["Cursor", "No", "A notification when a review is due; you start it", "Computer on (macOS or Linux)"],
+        [
+          "Antigravity",
+          "No",
+          "A notification when a review is due; start it from Claude Code, Codex or Cursor. Any scheduled review includes your Antigravity sessions",
+          "Computer on, and one of those tools installed",
+        ],
         ["claude.ai", "Yes, claude.ai only", "A claude.ai scheduled task. It can’t see your coding tools", "Chat search on"],
         ["ChatGPT", "No", "Reviews don’t run here. Its history comes in through the data export", "A conversations.json export"],
+        [
+          "Gemini (web app)",
+          "No",
+          "Reviews don’t run here. Its history comes in through the Takeout export, and you’re reminded when it’s 90 days old",
+          "A MyActivity.json export",
+        ],
       ],
     },
   },
   {
     q: "How far back does the yearly view go?",
-    a: "As far as your logs do. Claude Code keeps 30 days by default, which is why the installer offers to keep a year. claude.ai and ChatGPT count up to the day you export. Each run saves weekly totals, so weeks your tools later delete stay in the trend. The sample report on this page uses made-up data.",
+    a: "As far as your logs do. Claude Code keeps 30 days by default, which is why the installer offers to keep a year. claude.ai, ChatGPT and Gemini count up to the day you export. Each run saves weekly totals, so weeks your tools later delete stay in the trend. The sample report on this page uses made-up data.",
   },
   {
     q: "How accurate are the findings?",

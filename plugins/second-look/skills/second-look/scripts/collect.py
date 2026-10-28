@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Weekly evidence collector for the second look skill.
 
-Reads local session logs from Claude Code, Codex, Cursor and Antigravity and prints a compact JSON
+Reads local session logs from Claude Code, Codex, Cursor and Antigravity, plus any
+claude.ai, ChatGPT or Gemini data exports you pass in, and prints a compact JSON
 summary: counts, tool and skill usage, unused skills, repeated instructions, correction
 signals and a few trimmed prompt samples. Nothing leaves the machine.
 
@@ -300,6 +301,37 @@ def chatgpt_export(path, since):
     return a
 
 
+def gemini_export(path, since, gap_minutes=30):
+    """Gemini web app, from Google Takeout (My Activity > Gemini Apps, JSON format): MyActivity.json.
+
+    The export logs one record per prompt with no conversation id, so prompts less than
+    gap_minutes apart are grouped into one session.
+    """
+    a = Agg("gemini_web")
+    try:
+        records = json.load(open(path, encoding="utf-8"))
+    except Exception as ex:
+        hint = " (choose JSON, not HTML, for My Activity in Takeout)" if path.endswith(".html") else ""
+        print(f"gemini export: could not read {path}: {ex}{hint}", file=sys.stderr)
+        return a
+    prompts = []
+    for rec in records if isinstance(records, list) else []:
+        title = (rec.get("title") or "") if isinstance(rec, dict) else ""
+        if not title.startswith("Prompted "):     # skips feedback, Gem edits, extension use
+            continue
+        ts = parse_ts(rec.get("time"))
+        if ts and ts >= since:
+            prompts.append((ts, title[len("Prompted "):].strip()))
+    prompts.sort(key=lambda t: t[0])
+    session, last = None, None
+    for ts, text in prompts:
+        if last is None or (ts - last).total_seconds() > gap_minutes * 60:
+            session = "gemini-" + ts.strftime("%Y%m%dT%H%M%S")
+        last = ts
+        a.add_prompt(ts, session, text)
+    return a
+
+
 def week_of(ts):
     d = ts.astimezone().date()
     return (d - dt.timedelta(days=d.weekday())).isoformat()
@@ -552,6 +584,7 @@ def main():
                     help="add a weekly series (use with --days 365) for 12-month trends")
     ap.add_argument("--claude-export", help="path to claude.ai export conversations.json")
     ap.add_argument("--chatgpt-export", help="path to ChatGPT export conversations.json")
+    ap.add_argument("--gemini-export", help="path to Google Takeout My Activity/Gemini Apps/MyActivity.json")
     args = ap.parse_args()
     since = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=args.days)
 
@@ -561,6 +594,8 @@ def main():
         aggs.append(claude_export(os.path.expanduser(args.claude_export), since))
     if args.chatgpt_export:
         aggs.append(chatgpt_export(os.path.expanduser(args.chatgpt_export), since))
+    if args.gemini_export:
+        aggs.append(gemini_export(os.path.expanduser(args.gemini_export), since))
     all_prompts = [p for a in aggs for p in a.prompts]
     skills = installed_skills(args.home)
     used = collections.Counter()

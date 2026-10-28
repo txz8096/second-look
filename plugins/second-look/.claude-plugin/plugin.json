@@ -1,6 +1,6 @@
 {
   "name": "second-look",
-  "description": "Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai and ChatGPT, and keeps your skills current.",
+  "description": "Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current.",
   "version": "0.1.0",
   "author": { "name": "Melissa Tang" },
   "homepage": "https://github.com/txz8096/second-look",
