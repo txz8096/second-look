@@ -10,6 +10,7 @@ Each suggestion cites the sessions it came from.
 
 [Website](https://txz8096.github.io/second-look/) ·
 [Sample report](https://txz8096.github.io/second-look/#sample-report) ·
+[Supported tools](#supported-tools) ·
 [Install](#install) ·
 [Privacy](#privacy) ·
 [FAQ](#faq)
@@ -63,57 +64,45 @@ better.
 See the [sample report](https://txz8096.github.io/second-look/#sample-report) for the full
 layout. It uses made-up data.
 
+## Supported tools
+
+Start a review from Claude Code, Codex or Cursor, and one run covers every source below
+that's on that computer.
+
+| Tool | What's read | Setup needed | How far back |
+|---|---|---|---|
+| **Claude Code** | Session logs in `~/.claude/projects`, your skills and `CLAUDE.md` | None. The installer links the skill in | Last 30 days only, unless you raise `cleanupPeriodDays` in `~/.claude/settings.json` |
+| **Codex** | Session logs in `~/.codex/sessions`, your skills and `AGENTS.md` | None. The installer links the skill in | Full history |
+| **Cursor** | Chats in Cursor's local database, plus `.cursor/rules` | None. The installer links the skill in | Full history |
+| **Antigravity** | Agent transcripts in `~/.gemini/antigravity-cli`, plus `~/.gemini/GEMINI.md` | None. Reviews start from one of the tools above | Whatever the CLI keeps on disk. Support is new, and app chats may be missing |
+| **claude.ai** | `conversations.json` from your data export | Optional. [Add your export](#add-your-claudeai-chatgpt-and-gemini-history) | Up to your export date |
+| **ChatGPT** | `conversations.json` from your data export | Optional. [Add your export](#add-your-claudeai-chatgpt-and-gemini-history) | Up to your export date |
+| **Gemini** | `MyActivity.json` from a Google Takeout export of your Gemini Apps activity | Optional. [Add your export](#add-your-claudeai-chatgpt-and-gemini-history) | Chats saved with Gemini Apps Activity on, up to your export date |
+
 ## Privacy
 
 second look has no server and no account. It runs inside the assistant you already use,
-reads files on your computer, and saves its report next to them.
-
-```
-Your files  ──▶  Your assistant  ──▶  Your model provider
-```
+reads files on your computer, and saves its report to `~/.second-look/`. Nothing about your
+sessions is sent to us. What the review reads goes to your model provider like any message
+you send your assistant, under your existing account settings.
 
 | | |
 |---|---|
-| **Your files** | `~/.claude`, `~/.codex`, Cursor's database, `~/.gemini`, and the exports you add. Read only when you ask for a review |
-| **Your assistant** | Claude Code, Codex or Cursor runs the review on your computer and writes the report to `~/.second-look` |
-| **Your model provider** | Sees what the review reads, like any message you send your assistant, under your existing account settings |
+| **Redaction** | API keys, emails, and token or password values are stripped before anything is quoted. It works by pattern, so it can miss a client's name or confidential code. Read a report before you share it |
+| **Scope** | Limit any review to a window, a tool or a project: "only my Cursor sessions", "since Oct 1" |
+| **Sharing** | Reports stay private unless you share them |
+| **Deleting** | Stop recurring reviews, then remove `~/.second-look/` and the skill folder ([How do I uninstall it?](#faq)). If you kept a year of Claude Code history, set `cleanupPeriodDays` back to `30` |
 
-There are no second look servers. Nothing about your sessions is sent to us.
-
-**What it reads.** Claude Code, Codex, Cursor and Antigravity logs on this computer, the
-exports you add, and your skill files. To see the list for your machine without changing anything:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --check
-```
-
-**What gets removed.** API keys, emails, and token or password values are stripped before
-anything is quoted. It works by pattern, so it won't catch a client's name or confidential
-code. Read a report before you share it.
-
-**Who sees the report.** Only you. It's saved in `~/.second-look/` or published as a private
-artifact, and it's shared only if you choose to.
-
-**What you can leave out.** Scope any review to a window, a tool or a project: "only my
-Cursor sessions", "since Oct 1".
-
-**Check it yourself.** Everything is in this repo. The two scripts,
-[`collect.py`](plugins/second-look/skills/second-look/scripts/collect.py) and
+Both scripts, [`collect.py`](plugins/second-look/skills/second-look/scripts/collect.py) and
 [`check_report.py`](plugins/second-look/skills/second-look/scripts/check_report.py), use
 Python's standard library and make no network calls. To see exactly what your assistant will
-read, run the collector yourself from the installed skill:
+read, run the collector yourself:
 
 ```bash
 python3 ~/.agents/skills/second-look/scripts/collect.py --days 14
 ```
 
-**Delete it any time.** Stop recurring reviews, then remove `~/.second-look/` and the skill folder (see
-[How do I uninstall it?](#faq)). If you kept a year of Claude Code history, set
-`cleanupPeriodDays` back to `30` in `~/.claude/settings.json`.
-
 Using AI tools at work? Check your company's AI policy before you review work sessions.
-Keeping a year of history also means more of it stays on your disk, which is why the
-installer asks before changing that.
 
 ## How it works
 
