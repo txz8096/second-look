@@ -69,7 +69,7 @@ export function Term({ name, children }: { name: TermName; children: ReactNode }
         id={id}
         role="tooltip"
         style={{ left: offset }}
-        className={`absolute top-full z-50 mt-2 hidden w-max max-w-[min(280px,calc(100vw-32px))] rounded-md bg-ink px-3 py-2.5 text-left font-body text-[13px] leading-[1.45] font-normal tracking-normal whitespace-normal normal-case text-paper shadow-[0_6px_18px_rgb(0_0_0/0.3)] before:absolute before:inset-x-0 before:-top-2 before:h-2 ${dismissed ? "" : "group-hover:block group-focus:block"}`}
+        className={`pop-in absolute top-full z-50 mt-2 hidden w-max max-w-[min(280px,calc(100vw-32px))] rounded-md bg-ink px-3 py-2.5 text-left font-body text-[13px] leading-[1.45] font-normal tracking-normal whitespace-normal normal-case text-paper shadow-[0_6px_18px_rgb(0_0_0/0.3)] before:absolute before:inset-x-0 before:-top-2 before:h-2 ${dismissed ? "" : "group-hover:block group-focus:block"}`}
       >
         {definitions[name]}
       </span>

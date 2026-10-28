@@ -109,9 +109,9 @@ export function Faq() {
                 <Plus size={22} className="shrink-0 text-accent group-open:hidden" aria-hidden="true" />
                 <Minus size={22} className="hidden shrink-0 text-accent group-open:block" aria-hidden="true" />
               </summary>
-              <p className="max-w-[760px] pt-3.5 pb-1 font-body text-base leading-[1.55] text-dark-text-2">{item.a}</p>
+              <p className="fade-down max-w-[760px] pt-3.5 pb-1 font-body text-base leading-[1.55] text-dark-text-2">{item.a}</p>
               {item.table && (
-                <div className="mt-4 overflow-x-auto">
+                <div className="fade-down mt-4 overflow-x-auto">
                   <table className="w-full min-w-[640px] text-left font-body text-sm leading-[1.5]">
                     <thead>
                       <tr className="border-b border-rule">

@@ -9,7 +9,6 @@ const INSTALL_COMMAND = "curl -fsSL https://raw.githubusercontent.com/txz8096/se
 
 const secondaryLinks = [
   { label: "Sample report", href: "#sample-report" },
-  { label: "Report an issue", href: links.newIssue },
 ];
 
 function Step({ n, title, prereq, children }: { n: number; title: string; prereq: string; children: ReactNode }) {
