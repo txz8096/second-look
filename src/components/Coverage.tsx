@@ -28,7 +28,7 @@ const tools = [
     name: "Antigravity",
     reads: "Agent transcripts in ~/.gemini/antigravity-cli, plus ~/.gemini/GEMINI.md",
     setup: "None. Reviews start from one of the tools above",
-    history: "Full history for the CLI. App chats saved only in its own format aren’t read",
+    history: "Whatever the CLI keeps on disk. Support is new, and app chats may be missing",
   },
   {
     name: "claude.ai",
