@@ -2,15 +2,15 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import type { ReactNode } from "react";
 import { SPARKLINES } from "@/lib/paths";
 import { Sparkline } from "./Sparkline";
-import { Term } from "./Term";
+import { Term, type TermName } from "./Term";
 import { Container, Kicker, Pill } from "./ui";
 
-const glance: { label: string; term?: "corrections"; value: string; delta: string; note: string }[] = [
-  { label: "Sessions", value: "94", delta: "+6", note: "Shown for context." },
-  { label: "Briefed starts", value: "54%", delta: "+6 pts", note: "Opens with goal, context and done." },
-  { label: "Corrections", term: "corrections", value: "1.1", delta: "−0.3", note: "Per 10 messages." },
-  { label: "Restarts", value: "11", delta: "+5", note: "Starting a task over." },
-  { label: "Rules retyped", value: "17", delta: "+3", note: "Rules that belong in a config file." },
+const glance: { label: string; term: TermName; value: string; delta: string }[] = [
+  { label: "Sessions", term: "sessions", value: "94", delta: "+6" },
+  { label: "Briefed starts", term: "briefedStarts", value: "54%", delta: "+6 pts" },
+  { label: "Corrections", term: "corrections", value: "1.1", delta: "−0.3" },
+  { label: "Restarts", term: "restarts", value: "11", delta: "+5" },
+  { label: "Rules retyped", term: "rulesRetyped", value: "17", delta: "+3" },
 ];
 
 type Confidence = "Clear pattern" | "Likely pattern" | "Unconfirmed";
@@ -233,13 +233,12 @@ export function SampleReport() {
                 {glance.map((m, i) => (
                   <div key={m.label} className={`flex flex-col gap-1.5 py-4 ${i === 0 ? "md:pr-5" : "md:px-5"}`}>
                     <dt className="font-body text-[13px] text-text-3">
-                      {m.term ? <Term name={m.term}>{m.label}</Term> : m.label}
+                      <Term name={m.term}>{m.label}</Term>
                     </dt>
                     <dd className="flex items-end gap-2">
                       <span className="font-display text-[30px] leading-none font-bold text-ink">{m.value}</span>
                       <span className="pb-[3px] font-body text-[13px] text-text-2">{m.delta}</span>
                     </dd>
-                    <dd className="font-body text-[13px] leading-[1.4] text-text-3">{m.note}</dd>
                   </div>
                 ))}
               </dl>

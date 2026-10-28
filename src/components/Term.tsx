@@ -4,6 +4,8 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 
 // Same definitions the report shows on its habit terms.
 const definitions = {
+  sessions:
+    "Conversations you had with an AI tool this cycle, across every tool Second Look read. Shown for context: the count alone says nothing about how well they went.",
   briefedStarts:
     "Your first message gives at least two of three things: the goal, the context, and what done looks like.",
   corrections:
@@ -12,13 +14,17 @@ const definitions = {
     "In build and research sessions, the share where you asked for sources, edge cases or a critique before accepting the result.",
   restarts:
     "A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.",
+  rulesRetyped:
+    "A standing preference typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in your CLAUDE.md, AGENTS.md or Cursor rules.",
 };
 
 const CARD_MAX_WIDTH = 280;
 const EDGE = 16;
 
 // A habit term with a dashed underline that opens its definition on hover, tap or focus. Escape closes it.
-export function Term({ name, children }: { name: keyof typeof definitions; children: ReactNode }) {
+export type TermName = keyof typeof definitions;
+
+export function Term({ name, children }: { name: TermName; children: ReactNode }) {
   const id = useId();
   const ref = useRef<HTMLSpanElement>(null);
   const [offset, setOffset] = useState(0);
