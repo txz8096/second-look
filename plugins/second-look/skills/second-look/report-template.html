@@ -1,4 +1,4 @@
-<title>AI Coach Review v2</title>
+<title>second look · Oct 12 – 25, 2026</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -748,7 +748,8 @@ td .def { display: block; margin-top: 6px; }
 .glance .sec-head { margin-top: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; }
 .glance h2 { font-size: 24px; line-height: 1.25; margin: 0; }
 .glance .head-meta { margin: 0; }
-.snapshot { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); border: 1px solid var(--line); border-radius: var(--r-12); background: var(--surface); overflow: hidden; }
+.snapshot { grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--line); border-radius: var(--r-12); background: var(--surface); overflow: hidden; }
+@media (min-width: 681px) { .stat:nth-child(3n) { border-right: none; } .stat:nth-child(-n+3) { border-bottom: 1px solid var(--line); } }
 .stat { padding: 18px 18px 20px; gap: 4px; align-content: start; border-right: 1px solid var(--line); }
 .stat b { font-family: var(--display); font-size: 32px; line-height: 1.1; font-weight: 700; letter-spacing: -0.025em; }
 .stat .delta { font-size: 14px; color: var(--fg); }
@@ -780,8 +781,7 @@ td .def { display: block; margin-top: 6px; }
 .stat .term-card { top: 42px; left: 18px; right: auto; }
 .stat .term-card::before { top: -12px; height: 12px; }
 @media (min-width: 681px) {
-  @container (min-width: 800px) { .stat:nth-child(5) .term-card { left: auto; right: 12px; } }
-  @container (max-width: 799.98px) { .stat:nth-child(4) .term-card { left: auto; right: 12px; } }
+  .stat:nth-child(3n) .term-card { left: auto; right: 12px; }
 }
 @media (max-width: 680px) { .stat:nth-child(even) .term-card { left: auto; right: 12px; } .stat:last-child { border-bottom: none; } }
 /* In running text the card hangs from the paragraph's left edge, under the term's line, so it can't run off screen. */
@@ -823,6 +823,7 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
     <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-corrections">Corrections<span class="term-card" role="tooltip" id="def-corrections">Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly.</span></span></span><b>1.1</b><span class="delta">−0.3</span><span class="why">Per 10 messages. Each "no, I meant…" is a misunderstanding you paid for in time.</span></div>
     <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-restarts">Restarts<span class="term-card" role="tooltip" id="def-restarts">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span></span><b>11</b><span class="delta">+5</span><span class="why">Starting over on a task. Usually the first brief missed something.</span></div>
     <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-retyped">Rules retyped<span class="term-card" role="tooltip" id="def-retyped">A standing preference typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in your CLAUDE.md, AGENTS.md or Cursor rules.</span></span></span><b>17</b><span class="delta">+3</span><span class="why">Preferences typed by hand that belong in a config file.</span></div>
+    <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-long">Long-session share<span class="term-card" role="tooltip" id="def-long">Share of your Claude Code and Codex usage from sessions that ran past 150k tokens. In those, every request re-reads a long history first.</span></span></span><b>62%</b><span class="delta">+9 pts</span><span class="why">Usage from sessions past 150k tokens. Every request there re-reads a long history.</span></div>
   </div>
 </section>
 
@@ -932,18 +933,18 @@ Before building, list up to 3 questions you need answered.</pre></div>
   </article>
 
   <article id="p-long" class="icard">
-    <div class="ic-head"><span class="rank">4</span><div class="ic-title"><h3>Long Claude Code sessions drift between projects</h3>
-      <div class="ic-tags"><span class="tag">Claude Code</span><span class="conf sugg">Likely pattern</span></div></div></div>
+    <div class="ic-head"><span class="rank">4</span><div class="ic-title"><h3>Long sessions drift between projects and take most of your usage</h3>
+      <div class="ic-tags"><span class="tag">Claude Code · Codex</span><span class="conf sugg">Likely pattern</span></div></div></div>
     <dl class="ic-grid">
-      <dt>What happens</dt><dd>Some sessions jump between projects without clearing context, and Claude keeps rereading files from the earlier one.</dd>
-      <dt>Evidence</dt><dd>2 sessions ran 60+ turns across the onboarding flow, a Streak sync bug and a pricing page, with 5 automatic compactions. After one, Claude reread the onboarding files twice.</dd>
-      <dt>Why it matters</dt><dd>Old context can steer the new task, and compaction summaries drop detail.</dd>
+      <dt>What happens</dt><dd>Some sessions jump between projects without clearing context. Every request in a <span class="term" tabindex="0" aria-describedby="def-long-part1">long session<span class="term-card" role="tooltip" id="def-long-part1">Share of your Claude Code and Codex usage from sessions that ran past 150k tokens. In those, every request re-reads a long history first.</span></span> re-reads all the history before it, including files from the earlier project.</dd>
+      <dt>Evidence</dt><dd>9 of 41 Claude Code and Codex sessions ran past 150k tokens and took 62% of your usage. A request in them used 2.6× your typical one. 2 of them ran 60+ turns across the onboarding flow, a Streak sync bug and a pricing page, with 5 automatic compactions.</dd>
+      <dt>Why it matters</dt><dd>Old context can steer the new task, compaction summaries drop detail, and long sessions are where your usage goes. You hit 1 usage limit this cycle.</dd>
     </dl>
   
     <section class="try later" id="try-long" aria-label="What to try">
       
-      <h4>Not this cycle: clear context between projects</h4>
-      <p class="try-do">When you switch projects in Claude Code, run <code>/clear</code> or start a new session. Left out of this cycle so you're only testing three things at once.</p>
+      <h4>Not this cycle: start fresh between projects</h4>
+      <p class="try-do">When you switch projects or finish a piece of work, run <code>/clear</code> or start a new session from a five-line handoff. The glance's long-session share will show whether it works. Left out of this cycle so you're only testing three things at once.</p>
     </section>
   </article>
 
@@ -1038,6 +1039,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
     <div class="tbl"><table>
       <thead><tr><th>Issue</th><th>Why it matters</th><th>How sure</th><th>Next step</th></tr></thead>
       <tbody>
+        <tr><td>14 skills and 2 plugins you haven't run in 60 days load into every Claude Code session</td><td>Every session starts at 54k tokens before you type. These add 1.9k of it, about 1% of your usage</td><td><span class="conf sugg">Possible</span></td><td>Add <code>disable-model-invocation: true</code> to your own; <code>/skill-name</code> still runs them. Turn the plugins off in <code>/plugin</code></td></tr>
         <tr><td>Your team details are copied into three skills</td><td>The copies already disagree</td><td><span class="conf strong">Clear</span></td><td>Move it into one shared file</td></tr>
         <tr><td>No skill has a test</td><td>A model update could quietly change how a skill behaves. Hasn't happened yet.</td><td><span class="conf sugg">Possible</span></td><td>Write 3–5 test prompts for release-notes and design-review</td></tr>
         <tr><td>Your skills only live where Claude looks</td><td>Codex and Cursor can run the same files, and the coach can't read <code>~/.claude/skills</code></td><td><span class="conf strong">Clear</span></td><td>Keep them in <code>~/.agents/skills</code> and link each tool to it</td></tr>
@@ -1171,6 +1173,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
 
   <section>
   <div class="sec-head"><h3>Usage this cycle</h3><span class="muted">Oct 12–25</span></div>
+  <p class="def">You hit 1 usage limit this cycle. A full breakdown of where your usage went appears here once you hit 3 or more in a cycle.</p>
   <details>
     <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">By tool</span><span class="sum-meta">Claude Code carried most of the build work; claude.ai most of the thinking.</span></span><span></span></summary>
     <div class="body"><div class="tbl"><table>
@@ -1279,6 +1282,11 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
       cursor: {prototyping: .9, creating: .1, research: 0, brainstorming: 0, career: 0, consultation: 0},
     }[src];
   };
+  // usage: only Claude Code and Codex log tokens
+  const usage = (src, sessions, i) => {
+    const metered = src === "claude_code" || src === "codex" ? sessions : 0, u = metered * 100000;
+    return {metered, usage: u, long_usage: rr(u * ramp(0.45, 0.62, i, 30, 51)), start_tokens: metered * rr(ramp(38000, 54000, i, 19, 40))};
+  };
   const rows = [];
   weeks.forEach((_, i) => SOURCES.filter(([src]) => base[src]).forEach(([src]) => {
     const m = mix(src, i), tot = Object.values(m).reduce((a, b) => a + b, 0), n = base[src](i);
@@ -1297,7 +1305,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
       rows.push({w: i, s: src, c, sessions, prompts,
         briefed: rr(sessions * brief), corrections: rr(prompts * corr), refinements: rr(sessions * ramp(1.2, 2.4, i, 10, 40)),
         build: BUILD.has(c) ? sessions : 0, checked: rr(sessions * check), restarts: rr(sessions * restart),
-        retyped: rr(sessions * retype), skilled: rr(sessions * skill)});
+        retyped: rr(sessions * retype), skilled: rr(sessions * skill), ...usage(src, sessions, i)});
     });
   }));
 
@@ -1319,6 +1327,10 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
      def: "Sessions that ran one of your skills or commands. Shows how much of your process is packaged and repeatable."},
     {id: "retyped", el: "more-charts", title: "Rules retyped per week", num: "retyped", den: null, fmt: v => Math.round(v), d: "rel", better: "down",
      def: "Standing preferences typed by hand, like “use tables”. Each repeat belongs in a config file once."},
+    {id: "longshare", el: "more-charts", title: "Long-session share", num: "long_usage", den: "usage", fmt: pct, d: "pts", better: "down",
+     def: "Share of your usage from sessions past 150k tokens. Every request there re-reads a long history. Claude Code and Codex only."},
+    {id: "starttokens", el: "more-charts", title: "Starting context", num: "start_tokens", den: "metered", fmt: v => Math.round(v / 1000) + "k", d: "rel", better: "down",
+     def: "Tokens loaded before your first message: tool instructions, skill list and instruction files. Claude Code and Codex only."},
     {id: "refinements", el: "more-charts", title: "Refinements per session", num: "refinements", den: "sessions", fmt: v => v.toFixed(1), d: "abs", better: "up",
      def: "Follow-ups that build on a good answer, like “now make it shorter”. Iterating on good output is a sign of skilled AI use."},
   ];
@@ -1355,7 +1367,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
   const srcOk = r => !state.sources.size || state.sources.has(r.s);
   const catOk = r => state.cat === "all" || r.c === state.cat;
   const sumRows = (list, keys) => { const t = {}; keys.forEach(k => t[k] = 0); list.forEach(r => keys.forEach(k => t[k] += r[k])); return t; };
-  const KEYS = ["sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled"];
+  const KEYS = ["sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "metered", "usage", "long_usage", "start_tokens"];
   const weekTotals = filter => { const t = weeks.map(() => { const o = {}; KEYS.forEach(k => o[k] = 0); return o; }); rows.filter(filter).forEach(r => KEYS.forEach(k => t[r.w][k] += r[k])); return t; };
   const value = (m, t) => m.den ? (t[m.den] ? t[m.num] / t[m.den] : null) : t[m.num];
   const windowVal = (m, totals, a, b) => { // ratio of sums for rates, mean for counts

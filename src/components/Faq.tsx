@@ -73,6 +73,10 @@ const faqs: Faq[] = [
     a: "As far as your logs do. Claude Code keeps 30 days by default, which is why the installer offers to keep a year. claude.ai, ChatGPT and Gemini count up to the day you export. Each run saves weekly totals, so weeks your tools later delete stay in the trend. The sample report on this page uses made-up data.",
   },
   {
+    q: "Does it show where my token usage goes?",
+    a: "For Claude Code and Codex, the only tools that log tokens. The glance tracks how much of your usage came from very long sessions, where every request re-reads a long history. The skills check names what loads into every session before you type, like skills you haven’t run in 60 days, and how much you’d save by having them run only when you ask. Numbers compare you with your own typical session, never with other people. A full breakdown appears only if you keep hitting usage limits.",
+  },
+  {
     q: "How accurate are the findings?",
     a: "They’re estimates read from the wording of your sessions. Each finding shows its examples and how sure the review is (Clear pattern, Likely pattern or Unconfirmed). Before trusting a number, the review spot-checks a sample of its own labels, and you can correct a label at the next review.",
   },

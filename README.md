@@ -24,7 +24,7 @@ A closer look pays off in a few places:
 
 | | |
 |---|---|
-| **Less overhead** | Cut the setup and back-and-forth around each task |
+| **Less overhead** | Cut the setup and back-and-forth around each task, so your usage goes further |
 | **Better first results** | Find the habits behind rework, so output needs less fixing |
 | **More reliable code** | Ask for code with a clear scope and a way to check it |
 | **Your own judgment** | Notice when you accept polished output without checking it |
@@ -39,7 +39,8 @@ After your first report, it offers to set up the two-week schedule for you.
 
 **1. Improve your prompts and context.** It checks whether your first message gave the goal,
 the audience, the constraints and what done looks like, and whether your standing rules
-reach every tool. A finding looks like this:
+reach every tool. When very long sessions take most of your token usage, it says so and
+suggests where to start fresh. A finding looks like this:
 
 > **Pattern:** Your prototype requests name the feature but leave out the user.
 >
@@ -52,10 +53,11 @@ your own sessions, how sure the review is, and a fix you can paste.
 
 **2. Keep your skills current.** It reads the skills and config you've built and flags the
 ones with wrong facts, broken folders, duplicates, missed updates from recent releases, and
-no tests.
+no tests. It also names what loads into every Claude Code session before you type, like skills
+you haven't run in 60 days, and how much you'd save by having them run only when you ask.
 
-**3. See how your habits change.** Briefed starts, corrections, output checking and restarts,
-charted week by week for up to 12 months and filterable by tool and kind of work. After your
+**3. See how your habits change.** Briefed starts, corrections, output checking, restarts,
+and how much of your usage went to very long sessions, charted week by week for up to 12 months and filterable by tool and kind of work. After your
 first review, it also checks whether last cycle's fixes stuck and whether the work got
 better.
 
@@ -352,6 +354,17 @@ session logs are.
 As far as your logs do. Claude Code keeps 30 days by default, which is why the installer
 offers to keep a year. claude.ai, ChatGPT and Gemini count up to the day you export. Each run saves
 weekly totals, so weeks your tools later delete stay in the trend.
+</details>
+
+<details>
+<summary><b>Does it show where my token usage goes?</b></summary>
+
+For Claude Code and Codex, the only tools that log tokens. The glance tracks how much of your
+usage came from very long sessions, where every request re-reads a long history. The skills
+check names what loads into every session before you type, like skills you haven't run in 60
+days, and how much you'd save by having them run only when you ask. Numbers compare you with
+your own typical session, never with other people. A full breakdown appears only if you keep
+hitting usage limits. Usage is weighted by public list prices, so treat it as an estimate.
 </details>
 
 <details>

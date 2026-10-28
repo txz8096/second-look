@@ -332,6 +332,164 @@ def gemini_export(path, since, gap_minutes=30):
     return a
 
 
+# Usage: tokens weighted by relative list price, new input = 1. An estimate; it compares sessions with each other.
+WEIGHTS = {"claude_code": {"input": 1, "write_5m": 1.25, "write_1h": 2, "read": 0.1, "output": 5},
+           "codex": {"input": 1, "read": 0.1, "output": 8}}
+LONG_LINE = 150_000   # a session is long once its context passes this. A chosen line, not a measured limit
+UNUSED_DAYS = 60      # a skill counts as unused after this many days without a run
+LIMIT_HIT = re.compile(r"usage limit|rate.?limit|limit reached|5-hour limit|weekly limit", re.I)
+
+
+def _turn(source, ctx, usage, out_rows):
+    w = WEIGHTS[source]
+    reread = min(usage, max(0, ctx - LONG_LINE) * w["read"])
+    out_rows.append((ctx, usage, reread))
+
+
+def usage_by_session(home, since):
+    """Per-session usage from the token counts Claude Code and Codex log. Other tools don't record tokens."""
+    out, limit_hits = {}, 0
+    for path in glob.glob(os.path.join(home, ".claude/projects/*/*.jsonl")):
+        if os.path.getmtime(path) < since.timestamp():
+            continue
+        turns, seen, w = [], set(), WEIGHTS["claude_code"]
+        for e in iter_jsonl(path):
+            ts = parse_ts(e.get("timestamp"))
+            if ts and ts < since:
+                continue
+            if e.get("isApiErrorMessage") and LIMIT_HIT.search(json.dumps(e.get("message"))[:2000]):
+                limit_hits += 1
+            msg = e.get("message") or {}
+            u = msg.get("usage") if e.get("type") == "assistant" and not e.get("isSidechain") else None
+            if not u or msg.get("id") in seen:
+                continue
+            seen.add(msg.get("id"))
+            write = u.get("cache_creation_input_tokens", 0)
+            write_1h = (u.get("cache_creation") or {}).get("ephemeral_1h_input_tokens", 0)
+            ctx = u.get("input_tokens", 0) + write + u.get("cache_read_input_tokens", 0)
+            cost = (u.get("input_tokens", 0) * w["input"] + (write - write_1h) * w["write_5m"] + write_1h * w["write_1h"]
+                    + u.get("cache_read_input_tokens", 0) * w["read"] + u.get("output_tokens", 0) * w["output"])
+            _turn("claude_code", ctx, cost, turns)
+        if turns:
+            out[("claude_code", os.path.basename(path)[:-6])] = turns
+    for path in glob.glob(os.path.join(home, ".codex/sessions/**/*.jsonl"), recursive=True):
+        if os.path.getmtime(path) < since.timestamp():
+            continue
+        turns, last, w = [], None, WEIGHTS["codex"]
+        for e in iter_jsonl(path):
+            p = e.get("payload") if isinstance(e.get("payload"), dict) else {}
+            if p.get("type") != "token_count" or not p.get("info"):
+                continue
+            total, u = p["info"].get("total_token_usage"), p["info"].get("last_token_usage") or {}
+            if not total or total == last:
+                continue
+            last = total
+            inp, cached, out_t = u.get("input_tokens", 0), u.get("cached_input_tokens", 0), u.get("output_tokens", 0)
+            _turn("codex", inp, (inp - cached) * w["input"] + cached * w["read"] + out_t * w["output"], turns)
+        if turns:
+            out[("codex", os.path.basename(path)[:-6])] = turns
+    sessions = {k: {"usage": sum(t[1] for t in v), "reread": sum(t[2] for t in v), "turns": len(v),
+                    "peak": max(t[0] for t in v), "start_tokens": v[0][0]} for k, v in out.items()}
+    return sessions, limit_hits
+
+
+def starting_context(home, metered):
+    """What loads before the first message in Claude Code, from the setup it logs. Sizes are text length / 4, an estimate."""
+    cutoff = dt.datetime.now().timestamp() - UNUSED_DAYS * 86400
+    runs, listed, files, system, oldest = collections.Counter(), {}, {}, [], dt.datetime.now().timestamp()
+    recent = {s for (src, s) in metered if src == "claude_code"}
+    for path in glob.glob(os.path.join(home, ".claude/projects/*/*.jsonl")):
+        if os.path.getmtime(path) < cutoff:
+            continue
+        oldest = min(oldest, os.path.getmtime(path), os.path.getctime(path))
+        in_window = os.path.basename(path)[:-6] in recent
+        for e in iter_jsonl(path):
+            for c in (e.get("message") or {}).get("content") or [] if e.get("type") == "assistant" else []:
+                if isinstance(c, dict) and c.get("type") == "tool_use" and c.get("name") == "Skill":
+                    runs[(c.get("input") or {}).get("skill", "?")] += 1
+            if e.get("type") == "user":
+                m = SLASH.search(text_of((e.get("message") or {}).get("content")))
+                if m:
+                    runs[m.group(1)] += 1
+            a = e.get("attachment")
+            if not in_window or not isinstance(a, dict):
+                continue
+            if a.get("type") == "skill_listing" and a.get("isInitial", True):
+                for line in (a.get("content") or "").splitlines():
+                    m = re.match(r"- ([^\s(:]+(?::[^\s(:]+)?)", line)
+                    if m:
+                        listed[m.group(1)] = len(line)
+            elif a.get("type") == "instructions":
+                for f in a.get("files") or []:
+                    if isinstance(f, dict) and f.get("path"):
+                        files[f["path"]] = f.get("content") or ""
+            elif a.get("type") == "prompt_snapshot":
+                system.append(len(json.dumps(a.get("systemPrompt"))))
+    starts = sorted(v["start_tokens"] for k, v in metered.items() if k[0] == "claude_code")
+    if not starts:
+        return None
+    ran = {n.split(":")[-1] for n in runs} | set(runs)
+    mine = set(os.listdir(os.path.join(home, ".claude/skills"))) if os.path.isdir(os.path.join(home, ".claude/skills")) else set()
+    unused_mine, plugins = [], collections.defaultdict(lambda: [0, 0])
+    unused_chars = 0
+    for name, chars in listed.items():
+        if ":" in name:
+            g = plugins[name.split(":")[0]]
+            g[0] += chars
+            g[1] += name in ran or name.split(":")[-1] in ran
+        elif name in mine and name not in ran:
+            unused_mine.append(name)
+            unused_chars += chars
+    unused_plugins = sorted(n for n, (_, r) in plugins.items() if not r)
+    unused_chars += sum(plugins[n][0] for n in unused_plugins)
+    words = {p: set(re.findall(r"[a-z]{4,}", c.lower())) for p, c in files.items()}
+    copies = [{"path": b.replace(home, "~"), "copy_of": a.replace(home, "~"), "tokens": len(files[b]) // 4}
+              for a in files for b in files
+              if a < b and words[a] and words[b] and len(words[a] & words[b]) / len(words[a] | words[b]) >= 0.8]
+    gain = unused_chars / 4
+    typical = starts[len(starts) // 2]
+    return {
+        "typical_tokens": typical,
+        "parts": {"tool_instructions": sorted(system)[len(system) // 2] // 4 if system else None,
+                  "skill_list": sum(listed.values()) // 4, "instruction_files": sum(len(c) for c in files.values()) // 4},
+        "skills_listed": len(listed), "skills_run": sum(1 for n in listed if n in ran or n.split(":")[-1] in ran),
+        "unused_skills": sorted(unused_mine), "unused_plugins": unused_plugins, "unused_days": UNUSED_DAYS,
+        "log_days": int((dt.datetime.now().timestamp() - oldest) / 86400),
+        "gain_tokens": int(gain), "gain_of_start": round(gain / typical, 3),
+        "instruction_copies": copies,
+    }
+
+
+def usage_summary(sessions, metered, limit_hits, home):
+    """The numbers usage findings need: where usage went, compared only with the user's own typical session."""
+    rows = [r for r in sessions if r.get("usage")]
+    if not rows:
+        return None
+    total = sum(r["usage"] for r in rows)
+    per_req = sorted(r["usage"] / r["prompts"] for r in rows)
+    long_ = [r for r in rows if r["long"]]
+    long_usage = sum(r["usage"] for r in long_)
+    cc = [r for r in rows if r["source"] == "claude_code"]
+    start = starting_context(home, metered)
+    if start and cc:
+        # share of Claude Code usage spent loading and re-reading the starting context
+        start["share_of_usage"] = round(sum(min(r["start_tokens"], r["peak"]) * 0.1 * r["turns"] for r in cc)
+                                        / sum(r["usage"] for r in cc), 3)
+        start["gain_of_usage"] = round(start["gain_tokens"] * 0.1 * sum(r["turns"] for r in cc) / sum(r["usage"] for r in cc), 4)
+    biggest = sorted(rows, key=lambda r: -r["usage"])[:3]
+    return {
+        "metered_sessions": len(rows), "long_line": LONG_LINE, "long_sessions": len(long_),
+        "long_share": round(long_usage / total, 3),
+        "typical_request": round(per_req[len(per_req) // 2]),
+        "long_request_vs_typical": round(long_usage / sum(r["prompts"] for r in long_) / per_req[len(per_req) // 2], 1) if long_ else None,
+        "reread_share_of_long": round(sum(r["reread"] for r in long_) / long_usage, 3) if long_usage else None,
+        "biggest": [{"source": r["source"], "date": r["start"].astimezone().strftime("%b %-d"), "share": round(r["usage"] / total, 3),
+                     "prompts": r["prompts"], "peak": r["peak"], "first": clean(r["first"], 120)} for r in biggest],
+        "limit_hits": limit_hits,
+        "starting_context": start,
+    }
+
+
 def week_of(ts):
     d = ts.astimezone().date()
     return (d - dt.timedelta(days=d.weekday())).isoformat()
@@ -418,8 +576,8 @@ def content_words(text):
     return {w for w in re.findall(r"[a-z]{4,}", text.lower())}
 
 
-def sessions_of(aggs):
-    out = []
+def sessions_of(aggs, metered=None):
+    out, metered = [], metered or {}
     for a in aggs:
         by = collections.defaultdict(list)
         for ts, session, text in a.prompts:
@@ -442,6 +600,7 @@ def sessions_of(aggs):
                 "retyped": sum(bool(STYLE.search(t)) for t in texts),
                 "skilled": session in a.skill_sessions,
                 "restart": False,
+                **_usage_fields(metered.get((a.name, session))),
             })
     # a restart: same tool and kind of work, within 48h, opening on mostly the same words
     out.sort(key=lambda r: r["start"])
@@ -459,10 +618,17 @@ def sessions_of(aggs):
     return out
 
 
+def _usage_fields(m):
+    if not m:
+        return {}
+    return {"usage": m["usage"], "reread": m["reread"], "peak": m["peak"], "start_tokens": m["start_tokens"],
+            "turns": m.get("turns", 0), "long": m["peak"] > LONG_LINE}
+
+
 def session_cube(sessions):
     """Additive weekly rows by source and kind of work, so the report can filter and recompute."""
     keys = ("sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked",
-            "restarts", "retyped", "skilled")
+            "restarts", "retyped", "skilled", "metered", "usage", "long_usage", "start_tokens")
     cube = collections.defaultdict(lambda: dict.fromkeys(keys, 0))
     for r in sessions:
         row = cube[(week_of(r["start"]), r["source"], r["category"])]
@@ -476,6 +642,11 @@ def session_cube(sessions):
         row["restarts"] += r["restart"]
         row["retyped"] += r["retyped"]
         row["skilled"] += r["skilled"]
+        if r.get("usage"):
+            row["metered"] += 1
+            row["usage"] += round(r["usage"])
+            row["long_usage"] += round(r["usage"]) if r["long"] else 0
+            row["start_tokens"] += r["start_tokens"]
     return [{"week": w, "source": s, "category": c, **v} for (w, s, c), v in sorted(cube.items())]
 
 
@@ -612,7 +783,9 @@ def main():
         "context_files": context_files(args.home),
         "coverage": coverage(aggs),
     }
-    sessions = sessions_of(aggs)
+    metered, limit_hits = usage_by_session(args.home, since)
+    sessions = sessions_of(aggs, metered)
+    result["usage"] = usage_summary([r for r in sessions if r["start"] >= since], metered, limit_hits, args.home)
     result["label_samples"] = label_samples(sessions)
     if args.trend:
         result["cube"] = session_cube(sessions)

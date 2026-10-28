@@ -11,6 +11,7 @@ const glance: { label: string; term: TermName; value: string; delta: string }[] 
   { label: "Corrections", term: "corrections", value: "1.1", delta: "−0.3" },
   { label: "Restarts", term: "restarts", value: "11", delta: "+5" },
   { label: "Rules retyped", term: "rulesRetyped", value: "17", delta: "+3" },
+  { label: "Long-session share", term: "longSessionShare", value: "62%", delta: "+9 pts" },
 ];
 
 type Confidence = "Clear pattern" | "Likely pattern" | "Unconfirmed";
@@ -36,9 +37,9 @@ const patterns: { title: string; next: string; tools: string; confidence: Confid
     confidence: "Unconfirmed",
   },
   {
-    title: "Long Claude Code sessions drift between projects",
-    next: "Not this cycle: clear context between projects",
-    tools: "Claude Code",
+    title: "Long sessions drift between projects and take most of your usage",
+    next: "Not this cycle: start fresh between projects",
+    tools: "Claude Code · Codex",
     confidence: "Likely pattern",
   },
 ];
@@ -229,9 +230,9 @@ export function SampleReport() {
                 <h4 className="font-display text-lg font-bold text-ink">This cycle at a glance</h4>
                 <p className="font-body text-sm text-text-3">Comparing Oct 12–25 to Sep 28 – Oct 11, 2026</p>
               </div>
-              <dl className="grid grid-cols-1 divide-y divide-rule border-y border-rule md:grid-cols-5 md:divide-x md:divide-y-0">
+              <dl className="grid grid-cols-1 divide-y divide-rule border-y border-rule lg:grid-cols-6 lg:divide-x lg:divide-y-0">
                 {glance.map((m, i) => (
-                  <div key={m.label} className={`flex flex-col gap-1.5 py-4 ${i === 0 ? "md:pr-5" : "md:px-5"}`}>
+                  <div key={m.label} className={`flex flex-col gap-1.5 py-4 ${i === 0 ? "lg:pr-4" : "lg:px-4"}`}>
                     <dt className="font-body text-[13px] text-text-3">
                       <Term name={m.term}>{m.label}</Term>
                     </dt>

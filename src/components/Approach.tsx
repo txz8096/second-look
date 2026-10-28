@@ -22,11 +22,11 @@ const behaviors: Behavior[] = [
   },
   {
     label: "Keep your skills current",
-    question: "Which skills or configs are stale, broken or duplicated?",
+    question: "Which skills or configs are stale, broken, duplicated, or loading into every session unused?",
   },
   {
     label: "See how your habits change",
-    question: "Did your changes stick, and did the work improve?",
+    question: "Did your changes stick, did the work improve, and where did your usage go?",
   },
 ];
 

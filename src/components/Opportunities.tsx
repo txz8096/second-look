@@ -1,7 +1,7 @@
 import { Container, Kicker, SectionHeading } from "./ui";
 
 const benefits = [
-  { title: "Less overhead for tasks", body: "Cut the administrative overhead around each task so work moves faster." },
+  { title: "Less overhead for tasks", body: "Cut the setup and long-session overhead around each task, so work moves faster and your usage goes further." },
   { title: "Better output, fewer errors", body: "Find the habits behind rework, so first results need less fixing." },
   { title: "More reliable code", body: "Ask for code with a clear scope and a way to check it." },
   { title: "Keep your own judgement", body: "Depend less on AI for the thinking." },

@@ -1,6 +1,6 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\"), or add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\")."
+description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in your prompting and context, shows where your token usage goes, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\"), or add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\")."
 ---
 
 # second look
@@ -238,7 +238,10 @@ and still works on current models.
    database and Antigravity transcripts (`~/.gemini/antigravity-cli/brain`, plus the app's
    folders when it writes the same files) and prints JSON: sessions, prompts, corrections,
    briefed starts, restarts, rules retyped, skill runs, and trimmed prompt samples with
-   secrets removed.
+   secrets removed. Its `usage` block covers Claude Code and Codex, the only tools that log
+   tokens: long-session share, typical request, the biggest sessions, usage-limit hits, and
+   `starting_context` (what loads before the first message, unused skills and plugins, copied
+   instruction files, and the gain from trimming them).
 2. If you can also search their past Claude chats, open the real work chats in the window.
    Note restarts, corrections, restated preferences, and polished output accepted without a
    check.
@@ -267,8 +270,8 @@ and still works on current models.
   the first message), corrections ("no", "actually", "I meant", "that's not" openers),
   output checked (asked for sources, edge cases or a critique), restart (same topic again
   within 2 days), rules retyped. Keep a short quote for each pattern you'll cite.
-- Compute the five glance stats from those rows and label them as a sample ("Sample of 24
-  chats").
+- Compute the first five glance stats from those rows and label them as a sample ("Sample of 24
+  chats"). Long-session share is "Not measured" here: claude.ai doesn't share token counts.
 - For the year view, use `conversations.json` if they upload it. Without an export, show
   the trends as "No data". Never draw a line from one window's sample.
 
@@ -318,9 +321,9 @@ Sections, in order. Each maps to a block in the template.
 much, then what slipped recently. With no history, say that plainly.
 
 **This cycle at a glance** (`#glance`). "Comparing <window> to <previous window>" next to
-the heading (scoped reviews compare with the same length of time before). Then exactly five
+the heading (scoped reviews compare with the same length of time before). Then exactly six
 stats in this order: Sessions, Briefed starts, Corrections (per 10 messages), Restarts,
-Rules retyped. Each has a value, a plain-text change and a one-line meaning. Use "—" and
+Rules retyped, Long-session share. Each has a value, a plain-text change and a one-line meaning. Use "—" and
 "Not measured" when there's no data. Keep each stat's term card from the template, and wrap the first mention of
 each habit in the summary and in each part with the same component, even when the prose
 words it differently ("misread you", "a real brief"). See "Habit terms" in the design system.
@@ -332,7 +335,8 @@ Likely pattern, Unconfirmed); What happens, Evidence and Why it matters; optiona
 extras ("Example and limits", "Which tools have which rules"). Then the fix in the same
 card: a tinted "Try this" block with how likely it is to help, the action and a paste-ready
 block, or a gray "Not this cycle" block for a fix left out of the plan. If they ship what
-they build with AI, include an over-trust pattern when the evidence supports it. Close the
+they build with AI, include an over-trust pattern when the evidence supports it. When
+long sessions take a large share of usage, fold that into a long-session card (see "Usage"). Close the
 part with "Compare the fixes" (fix, will it help, effort, risk), "Your plan until <next
 review>" (three fixes at most) and the collapsed "What the <date> review will check". Keep
 each fix's bet, metric and keep-it-if rule in the log.
@@ -340,7 +344,8 @@ each fix's bet, metric and keep-it-if rule in the log.
 **Keep your skills current** (`#part-2`). A headline with how many skills are wrong today
 and the biggest risk; the scan date and anything you couldn't read. "Skills you wrote"
 status table; "Fix first" (issue, impact, how sure, fix) with paste-ready diffs for the big
-ones; "Worth a look" (issue, why it matters, how sure, next step) with dated sources;
+ones; "Worth a look" (issue, why it matters, how sure, next step) with dated sources, including the
+starting-context row from "Usage" when it applies;
 collapsed "Skills you installed from others".
 
 **How your behavior is changing** (`#part-3`). No headline; the summary already tells the
@@ -348,7 +353,8 @@ story. "Did last cycle's fixes work?" appears only when an earlier review logged
 row per fix: tried?, did the habit change ("Cause unclear" when something else could
 explain it), did the work get better ("Not measured" when there's no data yet), costs,
 decision (Keep, Revise, Drop). Then "Habits over the last year" (`#trends`), filled from the
-cube, and "Usage this cycle" (by tool, skills and commands, and "Try next").
+cube, and "Usage this cycle" (by tool, skills and commands, and "Try next"). Open "Usage this
+cycle" with the usage-limit line from the template.
 
 **Report an issue** (`#report-issue`). Keep the template's line and link to
 https://github.com/txz8096/second-look/issues/new as they are.
@@ -357,6 +363,33 @@ https://github.com/txz8096/second-look/issues/new as they are.
 
 Reports contain real prompts. Keep them private unless the user chooses to share one, and
 remove anything about other people before they do.
+
+## Usage
+
+Usage is evidence inside the parts above, never a section of its own. It answers two
+questions: where did my usage go, and what can I change. "Usage" means tokens weighted by
+list price (an estimate), because re-reading cached history costs about a tenth of new input.
+Say "usage", never "cost" or "spend": most people are on a plan, not paying per token.
+
+- **Compare only with themselves.** "Typical" is their own median session or request; later
+  reviews also compare with the last one. Never compare with other people or a fixed number.
+- **Show a usage finding only when** there is a change they can make, the next review can check
+  it, and the thing involved is at least a tenth of their usage. Otherwise leave it out.
+- **Long sessions** (Part 1). Sessions past `long_line` (150k tokens, a chosen line, not a
+  measured limit). Give the share of usage they took, how a request there compares with a typical
+  one, and the biggest sessions. Say what you can't tell: whether the long history helped, and
+  that a fresh session pays to rebuild context. The fix: start fresh when a phase ends.
+- **Starting context** (Part 2, "Worth a look"). What loads before the first message. Name the
+  skills and plugins not run in `unused_days`, their gain in tokens and share of usage, and any
+  instruction file that copies another. The fix for their own skills is
+  `disable-model-invocation: true` in the frontmatter: the skill stays installed and
+  `/skill-name` still runs it, but it stops loading on its own. For plugins, turn them off in
+  `/plugin`. Never suggest deleting or moving skills. When `log_days` is shorter than
+  `unused_days`, say "since <date>, when your logs begin" and that some may simply not have come
+  up yet.
+- **Usage breakdown.** Doing the work, re-reading long conversations, redoing work. Show it in
+  "Usage this cycle" only when `limit_hits` is 3 or more; otherwise keep the one-line note.
+- Cursor, Antigravity, claude.ai, ChatGPT and Gemini don't record tokens. Say so once.
 
 ## Trend metrics
 
@@ -370,6 +403,8 @@ remove anything about other people before they do.
 | Skill use | skilled / sessions | Sessions that ran one of their skills or commands | Higher |
 | Rules retyped | retyped | Standing preferences typed by hand. Each belongs in a config file | Lower |
 | Refinements per session | refinements / sessions | Follow-ups that build on a good answer | Higher |
+| Long-session share | long_usage / usage | Usage from sessions past 150k tokens. Claude Code and Codex only | Lower |
+| Starting context | start_tokens / metered | Tokens loaded before the first message. Claude Code and Codex only | Lower |
 
 Kinds of work, from each session's opening message: Prototyping, Creating, Research,
 Brainstorming, Career, Consultation.
@@ -397,7 +432,7 @@ entry in a Log section at the end of the report.
 ```
 ## 2026-10-25 (covers Oct 12 – 25)            ← add "(scoped)" for scoped reviews
 Skills: 1 stale · 3 review · 3 current
-Snapshot: 94 sessions · 54% briefed · 1.1 corrections/10 · 11 restarts · 17 rules retyped
+Snapshot: 94 sessions · 54% briefed · 1.1 corrections/10 · 11 restarts · 17 rules retyped · 62% long-session usage
 Report: <link or path>
 Findings: P1 <one-liners> · P2 <count> · P3 <count>
 Fixes: [ ] <fix> · [ ] <fix> · [ ] <fix>

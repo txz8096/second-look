@@ -101,16 +101,16 @@ def main():
     if re.search(r'class="[^"]*\b(up-bad|down-good|chg-good|chg-bad)\b', html):
         problems.append("green/red change classes used on the user's numbers; changes are plain text")
 
-    # the glance needs five stats, each with a meaning line
+    # the glance needs six stats, each with a meaning line
     g = re.search(r'id="glance".*?</section>', html, re.S)
     if g:
         stats = g.group(0).count('class="stat"')
         whys = g.group(0).count('class="why"')
-        if stats != 5 or whys != 5:
-            problems.append(f"the glance needs 5 stats each with a meaning line (found {stats} stats, {whys} lines)")
+        if stats != 6 or whys != 6:
+            problems.append(f"the glance needs 6 stats each with a meaning line (found {stats} stats, {whys} lines)")
         cards = g.group(0).count('class="term-card"')
-        if cards < 4:
-            problems.append(f"each habit stat in the glance needs its term card from the template (found {cards} of 4)")
+        if cards < 5:
+            problems.append(f"each habit stat in the glance needs its term card from the template (found {cards} of 5)")
 
     if problems:
         try:

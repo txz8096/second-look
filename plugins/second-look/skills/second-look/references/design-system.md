@@ -48,7 +48,7 @@ cards, panels · 20px "Try this" blocks and the plan · fully rounded chips.
    16px body text.
 2. Summary paragraph (20px): the year's story.
 3. This cycle at a glance (`#glance`): heading, "Comparing <window> to <previous window>",
-   five stats each with value, plain-text change and a one-line meaning.
+   six stats in a 3 × 2 grid (2 columns on phones), each with value, plain-text change and a one-line meaning.
 4. Improve your prompts and context (`#part-1`): headline, pattern cards (`article.icard`),
    "Compare the fixes" table, "Your plan until <date>", collapsed next-review check.
 5. Keep your skills current (`#part-2`): headline, scan line, "Skills you wrote", "Fix
