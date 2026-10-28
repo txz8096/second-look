@@ -213,15 +213,20 @@ to include those tools.
 
 This step is optional. You can add it any time.
 
-| App | Where | File | Put it in |
-|---|---|---|---|
-| claude.ai | Settings > Privacy > Export data | `conversations.json` | `~/.second-look/exports/claude/` |
-| ChatGPT | Settings > Data controls > Export data | `conversations.json` | `~/.second-look/exports/chatgpt/` |
-| Gemini | takeout.google.com > My Activity, filtered to Gemini Apps, format JSON | `My Activity/Gemini Apps/MyActivity.json` | `~/.second-look/exports/gemini/` |
+| App | Get your export | Then tell your assistant |
+|---|---|---|
+| claude.ai | Settings > Privacy > Export data | "add my claude.ai export" |
+| ChatGPT | Settings > Data controls > Export data | "add my ChatGPT export" |
+| Gemini | takeout.google.com > My Activity, filtered to Gemini Apps, format JSON | "add my Gemini export" |
 
-Each app sends you a zip, usually within a day. For Gemini, pick "My Activity" rather than
-"Gemini", which exports your Gems only. It includes chats saved while Gemini Apps Activity
-was on.
+Each app sends you a zip, usually within a day. Download it, and your assistant finds it in
+Downloads or Desktop, checks which app it came from, and files it. You can also drag the zip
+into the chat. For Gemini, pick "My Activity" rather than "Gemini", which exports your Gems
+only. It includes chats saved while Gemini Apps Activity was on.
+
+To file one by hand instead, put `conversations.json` in `~/.second-look/exports/claude/` or
+`~/.second-look/exports/chatgpt/`, and Gemini's `MyActivity.json` in
+`~/.second-look/exports/gemini/`.
 
 ## Run it
 

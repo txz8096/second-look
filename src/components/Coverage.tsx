@@ -33,20 +33,20 @@ const tools = [
   {
     name: "claude.ai",
     reads: "conversations.json from your data export",
-    setup: "Export it from Settings → Privacy, then put it in ~/.second-look/exports/claude",
+    setup: "Export it from Settings → Privacy, then ask your assistant to “add my claude.ai export”",
     history: "Optional. Covers everything up to your export date",
   },
   {
     name: "ChatGPT",
     reads: "conversations.json from your data export",
-    setup: "Export it from Settings → Data controls, then put it in ~/.second-look/exports/chatgpt",
+    setup: "Export it from Settings → Data controls, then ask your assistant to “add my ChatGPT export”",
     history: "Optional. Covers everything up to your export date",
   },
   {
     name: "Gemini",
     reads: "MyActivity.json from a Google Takeout export of your Gemini Apps activity",
     setup:
-      "In Google Takeout, pick My Activity → Gemini Apps, format JSON, then put the file in ~/.second-look/exports/gemini",
+      "In Google Takeout, pick My Activity → Gemini Apps, format JSON, then ask your assistant to “add my Gemini export”",
     history: "Optional. Covers chats saved with Gemini Apps Activity on, up to your export date",
   },
 ];

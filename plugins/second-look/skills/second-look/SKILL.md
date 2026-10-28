@@ -1,6 +1,6 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\")."
+description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in your prompting and context, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\"), or add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\")."
 ---
 
 # second look
@@ -64,7 +64,28 @@ Files that ship with this skill:
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
 | `scripts/collect.py` | Local | Reads Claude Code, Codex, Cursor and Antigravity logs and the three data exports |
 | `scripts/open_report.py` | Local | Opens a finished report in the user's own browser |
+| `scripts/add_export.py` | Local | Finds a claude.ai, ChatGPT or Gemini export and files it in `~/.second-look/exports` |
 | `scripts/schedule.py` | Local | Sets up, changes or stops recurring reviews, and records each full review |
+
+## Adding an export
+
+When they say "add my ChatGPT export" (or claude.ai, or Gemini), or drop an export into the
+chat, file it for them. Never ask them to open `~/.second-look`.
+
+- **Local:** if they dragged in a file or folder, run `python3 scripts/add_export.py PATH`.
+  Otherwise run `python3 scripts/add_export.py` (add `--app chatgpt`, `claude` or `gemini`
+  when they named one); it looks in Downloads and Desktop. It tells exports apart by what's
+  inside, so the zip's name doesn't matter. Repeat its result lines in plain words, like
+  "Added your ChatGPT export: 1,240 chats, Jan 2025 to Oct 2026." If it finds nothing,
+  give them its steps for getting one and say they can drag the zip in when it arrives.
+  If macOS asks for access to Downloads, tell them to allow it, or to drag the zip in instead.
+- **claude.ai:** ask them to upload `conversations.json` (or Gemini's `MyActivity.json`)
+  here. It's used for this review only.
+
+Getting each export: claude.ai, Settings → Privacy → Export data. ChatGPT, Settings → Data
+controls → Export data. Gemini, takeout.google.com → My Activity, filtered to Gemini Apps,
+format JSON (the "Gemini" option exports Gems only). Each arrives as a zip by email,
+usually within a day.
 
 ## First run: the profile
 
@@ -231,10 +252,10 @@ and still works on current models.
    exist. It returns `cube` (weekly rows by source and kind of work), `coverage` and
    `label_samples`. Spot-check the labels against the samples before trusting a number.
    Merge the cube into `~/.second-look/history.json`, keeping older weeks the tools have
-   deleted. If any export is over 90 days old, add a P3 asking for a fresh one. Gemini's
-   export (Google Takeout → My Activity → Gemini Apps, format JSON) has no conversation
-   ids, so the collector groups prompts less than 30 minutes apart into one session: call
-   its session-based numbers (restarts, briefed starts) estimates.
+   deleted. If any export is over 90 days old, add a P3: download a fresh one and say
+   "add my <app> export". Gemini's export has no conversation ids, so the collector
+   groups prompts less than 30 minutes apart into one session: call its session-based
+   numbers (restarts, briefed starts) estimates.
 5. Read `~/.second-look/log.md` for last cycle's fixes.
 
 **claude.ai:**

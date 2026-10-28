@@ -178,8 +178,6 @@ Optional, for your claude.ai, ChatGPT and Gemini history:
   claude.ai  Settings > Privacy > Export data
   ChatGPT    Settings > Data controls > Export data
   Gemini     takeout.google.com > My Activity > Gemini Apps only, format JSON
-Each one sends you a zip. Put its conversations.json in
-  $HOME_DIR/exports/claude/   or   $HOME_DIR/exports/chatgpt/
-and Gemini's My Activity/Gemini Apps/MyActivity.json in
-  $HOME_DIR/exports/gemini/
+Each one sends you a zip. Download it, then ask your assistant to
+"add my ChatGPT export" (or claude.ai, or Gemini). It finds the zip in Downloads.
 EOF

@@ -177,7 +177,8 @@ def stale_exports():
     if not old:
         return ""
     names = old[0] if len(old) == 1 else ", ".join(old[:-1]) + " and " + old[-1]
-    return " Your %s export is over %d days old; download a fresh one." % (names, STALE_EXPORT_DAYS)
+    return (" Your %s export is over %d days old. Download a fresh one, then ask your assistant "
+            "to add it." % (names, STALE_EXPORT_DAYS))
 
 
 def run_headless(s, dry):
