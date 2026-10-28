@@ -1,7 +1,7 @@
 # second look report design system
 
 The source of truth is `report-template.html` (a filled-in sample report).
-Build every report from a copy of it. Keep its `<style>` block, font links, logo and scripts
+Build every report from a copy of it. Keep its charset line, `<style>` block, font links, logo and scripts
 exactly as they are. Change only the text, the table rows, the cards and the sample data.
 `scripts/check_report.py` fails any report whose styles differ from the template.
 

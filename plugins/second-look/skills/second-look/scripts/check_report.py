@@ -73,6 +73,8 @@ def main():
     else:
         problems.append(f"template not found at {a.template}; can't compare styles")
 
+    if not re.search(r'<meta charset="utf-8">', html, re.I):
+        problems.append('missing <meta charset="utf-8">; without it browsers garble the dashes, dots and quotes')
     if FONT_LINK not in html:
         problems.append("missing the Google Fonts link for Familjen Grotesk and IBM Plex Mono")
     if 'class="brand-logo"' not in html:

@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>second look · Oct 12 – 25, 2026</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -794,6 +795,10 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
 .stat .term[data-align="start"] .term-card { left: 18px; right: auto; }
 .stat .term[data-align="end"] .term-card { left: auto; right: 12px; }
 @media (prefers-reduced-motion: reduce) { .term-card { transition: none; } }
+/* side-by-side panels share a height; keep their rows packed at the top so headings and bars line up */
+.panel { align-content: start; }
+/* on phones, tables scroll sideways instead of squeezing cells to a word per line */
+@media (max-width: 600px) { .tbl table { min-width: 600px; } }
 </style>
 
 <div class="wrap">
