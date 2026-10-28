@@ -49,15 +49,15 @@ cards, panels · 20px "Try this" blocks and the plan · fully rounded chips.
 2. Summary paragraph (20px): the year's story.
 3. This cycle at a glance (`#glance`): heading, "Comparing <window> to <previous window>",
    six stats in a 3 × 2 grid (2 columns on phones), each with value, plain-text change and a one-line meaning.
-4. Improve your prompts and context (`#part-1`): headline, pattern cards (`article.icard`),
-   "Compare the fixes" table, "Your plan until <date>", collapsed next-review check.
-5. Keep your skills current (`#part-2`): headline, scan line, "Skills you wrote", "Fix
-   first", "Worth a look", collapsed installed skills.
-6. How your behavior is changing (`#part-3`): scan line, "Did last cycle's fixes work?"
+4. How your behavior is changing (`#part-1`): scan line, "Did last cycle's fixes work?"
    (only after a review with logged fixes), "Habits over the last year" (`#trends`),
    "Usage this cycle". `scripts/prerender.py` saves the drawn charts, bars and tables into
    the file and marks the section `data-static`, which hides the filters and shows a note.
    The script clears the mark and redraws with live filters.
+5. Improve your prompts and context (`#part-2`): headline, pattern cards (`article.icard`),
+   "Compare the fixes" table, "Your plan until <date>", collapsed next-review check.
+6. Keep your skills current (`#part-3`): headline, scan line, "Skills you wrote", "Fix
+   first", "Worth a look", collapsed installed skills.
 7. Report an issue (`#report-issue`): one line linking to
    https://github.com/txz8096/second-look/issues/new. Keep it as the template has it.
 8. Footer: method and sources.

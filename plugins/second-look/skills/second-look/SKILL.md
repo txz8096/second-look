@@ -328,7 +328,16 @@ Rules retyped, Long-session share. Each has a value, a plain-text change and a o
 each habit in the summary and in each part with the same component, even when the prose
 words it differently ("misread you", "a real brief"). See "Habit terms" in the design system.
 
-**Improve your prompts and context** (`#part-1`). A headline with the biggest finding. Then
+**How your behavior is changing** (`#part-1`). First, so the review opens where the
+walkthrough does: did last cycle's fixes work, and how are the habits trending. No headline;
+the summary already tells the story. "Did last cycle's fixes work?" appears only when an earlier review logged fixes. One
+row per fix: tried?, did the habit change ("Cause unclear" when something else could
+explain it), did the work get better ("Not measured" when there's no data yet), costs,
+decision (Keep, Revise, Drop). Then "Habits over the last year" (`#trends`), filled from the
+cube, and "Usage this cycle" (by tool, skills and commands, and "Try next"). Open "Usage this
+cycle" with the usage-limit line from the template.
+
+**Improve your prompts and context** (`#part-2`). A headline with the biggest finding. Then
 one card per prompting, context or memory pattern, biggest first (time lost × how often).
 Each card: a title that states the finding; tags for the tools and how sure (Clear pattern,
 Likely pattern, Unconfirmed); What happens, Evidence and Why it matters; optional collapsed
@@ -341,20 +350,12 @@ part with "Compare the fixes" (fix, will it help, effort, risk), "Your plan unti
 review>" (three fixes at most) and the collapsed "What the <date> review will check". Keep
 each fix's bet, metric and keep-it-if rule in the log.
 
-**Keep your skills current** (`#part-2`). A headline with how many skills are wrong today
+**Keep your skills current** (`#part-3`). A headline with how many skills are wrong today
 and the biggest risk; the scan date and anything you couldn't read. "Skills you wrote"
 status table; "Fix first" (issue, impact, how sure, fix) with paste-ready diffs for the big
 ones; "Worth a look" (issue, why it matters, how sure, next step) with dated sources, including the
 starting-context row from "Usage" when it applies;
 collapsed "Skills you installed from others".
-
-**How your behavior is changing** (`#part-3`). No headline; the summary already tells the
-story. "Did last cycle's fixes work?" appears only when an earlier review logged fixes. One
-row per fix: tried?, did the habit change ("Cause unclear" when something else could
-explain it), did the work get better ("Not measured" when there's no data yet), costs,
-decision (Keep, Revise, Drop). Then "Habits over the last year" (`#trends`), filled from the
-cube, and "Usage this cycle" (by tool, skills and commands, and "Try next"). Open "Usage this
-cycle" with the usage-limit line from the template.
 
 **Report an issue** (`#report-issue`). Keep the template's line and link to
 https://github.com/txz8096/second-look/issues/new as they are.
@@ -375,11 +376,11 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
   reviews also compare with the last one. Never compare with other people or a fixed number.
 - **Show a usage finding only when** there is a change they can make, the next review can check
   it, and the thing involved is at least a tenth of their usage. Otherwise leave it out.
-- **Long sessions** (Part 1). Sessions past `long_line` (150k tokens, a chosen line, not a
+- **Long sessions** (Improve your prompts and context). Sessions past `long_line` (150k tokens, a chosen line, not a
   measured limit). Give the share of usage they took, how a request there compares with a typical
   one, and the biggest sessions. Say what you can't tell: whether the long history helped, and
   that a fresh session pays to rebuild context. The fix: start fresh when a phase ends.
-- **Starting context** (Part 2, "Worth a look"). What loads before the first message. Name the
+- **Starting context** (Keep your skills current, "Worth a look"). What loads before the first message. Name the
   skills and plugins not run in `unused_days`, their gain in tokens and share of usage, and any
   instruction file that copies another. The fix for their own skills is
   `disable-model-invocation: true` in the frontmatter: the skill stays installed and

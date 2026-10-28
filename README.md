@@ -37,7 +37,12 @@ A closer look pays off in a few places:
 Every two weeks, or whenever you ask, second look builds one private report in three parts.
 After your first report, it offers to set up the two-week schedule for you.
 
-**1. Improve your prompts and context.** It checks whether your first message gave the goal,
+**1. See how your habits change.** From your second review on, it opens with whether last
+cycle's fixes stuck and whether the work got better. Then briefed starts, corrections, output
+checking, restarts, and how much of your usage went to very long sessions, charted week by
+week for up to 12 months and filterable by tool and kind of work.
+
+**2. Improve your prompts and context.** It checks whether your first message gave the goal,
 the audience, the constraints and what done looks like, and whether your standing rules
 reach every tool. When very long sessions take most of your token usage, it says so and
 suggests where to start fresh. A finding looks like this:
@@ -51,15 +56,10 @@ suggests where to start fresh. A finding looks like this:
 Generic advice like "write clearer prompts" doesn't make the cut. Each card shows quotes from
 your own sessions, how sure the review is, and a fix you can paste.
 
-**2. Keep your skills current.** It reads the skills and config you've built and flags the
+**3. Keep your skills current.** It reads the skills and config you've built and flags the
 ones with wrong facts, broken folders, duplicates, missed updates from recent releases, and
 no tests. It also names what loads into every Claude Code session before you type, like skills
 you haven't run in 60 days, and how much you'd save by having them run only when you ask.
-
-**3. See how your habits change.** Briefed starts, corrections, output checking, restarts,
-and how much of your usage went to very long sessions, charted week by week for up to 12 months and filterable by tool and kind of work. After your
-first review, it also checks whether last cycle's fixes stuck and whether the work got
-better.
 
 See the [sample report](https://txz8096.github.io/second-look/#sample-report) for the full
 layout. It uses made-up data.

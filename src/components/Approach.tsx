@@ -12,6 +12,10 @@ type Behavior = {
 
 const behaviors: Behavior[] = [
   {
+    label: "See how your habits change",
+    question: "Did your changes stick, did the work improve, and where did your usage go?",
+  },
+  {
     label: "Improve your prompts and context",
     question: "Did the first message give the goal, audience, constraints and what done looks like?",
     example: [
@@ -24,10 +28,6 @@ const behaviors: Behavior[] = [
     label: "Keep your skills current",
     question: "Which skills or configs are stale, broken, duplicated, or loading into every session unused?",
   },
-  {
-    label: "See how your habits change",
-    question: "Did your changes stick, did the work improve, and where did your usage go?",
-  },
 ];
 
 function SmallLabel({ children }: { children: string }) {
@@ -35,7 +35,7 @@ function SmallLabel({ children }: { children: string }) {
 }
 
 export function Approach() {
-  const [open, setOpen] = useState(0);
+  const [open, setOpen] = useState(1);
 
   return (
     <section id="approach" className="border-t border-rule bg-paper">

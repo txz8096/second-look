@@ -248,81 +248,6 @@ export function SampleReport() {
 
           {/* Part 1 */}
           <section className="flex flex-col gap-4 px-5 pt-8 pb-9 md:px-10">
-            <PartTitle>Improve your prompts and context</PartTitle>
-            <p className="font-body text-[15px] leading-normal text-text-2">
-              Most <Term name="corrections">corrections</Term> start at the first message. Fix the brief and stop retyping rules to cut about a
-              third of them.
-            </p>
-            <ol className="flex flex-col gap-4">
-              {patterns.map((p, i) => (
-                <li
-                  key={p.title}
-                  className={`flex flex-col gap-5 border-b border-rule last:border-b-0 md:px-7 ${p.expanded ? "pb-7" : "pb-[18px]"}`}
-                >
-                  <div className="flex items-center gap-3.5">
-                    <Rank n={i + 1} />
-                    <div className="flex min-w-0 flex-1 flex-col gap-1">
-                      <h4 className="font-display text-[19px] font-bold tracking-[-0.3px] text-ink">{p.title}</h4>
-                      {!p.expanded && <p className="font-body text-sm text-text-3">{p.next}</p>}
-                    </div>
-                    <span className="hidden font-body text-[13px] text-text-3 lg:inline">{p.tools}</span>
-                    <span className="hidden sm:inline-flex">
-                      <Pill variant={confidenceVariant[p.confidence]}>{p.confidence}</Pill>
-                    </span>
-                    {p.expanded ? (
-                      <ChevronUp size={20} className="shrink-0 text-text-2" aria-hidden="true" />
-                    ) : (
-                      <ChevronDown size={20} className="shrink-0 text-text-2" aria-hidden="true" />
-                    )}
-                  </div>
-                  {p.expanded && <ExpandedPattern />}
-                </li>
-              ))}
-            </ol>
-          </section>
-
-          {/* Part 2 */}
-          <section className="flex flex-col gap-4 border-t border-rule px-5 pt-8 pb-9 md:px-10">
-            <PartTitle>Keep your skills current</PartTitle>
-            <p className="font-body text-[15px] leading-normal text-text-2">
-              Two of your seven skills give wrong information, and none has a test.
-            </p>
-            <p className="font-body text-[13px] text-text-3">
-              Scanned Oct 21. 7 skills you wrote: 2 stale, 2 to review, 1 minor, 2 current. 17 installed: 2
-              behind their source, 1 broken, 1 duplicate.
-            </p>
-            <SubTitle>Fix first</SubTitle>
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[720px]">
-                <thead>
-                  <tr className="border-b border-rule">
-                    <Th>ISSUE</Th>
-                    <Th className="w-[216px]">IMPACT</Th>
-                    <Th className="w-[126px]">HOW SURE</Th>
-                    <Th className="w-[200px]">FIX</Th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {fixFirst.map((row) => (
-                    <tr key={row.issue} className="border-b border-rule">
-                      <Td className="font-body text-[15px] leading-normal font-medium text-ink">{row.issue}</Td>
-                      <Td>
-                        <div className="flex flex-col gap-0.5">
-                          <span className="font-body text-[15px] leading-[1.45] text-ink">{row.impact.main}</span>
-                          <span className="font-body text-[13px] leading-[1.45] text-text-3">{row.impact.sub}</span>
-                        </div>
-                      </Td>
-                      <Td className="font-body text-sm leading-normal text-text-2">{row.sure}</Td>
-                      <Td className="font-body text-sm leading-normal text-text-2">{row.fix}</Td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
-
-          {/* Part 3 */}
-          <section className="flex flex-col gap-4 border-t border-rule px-5 pt-8 pb-10 md:px-10">
             <PartTitle>See how your habits change</PartTitle>
             <p className="font-body text-[15px] leading-normal text-text-2">
               12 months of sessions across claude.ai, Claude Code, Codex, Cursor and ChatGPT.
@@ -387,6 +312,81 @@ export function SampleReport() {
               </table>
             </div>
             <p className="font-body text-[13px] text-text-3">“Not measured” means there’s no data yet.</p>
+          </section>
+
+          {/* Part 2 */}
+          <section className="flex flex-col gap-4 border-t border-rule px-5 pt-8 pb-9 md:px-10">
+            <PartTitle>Improve your prompts and context</PartTitle>
+            <p className="font-body text-[15px] leading-normal text-text-2">
+              Most <Term name="corrections">corrections</Term> start at the first message. Fix the brief and stop retyping rules to cut about a
+              third of them.
+            </p>
+            <ol className="flex flex-col gap-4">
+              {patterns.map((p, i) => (
+                <li
+                  key={p.title}
+                  className={`flex flex-col gap-5 border-b border-rule last:border-b-0 md:px-7 ${p.expanded ? "pb-7" : "pb-[18px]"}`}
+                >
+                  <div className="flex items-center gap-3.5">
+                    <Rank n={i + 1} />
+                    <div className="flex min-w-0 flex-1 flex-col gap-1">
+                      <h4 className="font-display text-[19px] font-bold tracking-[-0.3px] text-ink">{p.title}</h4>
+                      {!p.expanded && <p className="font-body text-sm text-text-3">{p.next}</p>}
+                    </div>
+                    <span className="hidden font-body text-[13px] text-text-3 lg:inline">{p.tools}</span>
+                    <span className="hidden sm:inline-flex">
+                      <Pill variant={confidenceVariant[p.confidence]}>{p.confidence}</Pill>
+                    </span>
+                    {p.expanded ? (
+                      <ChevronUp size={20} className="shrink-0 text-text-2" aria-hidden="true" />
+                    ) : (
+                      <ChevronDown size={20} className="shrink-0 text-text-2" aria-hidden="true" />
+                    )}
+                  </div>
+                  {p.expanded && <ExpandedPattern />}
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          {/* Part 3 */}
+          <section className="flex flex-col gap-4 border-t border-rule px-5 pt-8 pb-10 md:px-10">
+            <PartTitle>Keep your skills current</PartTitle>
+            <p className="font-body text-[15px] leading-normal text-text-2">
+              Two of your seven skills give wrong information, and none has a test.
+            </p>
+            <p className="font-body text-[13px] text-text-3">
+              Scanned Oct 21. 7 skills you wrote: 2 stale, 2 to review, 1 minor, 2 current. 17 installed: 2
+              behind their source, 1 broken, 1 duplicate.
+            </p>
+            <SubTitle>Fix first</SubTitle>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[720px]">
+                <thead>
+                  <tr className="border-b border-rule">
+                    <Th>ISSUE</Th>
+                    <Th className="w-[216px]">IMPACT</Th>
+                    <Th className="w-[126px]">HOW SURE</Th>
+                    <Th className="w-[200px]">FIX</Th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {fixFirst.map((row) => (
+                    <tr key={row.issue} className="border-b border-rule">
+                      <Td className="font-body text-[15px] leading-normal font-medium text-ink">{row.issue}</Td>
+                      <Td>
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-body text-[15px] leading-[1.45] text-ink">{row.impact.main}</span>
+                          <span className="font-body text-[13px] leading-[1.45] text-text-3">{row.impact.sub}</span>
+                        </div>
+                      </Td>
+                      <Td className="font-body text-sm leading-normal text-text-2">{row.sure}</Td>
+                      <Td className="font-body text-sm leading-normal text-text-2">{row.fix}</Td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </section>
         </article>
       </Container>

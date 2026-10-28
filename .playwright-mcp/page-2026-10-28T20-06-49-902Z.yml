@@ -1,0 +1,678 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e4]:
+        - link "second look" [ref=e5] [cursor=pointer]:
+          - /url: "#"
+          - img "second look" [ref=e6]
+        - heading "Learn from the way you work with AI" [level=1] [ref=e10]
+    - paragraph [ref=e11]:
+      - text: "You set up work far better than a year ago: about half your sessions now"
+      - generic [ref=e12]: start with a real brief
+      - text: ", up from one in five, and"
+      - generic [ref=e13]: corrections
+      - text: fell by nearly half. Two things slipped in the last six weeks.
+      - generic [ref=e14]: Output checking
+      - text: on prototypes dropped, and
+      - generic [ref=e15]: restarts
+      - text: are back up since the Streak redesign started.
+    - region [ref=e16]:
+      - generic [ref=e17]:
+        - heading "This cycle at a glance" [level=2] [ref=e18]
+        - generic [ref=e19]: Comparing Oct 12鈥�25 to Sep 28 鈥� Oct 11, 2026
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - generic [ref=e22]: Sessions
+          - generic [ref=e23]: "94"
+          - generic [ref=e24]: "+6"
+          - generic [ref=e25]: How much you leaned on AI. Read the other numbers against it.
+        - generic [ref=e26]:
+          - generic [ref=e27]: Briefed starts
+          - generic [ref=e29]: 54%
+          - generic [ref=e30]: +6 pts
+          - generic [ref=e31]: Sessions that open with the goal, context and what done looks like.
+        - generic [ref=e32]:
+          - generic [ref=e33]: Corrections
+          - generic [ref=e35]: "1.1"
+          - generic [ref=e36]: 鈭�0.3
+          - generic [ref=e37]: Per 10 messages. Each "no, I meant鈥�" is a misunderstanding you paid for in time.
+        - generic [ref=e38]:
+          - generic [ref=e39]: Restarts
+          - generic [ref=e41]: "11"
+          - generic [ref=e42]: "+5"
+          - generic [ref=e43]: Starting over on a task. Usually the first brief missed something.
+        - generic [ref=e44]:
+          - generic [ref=e45]: Rules retyped
+          - generic [ref=e47]: "17"
+          - generic [ref=e48]: "+3"
+          - generic [ref=e49]: Preferences typed by hand that belong in a config file.
+        - generic [ref=e50]:
+          - generic [ref=e51]: Long-session share
+          - generic [ref=e53]: 62%
+          - generic [ref=e54]: +9 pts
+          - generic [ref=e55]: Usage from sessions past 150k tokens. Every request there re-reads a long history.
+    - generic [ref=e56]:
+      - generic [ref=e57]:
+        - heading "How your behavior is changing" [level=2] [ref=e58]
+        - generic [ref=e59]: 12 months of sessions across claude.ai, Claude Code, Codex, Cursor and ChatGPT
+      - generic [ref=e61]:
+        - heading "Did last cycle's fixes work?" [level=3] [ref=e63]
+        - table [ref=e65]:
+          - rowgroup [ref=e66]:
+            - row [ref=e67]:
+              - columnheader "Experiment" [ref=e68]
+              - columnheader "Tried?" [ref=e69]
+              - columnheader "Habit changed?" [ref=e70]
+              - columnheader "Work got better?" [ref=e71]
+              - columnheader "Costs" [ref=e72]
+              - columnheader "Decision" [ref=e73]
+          - rowgroup [ref=e74]:
+            - row [ref=e75]:
+              - cell "Add \"ask clarifying questions first\" to CLAUDE.md" [ref=e76]
+              - cell "Yes" [ref=e77]
+              - cell "Corrections fell from 24 to 19 Cause unclear You did more writing this cycle, which needs fewer corrections anyway." [ref=e78]:
+                - text: Corrections fell from 24 to 19
+                - generic [ref=e79]: Cause unclear
+                - generic [ref=e80]: You did more writing this cycle, which needs fewer corrections anyway.
+              - cell "Not measured" [ref=e81]
+              - cell "Maybe slower starts on simple tasks. Not checked." [ref=e83]
+              - cell "Keep Rate the results next time" [ref=e84]:
+                - text: Keep
+                - generic [ref=e85]: Rate the results next time
+            - row [ref=e86]:
+              - cell "Research in a subagent for API comparisons" [ref=e87]
+              - cell "Yes" [ref=e88]
+              - cell "Compactions per session fell from 4 to 2 Cause unclear" [ref=e89]:
+                - text: Compactions per session fell from 4 to 2
+                - generic [ref=e90]: Cause unclear
+              - cell "Not measured Did the comparisons miss anything?" [ref=e91]:
+                - generic [ref=e92]: Not measured
+                - generic [ref=e93]: Did the comparisons miss anything?
+              - cell "None observed" [ref=e94]
+              - cell "Keep Ask at the next review" [ref=e95]:
+                - text: Keep
+                - generic [ref=e96]: Ask at the next review
+            - row [ref=e97]:
+              - cell "Write a one-page prototype brief template" [ref=e98]
+              - cell "No" [ref=e99]
+              - cell "鈥�" [ref=e100]
+              - cell "鈥�" [ref=e101]
+              - cell "鈥�" [ref=e102]
+              - cell "Revise Now the brief template in this cycle's plan" [ref=e103]:
+                - text: Revise
+                - generic [ref=e104]: Now the brief template in this cycle's plan
+        - paragraph [ref=e105]: "\"Not measured\" means there's no data yet."
+      - generic [ref=e106]:
+        - generic [ref=e107]:
+          - heading "Habits over the last year" [level=3] [ref=e108]
+          - generic [ref=e109]: Last 12 months
+        - group "Filter the charts" [ref=e110]:
+          - group "Time range" [ref=e111]:
+            - generic [ref=e112]: Time
+            - button "4 weeks" [ref=e113] [cursor=pointer]
+            - button "3 months" [ref=e114] [cursor=pointer]
+            - button "6 months" [ref=e115] [cursor=pointer]
+            - button "12 months" [pressed] [ref=e116] [cursor=pointer]
+          - group "Source" [ref=e117]:
+            - button "All" [pressed] [ref=e119] [cursor=pointer]
+            - button "claude.ai" [ref=e120] [cursor=pointer]
+            - button "Claude Code" [ref=e121] [cursor=pointer]
+            - button "Codex" [ref=e122] [cursor=pointer]
+            - button "Cursor" [ref=e123] [cursor=pointer]
+            - button "ChatGPT" [ref=e124] [cursor=pointer]
+          - generic [ref=e125]:
+            - generic [ref=e126]: Work
+            - combobox "Work" [ref=e127]:
+              - option "All work" [selected]
+              - option "Prototyping"
+              - option "Creating"
+              - option "Research"
+              - option "Brainstorming"
+              - option "Career"
+              - option "Consultation"
+          - generic [ref=e128]: 1,148 sessions
+        - generic [ref=e129]:
+          - generic [ref=e130]: Each week
+          - generic [ref=e132]: 4-week average
+          - generic [ref=e134]: Latest week
+          - generic [ref=e136]: "Milestones: Mar, first skill 路 Jul, global CLAUDE.md 路 Sep, Streak redesign"
+        - generic [ref=e138]:
+          - generic [ref=e139]:
+            - generic [ref=e140]:
+              - heading "Briefed starts" [level=3] [ref=e141]
+              - generic [ref=e142]: 50% now 路 +33 pts vs start of range
+            - paragraph [ref=e143]: Sessions whose first message gives the goal, the context and what done looks like. Higher means fewer detours.
+            - img "Briefed starts, 50% over the last 4 weeks" [ref=e144]:
+              - generic [ref=e145]: 0%
+              - generic [ref=e146]: 40%
+              - generic [ref=e147]: 80%
+              - generic [ref=e148]: Jan
+              - generic [ref=e149]: Apr
+              - generic [ref=e150]: Jul
+              - generic [ref=e151]: Oct
+          - generic [ref=e156]:
+            - generic [ref=e157]:
+              - heading "Corrections per 10 messages" [level=3] [ref=e158]
+              - generic [ref=e159]: 1.2 now 路 鈭�0.7 vs start of range
+            - paragraph [ref=e160]: How often you had to say 鈥渘o, I meant鈥︹€�. Each one is a misunderstanding you paid for in time.
+            - img "Corrections per 10 messages, 1.2 over the last 4 weeks" [ref=e161]:
+              - generic [ref=e162]: "0.0"
+              - generic [ref=e163]: "2.0"
+              - generic [ref=e164]: "4.0"
+              - generic [ref=e165]: Jan
+              - generic [ref=e166]: Apr
+              - generic [ref=e167]: Jul
+              - generic [ref=e168]: Oct
+          - generic [ref=e173]:
+            - generic [ref=e174]:
+              - heading "Output checking" [level=3] [ref=e175]
+              - generic [ref=e176]: 28% now 路 +11 pts vs start of range
+            - paragraph [ref=e177]: Build and research sessions where you asked for sources, edge cases or a critique before accepting. It drops when output looks polished.
+            - img "Output checking, 28% over the last 4 weeks" [ref=e178]:
+              - generic [ref=e179]: 0%
+              - generic [ref=e180]: 40%
+              - generic [ref=e181]: 80%
+              - generic [ref=e182]: Jan
+              - generic [ref=e183]: Apr
+              - generic [ref=e184]: Jul
+              - generic [ref=e185]: Oct
+          - generic [ref=e190]:
+            - generic [ref=e191]:
+              - heading "Restarts" [level=3] [ref=e192]
+              - generic [ref=e193]: 14% now 路 +6 pts vs start of range
+            - paragraph [ref=e194]: Sessions that start over on a task you began in the last 2 days. Usually the first brief was missing something.
+            - img "Restarts, 14% over the last 4 weeks" [ref=e195]:
+              - generic [ref=e196]: 0%
+              - generic [ref=e197]: 20%
+              - generic [ref=e198]: 40%
+              - generic [ref=e199]: Jan
+              - generic [ref=e200]: Apr
+              - generic [ref=e201]: Jul
+              - generic [ref=e202]: Oct
+        - group [ref=e207]:
+          - generic "More metrics Volume, skill use, rules retyped, refinement" [ref=e208] [cursor=pointer]:
+            - generic [ref=e211]:
+              - generic [ref=e212]: More metrics
+              - generic [ref=e213]: Volume, skill use, rules retyped, refinement
+        - generic [ref=e214]:
+          - generic [ref=e215]:
+            - heading "What you used AI for" [level=3] [ref=e216]
+            - paragraph [ref=e217]: Share of sessions by kind of work, labeled from each session's opening message. Click a row to filter the charts.
+            - generic [ref=e218]:
+              - button "Consultation 24%" [ref=e219] [cursor=pointer]:
+                - generic [ref=e220]: Consultation
+                - generic [ref=e223]: 24%
+              - button "Prototyping 22%" [ref=e224] [cursor=pointer]:
+                - generic [ref=e225]: Prototyping
+                - generic [ref=e228]: 22%
+              - button "Creating 19%" [ref=e229] [cursor=pointer]:
+                - generic [ref=e230]: Creating
+                - generic [ref=e233]: 19%
+              - button "Research 17%" [ref=e234] [cursor=pointer]:
+                - generic [ref=e235]: Research
+                - generic [ref=e238]: 17%
+              - button "Brainstorming 13%" [ref=e239] [cursor=pointer]:
+                - generic [ref=e240]: Brainstorming
+                - generic [ref=e243]: 13%
+              - button "Career 5%" [ref=e244] [cursor=pointer]:
+                - generic [ref=e245]: Career
+                - generic [ref=e248]: 5%
+          - generic [ref=e249]:
+            - heading "Where you worked" [level=3] [ref=e250]
+            - paragraph [ref=e251]: Share of sessions by tool for the current filters.
+            - generic [ref=e252]:
+              - generic [ref=e253]:
+                - generic [ref=e254]: claude.ai
+                - generic [ref=e257]: 64%
+              - generic [ref=e258]:
+                - generic [ref=e259]: ChatGPT
+                - generic [ref=e262]: 19%
+              - generic [ref=e263]:
+                - generic [ref=e264]: Claude Code
+                - generic [ref=e267]: 7%
+              - generic [ref=e268]:
+                - generic [ref=e269]: Cursor
+                - generic [ref=e272]: 6%
+              - generic [ref=e273]:
+                - generic [ref=e274]: Codex
+                - generic [ref=e277]: 4%
+        - paragraph [ref=e278]: Consultation is your biggest kind of work in this view (24% of sessions). Prototyping has your lowest briefed-start rate at 34%. It also has the least output checking (31%).
+        - group [ref=e279]:
+          - generic "How each product's use is changing First 4 weeks with data vs the last 4, per product" [ref=e280] [cursor=pointer]:
+            - generic [ref=e283]:
+              - generic [ref=e284]: How each product's use is changing
+              - generic [ref=e285]: First 4 weeks with data vs the last 4, per product
+          - generic [ref=e286]:
+            - paragraph [ref=e287]: "Biggest shift: career went from 3% to 12% of your claude.ai sessions. You brief best in claude.ai (55%) and least in Cursor (27%)."
+            - table [ref=e289]:
+              - rowgroup [ref=e290]:
+                - row [ref=e291]:
+                  - columnheader "Product" [ref=e292]
+                  - columnheader "Sessions" [ref=e293]
+                  - columnheader "Main uses now (change)" [ref=e294]
+                  - columnheader "Briefed starts" [ref=e295]
+                  - columnheader "Corrections / 10" [ref=e296]
+                  - columnheader "Output checking" [ref=e297]
+                  - columnheader "Restarts" [ref=e298]
+              - rowgroup [ref=e299]:
+                - row [ref=e300]:
+                  - cell "claude.ai" [ref=e301]
+                  - cell "731" [ref=e302]
+                  - cell "Creating 23% 路 Consultation 21% 路 Research 19% (鈭�6)" [ref=e303]
+                  - cell "55% (+32)" [ref=e304]
+                  - cell "0.9 (鈭�1.0)" [ref=e305]
+                  - cell "44% (+20)" [ref=e306]
+                  - cell "9% (+7)" [ref=e307]
+                - row [ref=e308]:
+                  - cell "Claude Code Data since Sep 21; too new to compare" [ref=e309]: Claude CodeData since Sep 21; too new to compare
+                  - cell "76" [ref=e310]
+                  - cell "Prototyping 72% 路 Creating 13% 路 Career 11%" [ref=e311]
+                  - cell "46%" [ref=e312]
+                  - cell "1.3" [ref=e313]
+                  - cell "22%" [ref=e314]
+                  - cell "16%" [ref=e315]
+                - row [ref=e316]:
+                  - cell "Codex Too few early sessions to compare" [ref=e317]: CodexToo few early sessions to compare
+                  - cell "50" [ref=e318]
+                  - cell "Prototyping 100%" [ref=e319]
+                  - cell "45%" [ref=e320]
+                  - cell "1.5" [ref=e321]
+                  - cell "18%" [ref=e322]
+                  - cell "27%" [ref=e323]
+                - row [ref=e324]:
+                  - cell "Cursor Too few early sessions to compare" [ref=e325]: CursorToo few early sessions to compare
+                  - cell "72" [ref=e326]
+                  - cell "Prototyping 100%" [ref=e327]
+                  - cell "27%" [ref=e328]
+                  - cell "1.5" [ref=e329]
+                  - cell "9%" [ref=e330]
+                  - cell "18%" [ref=e331]
+                - row [ref=e332]:
+                  - cell "ChatGPT Only 4 sessions in the last 4 weeks; too few to read" [ref=e333]: ChatGPTOnly 4 sessions in the last 4 weeks; too few to read
+                  - cell "219" [ref=e334]
+                  - cell "鈥�" [ref=e335]
+                  - cell "鈥�" [ref=e336]
+                  - cell "鈥�" [ref=e337]
+                  - cell "鈥�" [ref=e338]
+                  - cell "鈥�" [ref=e339]
+            - paragraph [ref=e340]: Each cell shows the last 4 weeks, with the change from that product's first 4 weeks in range in parentheses. Uses ignore the Work filter so the mix stays complete; habits follow it. Numbers need at least 10 sessions in a 4-week window; products below that, or with under 8 weeks of data, say so instead.
+        - group [ref=e341]:
+          - generic "Habits by kind of work Where you brief, check and restart differently" [ref=e342] [cursor=pointer]:
+            - generic [ref=e345]:
+              - generic [ref=e346]: Habits by kind of work
+              - generic [ref=e347]: Where you brief, check and restart differently
+        - group [ref=e348]:
+          - generic "Start vs end of range First 4 weeks of the range compared with the last 4" [ref=e349] [cursor=pointer]:
+            - generic [ref=e352]:
+              - generic [ref=e353]: Start vs end of range
+              - generic [ref=e354]: First 4 weeks of the range compared with the last 4
+        - group [ref=e355]:
+          - generic "How these are measured Data coverage, gaps and labeling Gap" [ref=e356] [cursor=pointer]:
+            - generic [ref=e359]:
+              - generic [ref=e360]: How these are measured
+              - generic [ref=e361]: Data coverage, gaps and labeling
+            - generic [ref=e362]: Gap
+      - generic [ref=e364]:
+        - generic [ref=e365]:
+          - heading "Usage this cycle" [level=3] [ref=e366]
+          - generic [ref=e367]: Oct 12鈥�25
+        - paragraph [ref=e368]: You hit 1 usage limit this cycle. A full breakdown of where your usage went appears here once you hit 3 or more in a cycle.
+        - group [ref=e369]:
+          - generic "By tool Claude Code carried most of the build work; claude.ai most of the thinking." [ref=e370] [cursor=pointer]:
+            - generic [ref=e373]:
+              - generic [ref=e374]: By tool
+              - generic [ref=e375]: Claude Code carried most of the build work; claude.ai most of the thinking.
+        - group [ref=e376]:
+          - generic "Skills and commands 5 used 路 2 unused for 30+ days" [ref=e377] [cursor=pointer]:
+            - generic [ref=e380]:
+              - generic [ref=e381]: Skills and commands
+              - generic [ref=e382]: 5 used 路 2 unused for 30+ days
+        - group [ref=e383]:
+          - generic "Try next 2 features that fit how you worked these two weeks" [ref=e384] [cursor=pointer]:
+            - generic [ref=e387]:
+              - generic [ref=e388]: Try next
+              - generic [ref=e389]: 2 features that fit how you worked these two weeks
+    - generic [ref=e390]:
+      - generic [ref=e391]:
+        - heading "Improve your prompts and context" [level=2] [ref=e392]
+        - paragraph [ref=e393]:
+          - text: Most
+          - generic [ref=e394]: corrections
+          - text: trace back to how a session starts. Fix the
+          - generic [ref=e395]: opening brief
+          - text: and stop
+          - generic [ref=e396]: retyping the same rules
+          - text: ", and about a third of your corrections should go away."
+      - article [ref=e397]:
+        - generic [ref=e398]:
+          - generic [ref=e399]: "1"
+          - generic [ref=e400]:
+            - heading "You retype the same rules in every tool" [level=3] [ref=e401]
+            - generic [ref=e402]:
+              - generic [ref=e403]: Claude Code 路 Codex 路 Cursor
+              - generic [ref=e404]: Clear pattern
+        - generic [ref=e405]:
+          - definition [ref=e406]: You type the same formatting preferences by hand, because only some of your tools have them saved.
+          - term [ref=e407]: Evidence
+          - definition [ref=e408]: "Oct 12鈥�25: \"tables for comparisons, skip filler openers\" showed up in 9 of 94 sessions across Claude Code, Codex and Cursor. Codex is missing 4 of your ai-context.md rules, Cursor 2. Claude Code is in sync."
+          - term [ref=e409]: Why it matters
+          - definition [ref=e410]: Retyping costs time every session, and tools without the rules give you inconsistent output.
+        - group [ref=e411]:
+          - generic "Which tools have which rules" [ref=e412] [cursor=pointer]
+        - region "What to try" [ref=e416]:
+          - generic [ref=e417]: Likely to help
+          - 'heading "Try this: sync your standing rules to every tool" [level=4] [ref=e419]'
+          - paragraph [ref=e420]: Add the four lines below to ai-context.md, then paste them into Codex's AGENTS.md and your Cursor rules.
+          - generic [ref=e421]:
+            - generic [ref=e422]:
+              - generic [ref=e423]: Add to ai-context.md
+              - button "Copy" [ref=e424] [cursor=pointer]
+            - generic [ref=e425]: "## Output style - Start with the answer. No filler openers. - Tables for any comparison or tradeoff. - Short sentences. Prose by default. - Ask clarifying questions before large tasks."
+      - article [ref=e426]:
+        - generic [ref=e427]:
+          - generic [ref=e428]: "2"
+          - generic [ref=e429]:
+            - heading "Prototype chats start vague, then restart" [level=3] [ref=e430]
+            - generic [ref=e431]:
+              - generic [ref=e432]: Claude Code 路 Cursor 路 claude.ai
+              - generic [ref=e433]: Likely pattern
+        - generic [ref=e434]:
+          - definition [ref=e435]: Your first message names what to build, but not who it's for or what done looks like. You fill in the gaps over the next few turns, and sometimes start a new chat.
+          - term [ref=e436]: Evidence
+          - definition [ref=e437]:
+            - text: "Oct 12鈥�25: 4 of 11"
+            - generic [ref=e438]: restarts
+            - text: "were prototypes, including 4 new Streak settings-screen chats in 2 days. 35% of prototype sessions opened with a brief, vs 58% across claude.ai. Cursor: 12%. Claude Code: 48%."
+          - term [ref=e439]: Why it matters
+          - definition [ref=e440]: Each restart repeats setup, and without a definition of done it's hard to tell when a prototype is finished.
+        - group [ref=e441]:
+          - generic "Example and limits" [ref=e442] [cursor=pointer]
+        - region "What to try" [ref=e446]:
+          - generic [ref=e447]: Might help
+          - 'heading "Try this: brief before big prototype tasks" [level=4] [ref=e449]'
+          - paragraph [ref=e450]:
+            - text: Before a prototype session you expect to run past 15 minutes, write the goal, the user, what done means and the constraints. A
+            - code [ref=e451]: /brief
+            - text: skill can prompt you. Skip it for quick fixes. If you're exploring and don't know done yet, just say "exploring."
+          - generic [ref=e452]:
+            - generic [ref=e453]:
+              - generic [ref=e454]: Brief template
+              - button "Copy" [ref=e455] [cursor=pointer]
+            - generic [ref=e456]: "Goal: [what this prototype should let someone do] User: [who uses it] Done when: [what you'll check to call it finished] Constraints: [stack, scope, what not to touch] Before building, list up to 3 questions you need answered."
+      - article [ref=e457]:
+        - generic [ref=e458]:
+          - generic [ref=e459]: "3"
+          - generic [ref=e460]:
+            - heading "Finished-looking prototypes get waved through" [level=3] [ref=e461]
+            - generic [ref=e462]:
+              - generic [ref=e463]: Claude Code 路 claude.ai
+              - generic [ref=e464]: Unconfirmed
+        - generic [ref=e465]:
+          - definition [ref=e466]: When a prototype looks done, you tend to accept it without asking for edge cases, a critique or a test. You push back on text answers far more.
+          - term [ref=e467]: Evidence
+          - definition [ref=e468]: 3 prototypes went into the Streak beta with "perfect, ship it" as the last message. Checking in prototype sessions fell from 46% to 18% once the redesign started. You challenge text-only answers 2.4脳 as often.
+          - term [ref=e469]: Why it matters
+          - definition [ref=e470]: Beta testers use what you ship. A broken interaction there costs more than one in a sketch.
+        - region "What to try" [ref=e471]:
+          - generic [ref=e472]: Worth testing
+          - 'heading "Try this: check beta work before it ships" [level=4] [ref=e474]'
+          - paragraph [ref=e475]: "Only for work others will see: run your review checklist, or ask \"What are the 3 most likely ways this breaks for a real user, and what did you assume that I didn't tell you?\" Skip it for internal or throwaway work."
+          - group [ref=e476]:
+            - generic "How much to check, by type of work" [ref=e477] [cursor=pointer]
+      - article [ref=e481]:
+        - generic [ref=e482]:
+          - generic [ref=e483]: "4"
+          - generic [ref=e484]:
+            - heading "Long sessions drift between projects and take most of your usage" [level=3] [ref=e485]
+            - generic [ref=e486]:
+              - generic [ref=e487]: Claude Code 路 Codex
+              - generic [ref=e488]: Likely pattern
+        - generic [ref=e489]:
+          - definition [ref=e490]:
+            - text: Some sessions jump between projects without clearing context. Every request in a
+            - generic [ref=e491]: long session
+            - text: re-reads all the history before it, including files from the earlier project.
+          - term [ref=e492]: Evidence
+          - definition [ref=e493]: 9 of 41 Claude Code and Codex sessions ran past 150k tokens and took 62% of your usage. A request in them used 2.6脳 your typical one. 2 of them ran 60+ turns across the onboarding flow, a Streak sync bug and a pricing page, with 5 automatic compactions.
+          - term [ref=e494]: Why it matters
+          - definition [ref=e495]: Old context can steer the new task, compaction summaries drop detail, and long sessions are where your usage goes. You hit 1 usage limit this cycle.
+        - region "What to try" [ref=e496]:
+          - 'heading "Not this cycle: start fresh between projects" [level=4] [ref=e497]'
+          - paragraph [ref=e498]:
+            - text: When you switch projects or finish a piece of work, run
+            - code [ref=e499]: /clear
+            - text: or start a new session from a five-line handoff. The glance's long-session share will show whether it works. Left out of this cycle so you're only testing three things at once.
+      - generic [ref=e500]:
+        - generic [ref=e501]:
+          - heading "Compare the fixes" [level=3] [ref=e502]
+          - generic [ref=e503]: Three make this cycle's plan. Treat each one as a test.
+        - table [ref=e505]:
+          - rowgroup [ref=e506]:
+            - row [ref=e507]:
+              - columnheader "Fix" [ref=e508]
+              - columnheader "Will it help?" [ref=e509]
+              - columnheader "Effort" [ref=e510]
+              - columnheader "Risk" [ref=e511]
+          - rowgroup [ref=e512]:
+            - row [ref=e513]:
+              - cell [ref=e514]:
+                - link "Sync your standing rules to every tool" [ref=e515] [cursor=pointer]:
+                  - /url: "#try-rules"
+                - 'link "Go to pattern 1: You retype the same rules in every tool" [ref=e516] [cursor=pointer]':
+                  - /url: "#p-rules"
+                  - text: From pattern 1 鈫�
+              - cell "Likely" [ref=e517]
+              - cell "5 min, once" [ref=e518]
+              - cell "Low" [ref=e519]
+            - row [ref=e520]:
+              - cell [ref=e521]:
+                - link "Brief before big prototype tasks" [ref=e522] [cursor=pointer]:
+                  - /url: "#try-brief"
+                - 'link "Go to pattern 2: Prototype chats start vague, then restart" [ref=e523] [cursor=pointer]':
+                  - /url: "#p-brief"
+                  - text: From pattern 2 鈫�
+              - cell "Possibly" [ref=e524]
+              - cell "~1 min per session" [ref=e525]
+              - cell "Low" [ref=e526]
+            - row [ref=e527]:
+              - cell [ref=e528]:
+                - link "Check beta work before it ships" [ref=e529] [cursor=pointer]:
+                  - /url: "#try-trust"
+                - 'link "Go to pattern 3: Finished-looking prototypes get waved through" [ref=e530] [cursor=pointer]':
+                  - /url: "#p-trust"
+                  - text: From pattern 3 鈫�
+              - cell "Unproven" [ref=e531]
+              - cell "~5 min per piece" [ref=e532]
+              - cell "Low" [ref=e533]
+            - row [ref=e534]:
+              - 'cell "Clear context between projects Not in this cycle''s plan Go to pattern 4: Long sessions drift between projects and take most of your usage" [ref=e535]':
+                - link "Clear context between projects" [ref=e536] [cursor=pointer]:
+                  - /url: "#try-long"
+                - generic [ref=e537]: Not in this cycle's plan
+                - 'link "Go to pattern 4: Long sessions drift between projects and take most of your usage" [ref=e538] [cursor=pointer]':
+                  - /url: "#p-long"
+                  - text: From pattern 4 鈫�
+              - cell "Possibly" [ref=e539]
+              - cell "Habit" [ref=e540]
+              - cell "Low" [ref=e541]
+      - region [ref=e542]:
+        - heading "Your plan until Nov 8" [level=3] [ref=e543]
+        - generic [ref=e544]:
+          - generic [ref=e545]:
+            - generic [ref=e546]: Sync your standing rules
+            - generic [ref=e547]: 5 minutes, once.
+          - generic [ref=e548]:
+            - generic [ref=e549]: Brief before big prototype tasks
+            - generic [ref=e550]: Every prototype session over 15 minutes.
+          - generic [ref=e551]:
+            - generic [ref=e552]: Check beta work before it ships
+            - generic [ref=e553]: Only on work others will see.
+        - paragraph [ref=e554]: That's it for this cycle. Everything else waits until we see how these go.
+      - group [ref=e555]:
+        - generic "What the Nov 8 review will check What you do, what happens to the work, and whether it sticks" [ref=e556] [cursor=pointer]:
+          - generic [ref=e559]:
+            - generic [ref=e560]: What the Nov 8 review will check
+            - generic [ref=e561]: What you do, what happens to the work, and whether it sticks
+    - generic [ref=e562]:
+      - generic [ref=e563]:
+        - heading "Keep your skills current" [level=2] [ref=e564]
+        - paragraph [ref=e565]: Two of your seven skills give wrong information today, and none has a test, so the next model update could break one without you noticing.
+        - generic [ref=e567]:
+          - text: "Scanned Oct 21: 7 skills you wrote, 17 you installed. Couldn't read"
+          - code [ref=e568]: ~/.claude/skills
+          - text: from here.
+      - generic [ref=e569]:
+        - generic [ref=e570]:
+          - heading "Skills you wrote" [level=3] [ref=e571]
+          - generic [ref=e572]: Where each one stands
+        - table [ref=e574]:
+          - rowgroup [ref=e575]:
+            - row [ref=e576]:
+              - columnheader "Skill" [ref=e577]
+              - columnheader "Where" [ref=e578]
+              - columnheader "Status" [ref=e579]
+              - columnheader "What's out of date" [ref=e580]
+          - rowgroup [ref=e581]:
+            - row [ref=e582]:
+              - cell "release-notes" [ref=e583]
+              - cell "claude.ai" [ref=e584]
+              - cell "Stale" [ref=e585]
+              - cell "Pricing tiers, description, no tests" [ref=e586]
+            - row [ref=e587]:
+              - cell "pr-review" [ref=e588]
+              - cell "~/.agents" [ref=e589]
+              - cell "Stale" [ref=e590]
+              - cell "Tooling table names the wrong agent" [ref=e591]
+            - row [ref=e592]:
+              - cell "user-interview-synth" [ref=e593]
+              - cell "claude.ai" [ref=e594]
+              - cell "Review" [ref=e595]
+              - cell "Team size, no tests" [ref=e596]
+            - row [ref=e597]:
+              - cell "design-review" [ref=e598]
+              - cell "claude.ai" [ref=e599]
+              - cell "Review" [ref=e600]
+              - cell "Tool list; loads too much at once" [ref=e601]
+            - row [ref=e602]:
+              - cell "critical-review" [ref=e603]
+              - cell "claude.ai" [ref=e604]
+              - cell "Minor" [ref=e605]
+              - cell "Checks math in prose" [ref=e606]
+            - row [ref=e607]:
+              - cell "explain-concept" [ref=e608]
+              - cell "claude.ai" [ref=e609]
+              - cell "Current" [ref=e610]
+              - cell "Nothing found" [ref=e611]
+            - row [ref=e612]:
+              - cell "design-workflow-to-agents" [ref=e613]
+              - cell "claude.ai" [ref=e614]
+              - cell "Current" [ref=e615]
+              - cell "Nothing found" [ref=e616]
+      - generic [ref=e617]:
+        - generic [ref=e618]:
+          - heading "Fix first" [level=3] [ref=e619]
+          - generic [ref=e620]: Broken today. Checked by reading each file.
+        - table [ref=e622]:
+          - rowgroup [ref=e623]:
+            - row [ref=e624]:
+              - columnheader "Issue" [ref=e625]
+              - columnheader "Impact" [ref=e626]
+              - columnheader "How sure" [ref=e627]
+              - columnheader "Fix" [ref=e628]
+          - rowgroup [ref=e629]:
+            - row [ref=e630]:
+              - cell "release-notes still lists last quarter's pricing tiers" [ref=e631]
+              - cell "High Its output goes into every changelog" [ref=e632]
+              - cell "Confirmed" [ref=e633]
+              - cell "5 min" [ref=e635]
+            - row [ref=e636]:
+              - cell "pr-review points agents at tools that don't exist, so they may skip rendering" [ref=e637]
+              - cell "High Blocks the beta check" [ref=e638]
+              - cell "Confirmed" [ref=e639]
+              - cell "5 min" [ref=e641]
+            - row [ref=e642]:
+              - cell "user-interview-synth says the team has 4 designers; your context file says 6" [ref=e643]
+              - cell "Medium" [ref=e644]
+              - cell "Confirmed" [ref=e645]
+              - cell "Fixed by the shared team file" [ref=e647]
+            - row [ref=e648]:
+              - cell "api-docs is installed twice; the claude.ai copy is older" [ref=e649]
+              - cell "Medium Two versions give different advice" [ref=e650]
+              - cell "Confirmed" [ref=e651]
+              - cell "Replace the old copy" [ref=e653]
+            - row [ref=e654]:
+              - cell "frontend-slides has no SKILL.md, so it never loads" [ref=e655]
+              - cell "Low" [ref=e656]
+              - cell "Confirmed" [ref=e657]
+              - cell "Reinstall or remove" [ref=e659]
+        - group [ref=e660]:
+          - generic "Fixes for the two big ones" [ref=e661] [cursor=pointer]
+      - generic [ref=e665]:
+        - generic [ref=e666]:
+          - heading "Worth a look" [level=3] [ref=e667]
+          - generic [ref=e668]: Not broken. Biggest first.
+        - table [ref=e670]:
+          - rowgroup [ref=e671]:
+            - row [ref=e672]:
+              - columnheader "Issue" [ref=e673]
+              - columnheader "Why it matters" [ref=e674]
+              - columnheader "How sure" [ref=e675]
+              - columnheader "Next step" [ref=e676]
+          - rowgroup [ref=e677]:
+            - row [ref=e678]:
+              - cell "14 skills and 2 plugins you haven't run in 60 days load into every Claude Code session" [ref=e679]
+              - cell "Every session starts at 54k tokens before you type. These add 1.9k of it, about 1% of your usage" [ref=e680]
+              - cell "Possible" [ref=e681]
+              - cell [ref=e683]:
+                - text: Add
+                - code [ref=e684]: "disable-model-invocation: true"
+                - text: to your own;
+                - code [ref=e685]: /skill-name
+                - text: still runs them. Turn the plugins off in
+                - code [ref=e686]: /plugin
+            - row [ref=e687]:
+              - cell "Your team details are copied into three skills" [ref=e688]
+              - cell "The copies already disagree" [ref=e689]
+              - cell "Clear" [ref=e690]
+              - cell "Move it into one shared file" [ref=e692]
+            - row [ref=e693]:
+              - cell "No skill has a test" [ref=e694]
+              - cell "A model update could quietly change how a skill behaves. Hasn't happened yet." [ref=e695]
+              - cell "Possible" [ref=e696]
+              - cell "Write 3鈥�5 test prompts for release-notes and design-review" [ref=e698]
+            - row [ref=e699]:
+              - cell "Your skills only live where Claude looks" [ref=e700]
+              - cell [ref=e701]:
+                - text: Codex and Cursor can run the same files, and the coach can't read
+                - code [ref=e702]: ~/.claude/skills
+              - cell "Clear" [ref=e703]
+              - cell [ref=e705]:
+                - text: Keep them in
+                - code [ref=e706]: ~/.agents/skills
+                - text: and link each tool to it
+            - row [ref=e707]:
+              - cell "humanizer and pdf-tools are out of date" [ref=e708]
+              - cell "Newer isn't always better. Skim the changelog." [ref=e709]
+              - cell "Possible" [ref=e710]
+              - cell "Update if the changes help" [ref=e712]
+            - row [ref=e713]:
+              - cell "design-review doesn't know about Claude Design, and loads all three platform guides every time" [ref=e714]
+              - cell "Misses a current tool and wastes context" [ref=e715]
+              - cell "Possible" [ref=e716]
+              - cell "Add Claude Design; split the guides into separate files" [ref=e718]
+        - paragraph [ref=e719]: "11 installed skills don't link to a source, so I couldn't check them for updates. Sources: Claude Code changelog; Anthropic on plugin evals (Sep 2026), skill-creator evals (Mar 2026) and Claude Design (Jun 2026); Codex and Cursor skills docs."
+      - group [ref=e720]:
+        - generic "Skills you installed from others 2 behind their source 路 1 broken 路 1 duplicate 路 2 current 路 11 not checked" [ref=e721] [cursor=pointer]:
+          - generic [ref=e724]:
+            - generic [ref=e725]: Skills you installed from others
+            - generic [ref=e726]: 2 behind their source 路 1 broken 路 1 duplicate 路 2 current 路 11 not checked
+    - generic [ref=e728]:
+      - heading "Report an issue" [level=2] [ref=e729]
+      - paragraph [ref=e730]:
+        - text: Spotted a wrong number, a broken chart or a finding that missed?
+        - link "Open an issue on GitHub" [ref=e731] [cursor=pointer]:
+          - /url: https://github.com/txz8096/second-look/issues/new
+        - text: . This report holds your real prompts, so leave them out of the issue.
+    - contentinfo [ref=e732]: "How this works: this page uses sample data to show what the review will look like on your real sessions (Claude Code, Codex and Cursor logs, plus claude.ai and ChatGPT history). Prompts are trimmed and secrets removed. Habits are read from wording; results come from your ratings each session. Built on Anthropic's AI Fluency Index, prompting guide, Claude Code best practices and Agent Skills docs."
+  - navigation "Sections" [ref=e733]:
+    - button "Table of contents" [ref=e734] [cursor=pointer]
