@@ -79,6 +79,8 @@ def main():
         problems.append("missing the Google Fonts link for Familjen Grotesk and IBM Plex Mono")
     if 'class="brand-logo"' not in html:
         problems.append("missing the second look logo in the header")
+    if 'rel="icon"' not in html:
+        problems.append("missing the favicon link from the template's <head>")
     for i in REQUIRED_IDS:
         if f'id="{i}"' not in html:
             problems.append(f'missing section id="{i}"')
