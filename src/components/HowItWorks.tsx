@@ -16,7 +16,7 @@ export function HowItWorks() {
           <Kicker>Every two weeks</Kicker>
           <SectionHeading>Review, plan, check back.</SectionHeading>
           <p className="font-body text-[17px] leading-[1.55] text-text-2">
-            After your first report, second look offers to run the review every two weeks for you, or at the cadence you
+            After your first report, Second Look offers to run the review every two weeks for you, or at the cadence you
             pick. Change it or turn it off any time by asking your assistant.
           </p>
         </div>

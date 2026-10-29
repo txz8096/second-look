@@ -159,9 +159,21 @@ function Th({ children, className = "" }: { children: ReactNode; className?: str
   );
 }
 
-function Td({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <td className={`py-3 pr-4 align-top last:pr-0 ${className}`}>{children}</td>;
+// Below md each row stacks into a block, and the label stands in for the hidden column header.
+function Td({ label, children, className = "" }: { label?: string; children: ReactNode; className?: string }) {
+  return (
+    <td className={`py-3 pr-4 align-top last:pr-0 max-md:flex max-md:flex-col max-md:gap-1 max-md:p-0 ${className}`}>
+      {label && (
+        <span className="font-body text-xs font-semibold tracking-[0.6px] text-text-3 md:hidden" aria-hidden="true">
+          {label}
+        </span>
+      )}
+      {children}
+    </td>
+  );
 }
+
+const stackedRow = "border-b border-rule max-md:flex max-md:flex-col max-md:gap-3 max-md:py-4";
 
 function ExpandedPattern() {
   return (
@@ -209,11 +221,11 @@ export function SampleReport() {
           {/* Summary */}
           <header className="flex flex-col gap-7 border-b border-rule px-5 pt-7 pb-8 md:px-10">
             <div className="flex flex-wrap items-center gap-3">
-              <p className="font-body text-sm text-text-2">Cycle review · Oct 12–25, 2026 · next review Nov 8</p>
+              <p className="font-body text-sm text-text-2">Cycle review · Oct 12–25, 2026 · next review {"Nov\u00a08"}</p>
               <Pill variant="neutral">Sample data</Pill>
             </div>
             <div className="flex flex-col gap-2.5">
-              <h3 className="font-display text-[32px] font-bold tracking-[-0.8px] text-ink">Your two-week review</h3>
+              <h3 className="font-display text-[32px] leading-[1.1] font-bold tracking-[-0.8px] text-ink">Your two-week review</h3>
               <p className="max-w-[820px] font-body text-base leading-normal text-text-2">
                 Your <Term name="briefedStarts">briefs</Term> got much better this year. Half your sessions now
                 start with one, up from one in five, and <Term name="corrections">corrections</Term> nearly halved.
@@ -272,8 +284,8 @@ export function SampleReport() {
 
             <SubTitle>Did last cycle’s fixes work?</SubTitle>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[1000px]">
-                <thead>
+              <table className="w-full md:min-w-[1000px]">
+                <thead className="max-md:sr-only">
                   <tr className="border-b border-rule">
                     <Th>EXPERIMENT</Th>
                     <Th className="w-[76px]">TRIED?</Th>
@@ -285,21 +297,21 @@ export function SampleReport() {
                 </thead>
                 <tbody>
                   {experiments.map((row) => (
-                    <tr key={row.name} className="border-b border-rule">
+                    <tr key={row.name} className={stackedRow}>
                       <Td className="font-body text-[15px] leading-[1.45] font-medium text-ink">{row.name}</Td>
-                      <Td>
+                      <Td label="TRIED?">
                         <CellText cell={row.tried} />
                       </Td>
-                      <Td>
+                      <Td label="HABIT CHANGED?">
                         <CellText cell={row.habit} />
                       </Td>
-                      <Td>
+                      <Td label="WORK GOT BETTER?">
                         <CellText cell={row.work} />
                       </Td>
-                      <Td>
+                      <Td label="COSTS">
                         <CellText cell={row.costs} />
                       </Td>
-                      <Td>
+                      <Td label="DECISION">
                         <CellText cell={row.decision} />
                       </Td>
                     </tr>
@@ -323,7 +335,7 @@ export function SampleReport() {
                   key={p.title}
                   className={`flex flex-col gap-5 border-b border-rule last:border-b-0 md:px-7 ${p.expanded ? "pb-7" : "pb-[18px]"}`}
                 >
-                  <div className="flex items-center gap-3.5">
+                  <div className="flex items-start gap-3.5 sm:items-center">
                     <Rank n={i + 1} />
                     <div className="flex min-w-0 flex-1 flex-col gap-1">
                       <h4 className="font-display text-[19px] font-bold tracking-[-0.3px] text-ink">{p.title}</h4>
@@ -357,8 +369,8 @@ export function SampleReport() {
             </p>
             <SubTitle>Fix first</SubTitle>
             <div className="overflow-x-auto">
-              <table className="w-full min-w-[720px]">
-                <thead>
+              <table className="w-full md:min-w-[720px]">
+                <thead className="max-md:sr-only">
                   <tr className="border-b border-rule">
                     <Th>ISSUE</Th>
                     <Th className="w-[216px]">IMPACT</Th>
@@ -368,16 +380,20 @@ export function SampleReport() {
                 </thead>
                 <tbody>
                   {fixFirst.map((row) => (
-                    <tr key={row.issue} className="border-b border-rule">
+                    <tr key={row.issue} className={stackedRow}>
                       <Td className="font-body text-[15px] leading-normal font-medium text-ink">{row.issue}</Td>
-                      <Td>
+                      <Td label="IMPACT">
                         <div className="flex flex-col gap-0.5">
                           <span className="font-body text-[15px] leading-[1.45] text-ink">{row.impact.main}</span>
                           <span className="font-body text-[13px] leading-[1.45] text-text-3">{row.impact.sub}</span>
                         </div>
                       </Td>
-                      <Td className="font-body text-sm leading-normal text-text-2">{row.sure}</Td>
-                      <Td className="font-body text-sm leading-normal text-text-2">{row.fix}</Td>
+                      <Td label="HOW SURE" className="font-body text-sm leading-normal text-text-2">
+                        {row.sure}
+                      </Td>
+                      <Td label="FIX" className="font-body text-sm leading-normal text-text-2">
+                        {row.fix}
+                      </Td>
                     </tr>
                   ))}
                 </tbody>

@@ -107,17 +107,16 @@ function AnnotatedTrace() {
           <CorrectionsPlot />
         </div>
 
-        <div className="grid grid-cols-3 gap-6 border-t border-rule pt-[18px]">
+        {/* Subgrid rows keep the values and sparklines level when a label wraps on phones. */}
+        <div className="grid grid-cols-3 gap-x-4 border-t border-rule pt-[18px] sm:gap-x-6">
           {signals.map((s, i) => (
-            <div key={s.label} className="flex flex-col gap-2">
-              <p className="font-mono text-xs text-text-3">
+            <div key={s.label} className="row-span-3 grid grid-rows-subgrid gap-2">
+              <p className="self-end font-mono text-xs text-text-3">
                 <Term name={s.term}>{s.label}</Term>
               </p>
-              <p className="flex items-end gap-1.5">
+              <p className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
                 <span className="font-display text-[22px] leading-none font-medium text-ink">{s.value}</span>
-                <span className="font-mono text-xs text-text-2">
-                  {s.delta}
-                </span>
+                <span className="font-mono text-xs whitespace-nowrap text-text-2">{s.delta}</span>
               </p>
               <Sparkline d={s.d} delay={PLOT_IN + 400 + i * 80} />
             </div>

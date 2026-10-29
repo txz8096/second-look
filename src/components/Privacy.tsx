@@ -45,12 +45,12 @@ export function Privacy() {
           <Kicker>Privacy</Kicker>
           <SectionHeading>What it reads, and where it goes.</SectionHeading>
           <p className="font-body text-[17px] leading-[1.55] text-text-2">
-            second look has no server and no account. Nothing about your sessions is sent to us.
+            Second Look has no server and no account. Nothing about your sessions is sent to us.
           </p>
         </div>
 
         <div className="flex flex-col gap-4">
-          <ol className="flex flex-col items-stretch gap-3 lg:flex-row lg:items-center lg:gap-4">
+          <ol className="flex flex-col items-stretch gap-3 lg:flex-row lg:gap-4">
             {flow.map((step, i) => (
               <Fragment key={step.title}>
                 <li className="flex flex-1 flex-col gap-2.5 rounded-[10px] bg-surface p-[22px] outline outline-1 -outline-offset-1 outline-rule">

@@ -66,7 +66,7 @@ export function Approach() {
                     onClick={() => setOpen(isOpen ? -1 : i)}
                     className="group flex w-full items-center gap-6 text-left"
                   >
-                    <span className={`font-mono text-[13px] ${isOpen ? "text-accent" : "text-text-3"}`}>
+                    <span className={`w-5 shrink-0 font-mono text-[13px] ${isOpen ? "text-accent" : "text-text-3"}`}>
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span

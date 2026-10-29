@@ -10,7 +10,7 @@ const faqs: Faq[] = [
   },
   {
     q: "Which AI apps does it support?",
-    a: "Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is read directly but can’t start a review, so start one from another tool on the same computer. claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they count up to the day you export. Gemini’s export has no conversation boundaries, so its sessions are grouped by time and its numbers are estimates. Antigravity support is new and built on an undocumented file format, so a release that changes it can hide your sessions until second look is updated.",
+    a: "Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is read directly but can’t start a review, so start one from another tool on the same computer. claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they count up to the day you export. Gemini’s export has no conversation boundaries, so its sessions are grouped by time and its numbers are estimates. Antigravity support is new and built on an undocumented file format, so a release that changes it can hide your sessions until Second Look is updated.",
   },
   {
     q: "Does one report cover all my AI tools?",
