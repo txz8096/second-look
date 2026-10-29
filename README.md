@@ -108,7 +108,7 @@ Using AI tools at work? Check your company's AI policy before you review work se
 
 | Step | What happens |
 |---|---|
-| **Coach this cycle** | Pick up to three patterns to test. The rest waits |
+| **Coach this cycle** | Get a fix to test for every pattern |
 | **Maintain your setup** | Fix stale, broken or duplicate skills and config |
 | **Review change over time** | Compare habits and outcomes across tools |
 | **Return to the evidence** | Next review: did it stick, did it help, and what did it cost? |
@@ -312,8 +312,8 @@ your standing rules live, and where your skills are. Your answers become a profi
 <details>
 <summary><b>How often should I run it?</b></summary>
 
-Every two weeks works well. Each review checks last cycle's experiments, then suggests up to
-three new ones. You can also ask for a review any time; it covers everything since the last
+Every two weeks works well. Each review checks last cycle's experiments, then gives a fix for
+every new pattern. You can also ask for a review any time; it covers everything since the last
 one. Name a narrower scope, like "my Cursor sessions", if that's all you want.
 </details>
 

@@ -2,7 +2,7 @@ import { ClipboardList, RotateCcw, TrendingUp, Wrench, type LucideIcon } from "l
 import { Container, Kicker, SectionHeading } from "./ui";
 
 const steps: { title: string; desc: string; icon: LucideIcon }[] = [
-  { title: "Coach this cycle", desc: "Pick a few patterns to test. The rest waits.", icon: ClipboardList },
+  { title: "Coach this cycle", desc: "Get a fix to test for every pattern.", icon: ClipboardList },
   { title: "Maintain your AI setup", desc: "Flag stale, broken or duplicate skills and config.", icon: Wrench },
   { title: "Review change over time", desc: "Compare habits and outcomes across tools.", icon: TrendingUp },
   { title: "Return to the evidence", desc: "Did it stick, did it help, and what did it cost?", icon: RotateCcw },

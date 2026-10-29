@@ -30,7 +30,7 @@ const faqs: Faq[] = [
   },
   {
     q: "How often should I run it?",
-    a: "Every two weeks works well. Each review checks last cycle’s experiments, then suggests up to three new ones. You can also ask for a review any time; it covers everything since the last one. Name a narrower scope, like “my Cursor sessions”, if that’s all you want.",
+    a: "Every two weeks works well. Each review checks last cycle’s experiments, then gives a fix for every new pattern. You can also ask for a review any time; it covers everything since the last one. Name a narrower scope, like “my Cursor sessions”, if that’s all you want.",
   },
   {
     q: "Does it run by itself? Can I change or stop it?",

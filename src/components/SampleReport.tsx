@@ -38,7 +38,7 @@ const patterns: { title: string; next: string; tools: string; confidence: Confid
   },
   {
     title: "Long sessions drift between projects and take most of your usage",
-    next: "Not this cycle: start fresh between projects",
+    next: "Try this: start fresh between projects",
     tools: "Claude Code · Codex",
     confidence: "Likely pattern",
   },

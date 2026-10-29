@@ -189,7 +189,7 @@ last review plus 14 days.
 | Check-in | 0–2 min | Last cycle's fixes: done or not? One sentence each |
 | Coaching | 2–15 min | Skill P1s first, then habit P1s, then P2s as time allows. Tie one habit to a 12-month trend |
 | Questions | 15–28 min | They ask anything. Answer from evidence and say when you don't know |
-| Close | 28–30 min | They pick up to three fixes. Log them |
+| Close | 28–30 min | Confirm the plan: every fix in the report. Log them |
 
 Open with a question. Then show the evidence. The report holds every finding; the call
 covers what fits.
@@ -347,11 +347,11 @@ Each card: a title that states the finding; tags for the tools and how sure (Cle
 Likely pattern, Unconfirmed); What happens, Evidence and Why it matters; optional collapsed
 extras ("Example and limits", "Which tools have which rules"). Then the fix in the same
 card: a tinted "Try this" block with how likely it is to help, the action and a paste-ready
-block, or a gray "Not this cycle" block for a fix left out of the plan. If they ship what
+block. Every pattern with a fix gets one, and every fix goes in the plan. If they ship what
 they build with AI, include an over-trust pattern when the evidence supports it. When
 long sessions take a large share of usage, fold that into a long-session card (see "Usage"). Close the
 part with "Compare the fixes" (fix, will it help, effort, risk), "Your plan until <next
-review>" (three fixes at most) and the collapsed "What the <date> review will check". Keep
+review>" (every fix from this part) and the collapsed "What the <date> review will check". Keep
 each fix's bet, metric and keep-it-if rule in the log.
 
 **Keep your skills current** (`#part-3`). A headline with how many skills are wrong today

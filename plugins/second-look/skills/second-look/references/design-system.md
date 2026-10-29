@@ -70,7 +70,7 @@ cards, panels · 20px "Try this" blocks and the plan · fully rounded chips.
 Rank circle and title; chips for tools and how sure; lead sentence; Evidence | Why it matters
 in two columns; optional collapsed extras ("Example and limits", "Which tools have which
 rules"); then the tinted "Try this" block: how-likely chip, "Try this: <fix>", the action, a
-paste-ready block with Copy. A fix left out of the plan uses the gray "Not this cycle" block.
+paste-ready block with Copy.
 
 ## Habit terms
 
