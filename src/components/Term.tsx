@@ -17,7 +17,7 @@ const definitions = {
   rulesRetyped:
     "A standing preference typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in your CLAUDE.md, AGENTS.md or Cursor rules.",
   longSessionShare:
-    "Share of your Claude Code and Codex usage from sessions that ran past 150k tokens. In those, every request re-reads a long history first.",
+    "Share of your usage from sessions that ran past 150k tokens. Every request in those re-reads the whole history first, so they use up your allowance fastest. Counts Claude Code and Codex only, since other tools don't log tokens. Running /clear or starting fresh between tasks lowers it.",
 };
 
 const CARD_MAX_WIDTH = 280;

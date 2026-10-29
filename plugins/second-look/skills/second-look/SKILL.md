@@ -439,6 +439,10 @@ in one line. It stops Claude Code deleting logs after 30 days. Weeks already del
 | Long-session share | long_usage / usage | Usage from sessions past 150k tokens. Claude Code and Codex only | Lower |
 | Starting context | start_tokens / metered | Tokens loaded before the first message. Claude Code and Codex only | Lower |
 
+The template draws long-session share and starting context from Claude Code and Codex only, and
+notes under each chart which chosen tools it leaves out. Keep the long-session share term card from the
+template on the glance stat and the chart title.
+
 Kinds of work, from each session's opening message: Prototyping, Creating, Research,
 Brainstorming, Career, Consultation.
 

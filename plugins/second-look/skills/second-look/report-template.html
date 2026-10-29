@@ -859,7 +859,7 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
     <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-corrections">Corrections<span class="term-card" role="tooltip" id="def-corrections">Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly.</span></span></span><b>1.1</b><span class="delta">−0.3</span><span class="why">Per 10 messages. Each "no, I meant…" is a misunderstanding you paid for in time.</span></div>
     <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-restarts">Restarts<span class="term-card" role="tooltip" id="def-restarts">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span></span><b>11</b><span class="delta">+5</span><span class="why">Starting over on a task. Usually the first brief missed something.</span></div>
     <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-retyped">Rules retyped<span class="term-card" role="tooltip" id="def-retyped">A standing preference typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in your CLAUDE.md, AGENTS.md or Cursor rules.</span></span></span><b>17</b><span class="delta">+3</span><span class="why">Preferences typed by hand that belong in a config file.</span></div>
-    <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-long">Long-session share<span class="term-card" role="tooltip" id="def-long">Share of your Claude Code and Codex usage from sessions that ran past 150k tokens. In those, every request re-reads a long history first.</span></span></span><b>62%</b><span class="delta">+9 pts</span><span class="why">Usage from sessions past 150k tokens. Every request there re-reads a long history.</span></div>
+    <div class="stat"><span class="eyebrow"><span class="term" tabindex="0" aria-describedby="def-long">Long-session share<span class="term-card" role="tooltip" id="def-long">Share of your usage from sessions that ran past 150k tokens. Every request in those re-reads the whole history first, so they use up your allowance fastest. Counts Claude Code and Codex only, since other tools don't log tokens. Running /clear or starting fresh between tasks lowers it.</span></span></span><b>62%</b><span class="delta">+9 pts</span><span class="why">Usage from sessions past 150k tokens. Every request there re-reads a long history.</span></div>
   </div>
 </section>
 
@@ -1451,9 +1451,10 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     {id: "retyped", el: "more-charts", title: "Rules retyped per week", num: "retyped", den: null, fmt: v => Math.round(v), d: "rel", better: "down",
      def: "Standing preferences typed by hand, like “use tables”. Each repeat belongs in a config file once."},
     {id: "longshare", el: "more-charts", title: "Long-session share", num: "long_usage", den: "usage", fmt: pct, d: "pts", better: "down",
-     def: "Share of your usage from sessions past 150k tokens. Every request there re-reads a long history. Claude Code and Codex only."},
+     def: "Share of your usage from sessions past 150k tokens. Every request there re-reads a long history.",
+     card: "Share of your usage from sessions that ran past 150k tokens. Every request in those re-reads the whole history first, so they use up your allowance fastest. Counts Claude Code and Codex only, since other tools don't log tokens. Running /clear or starting fresh between tasks lowers it."},
     {id: "starttokens", el: "more-charts", title: "Starting context", num: "start_tokens", den: "metered", fmt: v => Math.round(v / 1000) + "k", d: "rel", better: "down",
-     def: "Tokens loaded before your first message: tool instructions, skill list and instruction files. Claude Code and Codex only."},
+     def: "Tokens loaded before your first message: tool instructions, skill list and instruction files."},
     {id: "refinements", el: "more-charts", title: "Refinements per session", num: "refinements", den: "sessions", fmt: v => v.toFixed(1), d: "abs", better: "up",
      def: "Follow-ups that build on a good answer, like “now make it shorter”. Iterating on good output is a sign of skilled AI use."},
   ];
@@ -1523,7 +1524,8 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     const dlt = deltaText(m, cmpA, lastA);
     const card = document.createElement("div"); card.className = "chart";
     const vs = state.range === 4 ? "vs previous 4 weeks" : "vs first 4 weeks";
-    card.innerHTML = `<div class="chart-head"><h3>${m.title}</h3><span class="chart-now"><b>${lastA == null ? "—" : m.fmt(lastA)}</b> last 4 weeks${dlt ? ` · <span class="${tone(m, dlt)}">${dlt.t}</span> ${vs}` : ""}</span></div><p class="def">${m.def}</p>`;
+    const title = m.card ? `<span class="term" tabindex="0" aria-describedby="def-chart-${m.id}">${m.title}<span class="term-card" role="tooltip" id="def-chart-${m.id}">${m.card}</span></span>` : m.title;
+    card.innerHTML = `<div class="chart-head"><h3>${title}</h3><span class="chart-now"><b>${lastA == null ? "—" : m.fmt(lastA)}</b> last 4 weeks${dlt ? ` · <span class="${tone(m, dlt)}">${dlt.t}</span> ${vs}` : ""}</span></div><p class="def">${m.def}</p>`;
     const firstData = raw.findIndex(v => v != null);
     const usageMetric = m.den === "usage" || m.den === "metered";
     const chosen = (state.sources.size ? [...state.sources] : SOURCES.map(([id]) => id));
@@ -1531,6 +1533,13 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
       const box = document.createElement("div"); box.className = "scope-out";
       box.innerHTML = scopeCard("Not measured for these sources", "These tools don't log tokens", "Usage comes from Claude Code and Codex logs. Pick one of them to see this chart.");
       card.appendChild(box); document.getElementById(m.el).appendChild(card); return {m, cmpA, lastA, dlt};
+    }
+    // usage comes only from tools that log tokens; name the chosen tools it leaves out
+    if (usageMetric && firstData !== -1) {
+      const left = chosen.filter(id => !METERED.has(id) && rows.some(r => r.s === id && r.w >= i0 && catOk(r) && r.sessions > 0));
+      const note = document.createElement("span"); note.className = "gapnote";
+      note.textContent = "From Claude Code and Codex sessions" + (left.length ? `. ${left.map(id => name(SOURCES, id)).join(", ")} ${left.length > 1 ? "don't" : "doesn't"} log tokens, so ${left.length > 1 ? "they aren't" : "it isn't"} counted` : "");
+      card.appendChild(note);
     }
     // a dashed start line only when a scope limit explains the gap, not when there were simply no sessions
     let scopeAt = null;
@@ -1815,7 +1824,6 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
 
 // ---- habit terms: keep each definition card on screen; Escape closes it ----
 (function () {
-  const terms = [...document.querySelectorAll(".term")];
   const place = t => {
     delete t.dataset.align;
     const r = t.querySelector(".term-card").getBoundingClientRect();
@@ -1823,9 +1831,11 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     else if (r.left < 8) t.dataset.align = "start";
   };
   const open = t => { t.classList.remove("dismissed"); place(t); };
-  terms.forEach(t => { t.addEventListener("pointerenter", () => open(t)); t.addEventListener("focus", () => open(t)); });
+  // delegated, so terms in charts drawn later work too
+  document.addEventListener("pointerover", e => { const t = e.target.closest(".term"); if (t && !t.contains(e.relatedTarget)) open(t); });
+  document.addEventListener("focusin", e => { const t = e.target.closest(".term"); if (t) open(t); });
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") terms.forEach(t => { if (t.matches(":hover, :focus")) t.classList.add("dismissed"); });
+    if (e.key === "Escape") document.querySelectorAll(".term").forEach(t => { if (t.matches(":hover, :focus")) t.classList.add("dismissed"); });
   });
 })();
 </script>
