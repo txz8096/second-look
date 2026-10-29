@@ -875,7 +875,7 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
     <div class="tbl"><table class="eval">
       <thead><tr><th>Experiment</th><th>Tried?</th><th>Habit changed?</th><th>Work got better?</th><th>Costs</th><th>Decision</th></tr></thead>
       <tbody>
-        <tr><td>Add "ask clarifying questions first" to CLAUDE.md</td><td>Yes</td><td>Corrections fell from 24 to 19 <span class="conf sugg">Cause unclear</span><span class="def">You did more writing this cycle, which needs fewer corrections anyway.</span></td><td><span class="conf val">Not measured</span></td><td>Maybe slower starts on simple tasks. Not checked.</td><td><span class="pill ok">Keep</span><span class="def">Rate the results next time</span></td></tr>
+        <tr><td>Add "confirm the plan before editing" to CLAUDE.md</td><td>Yes</td><td>Corrections per 10 messages fell from 1.4 to 1.1 <span class="conf sugg">Cause unclear</span><span class="def">You did more writing this cycle, which needs fewer corrections anyway.</span></td><td><span class="conf val">Not measured</span></td><td>Maybe slower starts on simple tasks. Not checked.</td><td><span class="pill ok">Keep</span><span class="def">Rate the results next time</span></td></tr>
         <tr><td>Research in a subagent for API comparisons</td><td>Yes</td><td>Compactions per session fell from 4 to 2 <span class="conf sugg">Cause unclear</span></td><td><span class="conf val">Not measured</span><span class="def">Did the comparisons miss anything?</span></td><td>None observed</td><td><span class="pill ok">Keep</span><span class="def">Ask at the next review</span></td></tr>
         <tr><td>Write a one-page prototype brief template</td><td>No</td><td>—</td><td>—</td><td>—</td><td><span class="pill p2">Revise</span><span class="def">Now the brief template in this cycle's plan</span></td></tr>
       </tbody></table></div>
@@ -981,10 +981,11 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
     <div class="body"><div class="tbl"><table>
       <thead><tr><th>Tool</th><th class="num">Sessions</th><th class="num">Prompts</th><th class="num">Median length</th><th class="num">Corrections</th></tr></thead>
       <tbody>
-        <tr><td>claude.ai</td><td class="num">21</td><td class="num">164</td><td class="num">212</td><td class="num">6</td></tr>
-        <tr><td>Claude Code</td><td class="num">17</td><td class="num">231</td><td class="num">148</td><td class="num">9</td></tr>
-        <tr><td>Codex</td><td class="num">5</td><td class="num">38</td><td class="num">96</td><td class="num">1</td></tr>
-        <tr><td>Cursor</td><td class="num">4</td><td class="num">29</td><td class="num">41</td><td class="num">3</td></tr>
+        <tr><td>claude.ai</td><td class="num">31</td><td class="num">260</td><td class="num">212</td><td class="num">28</td></tr>
+        <tr><td>Claude Code</td><td class="num">34</td><td class="num">330</td><td class="num">148</td><td class="num">38</td></tr>
+        <tr><td>Codex</td><td class="num">7</td><td class="num">60</td><td class="num">96</td><td class="num">6</td></tr>
+        <tr><td>Cursor</td><td class="num">13</td><td class="num">95</td><td class="num">41</td><td class="num">11</td></tr>
+        <tr><td>ChatGPT</td><td class="num">9</td><td class="num">75</td><td class="num">158</td><td class="num">7</td></tr>
       </tbody></table></div></div>
   </details>
   <details>
@@ -992,13 +993,13 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
     <div class="body"><div class="tbl"><table>
       <thead><tr><th>Skill</th><th class="num">Runs</th></tr></thead>
       <tbody>
-        <tr><td>design-review</td><td class="num">7</td></tr>
+        <tr><td>ui-review</td><td class="num">7</td></tr>
         <tr><td>pr-review</td><td class="num">5</td></tr>
-        <tr><td>user-interview-synth</td><td class="num">3</td></tr>
-        <tr><td>critical-review</td><td class="num">2</td></tr>
-        <tr><td>explain-concept</td><td class="num">1</td></tr>
+        <tr><td>beta-feedback-synth</td><td class="num">3</td></tr>
+        <tr><td>metrics-check</td><td class="num">2</td></tr>
+        <tr><td>explain-like-pm</td><td class="num">1</td></tr>
         <tr><td>release-notes</td><td class="num">0 <span class="muted">· unused 30 days</span></td></tr>
-        <tr><td>design-workflow-to-agents</td><td class="num">0 <span class="muted">· unused 30 days</span></td></tr>
+        <tr><td>test-plan</td><td class="num">0 <span class="muted">· unused 30 days</span></td></tr>
       </tbody></table></div></div>
   </details>
   <details>
@@ -1024,7 +1025,7 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
       <div class="ic-tags"><span class="tag">Claude Code · Codex · Cursor</span><span class="conf strong">Clear pattern</span></div></div></div>
     <dl class="ic-grid">
       <dt>What happens</dt><dd>You type the same formatting preferences by hand, because only some of your tools have them saved.</dd>
-      <dt>Evidence</dt><dd>Oct 12–25: "tables for comparisons, skip filler openers" showed up in 9 of 94 sessions across Claude Code, Codex and Cursor. Codex is missing 4 of your ai-context.md rules, Cursor 2. Claude Code is in sync.</dd>
+      <dt>Evidence</dt><dd>Oct 12–25: "just show the diff, skip the recap" showed up in 9 of 94 sessions across Claude Code, Codex and Cursor. Codex is missing 4 of your ai-context.md rules, Cursor 2. Claude Code is in sync.</dd>
       <dt>Why it matters</dt><dd>Retyping costs time every session, and tools without the rules give you inconsistent output.</dd>
     </dl>
   
@@ -1033,26 +1034,26 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
         <div class="tbl"><table>
           <thead><tr><th>Rule in ai-context.md</th><th>Claude Code</th><th>Codex</th><th>Cursor</th><th>claude.ai</th></tr></thead>
           <tbody>
-            <tr><td>Ask clarifying questions first</td><td>✓</td><td>—</td><td>✓</td><td>✓</td></tr>
-            <tr><td>Tables for comparisons</td><td>✓</td><td>—</td><td>—</td><td>✓</td></tr>
-            <tr><td>Cite sources, flag gaps</td><td>✓</td><td>—</td><td>—</td><td>✓</td></tr>
+            <tr><td>Confirm the plan before editing</td><td>✓</td><td>—</td><td>✓</td><td>✓</td></tr>
+            <tr><td>Show diffs, not whole files</td><td>✓</td><td>—</td><td>—</td><td>✓</td></tr>
+            <tr><td>Link docs for API claims</td><td>✓</td><td>—</td><td>—</td><td>✓</td></tr>
             <tr><td>Prototype stack: React + Tailwind</td><td>✓</td><td>—</td><td>✓</td><td>n/a</td></tr>
           </tbody></table></div>
         <div class="field"><div class="copy-row"><span class="eyebrow">Paste into ChatGPT custom instructions</span><button type="button" class="copy">Copy</button></div>
-<pre>Ask clarifying questions before big tasks. Start with the answer, no
-filler. Tables for comparisons. Cite named sources; say when you don't
-have one. I'm a product engineer building a habit-tracking app in React + Tailwind.</pre></div>
+<pre>Confirm the plan before big changes. Show diffs instead of whole
+files, and skip the recap at the end. Link the docs for any API claim.
+I'm a product engineer building a habit-tracking app in React + Tailwind.</pre></div>
       </div></details>
     <section class="try" id="try-rules" aria-label="What to try">
       <div class="try-head"><span class="conf strong">Likely to help</span></div>
       <h4>Try this: sync your standing rules to every tool</h4>
       <p class="try-do">Add the four lines below to ai-context.md, then paste them into Codex's AGENTS.md and your Cursor rules.</p>
       <div class="field"><div class="copy-row"><span class="eyebrow">Add to ai-context.md</span><button type="button" class="copy">Copy</button></div>
-<pre>## Output style
-- Start with the answer. No filler openers.
-- Tables for any comparison or tradeoff.
-- Short sentences. Prose by default.
-- Ask clarifying questions before large tasks.</pre></div>
+<pre>## Working style
+- Confirm the plan before editing more than one file.
+- Show diffs, not whole files. Skip the recap at the end.
+- Link the docs for any API or library claim.
+- Keep explanations to a few lines unless I ask.</pre></div>
       
       
     </section>
@@ -1189,11 +1190,11 @@ Before building, list up to 3 questions you need answered.</pre></div>
       <tbody>
         <tr><td>release-notes</td><td>claude.ai</td><td><span class="pill p1">Stale</span></td><td>Pricing tiers, description, no tests</td></tr>
         <tr><td>pr-review</td><td>~/.agents</td><td><span class="pill p1">Stale</span></td><td>Tooling table names the wrong agent</td></tr>
-        <tr><td>user-interview-synth</td><td>claude.ai</td><td><span class="pill p2">Review</span></td><td>Team size, no tests</td></tr>
-        <tr><td>design-review</td><td>claude.ai</td><td><span class="pill p2">Review</span></td><td>Tool list; loads too much at once</td></tr>
-        <tr><td>critical-review</td><td>claude.ai</td><td><span class="pill p3">Minor</span></td><td>Checks math in prose</td></tr>
-        <tr><td>explain-concept</td><td>claude.ai</td><td><span class="pill ok">Current</span></td><td>Nothing found</td></tr>
-        <tr><td>design-workflow-to-agents</td><td>claude.ai</td><td><span class="pill ok">Current</span></td><td>Nothing found</td></tr>
+        <tr><td>beta-feedback-synth</td><td>claude.ai</td><td><span class="pill p2">Review</span></td><td>Team size, no tests</td></tr>
+        <tr><td>ui-review</td><td>claude.ai</td><td><span class="pill p2">Review</span></td><td>Tool list; loads too much at once</td></tr>
+        <tr><td>metrics-check</td><td>claude.ai</td><td><span class="pill p3">Minor</span></td><td>Example query names an old table</td></tr>
+        <tr><td>explain-like-pm</td><td>claude.ai</td><td><span class="pill ok">Current</span></td><td>Nothing found</td></tr>
+        <tr><td>test-plan</td><td>claude.ai</td><td><span class="pill ok">Current</span></td><td>Nothing found</td></tr>
       </tbody></table></div>
   </section>
 
@@ -1204,9 +1205,9 @@ Before building, list up to 3 questions you need answered.</pre></div>
       <tbody>
         <tr><td><b>release-notes</b> still lists last quarter's pricing tiers</td><td><span class="pill p1">High</span> Its output goes into every changelog</td><td><span class="conf strong">Confirmed</span></td><td>5 min</td></tr>
         <tr><td><b>pr-review</b> points agents at tools that don't exist, so they may skip rendering</td><td><span class="pill p1">High</span> Blocks the beta check</td><td><span class="conf strong">Confirmed</span></td><td>5 min</td></tr>
-        <tr><td><b>user-interview-synth</b> says the team has 4 designers; your context file says 6</td><td><span class="pill p2">Medium</span></td><td><span class="conf strong">Confirmed</span></td><td>Fixed by the shared team file</td></tr>
+        <tr><td><b>beta-feedback-synth</b> says the team has 4 engineers; your context file says 6</td><td><span class="pill p2">Medium</span></td><td><span class="conf strong">Confirmed</span></td><td>Fixed by the shared team file</td></tr>
         <tr><td><b>api-docs</b> is installed twice; the claude.ai copy is older</td><td><span class="pill p2">Medium</span> Two versions give different advice</td><td><span class="conf strong">Confirmed</span></td><td>Replace the old copy</td></tr>
-        <tr><td><b>frontend-slides</b> has no SKILL.md, so it never loads</td><td><span class="pill p3">Low</span></td><td><span class="conf strong">Confirmed</span></td><td>Reinstall or remove</td></tr>
+        <tr><td><b>mermaid-diagrams</b> has no SKILL.md, so it never loads</td><td><span class="pill p3">Low</span></td><td><span class="conf strong">Confirmed</span></td><td>Reinstall or remove</td></tr>
       </tbody></table></div>
     <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Fixes for the two big ones</span></summary>
       <div class="body">
@@ -1227,10 +1228,10 @@ Before building, list up to 3 questions you need answered.</pre></div>
       <tbody>
         <tr><td>14 skills and 2 plugins you haven't run in 60 days load into every Claude Code session</td><td>Every session starts at 54k tokens before you type. These add 1.9k of it, about 1% of your usage</td><td><span class="conf sugg">Possible</span></td><td>Add <code>disable-model-invocation: true</code> to your own; <code>/skill-name</code> still runs them. Turn the plugins off in <code>/plugin</code></td></tr>
         <tr><td>Your team details are copied into three skills</td><td>The copies already disagree</td><td><span class="conf strong">Clear</span></td><td>Move it into one shared file</td></tr>
-        <tr><td>No skill has a test</td><td>A model update could quietly change how a skill behaves. Hasn't happened yet.</td><td><span class="conf sugg">Possible</span></td><td>Write 3–5 test prompts for release-notes and design-review</td></tr>
+        <tr><td>No skill has a test</td><td>A model update could quietly change how a skill behaves. Hasn't happened yet.</td><td><span class="conf sugg">Possible</span></td><td>Write 3–5 test prompts for release-notes and ui-review</td></tr>
         <tr><td>Your skills only live where Claude looks</td><td>Codex and Cursor can run the same files, and the coach can't read <code>~/.claude/skills</code></td><td><span class="conf strong">Clear</span></td><td>Keep them in <code>~/.agents/skills</code> and link each tool to it</td></tr>
-        <tr><td>humanizer and pdf-tools are out of date</td><td>Newer isn't always better. Skim the changelog.</td><td><span class="conf sugg">Possible</span></td><td>Update if the changes help</td></tr>
-        <tr><td>design-review doesn't know about Claude Design, and loads all three platform guides every time</td><td>Misses a current tool and wastes context</td><td><span class="conf sugg">Possible</span></td><td>Add Claude Design; split the guides into separate files</td></tr>
+        <tr><td>commit-message and pdf-tools are out of date</td><td>Newer isn't always better. Skim the changelog.</td><td><span class="conf sugg">Possible</span></td><td>Update if the changes help</td></tr>
+        <tr><td>ui-review doesn't know about Claude Design, and loads all three platform guides every time</td><td>Misses a current tool and wastes context</td><td><span class="conf sugg">Possible</span></td><td>Add Claude Design; split the guides into separate files</td></tr>
       </tbody></table></div>
     <p class="def">11 installed skills don't link to a source, so I couldn't check them for updates. Sources: Claude Code changelog; Anthropic on plugin evals (Sep 2026), skill-creator evals (Mar 2026) and Claude Design (Jun 2026); Codex and Cursor skills docs.</p>
   </section>
@@ -1241,11 +1242,11 @@ Before building, list up to 3 questions you need answered.</pre></div>
       <div class="tbl"><table>
         <thead><tr><th>Skill</th><th>Status</th><th>Detail</th></tr></thead>
         <tbody>
-          <tr><td>humanizer</td><td><span class="pill p2">Behind</span></td><td>You have v2.7.0 from Jul 13. The source was rewritten through Oct 16.</td></tr>
+          <tr><td>commit-message</td><td><span class="pill p2">Behind</span></td><td>You have v2.7.0 from Jul 13. The source was rewritten through Oct 16.</td></tr>
           <tr><td>pdf-tools</td><td><span class="pill p2">Behind</span></td><td>Source updated Jul 2, after you installed it Jun 4.</td></tr>
-          <tr><td>frontend-slides</td><td><span class="pill p1">Broken</span></td><td>No SKILL.md, so it never loads.</td></tr>
+          <tr><td>mermaid-diagrams</td><td><span class="pill p1">Broken</span></td><td>No SKILL.md, so it never loads.</td></tr>
           <tr><td>api-docs</td><td><span class="pill p2">Duplicate</span></td><td>The claude.ai copy is an older version of the one on your Mac.</td></tr>
-          <tr><td>skill-creator, beautiful-html-templates</td><td><span class="pill ok">Current</span></td><td>Match their sources.</td></tr>
+          <tr><td>skill-creator, tailwind-components</td><td><span class="pill ok">Current</span></td><td>Match their sources.</td></tr>
           <tr><td>11 others</td><td><span class="pill p3">Not checked</span></td><td>No source link in the files, so there's nothing to compare against.</td></tr>
         </tbody></table></div>
       <p class="def">Update installed skills from their source rather than editing them, so your changes don't get overwritten.</p>

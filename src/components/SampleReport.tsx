@@ -94,9 +94,9 @@ const fixFirst: { issue: string; impact: Cell; sure: string; fix: string }[] = [
 
 const experiments: { name: string; tried: Cell; habit: Cell; work: Cell; costs: Cell; decision: Cell }[] = [
   {
-    name: "Add “ask clarifying questions first” to CLAUDE.md",
+    name: "Add “confirm the plan before editing” to CLAUDE.md",
     tried: { main: "Yes" },
-    habit: { main: "Corrections fell from 24 to 19", sub: "Cause unclear" },
+    habit: { main: "Corrections per 10 messages fell from 1.4 to 1.1", sub: "Cause unclear" },
     work: { main: "Not measured" },
     costs: { main: "Maybe slower simple tasks. Unchecked." },
     decision: { main: "Keep", sub: "Rate the results next time", strong: true },
