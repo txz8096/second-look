@@ -20,7 +20,7 @@ Install second look from github.com/txz8096/second-look.
 ```
 
 [Website](https://txz8096.github.io/second-look/) ·
-[Sample report](https://txz8096.github.io/second-look/#sample-report) ·
+[Sample report](https://txz8096.github.io/second-look/sample-report.html) ·
 [Supported tools](#supported-tools) ·
 [Install](#install) ·
 [Privacy](#privacy) ·
@@ -69,7 +69,7 @@ ones with wrong facts, broken folders, duplicates, missed updates from recent re
 no tests. It also names what loads into every Claude Code session before you type, like skills
 you haven't run in 60 days, and how much you'd save by having them run only when you ask.
 
-See the [sample report](https://txz8096.github.io/second-look/#sample-report) for the full
+See the [sample report](https://txz8096.github.io/second-look/sample-report.html) for the full
 layout. It uses made-up data.
 
 ## Supported tools

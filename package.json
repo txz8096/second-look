@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "cp plugins/second-look/skills/second-look/report-template.html public/sample-report.html",
     "dev": "next dev",
+    "prebuild": "cp plugins/second-look/skills/second-look/report-template.html public/sample-report.html",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"

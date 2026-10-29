@@ -3,10 +3,12 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    # Skill-only changes don't touch the site, so they skip the rebuild.
+    # Skill-only changes don't touch the site, so they skip the rebuild,
+    # except the report template, which the site serves as the sample report.
     paths:
       - "src/**"
       - "public/**"
+      - "plugins/second-look/skills/second-look/report-template.html"
       - "package.json"
       - "package-lock.json"
       - "next.config.ts"
