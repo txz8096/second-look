@@ -43,3 +43,6 @@ next-env.d.ts
 
 # browser tool scratch output
 /.playwright-mcp/
+
+# marketing drafts live in ~/Documents/second-look-marketing
+/docs/pitch.md
