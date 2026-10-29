@@ -467,7 +467,9 @@ a.from-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 
 /* floating table of contents */
 .toc { position: fixed; z-index: 40; right: max(20px, env(safe-area-inset-right, 0px)); bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-  display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+  display: flex; flex-direction: column; align-items: flex-end; gap: 10px; pointer-events: none; }
+/* the nav's box spans the closed panel's area; only the button and the open panel take taps, so it can't block the page */
+.toc > * { pointer-events: auto; }
 .toc-btn { width: 48px; height: 48px; padding: 0; border-radius: 50%; display: grid; place-items: center; background: var(--surface); color: var(--fg);
   border: 1px solid var(--line); box-shadow: 0 6px 18px rgb(0 0 0 / .08), 0 1px 3px rgb(0 0 0 / .05); }
 .toc-btn:hover, .toc.open .toc-btn, .toc:not(.scripted):focus-within .toc-btn { background: var(--surface); color: var(--accent); border-color: var(--accent-soft-2); }
@@ -831,7 +833,7 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
 /* side-by-side panels share a height; keep their rows packed at the top so headings and bars line up */
 .panel { align-content: start; }
 /* on phones, tables scroll sideways instead of squeezing cells to a word per line */
-@media (max-width: 600px) { .tbl table { min-width: 600px; } }
+@media (max-width: 600px) { .tbl table { min-width: 600px; } .tbl { overscroll-behavior-x: contain; } }
 
 /* Phones: no text under 13px, secondary text at 14px, and 44px tap targets.
    Desktop sizes stay as set above; this only raises the floor on small screens. */
@@ -1828,9 +1830,12 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
   toc.classList.add("scripted");
   const setOpen = on => { toc.classList.toggle("open", on); btn.setAttribute("aria-expanded", String(on)); };
   let closeTimer;
-  toc.addEventListener("mouseenter", () => { clearTimeout(closeTimer); setOpen(true); });
-  toc.addEventListener("mouseleave", () => { closeTimer = setTimeout(() => setOpen(false), 180); });
-  btn.addEventListener("click", e => { e.stopPropagation(); setOpen(!toc.classList.contains("open")); });
+  // hover opens it for a mouse only; a tap on a phone also sends hover events, which would open it under the finger
+  let hoverOpened = false;
+  toc.addEventListener("pointerenter", e => { if (e.pointerType !== "mouse") return; clearTimeout(closeTimer); if (!toc.classList.contains("open")) hoverOpened = true; setOpen(true); });
+  toc.addEventListener("pointerleave", e => { if (e.pointerType !== "mouse") return; hoverOpened = false; closeTimer = setTimeout(() => setOpen(false), 180); });
+  // a click right after hover opened it keeps it open instead of toggling it shut
+  btn.addEventListener("click", e => { e.stopPropagation(); setOpen(hoverOpened || !toc.classList.contains("open")); hoverOpened = false; });
   toc.addEventListener("focusout", e => { if (!toc.contains(e.relatedTarget)) setOpen(false); });
   document.addEventListener("click", e => { if (!toc.contains(e.target)) setOpen(false); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && toc.classList.contains("open")) { setOpen(false); btn.focus(); } });
