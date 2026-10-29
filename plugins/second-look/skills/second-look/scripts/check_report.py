@@ -75,6 +75,8 @@ def main():
 
     if not re.search(r'<meta charset="utf-8">', html, re.I):
         problems.append('missing <meta charset="utf-8">; without it browsers garble the dashes, dots and quotes')
+    if not re.search(r'<meta name="viewport" content="width=device-width', html, re.I):
+        problems.append('missing <meta name="viewport">; without it phones shrink the report to desktop width and the text is too small to read')
     if FONT_LINK not in html:
         problems.append("missing the Google Fonts link for Familjen Grotesk and IBM Plex Mono")
     if 'class="brand-logo"' not in html:

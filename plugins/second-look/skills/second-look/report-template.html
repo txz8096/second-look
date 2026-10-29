@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 <title>second look · Oct 12 – 25, 2026</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2316181D'/%3E%3Cpath fill='%23F2A7B8' transform='matrix(1.45 0 0 1.45 10.1 55.2)' d='M15.89 0.8Q10.56 0.8 7.39 -0.88Q4.21 -2.56 2.75 -5.12Q1.28 -7.68 1.07 -10.24H9.28Q9.55 -8.85 10.43 -7.71Q11.31 -6.56 12.77 -5.92Q14.24 -5.28 16.32 -5.28Q18.88 -5.28 20 -6.16Q21.12 -7.04 21.12 -8.43Q21.12 -9.71 20.08 -10.59Q19.04 -11.47 16.69 -12.21L12.85 -13.49Q10.08 -14.45 7.73 -15.6Q5.39 -16.75 3.97 -18.56Q2.56 -20.37 2.56 -23.25Q2.56 -27.52 5.81 -30.16Q9.07 -32.8 15.04 -32.8Q19.36 -32.8 22.11 -31.47Q24.85 -30.13 26.24 -27.92Q27.63 -25.71 27.84 -23.04H19.95Q19.68 -24.96 18.35 -26Q17.01 -27.04 14.72 -27.04Q12.64 -27.04 11.6 -26.24Q10.56 -25.44 10.56 -24.05Q10.56 -22.67 11.68 -21.76Q12.8 -20.85 15.09 -20.11L18.93 -18.88Q21.71 -18.03 24.03 -16.88Q26.35 -15.73 27.73 -13.89Q29.12 -12.05 29.12 -9.12Q29.12 -4.64 25.73 -1.92Q22.35 0.8 15.89 0.8Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -831,6 +832,31 @@ p > .term > .term-card::before, dd > .term > .term-card::before { top: calc(-2.4
 .panel { align-content: start; }
 /* on phones, tables scroll sideways instead of squeezing cells to a word per line */
 @media (max-width: 600px) { .tbl table { min-width: 600px; } }
+
+/* Phones: no text under 13px, secondary text at 14px, and 44px tap targets.
+   Desktop sizes stay as set above; this only raises the floor on small screens. */
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+@media (max-width: 680px) {
+  body { line-height: 1.6; }
+  .eyebrow, .head-row .eyebrow, th, .flabel, .ic-grid dt, .judge dt, .gd-label, .toc-h, .sum-meta-label, .maint .part-head > .eyebrow, .field > .eyebrow, .term-card code { font-size: 13px; }
+  .tag, .conf, .pill, .badge, .slot, .sample, a.from-link, td a.from-link, .ic-tags .tag, .ic-tags .conf, .ic-tags a.from-link, .try-head .conf,
+  .gapnote, .better, .copy, .scope-at, .tl-axis, .gnum, .plan-fit, .gd-item .gd-text span, .layer, .gc { font-size: 13px; }
+  .sum-meta, .def, .key, .chart-now, .bval, .method, .part-meta, .data-note, .ic-fit, .ic-tags .ic-fit, .gd-hint, .gd-text span, .gd-custom label,
+  .tl-status, .tl-legend, .fsum, .chip, .stat .why, .stat .delta, .head-meta, .src, .tip, .tip-pop, .term-card, .judge dt, footer, table, pre,
+  .plan-grid span:last-child, .fact-inf, .ic-grid dt, details.nested > summary, .toc-btn, .toc a { font-size: 14px; }
+  .ic-grid dd, .judge dd, .try .try-do, .scope-line, .tl-name, .lede, .gaps { font-size: 16px; }
+  .chart svg text { font-size: 12px; }
+  /* tap targets */
+  button:not(.linkish):not(.brow), select, .chip, .toc a { min-height: 44px; }
+  .copy { min-height: 36px; padding-inline: 12px; }
+  details > summary { min-height: 44px; }
+  button.gd-ic { width: 44px; height: 44px; }
+  /* time range: label on top, the four ranges in one even row instead of wrapping */
+  #f-range { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; width: 100%; }
+  #f-range .flabel { grid-column: 1 / -1; }
+  #f-range .chip { padding-inline: 4px; white-space: nowrap; }
+  .term { text-underline-offset: 5px; }
+}
 </style>
 
 <div class="wrap">
