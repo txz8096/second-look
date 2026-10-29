@@ -145,8 +145,9 @@ export function Hero() {
             Learn from how you work with AI.
           </h1>
           <p style={delay(120)} className="rise-in font-body text-lg leading-[1.55] text-text-2 md:text-xl">
-            Second Look reviews your sessions across AI tools and suggests a few changes to test. Each one
-            cites the sessions it came from.
+            Models change, and the way you work drifts out of step. Second Look reads your sessions across
+            Claude Code, Codex, Cursor, ChatGPT and more, finds the leaks in your prompts, context and skills,
+            and gives you a few fixes to try. Each one cites the sessions it came from.
           </p>
           <div style={delay(180)} className="rise-in flex flex-wrap items-center gap-3 pt-3">
             <PrimaryButton href="#sample-report">See a sample report</PrimaryButton>

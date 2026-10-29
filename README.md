@@ -2,9 +2,22 @@
 
 **Learn from how you work with AI.**
 
-second look is an open-source skill that reviews your sessions across Claude Code, Codex,
-Cursor, Antigravity, claude.ai, ChatGPT and Gemini, then suggests a few changes to test.
-Each suggestion cites the sessions it came from.
+Models change every few months, and the way you work drifts out of step with them. Tokens
+leak in three places: your prompts (corrections, rules you retype in every tool), your
+context (long sessions, memory you no longer need) and your setup (skills written for an
+older model, still loading every session). You can't see any of it from inside one chat, and
+a leak you don't see costs you again every session after.
+
+second look is an open-source skill that reads your sessions across Claude Code, Codex,
+Cursor, Antigravity, claude.ai, ChatGPT and Gemini. It shows where your tokens go and gives
+you a few fixes to try, each with the sessions behind it. Run it again later and it checks
+whether the fix stuck.
+
+Paste this into Claude Code, Codex or Cursor:
+
+```
+Install second look from github.com/txz8096/second-look.
+```
 
 [Website](https://txz8096.github.io/second-look/) ·
 [Sample report](https://txz8096.github.io/second-look/#sample-report) ·
@@ -14,11 +27,6 @@ Each suggestion cites the sessions it came from.
 [FAQ](#faq)
 
 ## Why
-
-AI use is more than the prompt you type. It's also the context you give, the skills and
-config you've built, and habits that drift without you noticing. Most of that is invisible
-from inside a single chat. second look reads across all of it and hands back a short list of
-things to try, each with the evidence behind it.
 
 A closer look pays off in a few places:
 
