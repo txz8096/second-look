@@ -288,8 +288,8 @@ answer, then the evidence. Every number says what it means.
 **Design rules.** `report-template.html` is the design. `references/design-system.md`
 explains its tokens, type, radii, structure and the parts removed on purpose.
 
-- Copy the template. Keep its `<style>` block, favicon and font links, logo and scripts exactly as they
-  are. Don't add CSS, inline styles, colors or fonts. If something doesn't fit, use an
+- Copy the template. Keep its viewport line, `<style>` block, favicon and font links, logo and scripts
+  exactly as they are. The viewport line and the styles are what make the report readable on a phone. Don't add CSS, inline styles, colors or fonts. If something doesn't fit, use an
   existing component or leave it out.
 - Change only content: text, cards, table rows, chip labels from the allowed list, and the
   trend data in the script (replace the sample cube with the collector's `cube`).

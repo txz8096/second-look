@@ -1,8 +1,8 @@
 # second look report design system
 
 The source of truth is `report-template.html` (a filled-in sample report).
-Build every report from a copy of it. Keep its charset line, `<style>` block, font links, logo and scripts
-exactly as they are. Change only the text, the table rows, the cards and the sample data.
+Build every report from a copy of it. Keep its charset and viewport lines, `<style>` block, font links, logo and scripts
+exactly as they are. Without the viewport line, phones render the page at desktop width and shrink the text. Change only the text, the table rows, the cards and the sample data.
 `scripts/check_report.py` fails any report whose styles differ from the template.
 
 ## Tokens (dark only)
@@ -36,6 +36,10 @@ Familjen Grotesk for everything; IBM Plex Mono for code only. Headings 700, lett
 | Body | 16px |
 | Small text, tables, notes | 14px |
 | Labels (uppercase, 0.08em tracking) | 12px |
+
+On phones (680px and narrower) the template raises the floor: labels and chips 13px, small
+text 14px, card body 16px, chart axis text 12px, and buttons, chips and section toggles at
+least 44px tall. The template's styles already do this, so a report gets it by keeping them.
 
 ## Radii
 
