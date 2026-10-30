@@ -759,7 +759,7 @@ td .def { display: block; margin-top: 6px; }
 .stat .delta { font-size: 14px; color: var(--fg); }
 .stat .why { font-size: 13px; line-height: 1.45; color: var(--muted); margin-top: 6px; }
 @media (max-width: 680px) { .snapshot { grid-template-columns: 1fr 1fr; } .stat { border-bottom: 1px solid var(--line); } }
-#part-1 { border-top: 1px solid var(--line); padding-top: 56px; margin-top: 0; }
+#part-2 { border-top: 1px solid var(--line); padding-top: 56px; margin-top: 0; }
 #glance, #part-1, #part-2, #part-3 { scroll-margin-top: 20px; }
 
 .try .revisit { margin: 2px 0 0; font-size: 14px; color: var(--muted); }
@@ -892,157 +892,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   </div>
 </section>
 
-<!-- PART 1: BEHAVIOR -->
-<div class="part" id="part-1">
-  <div class="part-head">
-    <h2>How your behavior is changing</h2>
-    <p class="scope-line" id="scope-line">12 months of sessions across claude.ai, Claude Code, Codex, Cursor and ChatGPT</p>
-  </div>
-
-  <section id="last-cycle" data-needs-prior>
-    <div class="sec-head"><h3>Did last cycle's fixes work?</h3></div>
-    <div class="tbl"><table class="eval">
-      <thead><tr><th>Experiment</th><th>Tried?</th><th>Habit changed?</th><th>Work got better?</th><th>Costs</th><th>Decision</th></tr></thead>
-      <tbody>
-        <tr><td>Add "confirm the plan before editing" to CLAUDE.md</td><td>Yes</td><td>Corrections per 10 messages fell from 1.4 to 1.1 <span class="conf sugg">Cause unclear</span><span class="def">You did more writing this cycle, which needs fewer corrections anyway.</span></td><td><span class="conf val">Not measured</span></td><td>Maybe slower starts on simple tasks. Not checked.</td><td><span class="pill ok">Keep</span><span class="def">Rate the results next time</span></td></tr>
-        <tr><td>Research in a subagent for API comparisons</td><td>Yes</td><td>Compactions per session fell from 4 to 2 <span class="conf sugg">Cause unclear</span></td><td><span class="conf val">Not measured</span><span class="def">Did the comparisons miss anything?</span></td><td>None observed</td><td><span class="pill ok">Keep</span><span class="def">Ask at the next review</span></td></tr>
-        <tr><td>Write a one-page prototype brief template</td><td>No</td><td>—</td><td>—</td><td>—</td><td><span class="pill p2">Revise</span><span class="def">Now the brief template in this cycle's plan</span></td></tr>
-      </tbody></table></div>
-    <p class="def">"Not measured" means there's no data yet.</p>
-  </section>
-
-<section id="trends">
-  <div class="sec-head"><h3>Habits over the last year</h3><span class="muted" id="range-label">Last 12 months</span></div>
-
-  <details id="scope-details">
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">What each trend covers</span><span class="sum-meta">12 months by source. Dashed means second look can't see it</span></span><span></span></summary>
-    <div class="body">
-      <div class="tl" id="tl-sources"></div>
-      <p class="eyebrow tl-group">Token usage</p>
-      <div class="tl" id="tl-usage"></div>
-      <div class="tl-axis" id="tl-axis"></div>
-      <div class="tl-legend"><span><i class="seg-data"></i>Data</span><span><i style="background:var(--seg-track)"></i>No sessions</span><span><i class="seg-out"></i>Outside what second look can see</span></div>
-    </div>
-  </details>
-
-  <div class="filters" role="group" aria-label="Filter the charts">
-    <div class="fgroup" id="f-range" role="group" aria-label="Time range"><span class="flabel">Time</span></div>
-    <div class="fgroup" id="f-source" role="group" aria-label="Source"><span class="flabel">Source</span></div>
-    <div class="fgroup"><label class="flabel" for="f-cat">Work</label><select id="f-cat"></select></div>
-    <span class="fsum" id="f-sum"></span>
-  </div>
-
-  <p class="def static-note">Showing the last 12 months across every tool. Open this file in Chrome, Safari or another browser to filter the charts.</p>
-  <div class="multiples" id="primary-charts"></div>
-
-  <details>
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
-      <span class="sum-main"><span class="sum-title">More metrics</span><span class="sum-meta">Volume, skill use, rules retyped, refinement</span></span><span></span></summary>
-    <div class="body"><div class="multiples" id="more-charts"></div></div>
-  </details>
-
-  <div class="split">
-    <div class="panel">
-      <h3>What you used AI for</h3>
-      <p class="def">Share of sessions by kind of work, labeled from each session's opening message. Click a row to filter the charts.</p>
-      <div class="bars" id="cat-bars"></div>
-    </div>
-    <div class="panel">
-      <h3>Where you worked</h3>
-      <p class="def">Share of sessions by tool for the current filters.</p>
-      <div class="bars" id="src-bars"></div>
-    </div>
-  </div>
-  <p class="insight" id="cat-insight"></p>
-
-
-  <details open>
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
-      <span class="sum-main"><span class="sum-title">How each product's use is changing</span><span class="sum-meta">First 4 weeks with data vs the last 4, per product</span></span><span></span></summary>
-    <div class="body">
-      <p class="insight" id="prod-insight"></p>
-      <div class="tbl"><table id="prod-table">
-        <thead><tr><th>Product</th><th class="num">Sessions</th><th>Main uses now (change)</th><th class="num">Briefed starts</th><th class="num">Corrections / 10</th><th class="num">Output checking</th><th class="num">Restarts</th></tr></thead>
-        <tbody></tbody></table></div>
-      <p class="def">Each cell shows the last 4 weeks, with the change from that product's first 4 weeks in range in parentheses. Uses ignore the Work filter so the mix stays complete; habits follow it. Numbers need at least 10 sessions in a 4-week window; products below that, or with under 8 weeks of data, say so instead.</p>
-    </div>
-  </details>
-  <details>
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
-      <span class="sum-main"><span class="sum-title">Habits by kind of work</span><span class="sum-meta">Where you brief, check and restart differently</span></span><span></span></summary>
-    <div class="body"><div class="tbl"><table id="cat-table">
-      <thead><tr><th>Work</th><th class="num">Sessions</th><th class="num">Briefed starts</th><th class="num">Corrections</th><th class="num">Output checking</th><th class="num">Restarts</th></tr></thead>
-      <tbody></tbody></table></div>
-      <p class="def">Pink marks where each habit is strongest. Kinds with fewer than 10 sessions in range are left out of the comparison.</p></div>
-  </details>
-
-  <details>
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
-      <span class="sum-main"><span class="sum-title">Start vs end of range</span><span class="sum-meta" id="tn-meta">First 4 weeks compared with the last 4</span></span><span></span></summary>
-    <div class="body"><div class="tbl"><table id="then-now">
-      <thead><tr><th>Metric</th><th class="num" id="tn-a">Start</th><th class="num">Last 4 weeks</th><th class="num">Change</th><th>Better is</th></tr></thead>
-      <tbody></tbody></table></div></div>
-  </details>
-
-  <details>
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
-      <span class="sum-main"><span class="sum-title">How these are measured</span><span class="sum-meta">Data coverage, gaps and labeling</span></span><span class="tags"><span class="pill p2">Gap</span></span></summary>
-    <div class="body">
-      <div class="tbl"><table>
-        <thead><tr><th>Source</th><th>From</th><th>How</th></tr></thead>
-        <tbody>
-          <tr><td>claude.ai</td><td>Oct 2025</td><td>Data export (conversations.json)</td></tr>
-          <tr><td>ChatGPT</td><td>Oct 2025</td><td>Data export (conversations.json)</td></tr>
-          <tr><td>Claude Code</td><td>Sep 21, 2026</td><td>Local logs. Older sessions were deleted by the 30-day cleanup; now kept for a year</td></tr>
-          <tr><td>Codex</td><td>Apr 2026</td><td>Local logs</td></tr>
-          <tr><td>Cursor</td><td>Feb 2026</td><td>Local database</td></tr>
-        </tbody></table></div>
-      <p class="def">These numbers are read from wording, so treat them as estimates. Each review, the coach spot-checks a dozen sessions before trusting them, and you can correct a label at the next review. The jump in late September is when Claude Code data starts; your habits didn't change that week.</p>
-    </div>
-  </details>
-</section>
-
-  <section>
-  <div class="sec-head"><h3>Usage this cycle</h3><span class="muted">Oct 12–25</span></div>
-  <p class="def">You hit 1 usage limit this cycle. A full breakdown of where your usage went appears here once you hit 3 or more in a cycle.</p>
-  <details>
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">By tool</span><span class="sum-meta">Claude Code carried most of the build work; claude.ai most of the thinking.</span></span><span></span></summary>
-    <div class="body"><div class="tbl"><table>
-      <thead><tr><th>Tool</th><th class="num">Sessions</th><th class="num">Prompts</th><th class="num">Median length</th><th class="num">Corrections</th></tr></thead>
-      <tbody>
-        <tr><td>claude.ai</td><td class="num">31</td><td class="num">260</td><td class="num">212</td><td class="num">28</td></tr>
-        <tr><td>Claude Code</td><td class="num">34</td><td class="num">330</td><td class="num">148</td><td class="num">38</td></tr>
-        <tr><td>Codex</td><td class="num">7</td><td class="num">60</td><td class="num">96</td><td class="num">6</td></tr>
-        <tr><td>Cursor</td><td class="num">13</td><td class="num">95</td><td class="num">41</td><td class="num">11</td></tr>
-        <tr><td>ChatGPT</td><td class="num">9</td><td class="num">75</td><td class="num">158</td><td class="num">7</td></tr>
-      </tbody></table></div></div>
-  </details>
-  <details>
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">Skills and commands</span><span class="sum-meta">5 used · 2 unused for 30+ days</span></span><span></span></summary>
-    <div class="body"><div class="tbl"><table>
-      <thead><tr><th>Skill</th><th class="num">Runs</th></tr></thead>
-      <tbody>
-        <tr><td>ui-review</td><td class="num">7</td></tr>
-        <tr><td>pr-review</td><td class="num">5</td></tr>
-        <tr><td>beta-feedback-synth</td><td class="num">3</td></tr>
-        <tr><td>metrics-check</td><td class="num">2</td></tr>
-        <tr><td>explain-like-pm</td><td class="num">1</td></tr>
-        <tr><td>release-notes</td><td class="num">0 <span class="muted">· unused 30 days</span></td></tr>
-        <tr><td>test-plan</td><td class="num">0 <span class="muted">· unused 30 days</span></td></tr>
-      </tbody></table></div></div>
-  </details>
-  <details>
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">Try next</span><span class="sum-meta">2 features that fit how you worked these two weeks</span></span><span></span></summary>
-    <div class="body">
-      <div class="field"><span class="eyebrow">Plan mode in Claude Code</span><p>4 of your 6 Claude Code <span class="term" tabindex="0" aria-describedby="def-restarts-part3">restarts<span class="term-card" role="tooltip" id="def-restarts-part3">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span> were multi-step builds. Planning before code would have surfaced the missing brief at turn 1.</p></div>
-      <div class="field"><span class="eyebrow">Subagents for research</span><p>One session read 31 files to answer one question. A research subagent returns just the answer and keeps your main context clean.</p></div>
-    </div>
-  </details>
-</section>
-
-</div>
-
-<!-- PART 2: PROMPTS AND CONTEXT -->
+<!-- PROMPTS AND CONTEXT (#part-2), first after the glance -->
 <div class="part" id="part-2">
   <div class="part-head">
     <h2>Improve your prompts and context</h2>
@@ -1204,7 +1054,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
   </details>
 </div>
 
-<!-- PART 3: SKILLS -->
+<!-- SKILLS (#part-3) -->
 <div class="part" id="part-3">
   <div class="part-head">
     <h2>Keep your skills current</h2>
@@ -1284,6 +1134,156 @@ Before building, list up to 3 questions you need answered.</pre></div>
 
 </div>
 
+<!-- BEHAVIOR (#part-1), last -->
+<div class="part" id="part-1">
+  <div class="part-head">
+    <h2>How your behavior is changing</h2>
+    <p class="scope-line" id="scope-line">12 months of sessions across claude.ai, Claude Code, Codex, Cursor and ChatGPT</p>
+  </div>
+
+  <section id="last-cycle" data-needs-prior>
+    <div class="sec-head"><h3>Did last cycle's fixes work?</h3></div>
+    <div class="tbl"><table class="eval">
+      <thead><tr><th>Experiment</th><th>Tried?</th><th>Habit changed?</th><th>Work got better?</th><th>Costs</th><th>Decision</th></tr></thead>
+      <tbody>
+        <tr><td>Add "confirm the plan before editing" to CLAUDE.md</td><td>Yes</td><td>Corrections per 10 messages fell from 1.4 to 1.1 <span class="conf sugg">Cause unclear</span><span class="def">You did more writing this cycle, which needs fewer corrections anyway.</span></td><td><span class="conf val">Not measured</span></td><td>Maybe slower starts on simple tasks. Not checked.</td><td><span class="pill ok">Keep</span><span class="def">Rate the results next time</span></td></tr>
+        <tr><td>Research in a subagent for API comparisons</td><td>Yes</td><td>Compactions per session fell from 4 to 2 <span class="conf sugg">Cause unclear</span></td><td><span class="conf val">Not measured</span><span class="def">Did the comparisons miss anything?</span></td><td>None observed</td><td><span class="pill ok">Keep</span><span class="def">Ask at the next review</span></td></tr>
+        <tr><td>Write a one-page prototype brief template</td><td>No</td><td>—</td><td>—</td><td>—</td><td><span class="pill p2">Revise</span><span class="def">Now the brief template in this cycle's plan</span></td></tr>
+      </tbody></table></div>
+    <p class="def">"Not measured" means there's no data yet.</p>
+  </section>
+
+<section id="trends">
+  <div class="sec-head"><h3>Habits over the last year</h3><span class="muted" id="range-label">Last 12 months</span></div>
+
+  <details id="scope-details">
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">What each trend covers</span><span class="sum-meta">12 months by source. Dashed means second look can't see it</span></span><span></span></summary>
+    <div class="body">
+      <div class="tl" id="tl-sources"></div>
+      <p class="eyebrow tl-group">Token usage</p>
+      <div class="tl" id="tl-usage"></div>
+      <div class="tl-axis" id="tl-axis"></div>
+      <div class="tl-legend"><span><i class="seg-data"></i>Data</span><span><i style="background:var(--seg-track)"></i>No sessions</span><span><i class="seg-out"></i>Outside what second look can see</span></div>
+    </div>
+  </details>
+
+  <div class="filters" role="group" aria-label="Filter the charts">
+    <div class="fgroup" id="f-range" role="group" aria-label="Time range"><span class="flabel">Time</span></div>
+    <div class="fgroup" id="f-source" role="group" aria-label="Source"><span class="flabel">Source</span></div>
+    <div class="fgroup"><label class="flabel" for="f-cat">Work</label><select id="f-cat"></select></div>
+    <span class="fsum" id="f-sum"></span>
+  </div>
+
+  <p class="def static-note">Showing the last 12 months across every tool. Open this file in Chrome, Safari or another browser to filter the charts.</p>
+  <div class="multiples" id="primary-charts"></div>
+
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+      <span class="sum-main"><span class="sum-title">More metrics</span><span class="sum-meta">Volume, skill use, rules retyped, refinement</span></span><span></span></summary>
+    <div class="body"><div class="multiples" id="more-charts"></div></div>
+  </details>
+
+  <div class="split">
+    <div class="panel">
+      <h3>What you used AI for</h3>
+      <p class="def">Share of sessions by kind of work, labeled from each session's opening message. Click a row to filter the charts.</p>
+      <div class="bars" id="cat-bars"></div>
+    </div>
+    <div class="panel">
+      <h3>Where you worked</h3>
+      <p class="def">Share of sessions by tool for the current filters.</p>
+      <div class="bars" id="src-bars"></div>
+    </div>
+  </div>
+  <p class="insight" id="cat-insight"></p>
+
+
+  <details open>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+      <span class="sum-main"><span class="sum-title">How each product's use is changing</span><span class="sum-meta">First 4 weeks with data vs the last 4, per product</span></span><span></span></summary>
+    <div class="body">
+      <p class="insight" id="prod-insight"></p>
+      <div class="tbl"><table id="prod-table">
+        <thead><tr><th>Product</th><th class="num">Sessions</th><th>Main uses now (change)</th><th class="num">Briefed starts</th><th class="num">Corrections / 10</th><th class="num">Output checking</th><th class="num">Restarts</th></tr></thead>
+        <tbody></tbody></table></div>
+      <p class="def">Each cell shows the last 4 weeks, with the change from that product's first 4 weeks in range in parentheses. Uses ignore the Work filter so the mix stays complete; habits follow it. Numbers need at least 10 sessions in a 4-week window; products below that, or with under 8 weeks of data, say so instead.</p>
+    </div>
+  </details>
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+      <span class="sum-main"><span class="sum-title">Habits by kind of work</span><span class="sum-meta">Where you brief, check and restart differently</span></span><span></span></summary>
+    <div class="body"><div class="tbl"><table id="cat-table">
+      <thead><tr><th>Work</th><th class="num">Sessions</th><th class="num">Briefed starts</th><th class="num">Corrections</th><th class="num">Output checking</th><th class="num">Restarts</th></tr></thead>
+      <tbody></tbody></table></div>
+      <p class="def">Pink marks where each habit is strongest. Kinds with fewer than 10 sessions in range are left out of the comparison.</p></div>
+  </details>
+
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+      <span class="sum-main"><span class="sum-title">Start vs end of range</span><span class="sum-meta" id="tn-meta">First 4 weeks compared with the last 4</span></span><span></span></summary>
+    <div class="body"><div class="tbl"><table id="then-now">
+      <thead><tr><th>Metric</th><th class="num" id="tn-a">Start</th><th class="num">Last 4 weeks</th><th class="num">Change</th><th>Better is</th></tr></thead>
+      <tbody></tbody></table></div></div>
+  </details>
+
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+      <span class="sum-main"><span class="sum-title">How these are measured</span><span class="sum-meta">Data coverage, gaps and labeling</span></span><span class="tags"><span class="pill p2">Gap</span></span></summary>
+    <div class="body">
+      <div class="tbl"><table>
+        <thead><tr><th>Source</th><th>From</th><th>How</th></tr></thead>
+        <tbody>
+          <tr><td>claude.ai</td><td>Oct 2025</td><td>Data export (conversations.json)</td></tr>
+          <tr><td>ChatGPT</td><td>Oct 2025</td><td>Data export (conversations.json)</td></tr>
+          <tr><td>Claude Code</td><td>Sep 21, 2026</td><td>Local logs. Older sessions were deleted by the 30-day cleanup; now kept for a year</td></tr>
+          <tr><td>Codex</td><td>Apr 2026</td><td>Local logs</td></tr>
+          <tr><td>Cursor</td><td>Feb 2026</td><td>Local database</td></tr>
+        </tbody></table></div>
+      <p class="def">These numbers are read from wording, so treat them as estimates. Each review, the coach spot-checks a dozen sessions before trusting them, and you can correct a label at the next review. The jump in late September is when Claude Code data starts; your habits didn't change that week.</p>
+    </div>
+  </details>
+</section>
+
+  <section>
+  <div class="sec-head"><h3>Usage this cycle</h3><span class="muted">Oct 12–25</span></div>
+  <p class="def">You hit 1 usage limit this cycle. A full breakdown of where your usage went appears here once you hit 3 or more in a cycle.</p>
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">By tool</span><span class="sum-meta">Claude Code carried most of the build work; claude.ai most of the thinking.</span></span><span></span></summary>
+    <div class="body"><div class="tbl"><table>
+      <thead><tr><th>Tool</th><th class="num">Sessions</th><th class="num">Prompts</th><th class="num">Median length</th><th class="num">Corrections</th></tr></thead>
+      <tbody>
+        <tr><td>claude.ai</td><td class="num">31</td><td class="num">260</td><td class="num">212</td><td class="num">28</td></tr>
+        <tr><td>Claude Code</td><td class="num">34</td><td class="num">330</td><td class="num">148</td><td class="num">38</td></tr>
+        <tr><td>Codex</td><td class="num">7</td><td class="num">60</td><td class="num">96</td><td class="num">6</td></tr>
+        <tr><td>Cursor</td><td class="num">13</td><td class="num">95</td><td class="num">41</td><td class="num">11</td></tr>
+        <tr><td>ChatGPT</td><td class="num">9</td><td class="num">75</td><td class="num">158</td><td class="num">7</td></tr>
+      </tbody></table></div></div>
+  </details>
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">Skills and commands</span><span class="sum-meta">5 used · 2 unused for 30+ days</span></span><span></span></summary>
+    <div class="body"><div class="tbl"><table>
+      <thead><tr><th>Skill</th><th class="num">Runs</th></tr></thead>
+      <tbody>
+        <tr><td>ui-review</td><td class="num">7</td></tr>
+        <tr><td>pr-review</td><td class="num">5</td></tr>
+        <tr><td>beta-feedback-synth</td><td class="num">3</td></tr>
+        <tr><td>metrics-check</td><td class="num">2</td></tr>
+        <tr><td>explain-like-pm</td><td class="num">1</td></tr>
+        <tr><td>release-notes</td><td class="num">0 <span class="muted">· unused 30 days</span></td></tr>
+        <tr><td>test-plan</td><td class="num">0 <span class="muted">· unused 30 days</span></td></tr>
+      </tbody></table></div></div>
+  </details>
+  <details>
+    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">Try next</span><span class="sum-meta">2 features that fit how you worked these two weeks</span></span><span></span></summary>
+    <div class="body">
+      <div class="field"><span class="eyebrow">Plan mode in Claude Code</span><p>4 of your 6 Claude Code <span class="term" tabindex="0" aria-describedby="def-restarts-part3">restarts<span class="term-card" role="tooltip" id="def-restarts-part3">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span> were multi-step builds. Planning before code would have surfaced the missing brief at turn 1.</p></div>
+      <div class="field"><span class="eyebrow">Subagents for research</span><p>One session read 31 files to answer one question. A research subagent returns just the answer and keeps your main context clean.</p></div>
+    </div>
+  </details>
+</section>
+
+</div>
+
 <div class="part" id="report-issue">
   <div class="part-head">
     <h2>Report an issue</h2>
@@ -1305,9 +1305,9 @@ Before building, list up to 3 questions you need answered.</pre></div>
     <p class="toc-h">On this page</p>
     <ol>
       <li><a href="#glance" data-target="glance">This cycle at a glance</a></li>
-      <li><a href="#part-1" data-target="part-1">How your behavior is changing</a></li>
       <li><a href="#part-2" data-target="part-2">Improve your prompts and context</a></li>
       <li><a href="#part-3" data-target="part-3">Keep your skills current</a></li>
+      <li><a href="#part-1" data-target="part-1">How your behavior is changing</a></li>
       <li><a href="#report-issue" data-target="report-issue">Report an issue</a></li>
     </ol>
     <a href="#" class="toc-top" id="toc-top">Back to top</a>

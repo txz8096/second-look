@@ -339,16 +339,6 @@ measure the sources can't give, like long-session share from claude.ai alone. Ke
 each habit in the summary and in each part with the same component, even when the prose
 words it differently ("misread you", "a real brief"). See "Habit terms" in the design system.
 
-**How your behavior is changing** (`#part-1`). First, so the review opens where the
-walkthrough does: did last cycle's fixes work, and how are the habits trending. No headline;
-the summary already tells the story. Fill the scope line and "What each trend covers" from
-`SCOPE` (see "Data scope"). "Did last cycle's fixes work?" appears only when an earlier
-review logged fixes; on a first review, delete that section. One row per fix: tried?, did the habit change ("Cause unclear" when something else could
-explain it), did the work get better ("Not measured" when there's no data yet), costs,
-decision (Keep, Revise, Drop). Then "Habits over the last year" (`#trends`), filled from the
-cube, and "Usage this cycle" (by tool, skills and commands, and "Try next"). Open "Usage this
-cycle" with the usage-limit line from the template.
-
 **Improve your prompts and context** (`#part-2`). A headline with the biggest finding. Then
 one card per prompting, context or memory pattern, biggest first (time lost × how often).
 Each card: a title that states the finding; tags for the tools and how sure (Clear pattern,
@@ -378,6 +368,17 @@ status table; "Fix first" (issue, impact, how sure, fix) with paste-ready diffs 
 ones; "Worth a look" (issue, why it matters, how sure, next step) with dated sources, including the
 starting-context row from "Usage" when it applies;
 collapsed "Skills you installed from others".
+
+**How your behavior is changing** (`#part-1`). Last, after the skills part, so the review
+opens on what to change now and ends with how it's going: did last cycle's fixes work, and
+how are the habits trending. The id stays `#part-1`. No headline;
+the summary already tells the story. Fill the scope line and "What each trend covers" from
+`SCOPE` (see "Data scope"). "Did last cycle's fixes work?" appears only when an earlier
+review logged fixes; on a first review, delete that section. One row per fix: tried?, did the habit change ("Cause unclear" when something else could
+explain it), did the work get better ("Not measured" when there's no data yet), costs,
+decision (Keep, Revise, Drop). Then "Habits over the last year" (`#trends`), filled from the
+cube, and "Usage this cycle" (by tool, skills and commands, and "Try next"). Open "Usage this
+cycle" with the usage-limit line from the template.
 
 **Report an issue** (`#report-issue`). Keep the template's line and link to
 https://github.com/txz8096/second-look/issues/new as they are.

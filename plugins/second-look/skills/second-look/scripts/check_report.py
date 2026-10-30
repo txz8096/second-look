@@ -11,6 +11,7 @@ DEFAULT_TEMPLATE = os.path.join(os.path.dirname(HERE), "report-template.html")
 
 FONT_LINK = "family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500"
 REQUIRED_IDS = ["glance", "part-1", "part-2", "part-3", "trends", "report-issue", "toc"]
+SECTION_ORDER = ["part-2", "part-3", "part-1", "report-issue"]
 REQUIRED_TEXT = [
     "Learn from the way you work with AI",
     "This cycle at a glance",
@@ -89,6 +90,10 @@ def main():
     for t in REQUIRED_TEXT:
         if t not in html:
             problems.append(f'missing "{t}"')
+    # prompts, then skills, then behavior last
+    order = [html.find(f'<div class="part" id="{i}"') for i in SECTION_ORDER]
+    if -1 not in order and order != sorted(order):
+        problems.append("parts out of order: prompts and context, skills, behavior, then report an issue")
     markup = re.sub(r"<style>.*?</style>", "", html, flags=re.S)
     for needle, why in FORBIDDEN.items():
         if needle in markup:
