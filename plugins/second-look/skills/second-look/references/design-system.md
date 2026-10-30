@@ -90,7 +90,7 @@ Every glance stat except Sessions keeps its card from the template. In prose, wr
 mention of each habit in the summary, in each part's headline and cards, and in "Usage this
 cycle". Wrap the words the sentence uses, even when they aren't the habit's name: "corrections",
 "Claude misread you only six times", "start with a real brief". Skip headings, table cells and
-chart text (charts carry their own definition line). One card per habit per section, so a
+chart text (each chart carries a short definition line, and its title opens a card from `METRICS` in the template script). One card per habit per section, so a
 paragraph never shows the same card twice. Ids are `def-<habit>-<section>`, for example
 `def-corrections-summary`, and must be unique. Cards work inside `p` and `dd`.
 Use these definitions word for word:

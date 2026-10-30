@@ -463,7 +463,8 @@ in one line. It stops Claude Code deleting logs after 30 days. Weeks already del
 
 The template draws long-session share and starting context from Claude Code and Codex only, and
 notes under each chart which chosen tools it leaves out. Keep the long-session share term card from the
-template on the glance stat and the chart title, and the "Chats crowded with lookups" card on its chart title.
+template on the glance stat. Every chart title has its own card in the template's `METRICS` (why it
+matters, what higher and lower mean); keep them as they are.
 
 Kinds of work, from each session's opening message: Prototyping, Creating, Research,
 Brainstorming, Career, Consultation.
