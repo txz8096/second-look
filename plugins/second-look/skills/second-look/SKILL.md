@@ -248,7 +248,7 @@ and still works on current models.
    unchecked) with samples. Prose and settings files don't count as code. Open two samples
    and confirm them in the log before citing the number. Its `delegation` block counts
    sessions that handed work to a subagent (by purpose: research, check, build) and
-   "Reading piled into the chat" (`read_heavy`: 25+ reads and searches in the main conversation, no subagent) with
+   "Chats crowded with lookups" (`read_heavy`: 25+ reads and searches in the main conversation, no subagent) with
    their share of usage.
 2. If you can also search their past Claude chats, open the real work chats in the window.
    Note restarts, corrections, restated preferences, and polished output accepted without a
@@ -363,7 +363,7 @@ questions, or a standing rule or hook that runs the check before a commit. The l
 checks they did themselves in a browser or in their head, so say "no check in the session",
 never "you didn't check". When
 long sessions take a large share of usage, fold that into a long-session card (see "Usage").
-When "Reading piled into the chat" sessions take a tenth of usage or more, add a delegation card: the fix hands
+When "Chats crowded with lookups" take a tenth of usage or more, add a delegation card: the fix hands
 wide reading to a subagent that returns a short answer, and hands checks to a fresh subagent
 that gets the claim and where to verify it, never the reasoning behind it. Keep building,
 taste and anything that needs their own facts in the main session. Say what you can't tell:
@@ -457,13 +457,13 @@ in one line. It stops Claude Code deleting logs after 30 days. Weeks already del
 | Agent checks | agent_checked / edited | The agent ran a test, build, lint or browser check after its last code edit. Claude Code and Codex only | Higher |
 | Unchecked ships | unchecked_ships | A commit, push, deploy or "ship it" while code edits were still unchecked | Lower |
 | Delegated sessions | delegated / metered | Sessions that handed work to a subagent. Claude Code and Codex only | — |
-| Reading piled into the chat | read_heavy / metered | 25+ reads and searches in the main conversation with no subagent | Lower |
+| Chats crowded with lookups | read_heavy / metered | 25+ reads and searches in the main conversation with no subagent | Lower |
 | Long-session share | long_usage / usage | Usage from sessions past 150k tokens. Claude Code and Codex only | Lower |
 | Starting context | start_tokens / metered | Tokens loaded before the first message. Claude Code and Codex only | Lower |
 
 The template draws long-session share and starting context from Claude Code and Codex only, and
 notes under each chart which chosen tools it leaves out. Keep the long-session share term card from the
-template on the glance stat and the chart title.
+template on the glance stat and the chart title, and the "Chats crowded with lookups" card on its chart title.
 
 Kinds of work, from each session's opening message: Prototyping, Creating, Research,
 Brainstorming, Career, Consultation.
