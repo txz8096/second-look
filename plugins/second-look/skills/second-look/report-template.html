@@ -126,11 +126,26 @@ th.num { text-align: right; }
 .k-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--series); }
 .k-ms { width: 0; height: 12px; border-left: 1px dashed var(--milestone); }
 .multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 12px; }
+/* chart groups: a tile per question; the open one shows a summary, then its charts */
+.grp-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 8px; margin: 4px 0 14px; }
+.grp-tile { height: auto; text-align: left; display: grid; gap: 6px; align-content: start; padding: 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); color: var(--fg); }
+.grp-tile:hover { color: var(--fg); border-color: var(--line-strong); }
+.grp-tile[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
+.grp-tile .q { font-weight: 600; font-size: 0.95rem; line-height: 1.3; }
+.grp-tile .s { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+@media (max-width: 680px) { .grp-tiles { grid-template-columns: 1fr 1fr; } .grp-tile .s { display: none; } }
+.grp-panel { display: grid; gap: 8px; }
+.grp-panel.off { display: none; }
+.grp-title { display: none; }
+.grp-sum { display: grid; gap: 12px; padding: 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); margin-bottom: 6px; }
+.grp-sum p { margin: 0; max-width: 68ch; line-height: 1.55; }
+.grp-sum .lead { font-size: 1rem; color: var(--fg); text-wrap: pretty; }
+.grp-sum .how { font-size: 0.875rem; color: var(--muted); text-wrap: pretty; }
+.grp-read { margin: 4px 0 0; padding-top: 10px; border-top: 1px solid var(--line); font-size: 0.85rem; line-height: 1.5; color: var(--muted); }
+.grp-read b { font-weight: 600; color: var(--fg); }
 .chart { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 12px 6px; display: grid; gap: 4px; min-width: 0; position: relative; }
 .chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .chart-head h3 { font-size: 0.92rem; font-weight: 500; }
-.chart-now { font-variant-numeric: tabular-nums; font-size: 0.84rem; color: var(--muted); }
-.chart-now b { color: var(--fg); font-size: 1.05rem; }
 .chart svg { width: 100%; height: auto; display: block; overflow: visible; touch-action: pan-y; }
 .chart svg text { fill: var(--muted); font-family: var(--sans); font-size: 10px; font-variant-numeric: tabular-nums; }
 .tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); font-size: 0.78rem; line-height: 1.35;
@@ -173,7 +188,7 @@ h2 { font-size: 1.125rem; line-height: 1.5rem; font-weight: 500; }
 .eyebrow, .flabel, th { font-size: 0.75rem; line-height: 1rem; letter-spacing: 0.15px; text-transform: none; font-weight: 500; color: var(--muted); }
 .thesis, .insight { font-size: 1rem; line-height: 1.375rem; }
 .trend-intro { font-size: 0.875rem; line-height: 1.25rem; color: var(--muted); }
-.sum-meta, .def, .key, .chart-now, .bval { font-size: 0.8125rem; line-height: 1.125rem; }
+.sum-meta, .def, .key, .bval { font-size: 0.8125rem; line-height: 1.125rem; }
 .sec-head { border-bottom: none; padding-bottom: 0; }
 
 /* cards: white, 1px neutral-200 border, card shadow, 10px radius */
@@ -496,6 +511,10 @@ a.from-link:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 #trends[data-static] .filters { display: none; }
 .static-note { display: none; }
 #trends[data-static] .static-note { display: block; }
+#trends[data-static] .grp-tiles { display: none; }
+#trends[data-static] .grp-panel.off { display: grid; }
+#trends[data-static] .grp-panel { margin-bottom: 24px; }
+#trends[data-static] .grp-title { display: block; }
 
 /* dialog: ordered priorities + pool */
 .gd-sec { display: grid; gap: 8px; }
@@ -843,7 +862,7 @@ html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   .eyebrow, .head-row .eyebrow, th, .flabel, .ic-grid dt, .judge dt, .gd-label, .toc-h, .sum-meta-label, .maint .part-head > .eyebrow, .field > .eyebrow, .term-card code { font-size: 13px; }
   .tag, .conf, .pill, .badge, .slot, .sample, a.from-link, td a.from-link, .ic-tags .tag, .ic-tags .conf, .ic-tags a.from-link, .try-head .conf,
   .gapnote, .better, .copy, .scope-at, .tl-axis, .gnum, .plan-fit, .gd-item .gd-text span, .layer, .gc { font-size: 13px; }
-  .sum-meta, .def, .key, .chart-now, .bval, .method, .part-meta, .data-note, .ic-fit, .ic-tags .ic-fit, .gd-hint, .gd-text span, .gd-custom label,
+  .sum-meta, .def, .key, .bval, .method, .part-meta, .data-note, .ic-fit, .ic-tags .ic-fit, .gd-hint, .gd-text span, .gd-custom label,
   .tl-status, .tl-legend, .fsum, .chip, .stat .why, .stat .delta, .head-meta, .src, .tip, .tip-pop, .term-card, .judge dt, footer, table, pre,
   .plan-grid span:last-child, .fact-inf, .ic-grid dt, details.nested > summary, .toc-btn, .toc a { font-size: 14px; }
   .ic-grid dd, .judge dd, .try .try-do, .scope-line, .tl-name, .lede, .gaps { font-size: 16px; }
@@ -1175,13 +1194,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
   </div>
 
   <p class="def static-note">Showing the last 12 months across every tool. Open this file in Chrome, Safari or another browser to filter the charts.</p>
-  <div class="multiples" id="primary-charts"></div>
-
-  <details>
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
-      <span class="sum-main"><span class="sum-title">More metrics</span><span class="sum-meta">Volume, skill use, rules retyped, refinement</span></span><span></span></summary>
-    <div class="body"><div class="multiples" id="more-charts"></div></div>
-  </details>
+  <div id="groups"></div>
 
   <div class="split">
     <div class="panel">
@@ -1474,50 +1487,129 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
   const pct = v => Math.round(v * 100) + "%";
   const per10 = v => (v * 10).toFixed(1);
   const METRICS = [
-    {id: "briefed", el: "primary-charts", title: "Briefed starts", num: "briefed", den: "sessions", fmt: pct, d: "pts", better: "up",
+    {id: "briefed", el: "g-clear", title: "Briefed starts", num: "briefed", den: "sessions", fmt: pct, d: "pts", better: "up",
      def: "Sessions whose first message gives the goal, context and what done looks like.",
      card: "A clear first message saves the back-and-forth that happens when the AI has to guess. A start counts as briefed when it gives at least two of three things: the goal, the context, and what done looks like. Higher means more sessions start on the right track. Lower means the AI is guessing more often, which tends to show up later as corrections and restarts."},
-    {id: "corrections", el: "primary-charts", title: "Corrections per 10 messages", num: "corrections", den: "prompts", fmt: per10, d: "per10", better: "down",
+    {id: "corrections", el: "g-clear", title: "Corrections per 10 messages", num: "corrections", den: "prompts", fmt: per10, d: "per10", better: "down",
      def: "Times you said “no, I meant…”, per 10 messages.",
      card: "Each correction is a misunderstanding you paid for: a wrong turn, then a message to undo it. It's counted per 10 messages, so busy and quiet weeks compare fairly. Lower means the AI gets you right the first time more often. Higher usually traces back to thin briefs or to rules the AI doesn't have, so look at those two charts when it rises."},
-    {id: "checked", el: "primary-charts", title: "Output checking", num: "checked", den: "build", fmt: pct, d: "pts", better: "up",
+    {id: "checked", el: "g-check", title: "Output checking", num: "checked", den: "build", fmt: pct, d: "pts", better: "up",
      def: "Build and research sessions where you asked for sources, edge cases or a critique.",
      card: "AI output can look finished and still be wrong, and people check less when it looks polished. This counts the sessions where you pushed back before accepting. Higher means you test the work more often. Lower is fine for throwaway work and a warning for anything other people will see. It only sees checks you typed in the chat, not ones you did on your own."},
-    {id: "restarts", el: "primary-charts", title: "Restarts", num: "restarts", den: "sessions", fmt: pct, d: "pts", better: "down",
+    {id: "restarts", el: "g-clear", title: "Restarts", num: "restarts", den: "sessions", fmt: pct, d: "pts", better: "down",
      def: "Sessions that start over on a task you began in the last 2 days.",
      card: "Starting over throws away the first try and the time it took. A restart is a new session that opens with mostly the same request as one from the last two days, in the same tool. Lower means first tries land more often. Higher usually means the first brief was missing something, or the chat got too long and muddled to continue."},
-    {id: "sessions", el: "more-charts", title: "Sessions per week", num: "sessions", den: null, fmt: v => Math.round(v), d: "rel", better: "none",
+    {id: "sessions", el: "g-usage", title: "Sessions per week", num: "sessions", den: null, fmt: v => Math.round(v), d: "rel", better: "none",
      def: "How many sessions you started each week.",
      card: "This is the backdrop for every other chart: a busy week has more room for corrections and restarts, so read the other numbers against it. Up or down isn't good or bad on its own. Higher means you leaned on AI more that week; lower means less."},
-    {id: "skilled", el: "more-charts", title: "Skill use", num: "skilled", den: "sessions", fmt: pct, d: "pts", better: "up",
+    {id: "skilled", el: "g-delegate", title: "Skill use", num: "skilled", den: "sessions", fmt: pct, d: "pts", better: "up",
      def: "Sessions that ran one of your skills or slash commands.",
      card: "A skill packages a process you'd otherwise explain from scratch, so it runs the same way every time. Each session counts once, however many skills it ran. Higher means more of your work runs on steps you've already written down. Lower can mean you're doing new kinds of work, or that a skill stopped triggering when it should."},
-    {id: "retyped", el: "more-charts", title: "Rules retyped per week", num: "retyped", den: null, fmt: v => Math.round(v), d: "rel", better: "down",
+    {id: "retyped", el: "g-clear", title: "Rules retyped per week", num: "retyped", den: null, fmt: v => Math.round(v), d: "rel", better: "down",
      def: "Standing preferences typed by hand, like “use tables”.",
      card: "Typing the same preference again costs time, and it's easy to forget, so the AI follows it only some of the time. A rule you type more than once belongs in your CLAUDE.md, AGENTS.md or Cursor rules. Lower means your setup carries your preferences for you. Higher means rules are living in your head and not in a file."},
-    {id: "longshare", el: "more-charts", title: "Long-session share", num: "long_usage", den: "usage", fmt: pct, d: "pts", better: "down",
+    {id: "longshare", el: "g-usage", title: "Long-session share", num: "long_usage", den: "usage", fmt: pct, d: "pts", better: "down",
      def: "Share of your usage from sessions past 150k tokens.",
      card: "Every message in a long session re-reads the whole history first, so these sessions use up your limit fastest. Lower means you start fresh more often when a task or phase ends. Higher means more of your usage goes to re-reading old conversation. Running /clear or opening a new session between tasks lowers it. Counts Claude Code and Codex only, since other tools don't log tokens."},
-    {id: "starttokens", el: "more-charts", title: "Starting context", num: "start_tokens", den: "metered", fmt: v => Math.round(v / 1000) + "k", d: "rel", better: "down",
+    {id: "starttokens", el: "g-usage", title: "Starting context", num: "start_tokens", den: "metered", fmt: v => Math.round(v / 1000) + "k", d: "rel", better: "down",
      def: "Tokens loaded before your first message, on average.",
      card: "Tool instructions, your skill list and your instruction files load into every session before you type anything, and every message re-reads them. Lower means a leaner start, so more of your usage goes to the work itself. Higher usually means skills, plugins or instruction files that load every time but rarely get used. Counts Claude Code and Codex only."},
-    {id: "agentchecked", el: "more-charts", title: "Agent checks", num: "agent_checked", den: "edited", fmt: pct, d: "pts", better: "up", logs: "tool calls",
+    {id: "agentchecked", el: "g-check", title: "Agent checks", num: "agent_checked", den: "edited", fmt: pct, d: "pts", better: "up", logs: "tool calls",
      def: "Sessions where the agent tested its code changes before moving on.",
      card: "An agent saying “done” isn't proof the code works. This counts sessions where the agent changed code and then ran a test, build, lint or browser check after its last edit. Higher means more of your code changes were tested before you moved on. Lower means you're relying on the agent's word, or on checks you do yourself, which this chart can't see. Counts Claude Code and Codex only."},
-    {id: "uncheckedships", el: "more-charts", title: "Unchecked ships per week", num: "unchecked_ships", den: null, fmt: v => Math.round(v), d: "rel", better: "down", logs: "tool calls",
+    {id: "uncheckedships", el: "g-check", title: "Unchecked ships per week", num: "unchecked_ships", den: null, fmt: v => Math.round(v), d: "rel", better: "down", logs: "tool calls",
      def: "Commits, pushes, deploys or “ship it” while code changes were untested.",
      card: "This is where an untested change reaches other people: a commit, push, deploy or “ship it” after code edits with no test, build or browser check in between. Lower is better. Higher means more untested work is going out; a standing rule to run checks before every commit fixes it. Checks you ran yourself outside the chat don't show, so open a few before acting on it. Counts Claude Code and Codex only."},
-    {id: "delegated", el: "more-charts", title: "Delegated sessions", num: "delegated", den: "metered", fmt: pct, d: "pts", better: "none", logs: "tool calls",
+    {id: "delegated", el: "g-delegate", title: "Delegated sessions", num: "delegated", den: "metered", fmt: pct, d: "pts", better: "none", logs: "tool calls",
      def: "Sessions that handed work to a helper agent.",
      card: "A helper agent (a subagent) does a piece of work in its own space and brings back only the result, so your main chat stays short. It pays off on wide searches and independent checks, and adds cost on small tasks. Higher isn't automatically better: read it next to “Chats crowded with lookups”. If lookups are high while this stays low, you're doing searches in the chat that a helper could take. Counts Claude Code and Codex only."},
-    {id: "readheavy", el: "more-charts", title: "Chats crowded with lookups", num: "read_heavy", den: "metered", fmt: pct, d: "pts", better: "down", logs: "tool calls",
+    {id: "readheavy", el: "g-delegate", title: "Chats crowded with lookups", num: "read_heavy", den: "metered", fmt: pct, d: "pts", better: "down", logs: "tool calls",
      def: "Chats where the AI did 25 or more lookups itself, with no helper agent.",
      card: "Everything the AI opens or searches stays in the chat, and the whole chat is re-read every time you send a message. After 25 or more lookups, even a small follow-up costs a lot, so you reach your usage limit sooner, and the AI has more old material to sift through. Lower is better: wide searches went to a helper agent that brought back only the answer. Higher means more of your usage goes to re-reading old lookups. Counts Claude Code and Codex only."},
-    {id: "refinements", el: "more-charts", title: "Refinements per session", num: "refinements", den: "sessions", fmt: v => v.toFixed(1), d: "abs", better: "up",
+    {id: "refinements", el: "g-clear", title: "Refinements per session", num: "refinements", den: "sessions", fmt: v => v.toFixed(1), d: "abs", better: "up",
      def: "Follow-ups that build on a good answer, like “now make it shorter”.",
      card: "Good results usually come from building on a first draft. This counts follow-ups like “now make it shorter” or “add a row for…”, which aren't corrections. Higher means you're shaping good output further. Lower can mean you accept first drafts as they are, or that your follow-ups go to corrections."},
   ];
   const milestones = [{i: 19, label: "First skill"}, {i: 37, label: "Global CLAUDE.md"}, {i: 46, label: "Streak redesign starts"}];
+
+  // ---- chart groups: the questions people bring to the report ----
+  const GROUPS = [
+    {id: "clear", ids: ["briefed", "corrections", "restarts", "retyped", "refinements"], title: "Am I explaining what I want?", blurb: "How often the AI gets you right on the first try, and what you keep having to repeat.",
+     how: "These charts follow a chat from its first message: whether you gave the goal, context and what done looks like, how often you then corrected, restarted or retyped a rule, and how often you built on a good answer."},
+    {id: "check", ids: ["checked", "agentchecked", "uncheckedships"], title: "Am I checking the work?", blurb: "Whether answers and code get tested before they reach anyone.",
+     how: "These charts follow the work to the finish: whether you pushed back on answers in the chat, whether the agent ran a test after changing code, and how often untested code was committed or shipped. The last two cover Claude Code and Codex only."},
+    {id: "delegate", ids: ["delegated", "readheavy", "skilled"], title: "Am I handing off the right work?", blurb: "How much searching and repeat work goes to helper agents and skills.",
+     how: "These charts look at work you could hand off: sessions that used a helper agent, chats where the AI did 25 or more lookups itself, and sessions that ran one of your skills. Read the first two together."},
+    {id: "usage", ids: ["sessions", "longshare", "starttokens"], title: "Where does my usage go?", blurb: "How much you use AI, and what eats into your limit.",
+     how: "These charts show volume and cost: sessions started per week, the share of usage from very long sessions, and how much loads before your first message."},
+  ];
+  // what each chart says when it moves: rose/fell for the summary, up/down for the line under the chart
+  const READS = {
+    briefed: {rose: "more of your chats opened with a full brief", fell: "fewer of your chats opened with a full brief", up: "the AI starts on the right track more often", down: "the AI has to guess more at the start"},
+    corrections: {rose: "you corrected the AI more often", fell: "you corrected the AI less often", up: "first answers are missing what you meant", down: "the AI gets you right the first time more often"},
+    restarts: {rose: "more tasks had to be started over", fell: "fewer tasks had to be started over", up: "a first brief was missing something, or a chat got too long to continue", down: "first tries are landing"},
+    retyped: {rose: "you retyped standing rules more", fell: "you retyped standing rules less", up: "preferences live in your head instead of a saved file", down: "your instruction files carry your preferences for you"},
+    refinements: {rose: "you built on good answers more", fell: "you built on good answers less", up: "you're shaping good drafts further", down: "you take first drafts as they are, or follow-ups turned into corrections"},
+    checked: {rose: "you pushed back on answers more often", fell: "you pushed back on answers less often", up: "you test the work before accepting it", down: "more answers were taken as given, which is fine for throwaway work"},
+    agentchecked: {rose: "the agent tested its code changes more often", fell: "the agent tested its code changes less often", up: "more code changes were tested before you moved on", down: "you're relying on the agent's word that the code works"},
+    uncheckedships: {rose: "more untested changes went out", fell: "fewer untested changes went out", up: "untested code reached a commit, push or deploy", down: "changes get checked before they ship"},
+    delegated: {rose: "you handed more work to helper agents", fell: "you handed less work to helper agents", up: "more searches and checks ran outside your main chat", down: "more work stayed in the main chat, which suits small tasks"},
+    readheavy: {rose: "more chats filled up with lookups", fell: "fewer chats filled up with lookups", up: "more of your usage goes to re-reading old searches", down: "wide searches went to a helper and came back as answers"},
+    skilled: {rose: "more sessions ran one of your skills", fell: "fewer sessions ran one of your skills", up: "more work runs on steps you've already written down", down: "you're doing new kinds of work, or a skill stopped triggering"},
+    sessions: {rose: "you used AI more", fell: "you used AI less", up: "a busier stretch, with more room for corrections and restarts", down: "a quieter stretch"},
+    longshare: {rose: "more of your usage went to very long sessions", fell: "less of your usage went to very long sessions", up: "more usage goes to re-reading old conversation", down: "you start fresh between tasks more often"},
+    starttokens: {rose: "sessions started heavier", fell: "sessions started leaner", up: "more loads before you type, often skills or plugins you rarely use", down: "more of your usage goes to the work itself"},
+  };
+  const groupsEl = document.getElementById("groups");
+  const trendOf = r => !r.dlt || r.m.better === "none" || Math.abs(r.dlt.v) < 1e-9 ? "flat" : ((r.m.better === "up") === (r.dlt.v > 0) ? "good" : "bad");
+  const listed = a => a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1];
+  const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
+  // empty tiles and panels; chart() fills each panel's grid
+  function groupShells() {
+    groupsEl.innerHTML = `<div class="grp-tiles" role="group" aria-label="Chart groups">${GROUPS.map(g =>
+      `<button type="button" class="grp-tile" id="grp-tile-${g.id}" data-g="${g.id}" aria-controls="grp-${g.id}"><span class="q">${g.title}</span><span class="s">${g.blurb}</span></button>`).join("")}</div>
+      ${GROUPS.map(g => `<div class="grp-panel" id="grp-${g.id}" role="region" aria-labelledby="grp-tile-${g.id}"><h4 class="grp-title">${g.title}</h4><div class="grp-sum" aria-live="polite"></div><div class="multiples" id="g-${g.id}"></div></div>`).join("")}`;
+  }
+  // what changed in one group, how it's measured, and how to read each chart
+  function groupSummary(g, results) {
+    const rs = results.filter(r => g.ids.includes(r.m.id));
+    const moved = r => r.dlt && Math.abs(r.dlt.v) >= 1e-9;
+    const clause = r => r.dlt.v > 0 ? READS[r.m.id].rose : READS[r.m.id].fell;
+    const good = rs.filter(r => trendOf(r) === "good").map(clause);
+    const bad = rs.filter(r => trendOf(r) === "bad");
+    const context = rs.filter(r => r.m.better === "none" && moved(r)).map(clause);
+    const steady = rs.filter(r => r.m.better !== "none" && r.dlt && !moved(r)).map(r => r.m.title.toLowerCase());
+    const missing = rs.filter(r => !r.dlt).map(r => r.m.title);
+    const said = [];
+    if (good.length && bad.length) said.push(`${cap(listed(good))}, but ${listed(bad.map(clause))}.`);
+    else if (good.length) said.push(good.length === rs.length && rs.length > 2 ? `Every one moved the right way. ${cap(listed(good))}.` : `${cap(listed(good))}.`);
+    else if (bad.length) said.push(`${cap(listed(bad.map(clause)))}.`);
+    if (context.length) said.push(`${cap(listed(context))}.`);
+    if (steady.length) said.push(`${cap(listed(steady))} held steady.`);
+    const span = state.range === 4 ? "the 4 weeks before" : "the first 4 weeks of this range";
+    let lead = said.length ? `In the last 4 weeks, compared with ${span}: ${said.join(" ").replace(/^./, c => c.toLowerCase())}` : "There isn't enough history yet to show a trend here.";
+    if (bad.length) lead += ` Start with the ${bad[0].m.title} chart.`;
+    else if (good.length && !missing.length) lead += " Nothing here needs fixing right now.";
+    if (missing.length && said.length) lead += ` ${listed(missing)} ${missing.length === 1 ? "needs" : "need"} more weeks of history before showing a trend.`;
+    const panel = document.getElementById("grp-" + g.id);
+    panel.querySelector(".grp-sum").innerHTML = `<span class="eyebrow">What your charts say</span><p class="lead">${lead}</p><p class="how">${g.how}</p>`;
+    // slipping charts first, each with how to read it underneath
+    const grid = panel.querySelector(".multiples"), order = {bad: 0, good: 1, flat: 2};
+    [...rs].sort((a, b) => order[trendOf(a)] - order[trendOf(b)]).forEach(r => {
+      const card = grid.querySelector(`.chart[data-id="${r.m.id}"]`); if (!card) return;
+      card.insertAdjacentHTML("beforeend", `<p class="grp-read"><b>Higher</b> means ${READS[r.m.id].up}. <b>Lower</b> means ${READS[r.m.id].down}.</p>`);
+      grid.appendChild(card);
+    });
+    return bad.length;
+  }
+  function showGroup(id) {
+    state.group = id;
+    GROUPS.forEach(g => {
+      document.getElementById("grp-" + g.id).classList.toggle("off", g.id !== id);
+      document.getElementById("grp-tile-" + g.id).setAttribute("aria-pressed", String(g.id === id));
+    });
+  }
+  groupsEl.addEventListener("click", e => { const t = e.target.closest("[data-g]"); if (t) showGroup(t.dataset.g); });
 
   // charts drawn at build time: drop their filter controls, then redraw live
   const trendsEl = document.getElementById("trends");
@@ -1527,7 +1619,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
   }
   // ---- filter state ----
   const RANGES = [[4, "4 weeks"], [13, "3 months"], [26, "6 months"], [52, "12 months"]];
-  const state = {range: 52, sources: new Set(), cat: "all"};
+  const state = {range: 52, sources: new Set(), cat: "all", group: null};
   const rangeEl = document.getElementById("f-range"), srcEl = document.getElementById("f-source"), catEl = document.getElementById("f-cat");
   RANGES.forEach(([n, label]) => {
     const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = label; b.dataset.n = n;
@@ -1582,10 +1674,9 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     const lastA = windowVal(m, totals, WEEKS - 4, WEEKS - 1);
     const cmpA = state.range === 4 ? windowVal(m, totals, WEEKS - 8, WEEKS - 5) : windowVal(m, totals, i0, i0 + 3);
     const dlt = deltaText(m, cmpA, lastA);
-    const card = document.createElement("div"); card.className = "chart";
-    const vs = state.range === 4 ? "vs previous 4 weeks" : "vs first 4 weeks";
+    const card = document.createElement("div"); card.className = "chart"; card.dataset.id = m.id;
     const title = m.card ? `<span class="term" tabindex="0" aria-describedby="def-chart-${m.id}">${m.title}<span class="term-card" role="tooltip" id="def-chart-${m.id}">${m.card}</span></span>` : m.title;
-    card.innerHTML = `<div class="chart-head"><h3>${title}</h3><span class="chart-now"><b>${lastA == null ? "—" : m.fmt(lastA)}</b> last 4 weeks${dlt ? ` · <span class="${tone(m, dlt)}">${dlt.t}</span> ${vs}` : ""}</span></div><p class="def">${m.def}</p>`;
+    card.innerHTML = `<div class="chart-head"><h3>${title}</h3></div><p class="def">${m.def}</p>`;
     const firstData = raw.findIndex(v => v != null);
     const usageMetric = m.den === "usage" || m.den === "metered";
     const chosen = (state.sources.size ? [...state.sources] : SOURCES.map(([id]) => id));
@@ -1689,8 +1780,11 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     const inRange = rows.filter(r => r.w >= i0 && srcOk(r) && catOk(r));
     document.getElementById("f-sum").textContent = inRange.reduce((a, r) => a + r.sessions, 0).toLocaleString() + " sessions";
 
-    ["primary-charts", "more-charts"].forEach(id => document.getElementById(id).innerHTML = "");
+    groupShells();
     const results = METRICS.map(m => chart(m, totals, i0)).filter(Boolean);
+    // open the group with the most charts going the wrong way, unless one was picked
+    const slipping = GROUPS.map(g => groupSummary(g, results));
+    showGroup(state.group || GROUPS[slipping.indexOf(Math.max(...slipping))].id);
 
     const tb = document.querySelector("#then-now tbody"); tb.innerHTML = "";
     document.getElementById("tn-a").textContent = state.range === 4 ? "Previous 4 weeks" : "First 4 weeks";

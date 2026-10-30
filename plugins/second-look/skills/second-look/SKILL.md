@@ -377,7 +377,12 @@ the summary already tells the story. Fill the scope line and "What each trend co
 review logged fixes; on a first review, delete that section. One row per fix: tried?, did the habit change ("Cause unclear" when something else could
 explain it), did the work get better ("Not measured" when there's no data yet), costs,
 decision (Keep, Revise, Drop). Then "Habits over the last year" (`#trends`), filled from the
-cube, and "Usage this cycle" (by tool, skills and commands, and "Try next"). Open "Usage this
+cube. Its charts sit in four groups, one tile per question (`GROUPS` in the template script):
+explaining what you want, checking the work, handing off work, and where usage goes. The
+group with the most charts going the wrong way opens first. Each group opens with a written
+summary of what changed and how its charts measure it, and each chart ends with a "Higher
+means… Lower means…" line from `READS`. The script writes all of this; keep the groups and
+their wording as they are. Then "Usage this cycle" (by tool, skills and commands, and "Try next"). Open "Usage this
 cycle" with the usage-limit line from the template.
 
 **Report an issue** (`#report-issue`). Keep the template's line and link to
@@ -465,7 +470,8 @@ in one line. It stops Claude Code deleting logs after 30 days. Weeks already del
 The template draws long-session share and starting context from Claude Code and Codex only, and
 notes under each chart which chosen tools it leaves out. Keep the long-session share term card from the
 template on the glance stat. Every chart title has its own card in the template's `METRICS` (why it
-matters, what higher and lower mean); keep them as they are.
+matters, what higher and lower mean); keep them as they are. A new metric needs a group in
+`GROUPS` and a line in `READS`, or it won't show.
 
 Kinds of work, from each session's opening message: Prototyping, Creating, Research,
 Brainstorming, Career, Consultation.

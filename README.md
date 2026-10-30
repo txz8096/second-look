@@ -67,7 +67,9 @@ you haven't run in 60 days, and how much you'd save by having them run only when
 **3. See how your habits change.** It closes with how you're trending. From your second review
 on, that starts with whether last cycle's fixes stuck and whether the work got better. Then briefed starts, corrections, output
 checking, restarts, and how much of your usage went to very long sessions, charted week by
-week for up to 12 months and filterable by tool and kind of work.
+week for up to 12 months and filterable by tool and kind of work. The charts are grouped by
+the question they answer, like "Am I checking the work?", and the group that slipped most
+opens first with a short written summary.
 
 See the [sample report](https://txz8096.github.io/second-look/sample-report.html) for the full
 layout. It uses made-up data.

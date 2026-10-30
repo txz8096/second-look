@@ -33,6 +33,7 @@ PILLS = {
 FORBIDDEN = {
     "Personalize goals": "goals box was removed",
     'id="goal-': "goals box was removed",
+    'id="more-charts"': "the More metrics dropdown was replaced by chart groups",
     "Change now": "slot labels were removed",
     'class="slot"': "slot labels were removed",
     "<dt>How sure</dt>": "the How sure row was removed from cards",

@@ -58,8 +58,9 @@ cards, panels · 20px "Try this" blocks and the plan · fully rounded chips.
 5. Keep your skills current (`#part-3`): headline, scan line, "Skills you wrote", "Fix
    first", "Worth a look", collapsed installed skills.
 6. How your behavior is changing (`#part-1`, last despite its id): data-scope line, "Did last cycle's fixes work?"
-   (only after a review with logged fixes), "Habits over the last year" (`#trends`),
-   "Usage this cycle". `scripts/prerender.py` saves the drawn charts, bars and tables into
+   (only after a review with logged fixes), "Habits over the last year" (`#trends`): filters,
+   then four question tiles; the open group shows its summary and charts (see "Chart groups"),
+   then "Usage this cycle". `scripts/prerender.py` saves the drawn charts, bars and tables into
    the file and marks the section `data-static`, which hides the filters and shows a note.
    The script clears the mark and redraws with live filters.
 7. Report an issue (`#report-issue`): one line linking to
@@ -68,6 +69,29 @@ cards, panels · 20px "Try this" blocks and the plan · fully rounded chips.
 9. Floating contents menu (`#toc`) bottom right, listing the glance, the three parts and
    Report an issue. It opens on hover and keyboard focus with CSS alone, so it works in
    viewers that block scripts; the script adds click, Escape and the current-section highlight.
+
+## Chart groups
+
+Decided Oct 30, 2026 from three prototypes.
+
+- Charts sit in four groups, one per question: "Am I explaining what I want?", "Am I checking
+  the work?", "Am I handing off the right work?", "Where does my usage go?". One group shows at a
+  time; the tiles switch it.
+- The group with the most charts going the wrong way opens first. Inside a group, those charts
+  come first.
+- Tiles show the question and a one-line description, with no counts.
+- The open group starts with "What your charts say": what changed, in words, then one sentence
+  on how its charts measure it. No values or changes in the summary.
+- Chart headers show the title (with its card) and the definition line only. Each chart ends
+  with "Higher means… Lower means…".
+- Without scripts (prerendered), every group shows in turn with its question as a heading.
+- Phones: tiles in two columns, descriptions hidden.
+
+Rejected: a chip row with one group at a time and a repeated question heading (the chips gave
+no reason to pick one and showed nothing new on opening); every chart visible in work-stage
+order with a jump bar (still a long scroll, and some charts fit more than one stage); counts
+of slipping, improving and steady charts on the tiles, and the value and change on each chart
+and summary row (too much to read before the first chart).
 
 ## Pattern card
 
@@ -123,4 +147,5 @@ Numerals before part titles · goals box and "Personalize goals" · slot labels 
 Practice, Explore) · "How sure" rows in cards · "How we know this" · "How we'll know it
 worked" · Expand all / Collapse all · "sample data" chips · bullet dots in chips · divider
 lines between cards inside a part (dividers only between major sections) · "Review N" line
-above the glance · thesis and "Three moves" summary · light theme.
+above the glance · thesis and "Three moves" summary · light theme · the "More metrics"
+dropdown · the value and change line in chart headers.
