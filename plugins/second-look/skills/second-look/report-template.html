@@ -1364,7 +1364,9 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
   // agent checks: only Claude Code and Codex log tool calls
   const agentChecks = (src, c, sessions, i) => {
     const edited = (src === "claude_code" || src === "codex") && c === "prototyping" ? rr(sessions * 0.7) : 0;
-    return {edited, agent_checked: rr(edited * ramp(0.55, 0.72, i, 10, 40) * (i >= 45 ? 0.6 : 1)), unchecked_ships: rr(edited * (i >= 45 ? 0.25 : 0.08))};
+    const logged = src === "claude_code" || src === "codex" ? sessions : 0;
+    return {edited, agent_checked: rr(edited * ramp(0.55, 0.72, i, 10, 40) * (i >= 45 ? 0.6 : 1)), unchecked_ships: rr(edited * (i >= 45 ? 0.25 : 0.08)),
+      delegated: rr(logged * ramp(0, 0.18, i, 30, 51)), read_heavy: rr(logged * ramp(0.16, 0.09, i, 30, 51))};
   };
   const rows = [];
   weeks.forEach((_, i) => SOURCES.filter(([src]) => base[src]).forEach(([src]) => {
@@ -1495,6 +1497,10 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
      def: "Sessions where the agent changed code and then ran a test, build, lint or browser check."},
     {id: "uncheckedships", el: "more-charts", title: "Unchecked ships per week", num: "unchecked_ships", den: null, fmt: v => Math.round(v), d: "rel", better: "down", logs: "tool calls",
      def: "Commits, pushes, deploys or “ship it” while code changes were still untested. Checks you ran yourself don't show."},
+    {id: "delegated", el: "more-charts", title: "Delegated sessions", num: "delegated", den: "metered", fmt: pct, d: "pts", better: "none", logs: "tool calls",
+     def: "Sessions that handed work to a subagent: research, a check or a build. More isn't always better; it pays off on wide reading and independent checks."},
+    {id: "readheavy", el: "more-charts", title: "Read-heavy sessions", num: "read_heavy", den: "metered", fmt: pct, d: "pts", better: "down", logs: "tool calls",
+     def: "Sessions that did 25 or more reads and searches in the main conversation without a subagent. Every read stays in the history the session re-reads."},
     {id: "refinements", el: "more-charts", title: "Refinements per session", num: "refinements", den: "sessions", fmt: v => v.toFixed(1), d: "abs", better: "up",
      def: "Follow-ups that build on a good answer, like “now make it shorter”. Iterating on good output is a sign of skilled AI use."},
   ];
@@ -1531,7 +1537,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
   const srcOk = r => !state.sources.size || state.sources.has(r.s);
   const catOk = r => state.cat === "all" || r.c === state.cat;
   const sumRows = (list, keys) => { const t = {}; keys.forEach(k => t[k] = 0); list.forEach(r => keys.forEach(k => t[k] += r[k] || 0)); return t; };
-  const KEYS = ["sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "metered", "usage", "long_usage", "start_tokens"];
+  const KEYS = ["sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "read_heavy", "metered", "usage", "long_usage", "start_tokens"];
   const weekTotals = filter => { const t = weeks.map(() => { const o = {}; KEYS.forEach(k => o[k] = 0); return o; }); rows.filter(filter).forEach(r => KEYS.forEach(k => t[r.w][k] += r[k] || 0)); return t; };
   const value = (m, t) => m.den ? (t[m.den] ? t[m.num] / t[m.den] : null) : t[m.num];
   const windowVal = (m, totals, a, b) => { // ratio of sums for rates, mean for counts
@@ -1570,7 +1576,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     const usageMetric = m.den === "usage" || m.den === "metered";
     const chosen = (state.sources.size ? [...state.sources] : SOURCES.map(([id]) => id));
     // usage and agent checks come only from Claude Code and Codex, the tools that log tokens and tool calls
-    const logged = usageMetric ? "tokens" : m.logs;
+    const logged = m.logs || (usageMetric ? "tokens" : null);
     const inWindow = id => rows.some(r => r.s === id && r.w >= i0 && catOk(r) && r.sessions > 0);
     const unmeasured = usageMetric ? firstData === -1 : logged && !chosen.some(id => METERED.has(id) && inWindow(id));
     if (unmeasured && idx.some(i => totals[i].sessions > 0)) {

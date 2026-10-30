@@ -44,6 +44,11 @@ CHECK_CMD = re.compile(r"\b(pytest|unittest|jest|vitest|mocha|cypress|playwright
 SHIP_CMD = re.compile(r"\bgit\b[^|;&\n]*\b(commit|push)\b|\bgh pr (create|merge)\b|\b(vercel|netlify|firebase|fly)\b[^|;&\n]*deploy|"
                       r"\b(npm|pnpm|yarn) publish\b", re.I)
 READ_ONLY = re.compile(r"^\W*(grep|rg|sed|cat|ls|find|head|tail|wc|echo|awk|diff|git (log|diff|show|status))\b")
+# Delegation: subagents the main session hands work to, and reading it does itself
+DELEGATE_TOOLS = {"Agent", "Task", "spawn_agent"}
+READ_TOOLS = {"Read", "Grep", "Glob", "LS", "WebSearch", "WebFetch"}
+RESEARCH = re.compile(r"\b(find|search|look (up|for|into)|explore|investigate|read|survey|research|where (is|are)|locate)\b", re.I)
+READ_HEAVY = 25       # reads in one main session before it counts as read-heavy. A chosen line, not a measured limit
 PROSE = re.compile(r"\.(md|mdx|txt|rst)$|/\.(claude|codex|cursor|gemini|agents)/", re.I)
 ACCEPT = re.compile(r"^\s*(lgtm|ship it|looks good|perfect|((ok(ay)?|yes|great|good|perfect)[,.! ]+)?"
                     r"(commit|push|merge|deploy|publish|ship)( it| this| that)?)\b", re.I)
@@ -110,15 +115,23 @@ class Agg:
         self.timeline = collections.defaultdict(list)   # session -> [(kind, detail)] in log order
 
     def add_action(self, session, name, blob, shell=False):
-        """Record what an agent tool call did: edit, check or ship. Others are ignored."""
+        """Record what an agent tool call did: edit, check, ship, read or delegate. Others are ignored."""
         edit = name in EDIT_TOOLS or "*** Begin Patch" in blob
         runs = []
+        if name in DELEGATE_TOOLS:
+            self.timeline[session].append(("delegate", "check" if CHECK.search(blob) else
+                                           "research" if RESEARCH.search(blob) else "build"))
+        if name in READ_TOOLS:
+            self.timeline[session].append(("read", name))
         if shell and not edit:
             # commit messages, heredocs and grep patterns aren't commands
             bare = re.sub(r"<<-?\s*['\"]?(\w+)['\"]?.*?\n\1\b|\"(\\.|[^\"\\])*\"|'[^']*'", " ", blob, flags=re.S)
-            runs = [p for p in re.split(r"&&|\|\||[;|\n]", bare) if p.strip() and not READ_ONLY.match(p)]
+            segs = [p for p in re.split(r"&&|\|\||[;|\n]", bare) if p.strip() and not re.match(r"\s*cd\b", p)]
+            if segs and all(READ_ONLY.match(p) for p in segs):
+                self.timeline[session].append(("read", "shell"))
+            runs = [p for p in segs if not READ_ONLY.match(p)]
         if CHECK_TOOL.search(name) or any(CHECK_CMD.search(p) for p in runs) or (
-                name in ("Agent", "Task") and CHECK.search(blob)):
+                name in DELEGATE_TOOLS and CHECK.search(blob)):
             self.timeline[session].append(("check", name))
         ship = next((m for m in map(SHIP_CMD.search, runs) if m), None)
         if ship:
@@ -687,8 +700,12 @@ def agent_checks(steps):
             samples.append({"shipped": clean(detail, 80) if kind == "prompt" else f"agent ran: {detail}",
                             "unchecked_edits": sorted(set(pending))[:5]})
             pending = []
+    delegated = collections.Counter(d for k, d in steps if k == "delegate")
+    reads = sum(k == "read" for k, _ in steps)
     return {"edited": last_edit >= 0, "agent_checked": last_edit >= 0 and last_check > last_edit,
-            "unchecked_ships": ships, "unchecked_samples": samples}
+            "unchecked_ships": ships, "unchecked_samples": samples,
+            "delegations": dict(delegated), "reads": reads,
+            "read_heavy": reads >= READ_HEAVY and not delegated}
 
 
 def sessions_of(aggs, metered=None):
@@ -744,7 +761,7 @@ def _usage_fields(m):
 def session_cube(sessions):
     """Additive weekly rows by source and kind of work, so the report can filter and recompute."""
     keys = ("sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked",
-            "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships",
+            "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "read_heavy",
             "metered", "usage", "long_usage", "start_tokens")
     cube = collections.defaultdict(lambda: dict.fromkeys(keys, 0))
     for r in sessions:
@@ -762,6 +779,8 @@ def session_cube(sessions):
         row["edited"] += r["edited"]
         row["agent_checked"] += r["agent_checked"]
         row["unchecked_ships"] += r["unchecked_ships"]
+        row["delegated"] += bool(r["delegations"])
+        row["read_heavy"] += r["read_heavy"]
         if r.get("usage"):
             row["metered"] += 1
             row["usage"] += round(r["usage"])
@@ -789,6 +808,27 @@ def checks_summary(sessions, n=6):
             "unchecked_samples": samples[:n],
             "note": "Counts checks the agent ran (tests, builds, lint, browser, a verifying subagent). "
                     "Checks you did yourself outside the session don't show up."}
+
+
+def delegation_summary(sessions, n=5):
+    """Who did the work: subagents, or the main session reading for itself. Claude Code and Codex only."""
+    rows = [r for r in sessions if r["source"] in ("claude_code", "codex")]
+    heavy = [r for r in rows if r["read_heavy"]]
+    total = sum(r.get("usage", 0) for r in rows)
+    purposes = collections.Counter()
+    for r in rows:
+        purposes.update(r["delegations"])
+    return {"sessions": len(rows),
+            "delegated_sessions": sum(bool(r["delegations"]) for r in rows),
+            "subagents_by_purpose": dict(purposes),
+            "read_heavy_line": READ_HEAVY,
+            "read_heavy_sessions": len(heavy),
+            "read_heavy_usage_share": round(sum(r.get("usage", 0) for r in heavy) / total, 2) if total else None,
+            "read_heavy_samples": [{"source": r["source"], "date": r["start"].date().isoformat(), "reads": r["reads"],
+                                    "peak_tokens": r.get("peak"), "first": clean(r["first"], 120)}
+                                   for r in sorted(heavy, key=lambda r: -r["reads"])[:n]],
+            "note": "Reads are file reads, searches and read-only shell commands in the main session. "
+                    "A subagent's own reading stays in its context and isn't counted."}
 
 
 def installed_skills(home):
@@ -921,6 +961,7 @@ def main():
     sessions = sessions_of(aggs, metered)
     result["usage"] = usage_summary([r for r in sessions if r["start"] >= since], metered, limit_hits, args.home)
     result["agent_checks"] = checks_summary([r for r in sessions if r["start"] >= since])
+    result["delegation"] = delegation_summary([r for r in sessions if r["start"] >= since])
     result["label_samples"] = label_samples(sessions)
     result["scope"] = data_scope(args.home, aggs, {"claude": args.claude_export, "chatgpt": args.chatgpt_export,
                                                    "gemini": args.gemini_export})

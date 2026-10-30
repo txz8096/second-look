@@ -105,6 +105,8 @@ Use these definitions word for word:
 | Output checking | In build and research sessions, the share where you asked for sources, edge cases or a critique before accepting the result. It tends to drop when output looks finished. |
 | Agent checks | Sessions where the agent changed code and then ran a test, build, lint or browser check after its last edit. Claude Code and Codex only, since other tools don't log tool calls. |
 | Unchecked ships | A commit, push, deploy or “ship it” while code changes were still untested in the session. Checks you ran yourself outside the session don't show up. |
+| Delegated sessions | Sessions that handed work to a subagent: research, a check or a build. Claude Code and Codex only. |
+| Read-heavy sessions | Sessions that did 25 or more file reads, searches or read-only commands in the main conversation without a subagent. A chosen line, not a measured limit. |
 
 ## Chip labels (and nothing else)
 
