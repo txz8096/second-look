@@ -35,6 +35,18 @@ REFINE = re.compile(r"^\s*(now|also|next|then|great|good|ok(ay)?|nice|perfect|ca
 STYLE = re.compile(r"(no filler|skip (the )?(filler|preamble|intro)|use (a )?tables?|bullet points?|"
                    r"be (more )?concise|short sentences|plain (language|english)|"
                    r"don'?t use (jargon|emojis?|bullets)|ask (me )?clarifying questions|cite (your )?sources)", re.I)
+# Agent-side checks, from the tool calls Claude Code and Codex log. Heuristics too: spot-check `unchecked_samples`.
+EDIT_TOOLS = {"Edit", "Write", "MultiEdit", "NotebookEdit", "apply_patch"}
+CHECK_TOOL = re.compile(r"browser|preview_|playwright|screenshot|simulator|chrome", re.I)
+CHECK_CMD = re.compile(r"\b(pytest|unittest|jest|vitest|mocha|cypress|playwright|go (test|vet)|cargo (test|check|clippy)|"
+                       r"(npm|pnpm|yarn|bun)( run)? (test|build|lint|check|typecheck)|tsc\b|eslint|ruff|mypy|flake8|"
+                       r"make (test|check)|xcodebuild[^|;&\n]*\btest|swift (test|build)|check_\w+\.py|validate|lint)", re.I)
+SHIP_CMD = re.compile(r"\bgit\b[^|;&\n]*\b(commit|push)\b|\bgh pr (create|merge)\b|\b(vercel|netlify|firebase|fly)\b[^|;&\n]*deploy|"
+                      r"\b(npm|pnpm|yarn) publish\b", re.I)
+READ_ONLY = re.compile(r"^\W*(grep|rg|sed|cat|ls|find|head|tail|wc|echo|awk|diff|git (log|diff|show|status))\b")
+PROSE = re.compile(r"\.(md|mdx|txt|rst)$|/\.(claude|codex|cursor|gemini|agents)/", re.I)
+ACCEPT = re.compile(r"^\s*(lgtm|ship it|looks good|perfect|((ok(ay)?|yes|great|good|perfect)[,.! ]+)?"
+                    r"(commit|push|merge|deploy|publish|ship)( it| this| that)?)\b", re.I)
 CATEGORIES = [  # order breaks ties
     ("career", re.compile(r"recruiter|interview|resume|r[eé]sum[eé]|cover letter|job (description|posting|"
                                r"search|offer)|hiring manager|salary|negotiat|linkedin|application|offer call", re.I)),
@@ -95,6 +107,28 @@ class Agg:
         self.compactions = 0
         self.events = []           # (ts, kind, name) for tools/skills over time
         self.skill_sessions = set()
+        self.timeline = collections.defaultdict(list)   # session -> [(kind, detail)] in log order
+
+    def add_action(self, session, name, blob, shell=False):
+        """Record what an agent tool call did: edit, check or ship. Others are ignored."""
+        edit = name in EDIT_TOOLS or "*** Begin Patch" in blob
+        runs = []
+        if shell and not edit:
+            # commit messages, heredocs and grep patterns aren't commands
+            bare = re.sub(r"<<-?\s*['\"]?(\w+)['\"]?.*?\n\1\b|\"(\\.|[^\"\\])*\"|'[^']*'", " ", blob, flags=re.S)
+            runs = [p for p in re.split(r"&&|\|\||[;|\n]", bare) if p.strip() and not READ_ONLY.match(p)]
+        if CHECK_TOOL.search(name) or any(CHECK_CMD.search(p) for p in runs) or (
+                name in ("Agent", "Task") and CHECK.search(blob)):
+            self.timeline[session].append(("check", name))
+        ship = next((m for m in map(SHIP_CMD.search, runs) if m), None)
+        if ship:
+            self.timeline[session].append(("ship", clean(ship.group(0), 80)))
+        elif edit:
+            paths = [a or b for a, b in re.findall(r'"file_path": "([^"]+)"|\*\*\* (?:Update|Add) File: (\S+)', blob)]
+            # prose and the tools' own settings and memory have nothing to run, so they don't need an agent check
+            code = [p for p in paths if not PROSE.search(p)]
+            if code or not paths:
+                self.timeline[session].append(("edit", os.path.basename(code[0]) if code else name))
 
     def add_prompt(self, ts, session, text):
         if not text or NOISE.match(text.strip()):
@@ -111,6 +145,7 @@ class Agg:
             self.days.add(local.date().isoformat())
             self.hours[local.hour] += 1
         self.prompts.append((ts, session, text))
+        self.timeline[session].append(("prompt", text))
         m = SLASH.search(text or "")
         if m:
             self.slash[m.group(1)] += 1
@@ -155,6 +190,10 @@ def claude_code(home, since):
                     if isinstance(c, dict) and c.get("type") == "tool_use":
                         a.tools[c.get("name", "?")] += 1
                         a.events.append((ts, "tool", c.get("name", "?")))
+                        inp = c.get("input") or {}
+                        a.add_action(session, c.get("name", "?"),
+                                     inp.get("command", "") if c.get("name") == "Bash" else json.dumps(inp),
+                                     shell=c.get("name") == "Bash")
                         if c.get("name") == "Skill":
                             sk = (c.get("input") or {}).get("skill", "?")
                             a.skills[sk] += 1
@@ -184,6 +223,14 @@ def codex(home, since):
             elif kind in ("function_call", "custom_tool_call", "local_shell_call"):
                 a.tools[p.get("name") or kind] += 1
                 a.events.append((ts, "tool", p.get("name") or kind))
+                blob = " ".join(str(p.get(k) or "") for k in ("arguments", "input", "action"))
+                # the shell command sits inside JSON or JS: {"command": ["bash", "-lc", "..."]} or exec_command({cmd: "..."})
+                cmds = [json.loads(f'"{s}"') for s in re.findall(r'\bcmd"?\s*:\s*"((?:\\.|[^"\\])*)"', blob)]
+                cmds += [json.loads(f'"{s}"') for s in re.findall(r'"command":\s*\[[^\]]*?"((?:\\.|[^"\\])*)"\s*\]', blob)]
+                if "*** Begin Patch" in blob or not cmds:
+                    a.add_action(session, p.get("name") or kind, blob)
+                for cmd in cmds:
+                    a.add_action(session, p.get("name") or kind, cmd, shell=True)
     # de-duplicate: codex logs a user turn as both message and user_message
     seen, uniq = set(), []
     for t in a.prompts:
@@ -191,6 +238,15 @@ def codex(home, since):
         if k not in seen:
             seen.add(k); uniq.append(t)
     a.prompts = uniq
+    for session, steps in a.timeline.items():
+        seen, kept = set(), []
+        for s in steps:
+            if s[0] == "prompt" and s[1][:200] in seen:
+                continue
+            if s[0] == "prompt":
+                seen.add(s[1][:200])
+            kept.append(s)
+        a.timeline[session] = kept
     return a
 
 
@@ -614,6 +670,27 @@ def content_words(text):
     return {w for w in re.findall(r"[a-z]{4,}", text.lower())}
 
 
+def agent_checks(steps):
+    """Walk one session's log: did a check run after the last edit, and was anything shipped
+    (a commit, push or deploy, or "ship it" from the user) while edits were still unchecked?"""
+    last_edit = last_check = -1
+    pending, ships, samples = [], 0, []
+    for i, (kind, detail) in enumerate(steps):
+        if kind == "edit":
+            last_edit = i
+            pending.append(detail)
+        elif kind == "check":
+            last_check = i
+            pending = []
+        elif pending and (kind == "ship" or (kind == "prompt" and len(detail) < 80 and ACCEPT.match(detail))):
+            ships += 1
+            samples.append({"shipped": clean(detail, 80) if kind == "prompt" else f"agent ran: {detail}",
+                            "unchecked_edits": sorted(set(pending))[:5]})
+            pending = []
+    return {"edited": last_edit >= 0, "agent_checked": last_edit >= 0 and last_check > last_edit,
+            "unchecked_ships": ships, "unchecked_samples": samples}
+
+
 def sessions_of(aggs, metered=None):
     out, metered = [], metered or {}
     for a in aggs:
@@ -638,6 +715,7 @@ def sessions_of(aggs, metered=None):
                 "retyped": sum(bool(STYLE.search(t)) for t in texts),
                 "skilled": session in a.skill_sessions,
                 "restart": False,
+                **agent_checks(a.timeline.get(session, [])),
                 **_usage_fields(metered.get((a.name, session))),
             })
     # a restart: same tool and kind of work, within 48h, opening on mostly the same words
@@ -666,7 +744,8 @@ def _usage_fields(m):
 def session_cube(sessions):
     """Additive weekly rows by source and kind of work, so the report can filter and recompute."""
     keys = ("sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked",
-            "restarts", "retyped", "skilled", "metered", "usage", "long_usage", "start_tokens")
+            "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships",
+            "metered", "usage", "long_usage", "start_tokens")
     cube = collections.defaultdict(lambda: dict.fromkeys(keys, 0))
     for r in sessions:
         row = cube[(week_of(r["start"]), r["source"], r["category"])]
@@ -680,6 +759,9 @@ def session_cube(sessions):
         row["restarts"] += r["restart"]
         row["retyped"] += r["retyped"]
         row["skilled"] += r["skilled"]
+        row["edited"] += r["edited"]
+        row["agent_checked"] += r["agent_checked"]
+        row["unchecked_ships"] += r["unchecked_ships"]
         if r.get("usage"):
             row["metered"] += 1
             row["usage"] += round(r["usage"])
@@ -693,6 +775,20 @@ def label_samples(sessions, n=12):
     recent = sorted(sessions, key=lambda r: r["start"], reverse=True)[:n]
     return [{"source": r["source"], "category": r["category"], "briefed": r["briefed"],
              "restart": r["restart"], "first": clean(r["first"], 160)} for r in recent]
+
+
+def checks_summary(sessions, n=6):
+    """Agent-side checks for the window. Only Claude Code and Codex log tool calls."""
+    rows = [r for r in sessions if r["source"] in ("claude_code", "codex")]
+    edited = [r for r in rows if r["edited"]]
+    samples = [{"source": r["source"], "date": r["start"].date().isoformat(), "first": clean(r["first"], 120), **s}
+               for r in sorted(rows, key=lambda r: r["start"], reverse=True) for s in r["unchecked_samples"]]
+    return {"sessions_with_edits": len(edited),
+            "agent_checked": sum(r["agent_checked"] for r in edited),
+            "unchecked_ships": sum(r["unchecked_ships"] for r in rows),
+            "unchecked_samples": samples[:n],
+            "note": "Counts checks the agent ran (tests, builds, lint, browser, a verifying subagent). "
+                    "Checks you did yourself outside the session don't show up."}
 
 
 def installed_skills(home):
@@ -824,6 +920,7 @@ def main():
     metered, limit_hits = usage_by_session(args.home, since)
     sessions = sessions_of(aggs, metered)
     result["usage"] = usage_summary([r for r in sessions if r["start"] >= since], metered, limit_hits, args.home)
+    result["agent_checks"] = checks_summary([r for r in sessions if r["start"] >= since])
     result["label_samples"] = label_samples(sessions)
     result["scope"] = data_scope(args.home, aggs, {"claude": args.claude_export, "chatgpt": args.chatgpt_export,
                                                    "gemini": args.gemini_export})

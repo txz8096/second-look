@@ -103,6 +103,8 @@ Use these definitions word for word:
 | Rules retyped | A standing preference typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in your CLAUDE.md, AGENTS.md or Cursor rules. |
 | Skill use | Sessions that ran at least one of your skills or slash commands. Each session counts once, however many it ran. |
 | Output checking | In build and research sessions, the share where you asked for sources, edge cases or a critique before accepting the result. It tends to drop when output looks finished. |
+| Agent checks | Sessions where the agent changed code and then ran a test, build, lint or browser check after its last edit. Claude Code and Codex only, since other tools don't log tool calls. |
+| Unchecked ships | A commit, push, deploy or “ship it” while code changes were still untested in the session. Checks you ran yourself outside the session don't show up. |
 
 ## Chip labels (and nothing else)
 

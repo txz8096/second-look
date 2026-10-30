@@ -241,7 +241,12 @@ and still works on current models.
    secrets removed. Its `usage` block covers Claude Code and Codex, the only tools that log
    tokens: long-session share, typical request, the biggest sessions, usage-limit hits, and
    `starting_context` (what loads before the first message, unused skills and plugins, copied
-   instruction files, and the gain from trimming them).
+   instruction files, and the gain from trimming them). Its `agent_checks` block covers the
+   same two tools, from the tool calls they log: sessions where the agent edited code, how many
+   ran a test, build, lint, browser check or verifying subagent after the last edit, and
+   `unchecked_ships` (a commit, push, deploy or "ship it" while code edits were still
+   unchecked) with samples. Prose and settings files don't count as code. Open two samples
+   and confirm them in the log before citing the number.
 2. If you can also search their past Claude chats, open the real work chats in the window.
    Note restarts, corrections, restated preferences, and polished output accepted without a
    check.
@@ -348,7 +353,12 @@ Likely pattern, Unconfirmed); What happens, Evidence and Why it matters; optiona
 extras ("Example and limits", "Which tools have which rules"). Then the fix in the same
 card: a tinted "Try this" block with how likely it is to help, the action and a paste-ready
 block. Every pattern with a fix gets one, and every fix goes in the plan. If they ship what
-they build with AI, include an over-trust pattern when the evidence supports it. When
+they build with AI, include an over-trust pattern when the evidence supports it. Build it
+from both sides: checks they asked for (Output checking) and checks the agent ran (Agent
+checks, Unchecked ships). Name which side is weak, since the fixes differ: asking better
+questions, or a standing rule or hook that runs the check before a commit. The logs can't see
+checks they did themselves in a browser or in their head, so say "no check in the session",
+never "you didn't check". When
 long sessions take a large share of usage, fold that into a long-session card (see "Usage"). Close the
 part with "Compare the fixes" (fix, will it help, effort, risk), "Your plan until <next
 review>" (every fix from this part) and the collapsed "What the <date> review will check". Keep
@@ -436,6 +446,8 @@ in one line. It stops Claude Code deleting logs after 30 days. Weeks already del
 | Skill use | skilled / sessions | Sessions that ran one of their skills or commands | Higher |
 | Rules retyped | retyped | Standing preferences typed by hand. Each belongs in a config file | Lower |
 | Refinements per session | refinements / sessions | Follow-ups that build on a good answer | Higher |
+| Agent checks | agent_checked / edited | The agent ran a test, build, lint or browser check after its last code edit. Claude Code and Codex only | Higher |
+| Unchecked ships | unchecked_ships | A commit, push, deploy or "ship it" while code edits were still unchecked | Lower |
 | Long-session share | long_usage / usage | Usage from sessions past 150k tokens. Claude Code and Codex only | Lower |
 | Starting context | start_tokens / metered | Tokens loaded before the first message. Claude Code and Codex only | Lower |
 

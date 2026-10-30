@@ -1123,7 +1123,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
       <div class="ic-tags"><span class="tag">Claude Code · claude.ai</span><span class="conf val">Unconfirmed</span></div></div></div>
     <dl class="ic-grid">
       <dt>What happens</dt><dd>When a prototype looks done, you tend to accept it without asking for edge cases, a critique or a test. You push back on text answers far more.</dd>
-      <dt>Evidence</dt><dd>3 prototypes went into the Streak beta with "perfect, ship it" as the last message. Checking in prototype sessions fell from 46% to 18% once the redesign started. You challenge text-only answers 2.4× as often.</dd>
+      <dt>Evidence</dt><dd>3 prototypes went into the Streak beta with "perfect, ship it" as the last message. Checking in prototype sessions fell from 46% to 18% once the redesign started. You challenge text-only answers 2.4× as often. In 4 sessions Claude Code committed code changes that no test, build or browser check had run on since the last edit.</dd>
       <dt>Why it matters</dt><dd>Beta testers use what you ship. A broken interaction there costs more than one in a sketch.</dd>
     </dl>
     
@@ -1361,6 +1361,11 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     const metered = src === "claude_code" || src === "codex" ? sessions : 0, u = metered * 100000;
     return {metered, usage: u, long_usage: rr(u * ramp(0.45, 0.62, i, 30, 51)), start_tokens: metered * rr(ramp(38000, 54000, i, 19, 40))};
   };
+  // agent checks: only Claude Code and Codex log tool calls
+  const agentChecks = (src, c, sessions, i) => {
+    const edited = (src === "claude_code" || src === "codex") && c === "prototyping" ? rr(sessions * 0.7) : 0;
+    return {edited, agent_checked: rr(edited * ramp(0.55, 0.72, i, 10, 40) * (i >= 45 ? 0.6 : 1)), unchecked_ships: rr(edited * (i >= 45 ? 0.25 : 0.08))};
+  };
   const rows = [];
   weeks.forEach((_, i) => SOURCES.filter(([src]) => base[src]).forEach(([src]) => {
     const m = mix(src, i), tot = Object.values(m).reduce((a, b) => a + b, 0), n = base[src](i);
@@ -1379,7 +1384,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
       rows.push({w: i, s: src, c, sessions, prompts,
         briefed: rr(sessions * brief), corrections: rr(prompts * corr), refinements: rr(sessions * ramp(1.2, 2.4, i, 10, 40)),
         build: BUILD.has(c) ? sessions : 0, checked: rr(sessions * check), restarts: rr(sessions * restart),
-        retyped: rr(sessions * retype), skilled: rr(sessions * skill), ...usage(src, sessions, i)});
+        retyped: rr(sessions * retype), skilled: rr(sessions * skill), ...agentChecks(src, c, sessions, i), ...usage(src, sessions, i)});
     });
   }));
 
@@ -1486,6 +1491,10 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
      card: "Share of your usage from sessions that ran past 150k tokens. Every request in those re-reads the whole history first, so they use up your allowance fastest. Counts Claude Code and Codex only, since other tools don't log tokens. Running /clear or starting fresh between tasks lowers it."},
     {id: "starttokens", el: "more-charts", title: "Starting context", num: "start_tokens", den: "metered", fmt: v => Math.round(v / 1000) + "k", d: "rel", better: "down",
      def: "Tokens loaded before your first message: tool instructions, skill list and instruction files."},
+    {id: "agentchecked", el: "more-charts", title: "Agent checks", num: "agent_checked", den: "edited", fmt: pct, d: "pts", better: "up",
+     def: "Sessions where the agent changed code and then ran a test, build, lint or browser check. Claude Code and Codex only."},
+    {id: "uncheckedships", el: "more-charts", title: "Unchecked ships per week", num: "unchecked_ships", den: null, fmt: v => Math.round(v), d: "rel", better: "down",
+     def: "Commits, pushes, deploys or “ship it” while code changes were still untested. Checks you ran yourself don't show."},
     {id: "refinements", el: "more-charts", title: "Refinements per session", num: "refinements", den: "sessions", fmt: v => v.toFixed(1), d: "abs", better: "up",
      def: "Follow-ups that build on a good answer, like “now make it shorter”. Iterating on good output is a sign of skilled AI use."},
   ];
@@ -1521,9 +1530,9 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
 
   const srcOk = r => !state.sources.size || state.sources.has(r.s);
   const catOk = r => state.cat === "all" || r.c === state.cat;
-  const sumRows = (list, keys) => { const t = {}; keys.forEach(k => t[k] = 0); list.forEach(r => keys.forEach(k => t[k] += r[k])); return t; };
-  const KEYS = ["sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "metered", "usage", "long_usage", "start_tokens"];
-  const weekTotals = filter => { const t = weeks.map(() => { const o = {}; KEYS.forEach(k => o[k] = 0); return o; }); rows.filter(filter).forEach(r => KEYS.forEach(k => t[r.w][k] += r[k])); return t; };
+  const sumRows = (list, keys) => { const t = {}; keys.forEach(k => t[k] = 0); list.forEach(r => keys.forEach(k => t[k] += r[k] || 0)); return t; };
+  const KEYS = ["sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "metered", "usage", "long_usage", "start_tokens"];
+  const weekTotals = filter => { const t = weeks.map(() => { const o = {}; KEYS.forEach(k => o[k] = 0); return o; }); rows.filter(filter).forEach(r => KEYS.forEach(k => t[r.w][k] += r[k] || 0)); return t; };
   const value = (m, t) => m.den ? (t[m.den] ? t[m.num] / t[m.den] : null) : t[m.num];
   const windowVal = (m, totals, a, b) => { // ratio of sums for rates, mean for counts
     const slice = totals.slice(Math.max(0, a), b + 1); if (!slice.length) return null;
