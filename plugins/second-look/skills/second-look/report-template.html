@@ -1499,8 +1499,8 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
      def: "Commits, pushes, deploys or “ship it” while code changes were still untested. Checks you ran yourself don't show."},
     {id: "delegated", el: "more-charts", title: "Delegated sessions", num: "delegated", den: "metered", fmt: pct, d: "pts", better: "none", logs: "tool calls",
      def: "Sessions that handed work to a subagent: research, a check or a build. More isn't always better; it pays off on wide reading and independent checks."},
-    {id: "readheavy", el: "more-charts", title: "Read-heavy sessions", num: "read_heavy", den: "metered", fmt: pct, d: "pts", better: "down", logs: "tool calls",
-     def: "Sessions that did 25 or more reads and searches in the main conversation without a subagent. Every read stays in the history the session re-reads."},
+    {id: "readheavy", el: "more-charts", title: "Reading piled into the chat", num: "read_heavy", den: "metered", fmt: pct, d: "pts", better: "down", logs: "tool calls",
+     def: "Sessions where the AI opened or searched 25 or more files and pages itself, with no helper agent. All of it stays in the chat and gets re-read with every message you send."},
     {id: "refinements", el: "more-charts", title: "Refinements per session", num: "refinements", den: "sessions", fmt: v => v.toFixed(1), d: "abs", better: "up",
      def: "Follow-ups that build on a good answer, like “now make it shorter”. Iterating on good output is a sign of skilled AI use."},
   ];
@@ -1563,7 +1563,8 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     const raw = idx.map(i => value(m, totals[i]));
     const sessionsIn = idx.map(i => totals[i].sessions);
     const vals = raw.filter(v => v != null);
-    const ymax = niceMax(Math.max(...vals, m.den ? 0.05 : 1) * 1.08);
+    // a share tops out at 100%, so its axis never rounds up past it
+    const ymax = Math.min(niceMax(Math.max(...vals, m.den ? 0.05 : 1) * 1.08), m.fmt === pct ? 1 : Infinity);
     const x = k => L + (W - L - R) * (idx.length === 1 ? 0.5 : k / (idx.length - 1)), y = v => T + (H - T - B) * (1 - v / ymax);
     const lastA = windowVal(m, totals, WEEKS - 4, WEEKS - 1);
     const cmpA = state.range === 4 ? windowVal(m, totals, WEEKS - 8, WEEKS - 5) : windowVal(m, totals, i0, i0 + 3);

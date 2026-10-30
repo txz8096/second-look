@@ -106,7 +106,7 @@ Use these definitions word for word:
 | Agent checks | Sessions where the agent changed code and then ran a test, build, lint or browser check after its last edit. Claude Code and Codex only, since other tools don't log tool calls. |
 | Unchecked ships | A commit, push, deploy or “ship it” while code changes were still untested in the session. Checks you ran yourself outside the session don't show up. |
 | Delegated sessions | Sessions that handed work to a subagent: research, a check or a build. Claude Code and Codex only. |
-| Read-heavy sessions | Sessions that did 25 or more file reads, searches or read-only commands in the main conversation without a subagent. A chosen line, not a measured limit. |
+| Reading piled into the chat | Sessions where the AI opened or searched 25 or more files and pages itself, with no helper agent. All of it stays in the chat and gets re-read with every message you send. 25 is a chosen line, not a measured limit. |
 
 ## Chip labels (and nothing else)
 
