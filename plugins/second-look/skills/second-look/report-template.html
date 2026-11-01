@@ -140,7 +140,6 @@ th.num { text-align: right; }
 .grp-sum { display: grid; gap: 12px; padding: 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); margin-bottom: 6px; }
 .grp-sum p { margin: 0; max-width: 68ch; line-height: 1.55; }
 .grp-sum .lead { font-size: 1rem; color: var(--fg); text-wrap: pretty; }
-.grp-sum .how { font-size: 0.875rem; color: var(--muted); text-wrap: pretty; }
 .grp-read { margin: 4px 0 0; padding-top: 10px; border-top: 1px solid var(--line); font-size: 0.85rem; line-height: 1.5; color: var(--muted); }
 .grp-read b { font-weight: 600; color: var(--fg); }
 /* What you could automate next: repeat requests from the automation group, each with a fix */
@@ -1570,16 +1569,11 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
 
   // ---- chart groups: the questions people bring to the report ----
   const GROUPS = [
-    {id: "clear", ids: ["briefed", "corrections", "restarts", "retyped", "refinements"], title: "Am I explaining what I want?", blurb: "How often the AI gets you right on the first try, and what you keep having to repeat.",
-     how: "These charts follow a chat from its first message: whether you gave the goal, context and what done looks like, how often you then corrected, restarted or retyped a rule, and how often you built on a good answer."},
-    {id: "check", ids: ["checked", "agentchecked", "uncheckedships"], title: "Am I checking the work?", blurb: "Whether answers and code get tested before they reach anyone.",
-     how: "These charts follow the work to the finish: whether you pushed back on answers in the chat, whether the agent ran a test after changing code, and how often untested code was committed or shipped. The last two cover Claude Code and Codex only."},
-    {id: "delegate", ids: ["delegated", "readheavy"], title: "Am I handing off the right work?", blurb: "How much searching goes to helper agents.",
-     how: "These charts look at searching you could hand off: sessions that used a helper agent, and chats where the AI did 25 or more lookups itself. Read them together."},
-    {id: "automate", ids: ["repeats", "unattended", "setups", "parallel", "skilled"], title: "Am I automating repeat work?", blurb: "How much runs without you starting it, and what you keep redoing by hand.",
-     how: "These charts look at work that could run without you: requests you keep typing by hand, sessions a schedule, loop or headless run started, the loops and schedules you set up, work you sent off to run alongside, and sessions that ran one of your skills. All but skill use cover Claude Code and Codex only."},
-    {id: "usage", ids: ["sessions", "longshare", "starttokens"], title: "Where does my usage go?", blurb: "How much you use AI, and what eats into your limit.",
-     how: "These charts show volume and cost: sessions started per week, the share of usage from very long sessions, and how much loads before your first message."},
+    {id: "clear", ids: ["briefed", "corrections", "restarts", "retyped", "refinements"], title: "Am I explaining what I want?", blurb: "How often the AI gets you right on the first try, and what you keep having to repeat."},
+    {id: "check", ids: ["checked", "agentchecked", "uncheckedships"], title: "Am I checking the work?", blurb: "Whether answers and code get tested before they reach anyone."},
+    {id: "delegate", ids: ["delegated", "readheavy"], title: "Am I handing off the right work?", blurb: "How much searching goes to helper agents."},
+    {id: "automate", ids: ["repeats", "unattended", "setups", "parallel", "skilled"], title: "Am I automating repeat work?", blurb: "How much runs without you starting it, and what you keep redoing by hand."},
+    {id: "usage", ids: ["sessions", "longshare", "starttokens"], title: "Where does my usage go?", blurb: "How much you use AI, and what eats into your limit."},
   ];
   // what each chart says when it moves: rose/fell for the summary, up/down for the line under the chart
   const READS = {
@@ -1637,7 +1631,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     else if (good.length && !missing.length) lead += " Nothing here needs fixing right now.";
     if (missing.length && said.length) lead += ` ${listed(missing)} ${missing.length === 1 ? "needs" : "need"} more weeks of history before showing a trend.`;
     const panel = document.getElementById("grp-" + g.id);
-    panel.querySelector(".grp-sum").innerHTML = `<span class="eyebrow">What your charts say</span><p class="lead">${lead}</p><p class="how">${g.how}</p>`;
+    panel.querySelector(".grp-sum").innerHTML = `<span class="eyebrow">What your charts say</span><p class="lead">${lead}</p>`;
     // slipping charts first, each with how to read it underneath
     const grid = panel.querySelector(".multiples"), order = {bad: 0, good: 1, flat: 2};
     [...rs].sort((a, b) => order[trendOf(a)] - order[trendOf(b)]).forEach(r => {

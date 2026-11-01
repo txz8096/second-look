@@ -80,8 +80,8 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
 - The group with the most charts going the wrong way opens first. Inside a group, those charts
   come first.
 - Tiles show the question and a one-line description, with no counts.
-- The open group starts with "What your charts say": what changed, in words, then one sentence
-  on how its charts measure it. No values or changes in the summary.
+- The open group starts with "What your charts say": what changed, in words. No values or
+  changes in the summary.
 - Chart headers show the title (with its card) and the definition line only. Each chart ends
   with "Higher means… Lower means…".
 - "Am I automating repeat work?" ends with "What you could automate next" (`#automate-next`):
