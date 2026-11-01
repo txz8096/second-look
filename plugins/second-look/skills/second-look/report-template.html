@@ -127,7 +127,7 @@ th.num { text-align: right; }
 .k-ms { width: 0; height: 12px; border-left: 1px dashed var(--milestone); }
 .multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 12px; }
 /* chart groups: a tile per question; the open one shows a summary, then its charts */
-.grp-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr)); gap: 8px; margin: 4px 0 14px; }
+.grp-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 8px; margin: 4px 0 14px; }
 .grp-tile { height: auto; text-align: left; display: grid; gap: 6px; align-content: start; padding: 12px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); color: var(--fg); }
 .grp-tile:hover { color: var(--fg); border-color: var(--line-strong); }
 .grp-tile[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-soft); }
@@ -143,6 +143,14 @@ th.num { text-align: right; }
 .grp-sum .how { font-size: 0.875rem; color: var(--muted); text-wrap: pretty; }
 .grp-read { margin: 4px 0 0; padding-top: 10px; border-top: 1px solid var(--line); font-size: 0.85rem; line-height: 1.5; color: var(--muted); }
 .grp-read b { font-weight: 600; color: var(--fg); }
+/* What you could automate next: repeat requests from the automation group, each with a fix */
+.auto-next { display: grid; gap: 0; padding: 16px; border-radius: 8px; background: var(--surface); border: 1px solid var(--line); margin-top: 6px; }
+.auto-next .eyebrow { margin: 0 0 6px; }
+.auto-row { display: grid; grid-template-columns: minmax(0, 1.3fr) auto minmax(0, 1fr); gap: 16px; align-items: baseline; padding: 12px 0; border-top: 1px solid var(--line); }
+.auto-row .ask { color: var(--fg); text-wrap: pretty; }
+.auto-row .count { font-family: var(--mono); font-size: 0.8rem; color: var(--accent); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.auto-row .fix { color: var(--muted); font-size: 0.9rem; text-wrap: pretty; }
+@media (max-width: 600px) { .auto-row { grid-template-columns: 1fr; gap: 4px; } }
 .chart { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 12px 6px; display: grid; gap: 4px; min-width: 0; position: relative; }
 .chart-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .chart-head h3 { font-size: 0.92rem; font-weight: 500; }
@@ -1195,6 +1203,13 @@ Before building, list up to 3 questions you need answered.</pre></div>
 
   <p class="def static-note">Showing the last 12 months across every tool. Open this file in Chrome, Safari or another browser to filter the charts.</p>
   <div id="groups"></div>
+  <!-- What you could automate next: the script moves this into the "Am I automating repeat work?" group. Delete it when there are no repeats -->
+  <div class="auto-next" id="automate-next">
+    <p class="eyebrow">What you could automate next</p>
+    <div class="auto-row"><span class="ask">“Check the job tracker and summarize what changed”</span><span class="count">6 times in 4 weeks</span><span class="fix">Make it a scheduled task every Monday</span></div>
+    <div class="auto-row"><span class="ask">“Rewrite this in my voice, no em dashes”</span><span class="count">5 times in 4 weeks</span><span class="fix">Save it as a skill</span></div>
+    <div class="auto-row"><span class="ask">“Run the report checker and fix what it flags”</span><span class="count">4 times in 4 weeks</span><span class="fix">Add it as a Stop hook so it runs after every edit</span></div>
+  </div>
 
   <div class="split">
     <div class="panel">
@@ -1381,6 +1396,15 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     return {edited, agent_checked: rr(edited * ramp(0.55, 0.72, i, 10, 40) * (i >= 45 ? 0.6 : 1)), unchecked_ships: rr(edited * (i >= 45 ? 0.25 : 0.08)),
       delegated: rr(logged * ramp(0, 0.18, i, 30, 51)), read_heavy: rr(logged * ramp(0.16, 0.09, i, 30, 51))};
   };
+  // automation: only Claude Code and Codex log how a session started and the tools it called
+  // its own random stream, so adding it left the other sample charts unchanged
+  let seedA = 23; const rndA = () => (seedA = (seedA * 16807) % 2147483647) / 2147483647;
+  const rrA = v => Math.floor(v) + (rndA() < v - Math.floor(v) ? 1 : 0);
+  const automation = (src, sessions, i) => {
+    const logged = src === "claude_code" || src === "codex" ? sessions : 0;
+    return {logged, unattended: rrA(logged * ramp(0.04, 0.14, i, 25, 51)), setups: rrA(logged * ramp(0.12, 0.2, i, 30, 51)),
+      parallel: rrA(logged * (0.08 + rndA() * 0.02)), repeats: rrA(logged * ramp(0.5, 0.38, i, 25, 51))};
+  };
   const rows = [];
   weeks.forEach((_, i) => SOURCES.filter(([src]) => base[src]).forEach(([src]) => {
     const m = mix(src, i), tot = Object.values(m).reduce((a, b) => a + b, 0), n = base[src](i);
@@ -1399,7 +1423,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
       rows.push({w: i, s: src, c, sessions, prompts,
         briefed: rr(sessions * brief), corrections: rr(prompts * corr), refinements: rr(sessions * ramp(1.2, 2.4, i, 10, 40)),
         build: BUILD.has(c) ? sessions : 0, checked: rr(sessions * check), restarts: rr(sessions * restart),
-        retyped: rr(sessions * retype), skilled: rr(sessions * skill), ...agentChecks(src, c, sessions, i), ...usage(src, sessions, i)});
+        retyped: rr(sessions * retype), skilled: rr(sessions * skill), ...agentChecks(src, c, sessions, i), ...automation(src, sessions, i), ...usage(src, sessions, i)});
     });
   }));
 
@@ -1502,7 +1526,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     {id: "sessions", el: "g-usage", title: "Sessions per week", num: "sessions", den: null, fmt: v => Math.round(v), d: "rel", better: "none",
      def: "How many sessions you started each week.",
      card: "This is the backdrop for every other chart: a busy week has more room for corrections and restarts, so read the other numbers against it. Up or down isn't good or bad on its own. Higher means you leaned on AI more that week; lower means less."},
-    {id: "skilled", el: "g-delegate", title: "Skill use", num: "skilled", den: "sessions", fmt: pct, d: "pts", better: "up",
+    {id: "skilled", el: "g-automate", title: "Skill use", num: "skilled", den: "sessions", fmt: pct, d: "pts", better: "up",
      def: "Sessions that ran one of your skills or slash commands.",
      card: "A skill packages a process you'd otherwise explain from scratch, so it runs the same way every time. Each session counts once, however many skills it ran. Higher means more of your work runs on steps you've already written down. Lower can mean you're doing new kinds of work, or that a skill stopped triggering when it should."},
     {id: "retyped", el: "g-clear", title: "Rules retyped per week", num: "retyped", den: null, fmt: v => Math.round(v), d: "rel", better: "down",
@@ -1526,6 +1550,18 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     {id: "readheavy", el: "g-delegate", title: "Chats crowded with lookups", num: "read_heavy", den: "metered", fmt: pct, d: "pts", better: "down", logs: "tool calls",
      def: "Chats where the AI did 25 or more lookups itself, with no helper agent.",
      card: "Everything the AI opens or searches stays in the chat, and the whole chat is re-read every time you send a message. After 25 or more lookups, even a small follow-up costs a lot, so you reach your usage limit sooner, and the AI has more old material to sift through. Lower is better: wide searches went to a helper agent that brought back only the answer. Higher means more of your usage goes to re-reading old lookups. Counts Claude Code and Codex only."},
+    {id: "repeats", el: "g-automate", title: "Repeat tasks done by hand", num: "repeats", den: null, fmt: v => Math.round(v), d: "rel", better: "down", logs: "tool calls",
+     def: "Opening messages that match 3 or more earlier ones, with no skill or schedule behind them.",
+     card: "When you open a chat with the same request for the fourth time, it's a job you could hand off. This counts chats that start with mostly the same words as 3 or more earlier ones, where no skill ran and no schedule started it. Lower is better: repeat work has moved into skills and schedules. Higher means the same job keeps coming back to you, and each time you brief it from scratch. The list under these charts names the requests that come back most. Counts Claude Code and Codex only."},
+    {id: "unattended", el: "g-automate", title: "Runs you didn't start", num: "unattended", den: "logged", fmt: pct, d: "pts", better: "none", logs: "how sessions start",
+     def: "Sessions a schedule, a loop or a headless run started, out of all sessions.",
+     card: "Some work doesn't need you there to start it: a scheduled task, a loop that wakes itself up, or a headless run like <code>claude -p</code>. Higher means more of your work runs while you're elsewhere. Lower means you start everything by hand, which suits one-off work. Read it next to “Repeat tasks done by hand”: if repeats are high while this stays low, a schedule would take work off your plate. Counts Claude Code and Codex only."},
+    {id: "setups", el: "g-automate", title: "Loops and schedules set up", num: "setups", den: null, fmt: v => Math.round(v), d: "rel", better: "up", logs: "tool calls",
+     def: "Sessions that created a loop or a scheduled task: /loop, /schedule, a cron job or a wake-up.",
+     card: "Setting up a recurring job is the moment repeat work stops depending on your memory. This counts sessions that created or changed one: /loop, /schedule, a desktop scheduled task, a cron or launchd job, or an agent wake-up. Higher means you turn recurring checks into jobs. Lower means recurring work waits for you to remember it. Counts Claude Code and Codex only."},
+    {id: "parallel", el: "g-automate", title: "Work run in parallel", num: "parallel", den: "logged", fmt: pct, d: "pts", better: "none", logs: "tool calls",
+     def: "Sessions that started another session or a background task.",
+     card: "Long builds, test runs and second agents can run alongside you while you keep working. This counts sessions that started a background command or another agent run, like <code>claude -p</code> or <code>codex exec</code>. Helper agents are counted under “Delegated sessions” instead. Higher means more work runs side by side. Lower means one thing at a time, which suits focused work. Counts Claude Code and Codex only."},
     {id: "refinements", el: "g-clear", title: "Refinements per session", num: "refinements", den: "sessions", fmt: v => v.toFixed(1), d: "abs", better: "up",
      def: "Follow-ups that build on a good answer, like “now make it shorter”.",
      card: "Good results usually come from building on a first draft. This counts follow-ups like “now make it shorter” or “add a row for…”, which aren't corrections. Higher means you're shaping good output further. Lower can mean you accept first drafts as they are, or that your follow-ups go to corrections."},
@@ -1538,8 +1574,10 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
      how: "These charts follow a chat from its first message: whether you gave the goal, context and what done looks like, how often you then corrected, restarted or retyped a rule, and how often you built on a good answer."},
     {id: "check", ids: ["checked", "agentchecked", "uncheckedships"], title: "Am I checking the work?", blurb: "Whether answers and code get tested before they reach anyone.",
      how: "These charts follow the work to the finish: whether you pushed back on answers in the chat, whether the agent ran a test after changing code, and how often untested code was committed or shipped. The last two cover Claude Code and Codex only."},
-    {id: "delegate", ids: ["delegated", "readheavy", "skilled"], title: "Am I handing off the right work?", blurb: "How much searching and repeat work goes to helper agents and skills.",
-     how: "These charts look at work you could hand off: sessions that used a helper agent, chats where the AI did 25 or more lookups itself, and sessions that ran one of your skills. Read the first two together."},
+    {id: "delegate", ids: ["delegated", "readheavy"], title: "Am I handing off the right work?", blurb: "How much searching goes to helper agents.",
+     how: "These charts look at searching you could hand off: sessions that used a helper agent, and chats where the AI did 25 or more lookups itself. Read them together."},
+    {id: "automate", ids: ["repeats", "unattended", "setups", "parallel", "skilled"], title: "Am I automating repeat work?", blurb: "How much runs without you starting it, and what you keep redoing by hand.",
+     how: "These charts look at work that could run without you: requests you keep typing by hand, sessions a schedule, loop or headless run started, the loops and schedules you set up, work you sent off to run alongside, and sessions that ran one of your skills. All but skill use cover Claude Code and Codex only."},
     {id: "usage", ids: ["sessions", "longshare", "starttokens"], title: "Where does my usage go?", blurb: "How much you use AI, and what eats into your limit.",
      how: "These charts show volume and cost: sessions started per week, the share of usage from very long sessions, and how much loads before your first message."},
   ];
@@ -1556,11 +1594,17 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     delegated: {rose: "you handed more work to helper agents", fell: "you handed less work to helper agents", up: "more searches and checks ran outside your main chat", down: "more work stayed in the main chat, which suits small tasks"},
     readheavy: {rose: "more chats filled up with lookups", fell: "fewer chats filled up with lookups", up: "more of your usage goes to re-reading old searches", down: "wide searches went to a helper and came back as answers"},
     skilled: {rose: "more sessions ran one of your skills", fell: "fewer sessions ran one of your skills", up: "more work runs on steps you've already written down", down: "you're doing new kinds of work, or a skill stopped triggering"},
+    repeats: {rose: "the same requests came back by hand more often", fell: "fewer requests came back by hand", up: "the same job keeps coming back to you", down: "repeat work has moved into skills and schedules"},
+    unattended: {rose: "more of your work ran without you starting it", fell: "less of your work ran without you starting it", up: "more of your work runs while you're elsewhere", down: "you start everything by hand, which suits one-off work"},
+    setups: {rose: "you set up more loops and schedules", fell: "you set up fewer loops and schedules", up: "you turn recurring checks into jobs", down: "recurring work waits for you to remember it"},
+    parallel: {rose: "more work ran side by side", fell: "less work ran side by side", up: "more work runs side by side", down: "one thing at a time, which suits focused work"},
     sessions: {rose: "you used AI more", fell: "you used AI less", up: "a busier stretch, with more room for corrections and restarts", down: "a quieter stretch"},
     longshare: {rose: "more of your usage went to very long sessions", fell: "less of your usage went to very long sessions", up: "more usage goes to re-reading old conversation", down: "you start fresh between tasks more often"},
     starttokens: {rose: "sessions started heavier", fell: "sessions started leaner", up: "more loads before you type, often skills or plugins you rarely use", down: "more of your usage goes to the work itself"},
   };
   const groupsEl = document.getElementById("groups");
+  // the coach's "What you could automate next" list sits under the automation group's charts
+  const autoNext = document.getElementById("automate-next");
   const trendOf = r => !r.dlt || r.m.better === "none" || Math.abs(r.dlt.v) < 1e-9 ? "flat" : ((r.m.better === "up") === (r.dlt.v > 0) ? "good" : "bad");
   const listed = a => a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1];
   const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
@@ -1569,6 +1613,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
     groupsEl.innerHTML = `<div class="grp-tiles" role="group" aria-label="Chart groups">${GROUPS.map(g =>
       `<button type="button" class="grp-tile" id="grp-tile-${g.id}" data-g="${g.id}" aria-controls="grp-${g.id}"><span class="q">${g.title}</span><span class="s">${g.blurb}</span></button>`).join("")}</div>
       ${GROUPS.map(g => `<div class="grp-panel" id="grp-${g.id}" role="region" aria-labelledby="grp-tile-${g.id}"><h4 class="grp-title">${g.title}</h4><div class="grp-sum" aria-live="polite"></div><div class="multiples" id="g-${g.id}"></div></div>`).join("")}`;
+    if (autoNext) document.getElementById("grp-automate").appendChild(autoNext);
   }
   // what changed in one group, how it's measured, and how to read each chart
   function groupSummary(g, results) {
@@ -1642,7 +1687,7 @@ document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', 
   const srcOk = r => !state.sources.size || state.sources.has(r.s);
   const catOk = r => state.cat === "all" || r.c === state.cat;
   const sumRows = (list, keys) => { const t = {}; keys.forEach(k => t[k] = 0); list.forEach(r => keys.forEach(k => t[k] += r[k] || 0)); return t; };
-  const KEYS = ["sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "read_heavy", "metered", "usage", "long_usage", "start_tokens"];
+  const KEYS = ["sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "read_heavy", "metered", "usage", "long_usage", "start_tokens", "logged", "unattended", "setups", "parallel", "repeats"];
   const weekTotals = filter => { const t = weeks.map(() => { const o = {}; KEYS.forEach(k => o[k] = 0); return o; }); rows.filter(filter).forEach(r => KEYS.forEach(k => t[r.w][k] += r[k] || 0)); return t; };
   const value = (m, t) => m.den ? (t[m.den] ? t[m.num] / t[m.den] : null) : t[m.num];
   const windowVal = (m, totals, a, b) => { // ratio of sums for rates, mean for counts

@@ -16,7 +16,9 @@ CORRECTION = re.compile(
     re.I)
 SECRET = re.compile(r"(sk-[A-Za-z0-9_-]{10,}|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,}|"
                     r"(?i:api[_-]?key|token|password)\s*[:=]\s*\S+)")
-NOISE = re.compile(r"^<(command-|local-command|system-reminder|bash-|user-memory)", re.I)
+# not typed by the user: tool notes, and the instructions and environment Codex logs as a user turn
+NOISE = re.compile(r"^(<(command-|local-command|system-reminder|bash-|user-memory|environment_context|user_instructions)|"
+                   r"# AGENTS\.md instructions for )", re.I)
 SLASH = re.compile(r"<command-name>/?([\w:.-]+)</command-name>")
 BUILTIN_COMMANDS = {"clear", "compact", "help", "model", "config", "cost", "init", "resume",
                     "login", "logout", "status", "memory", "permissions", "exit", "doctor",
@@ -64,7 +66,21 @@ CATEGORIES = [  # order breaks ties
     ("brainstorming", re.compile(r"brainstorm|ideas?\b|what if|explore|options|how might|could we|name for|"
                                  r"concepts?|directions", re.I)),
 ]
+# Automation: runs nobody started by hand, jobs set up to recur, work sent off to run alongside,
+# and repeat requests still typed by hand. Claude Code and Codex only, the tools that log tool calls.
+SETUP_TOOL = re.compile(r"^(CronCreate|ScheduleWakeup|RemoteTrigger)$|create_scheduled_task|update_scheduled_task|"
+                        r"create_automation", re.I)
+SETUP_CMD = re.compile(r"\bcrontab\s+(-e\b|[^-\s])|\blaunchctl\s+(load|bootstrap)\b|\bsystemctl\s+--user\s+(enable|start)\b|"
+                       r"\bschedule\.py\s+set\b", re.I)
+SETUP_SLASH = {"loop", "schedule"}
+SPAWN_CMD = re.compile(r"\bclaude\b[^|;&\n]*\s-p\b|\bcodex\s+exec\b|\bnohup\b|[^&>]&\s*$", re.I)
+UNATTENDED_OPENER = re.compile(r"^\s*(<<autonomous-loop|<scheduled-task)", re.I)
+REPEAT_MIN = 3        # earlier matching openers before a hand-typed one counts as repeat work. A chosen line
+REPEAT_SIMILAR = 0.5  # share of content words two openers must share to count as the same request
+REPEAT_WORDS = 5      # openers with fewer content words ("continue", "fix it") are too short to match
+WRAPPER = re.compile(r"<([a-z][\w-]*)\b[^>]*>.*?</\1>", re.S | re.I)   # context an app adds around the request
 CODING_TOOLS = {"claude_code", "codex", "cursor", "antigravity"}
+LOGGED = {"claude_code", "codex"}   # the tools that log tool calls and tokens
 BUILD_CATEGORIES = {"prototyping", "creating", "research"}
 
 
@@ -112,10 +128,12 @@ class Agg:
         self.compactions = 0
         self.events = []           # (ts, kind, name) for tools/skills over time
         self.skill_sessions = set()
+        self.unattended = set()    # sessions a headless run started
         self.timeline = collections.defaultdict(list)   # session -> [(kind, detail)] in log order
 
-    def add_action(self, session, name, blob, shell=False):
-        """Record what an agent tool call did: edit, check, ship, read or delegate. Others are ignored."""
+    def add_action(self, session, name, blob, shell=False, background=False):
+        """Record what an agent tool call did: edit, check, ship, read, delegate, set up a recurring
+        job or start work in parallel. Others are ignored."""
         edit = name in EDIT_TOOLS or "*** Begin Patch" in blob
         runs = []
         if name in DELEGATE_TOOLS:
@@ -133,6 +151,10 @@ class Agg:
         if CHECK_TOOL.search(name) or any(CHECK_CMD.search(p) for p in runs) or (
                 name in DELEGATE_TOOLS and CHECK.search(blob)):
             self.timeline[session].append(("check", name))
+        if SETUP_TOOL.search(name) or any(SETUP_CMD.search(p) for p in runs):
+            self.timeline[session].append(("setup", name))
+        if background or any(SPAWN_CMD.search(p.strip()) for p in runs):
+            self.timeline[session].append(("parallel", name))
         ship = next((m for m in map(SHIP_CMD.search, runs) if m), None)
         if ship:
             self.timeline[session].append(("ship", clean(ship.group(0), 80)))
@@ -143,14 +165,21 @@ class Agg:
             if code or not paths:
                 self.timeline[session].append(("edit", os.path.basename(code[0]) if code else name))
 
+    def add_command(self, ts, session, text):
+        m = SLASH.search(text or "")
+        if not m:
+            return
+        name = m.group(1).split(":")[-1]
+        self.slash[m.group(1)] += 1
+        self.events.append((ts, "skill", name))
+        if name in SETUP_SLASH:
+            self.timeline[session].append(("setup", "/" + name))
+        elif name not in BUILTIN_COMMANDS:
+            self.skill_sessions.add(session)
+
     def add_prompt(self, ts, session, text):
         if not text or NOISE.match(text.strip()):
-            m = SLASH.search(text or "")
-            if m:
-                self.slash[m.group(1)] += 1
-                self.events.append((ts, "skill", m.group(1).split(":")[-1]))
-                if m.group(1).split(":")[-1] not in BUILTIN_COMMANDS:
-                    self.skill_sessions.add(session)
+            self.add_command(ts, session, text)
             return
         self.sessions.add(session)
         if ts:
@@ -159,12 +188,7 @@ class Agg:
             self.hours[local.hour] += 1
         self.prompts.append((ts, session, text))
         self.timeline[session].append(("prompt", text))
-        m = SLASH.search(text or "")
-        if m:
-            self.slash[m.group(1)] += 1
-            self.events.append((ts, "skill", m.group(1).split(":")[-1]))
-            if m.group(1).split(":")[-1] not in BUILTIN_COMMANDS:
-                self.skill_sessions.add(session)
+        self.add_command(ts, session, text)
 
 
 def text_of(content):
@@ -191,6 +215,8 @@ def claude_code(home, since):
                 continue
             if e.get("isMeta") or e.get("isSidechain"):
                 continue
+            if e.get("entrypoint") == "sdk-cli":     # claude -p: a headless run
+                a.unattended.add(session)
             msg = e.get("message") or {}
             if e.get("type") == "user" and msg.get("role") == "user":
                 content = msg.get("content")
@@ -206,7 +232,8 @@ def claude_code(home, since):
                         inp = c.get("input") or {}
                         a.add_action(session, c.get("name", "?"),
                                      inp.get("command", "") if c.get("name") == "Bash" else json.dumps(inp),
-                                     shell=c.get("name") == "Bash")
+                                     shell=c.get("name") == "Bash",
+                                     background=c.get("name") == "Bash" and bool(inp.get("run_in_background")))
                         if c.get("name") == "Skill":
                             sk = (c.get("input") or {}).get("skill", "?")
                             a.skills[sk] += 1
@@ -229,6 +256,10 @@ def codex(home, since):
                 continue
             p = e.get("payload") if isinstance(e.get("payload"), dict) else e
             kind = p.get("type")
+            # codex exec is a headless run; apps built on the Codex SDK also run through exec, so they're left out
+            origin = str(p.get("originator", "")).lower()
+            if e.get("type") == "session_meta" and "sdk" not in origin and ("exec" in origin or p.get("source") == "exec"):
+                a.unattended.add(session)
             if kind == "message" and p.get("role") == "user":
                 a.add_prompt(ts, session, text_of(p.get("content")))
             elif kind == "user_message":
@@ -708,7 +739,35 @@ def agent_checks(steps):
             "read_heavy": reads >= READ_HEAVY and not delegated}
 
 
-def sessions_of(aggs, metered=None):
+def scheduled_prompts(home):
+    """Prompts that scheduled jobs send: Claude desktop's scheduled tasks and second look's own headless review.
+    A session opening on one of them was started by a schedule, not by hand."""
+    found = []
+    for p in glob.glob(os.path.join(home, ".claude/scheduled-tasks/*/SKILL.md")):
+        try:
+            body = re.sub(r"^---.*?---\s*", "", open(p, encoding="utf-8", errors="ignore").read(), flags=re.S)
+        except OSError:
+            continue
+        found.append(content_words(body))
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from schedule import HEADLESS_PROMPT
+        found.append(content_words(HEADLESS_PROMPT))
+    except Exception:
+        pass
+    return [w for w in found if w]
+
+
+def request_words(text):
+    """Content words of what the user asked, minus context blocks an app wraps around it."""
+    return content_words(WRAPPER.sub(" ", text))
+
+
+def similar(a, b):
+    return bool(a and b) and len(a & b) / len(a | b) >= REPEAT_SIMILAR
+
+
+def sessions_of(aggs, metered=None, scheduled=()):
     out, metered = [], metered or {}
     for a in aggs:
         by = collections.defaultdict(list)
@@ -721,6 +780,8 @@ def sessions_of(aggs, metered=None):
             if not start:
                 continue
             category = classify(a.name, texts)
+            steps = a.timeline.get(session, [])
+            opener = content_words(texts[0])
             out.append({
                 "source": a.name, "session": session, "start": start, "category": category,
                 "first": texts[0], "prompts": len(texts),
@@ -732,7 +793,13 @@ def sessions_of(aggs, metered=None):
                 "retyped": sum(bool(STYLE.search(t)) for t in texts),
                 "skilled": session in a.skill_sessions,
                 "restart": False,
-                **agent_checks(a.timeline.get(session, [])),
+                # started by a headless run, a loop or a scheduled job instead of by hand
+                "unattended": session in a.unattended or bool(UNATTENDED_OPENER.match(texts[0]))
+                              or any(len(opener & w) / len(opener | w) >= 0.6 for w in scheduled if opener),
+                "setups": [d for k, d in steps if k == "setup"],
+                "parallel": any(k == "parallel" for k, _ in steps),
+                "repeat_of": 0,
+                **agent_checks(steps),
                 **_usage_fields(metered.get((a.name, session))),
             })
     # a restart: same tool and kind of work, within 48h, opening on mostly the same words
@@ -748,7 +815,17 @@ def sessions_of(aggs, metered=None):
             if words and pw and len(words & pw) / len(words | pw) >= 0.35:
                 r["restart"] = True
                 break
+    # repeat work: an opening request that matches 3+ earlier ones, any time in the range
+    logged = [(r, request_words(r["first"])) for r in out if r["source"] in LOGGED]
+    for i, (r, words) in enumerate(logged):
+        if len(words) >= REPEAT_WORDS:
+            r["repeat_of"] = sum(similar(words, pw) for _, pw in logged[:i])
     return out
+
+
+def is_repeat(r):
+    """Repeat work still started by hand: no skill ran and no schedule started it."""
+    return r["repeat_of"] >= REPEAT_MIN and not r["skilled"] and not r["unattended"]
 
 
 def _usage_fields(m):
@@ -762,7 +839,7 @@ def session_cube(sessions):
     """Additive weekly rows by source and kind of work, so the report can filter and recompute."""
     keys = ("sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked",
             "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "read_heavy",
-            "metered", "usage", "long_usage", "start_tokens")
+            "metered", "usage", "long_usage", "start_tokens", "logged", "unattended", "setups", "parallel", "repeats")
     cube = collections.defaultdict(lambda: dict.fromkeys(keys, 0))
     for r in sessions:
         row = cube[(week_of(r["start"]), r["source"], r["category"])]
@@ -781,6 +858,12 @@ def session_cube(sessions):
         row["unchecked_ships"] += r["unchecked_ships"]
         row["delegated"] += bool(r["delegations"])
         row["read_heavy"] += r["read_heavy"]
+        if r["source"] in LOGGED:
+            row["logged"] += 1
+            row["unattended"] += r["unattended"]
+            row["setups"] += bool(r["setups"])
+            row["parallel"] += r["parallel"]
+            row["repeats"] += is_repeat(r)
         if r.get("usage"):
             row["metered"] += 1
             row["usage"] += round(r["usage"])
@@ -829,6 +912,52 @@ def delegation_summary(sessions, n=5):
                                    for r in sorted(heavy, key=lambda r: -r["reads"])[:n]],
             "note": "Reads are file reads, searches and read-only shell commands in the main session. "
                     "A subagent's own reading stays in its context and isn't counted."}
+
+
+def automation_summary(sessions, since, n=5):
+    """What runs without the user, and which hand-typed requests keep coming back. Claude Code and Codex only.
+    Repeats are matched across every session collected, so run it with --days 365 for the full picture."""
+    rows = [r for r in sessions if r["source"] in LOGGED]
+    window = [r for r in rows if r["start"] >= since]
+    now = dt.datetime.now(dt.timezone.utc)
+    # group hand-typed openers that ask for the same thing; each group's first opener stands for it
+    groups = []
+    for r in rows:
+        words = request_words(r["first"])
+        if r["unattended"] or len(words) < REPEAT_WORDS:
+            continue
+        g = next((g for g in groups if similar(words, g["words"])), None)
+        if g:
+            g["runs"].append(r)
+        else:
+            groups.append({"words": words, "runs": [r]})
+    repeats = []
+    for g in groups:
+        runs, by_hand = g["runs"], [r for r in g["runs"] if not r["skilled"]]
+        # still coming back: typed by hand at least once in the last 4 weeks
+        if len(runs) <= REPEAT_MIN or not any(r["start"] >= max(since, now - dt.timedelta(days=28)) for r in by_hand):
+            continue
+        days = collections.Counter(r["start"].astimezone().strftime("%A") for r in runs).most_common(1)[0]
+        repeats.append({
+            "times": len(runs), "by_hand": len(by_hand),
+            "last_4_weeks": sum(r["start"] >= now - dt.timedelta(days=28) for r in runs),
+            "first": runs[0]["start"].date().isoformat(), "last": runs[-1]["start"].date().isoformat(),
+            # a request that lands on the same weekday most weeks is a schedule waiting to happen
+            "weekday": days[0] if days[1] / len(runs) >= 0.6 else None,
+            "sources": sorted({r["source"] for r in runs}), "category": runs[-1]["category"],
+            "with_skill": len(runs) - len(by_hand),
+            "opener": clean(WRAPPER.sub(" ", runs[-1]["first"]), 140),
+        })
+    repeats.sort(key=lambda x: (-x["last_4_weeks"], -x["by_hand"]))
+    setups = collections.Counter(d for r in window for d in r["setups"])
+    return {"sessions": len(window),
+            "unattended_sessions": sum(r["unattended"] for r in window),
+            "setup_sessions": sum(bool(r["setups"]) for r in window), "set_up_with": dict(setups),
+            "parallel_sessions": sum(r["parallel"] for r in window),
+            "repeat_sessions": sum(is_repeat(r) for r in window),
+            "repeat_line": REPEAT_MIN, "repeats": repeats[:n],
+            "note": "Unattended means a headless run (claude -p, codex exec), a loop, or a scheduled task's prompt. "
+                    "Repeats compare opening messages by shared words, so open the samples before citing them."}
 
 
 def installed_skills(home):
@@ -958,10 +1087,11 @@ def main():
         "coverage": coverage(aggs),
     }
     metered, limit_hits = usage_by_session(args.home, since)
-    sessions = sessions_of(aggs, metered)
+    sessions = sessions_of(aggs, metered, scheduled_prompts(args.home))
     result["usage"] = usage_summary([r for r in sessions if r["start"] >= since], metered, limit_hits, args.home)
     result["agent_checks"] = checks_summary([r for r in sessions if r["start"] >= since])
     result["delegation"] = delegation_summary([r for r in sessions if r["start"] >= since])
+    result["automation"] = automation_summary(sessions, since)
     result["label_samples"] = label_samples(sessions)
     result["scope"] = data_scope(args.home, aggs, {"claude": args.claude_export, "chatgpt": args.chatgpt_export,
                                                    "gemini": args.gemini_export})

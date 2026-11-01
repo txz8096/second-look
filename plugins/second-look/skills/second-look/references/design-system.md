@@ -59,7 +59,7 @@ cards, panels · 20px "Try this" blocks and the plan · fully rounded chips.
    first", "Worth a look", collapsed installed skills.
 6. How your behavior is changing (`#part-1`, last despite its id): data-scope line, "Did last cycle's fixes work?"
    (only after a review with logged fixes), "Habits over the last year" (`#trends`): filters,
-   then four question tiles; the open group shows its summary and charts (see "Chart groups"),
+   then five question tiles; the open group shows its summary and charts (see "Chart groups"),
    then "Usage this cycle". `scripts/prerender.py` saves the drawn charts, bars and tables into
    the file and marks the section `data-static`, which hides the filters and shows a note.
    The script clears the mark and redraws with live filters.
@@ -72,11 +72,11 @@ cards, panels · 20px "Try this" blocks and the plan · fully rounded chips.
 
 ## Chart groups
 
-Decided Oct 30, 2026 from three prototypes.
+Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1, 2026.
 
-- Charts sit in four groups, one per question: "Am I explaining what I want?", "Am I checking
-  the work?", "Am I handing off the right work?", "Where does my usage go?". One group shows at a
-  time; the tiles switch it.
+- Charts sit in five groups, one per question: "Am I explaining what I want?", "Am I checking
+  the work?", "Am I handing off the right work?", "Am I automating repeat work?", "Where does my
+  usage go?". One group shows at a time; the tiles switch it. The tiles fit one row on desktop.
 - The group with the most charts going the wrong way opens first. Inside a group, those charts
   come first.
 - Tiles show the question and a one-line description, with no counts.
@@ -84,6 +84,11 @@ Decided Oct 30, 2026 from three prototypes.
   on how its charts measure it. No values or changes in the summary.
 - Chart headers show the title (with its card) and the definition line only. Each chart ends
   with "Higher means… Lower means…".
+- "Am I automating repeat work?" ends with "What you could automate next" (`#automate-next`):
+  one row per repeated request, most repeated first, with the request in quotes, the count in
+  mono ("6 times in 4 weeks") and the fix in one short line. The script moves the block into
+  that group. Delete it when there are no repeats. It has a solid border, because in this report
+  a dashed border means data second look can't see.
 - Without scripts (prerendered), every group shows in turn with its question as a heading.
 - Phones: tiles in two columns, descriptions hidden.
 
@@ -130,6 +135,8 @@ Use these definitions word for word:
 | Agent checks | Sessions where the agent changed code and then ran a test, build, lint or browser check after its last edit. Claude Code and Codex only, since other tools don't log tool calls. |
 | Unchecked ships | A commit, push, deploy or “ship it” while code changes were still untested in the session. Checks you ran yourself outside the session don't show up. |
 | Delegated sessions | Sessions that handed work to a subagent: research, a check or a build. Claude Code and Codex only. |
+| Repeat tasks done by hand | A chat that opens with mostly the same request as 3 or more earlier ones, with no skill run and no schedule behind it. Claude Code and Codex only. |
+| Runs you didn't start | Sessions a scheduled task, a loop or a headless run (`claude -p`, `codex exec`) started. Claude Code and Codex only. |
 | Chats crowded with lookups | Chats where the AI opened or searched 25 or more files and pages itself, without handing the search to a helper agent. 25 is a chosen line, not a measured limit. |
 
 ## Chip labels (and nothing else)

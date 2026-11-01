@@ -58,6 +58,14 @@ _Avoid_: Pushback, redo
 Starting the same topic over in a new session within 2 days. A restart is an event and is not counted as redoing work.
 _Avoid_: Retry, abandoned session
 
+**Repeat request**:
+An opening request that matches 3 or more earlier ones and was still typed by hand: no skill ran and no schedule started it. A candidate for a skill, a hook or a scheduled task.
+_Avoid_: Duplicate, restart
+
+**Unattended run**:
+A session that a scheduled task, a loop or a headless run (`claude -p`, `codex exec`) started, with nobody typing the first message.
+_Avoid_: Background session, bot run
+
 **Incident**:
 Something notable that happened within one review period, such as a few very long sessions. Reports list incidents without a fix.
 _Avoid_: Habit, pattern

@@ -69,7 +69,8 @@ on, that starts with whether last cycle's fixes stuck and whether the work got b
 checking, restarts, and how much of your usage went to very long sessions, charted week by
 week for up to 12 months and filterable by tool and kind of work. The charts are grouped by
 the question they answer, like "Am I checking the work?", and the group that slipped most
-opens first with a short written summary.
+opens first with a short written summary. "Am I automating repeat work?" also lists the
+requests you keep typing by hand, each with a fix: a skill, a hook or a scheduled task.
 
 See the [sample report](https://txz8096.github.io/second-look/sample-report.html) for the full
 layout. It uses made-up data.

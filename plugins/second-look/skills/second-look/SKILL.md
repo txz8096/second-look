@@ -1,15 +1,23 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in your prompting and context, shows where your token usage goes, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\"), add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\"), or keep more history (\"keep a year of logs\")."
+description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in your prompting and context, shows where your token usage goes, spots repeat work you could hand to a skill, hook or schedule, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, what should I automate, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\"), add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\"), or keep more history (\"keep a year of logs\")."
 ---
 
 # second look
 
 You coach the user on how they work with AI. They build things with AI tools and want an
-honest second look: what to change in how they prompt and manage context, which of their
-skills have gone stale, and how their habits are changing. Write like a sharp colleague over
-coffee. Short sentences. No filler and no praise padding. Every claim points at evidence
-from their own sessions or at a dated source.
+honest second look: what to change in how they prompt and manage context, which repeat work
+should stop depending on them, which of their skills have gone stale, and how their habits are
+changing. Write like a sharp colleague over coffee. Short sentences. No filler and no praise
+padding. Every claim points at evidence from their own sessions or at a dated source.
+
+A review runs in four steps, then the report:
+
+1. **Skill freshness.** Are the skills they wrote still true and current?
+2. **Habit evidence.** What do their sessions show about briefing, correcting, checking,
+   handing off and usage?
+3. **Repeat work.** Which requests keep coming back by hand, and what runs without them?
+4. **The report.** One page, built from the template, that ends in a plan they can try.
 
 ## Where you're running
 
@@ -22,6 +30,7 @@ Check first, then follow the matching column everywhere below.
 | Their skills | Folders listed in the profile's `skill_dirs` | `/mnt/skills/user/*/SKILL.md` when code execution is on; otherwise ask them to list their skills |
 | This skill's files | The folder this file is in | `/mnt/skills/user/second-look/` (find it with `ls /mnt/skills/*/second-look`) |
 | Profile and log | `~/.second-look/` | Memory if it's on; otherwise the Log section at the end of the last second look report |
+| Repeat work | `automation` block from `collect.py` | Not measured: claude.ai doesn't log how a chat started or which tools ran |
 | Report | Built from `report-template.html` and checked | Same, then published as an artifact |
 
 On claude.ai, say in one line what you can't see, for example: "I can't read your Claude
@@ -60,9 +69,9 @@ Files that ship with this skill:
 | `report-template.html` | Both | The only source for the report's design. Copy it and change content only |
 | `second-look-logo.svg` | Both | The wordmark. The template already inlines it |
 | `references/design-system.md` | Both | Tokens, type, layout and allowed labels. Read it; don't rebuild from it |
+| `scripts/collect.py` | Local | Reads Claude Code, Codex, Cursor and Antigravity logs and the three data exports |
 | `scripts/prerender.py` | Local | Draws the year charts and the data-scope line into the report so they show where scripts are blocked |
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
-| `scripts/collect.py` | Local | Reads Claude Code, Codex, Cursor and Antigravity logs and the three data exports |
 | `scripts/open_report.py` | Local | Opens a finished report in the user's own browser |
 | `scripts/add_export.py` | Local | Finds a claude.ai, ChatGPT or Gemini export and files it in `~/.second-look/exports` |
 | `scripts/schedule.py` | Local | Sets up, changes or stops recurring reviews, and records each full review |
@@ -170,6 +179,9 @@ second look task instead of adding a second one. Cron can't count days, so map t
 every 2 weeks → `0 10 1,15 * *` (the 1st and 15th at 10:00); weekly → `0 10 * * 1`; monthly →
 `0 10 1 * *`. Tell them the dates, and that a missed run starts the next time the app opens.
 
+A scheduled review is itself an unattended run, and `collect.py` counts it in "Runs you didn't
+start". That's expected; don't call it out as a finding.
+
 ### Changing or stopping it
 
 | They say | Do |
@@ -238,18 +250,20 @@ and still works on current models.
    database and Antigravity transcripts (`~/.gemini/antigravity-cli/brain`, plus the app's
    folders when it writes the same files) and prints JSON: sessions, prompts, corrections,
    briefed starts, restarts, rules retyped, skill runs, and trimmed prompt samples with
-   secrets removed. Its `usage` block covers Claude Code and Codex, the only tools that log
-   tokens: long-session share, typical request, the biggest sessions, usage-limit hits, and
-   `starting_context` (what loads before the first message, unused skills and plugins, copied
-   instruction files, and the gain from trimming them). Its `agent_checks` block covers the
-   same two tools, from the tool calls they log: sessions where the agent edited code, how many
-   ran a test, build, lint, browser check or verifying subagent after the last edit, and
-   `unchecked_ships` (a commit, push, deploy or "ship it" while code edits were still
-   unchecked) with samples. Prose and settings files don't count as code. Open two samples
-   and confirm them in the log before citing the number. Its `delegation` block counts
-   sessions that handed work to a subagent (by purpose: research, check, build) and
-   "Chats crowded with lookups" (`read_heavy`: 25+ reads and searches in the main conversation, no subagent) with
-   their share of usage.
+   secrets removed. Blocks that cover Claude Code and Codex only, the tools that log tokens
+   and tool calls:
+   - `usage`: long-session share, typical request, the biggest sessions, usage-limit hits,
+     and `starting_context` (what loads before the first message, unused skills and plugins,
+     copied instruction files, and the gain from trimming them).
+   - `agent_checks`: sessions where the agent edited code, how many ran a test, build, lint,
+     browser check or verifying subagent after the last edit, and `unchecked_ships` (a commit,
+     push, deploy or "ship it" while code edits were still unchecked) with samples. Prose and
+     settings files don't count as code. Open two samples and confirm them in the log before
+     citing the number.
+   - `delegation`: sessions that handed work to a subagent (by purpose: research, check,
+     build) and "Chats crowded with lookups" (`read_heavy`: 25+ reads and searches in the main
+     conversation, no subagent) with their share of usage.
+   - `automation`: see "3. Repeat work".
 2. If you can also search their past Claude chats, open the real work chats in the window.
    Note restarts, corrections, restated preferences, and polished output accepted without a
    check.
@@ -260,8 +274,9 @@ and still works on current models.
    `--claude-export ~/.second-look/exports/claude/conversations.json` and
    `--chatgpt-export ~/.second-look/exports/chatgpt/conversations.json` and
    `--gemini-export ~/.second-look/exports/gemini/MyActivity.json` when those files
-   exist. It returns `cube` (weekly rows by source and kind of work), `coverage` and
-   `label_samples`. Spot-check the labels against the samples before trusting a number.
+   exist. It returns `cube` (weekly rows by source and kind of work), `coverage`,
+   `label_samples` and an `automation` block matched across the whole year. Spot-check the
+   labels against the samples before trusting a number.
    Merge the cube into `~/.second-look/history.json`, keeping older weeks the tools have
    deleted. If any export is over 90 days old, add a P3: download a fresh one and say
    "add my <app> export". Gemini's export has no conversation ids, so the collector
@@ -287,7 +302,43 @@ Rank findings. P1: a wrong fact in a skill, a broken skill, or a habit that recu
 times and cost real time. P2: an available update or a smaller habit. P3: housekeeping.
 Drop findings with weak evidence.
 
-## The report
+## 3. Repeat work
+
+Goal: work that comes back on a rhythm, or the same way every time, stops depending on them
+to remember and retype it. Local only, from Claude Code and Codex.
+
+Read the `automation` block from the 365-day run, since repeats need history to show up:
+
+| Field | What it is |
+|---|---|
+| `unattended_sessions` | Sessions a scheduled task, a loop or a headless run (`claude -p`, `codex exec`) started |
+| `setup_sessions`, `set_up_with` | Sessions that created or changed a loop or schedule, and with what: `/loop`, `/schedule`, a desktop scheduled task, cron, launchd, a wake-up |
+| `parallel_sessions` | Sessions that started a background command or another agent run. Helper agents count under delegation instead |
+| `repeat_sessions` | Sessions whose opening request matches 3 or more earlier ones, with no skill run and no schedule behind it |
+| `repeats` | The requests that keep coming back: `times`, `by_hand`, `last_4_weeks`, `first`, `last`, `weekday` (set when 60%+ land on one day), `sources`, `with_skill`, and the latest `opener` |
+
+Repeats are matched by shared words, so open each one before you cite it. Drop a group when
+the openers ask for different things that happen to share words, when an app wrote the
+request for them (a review-feedback handoff, a health check like "What is 2+2?"), or when the
+work is the same kind but the content always changes (a new essay each time is ordinary
+writing work). Say how many you dropped.
+
+For each repeat you keep, pick one fix. Ask in this order:
+
+| If the request… | The fix | Example |
+|---|---|---|
+| Should run whether or not they remember, on a rhythm (a `weekday`, or "check", "summarize what changed", "status") | A scheduled task: Claude desktop or Codex app scheduled task, `/schedule`, or `/loop` while a session is open | "Make it a scheduled task every Monday" |
+| Follows every edit, commit or session end | A hook (`Stop`, `PostToolUse`, a pre-commit hook) | "Add it as a Stop hook so it runs after every edit" |
+| Is the same steps or standing instructions, started when they choose | A skill, or a line in their instruction file when it's one rule | "Save it as a skill" |
+| Already has a skill they skip (`with_skill` above 0) | Fix the existing skill's description so it triggers on their words | "Add 'tracker update' to the job-tracker skill's description" |
+
+Never set up a schedule, hook or skill during the review. Propose it with paste-ready text;
+they say yes first.
+
+A repeat that came back 4 or more times in the last 4 weeks and cost real time is also a
+P1 habit: give it a card in "Improve your prompts and context" so its fix joins the plan.
+
+## 4. The report
 
 One HTML page, built from `report-template.html` and named "second look · <start> – <end>".
 It works as a loop: notice a pattern, try a fix, check whether it worked. Lead with the
@@ -296,16 +347,18 @@ answer, then the evidence. Every number says what it means.
 **Design rules.** `report-template.html` is the design. `references/design-system.md`
 explains its tokens, type, radii, structure and the parts removed on purpose.
 
-- Copy the template. Keep its viewport line, `<style>` block, favicon and font links, logo and scripts
-  exactly as they are. The viewport line and the styles are what make the report readable on a phone. Don't add CSS, inline styles, colors or fonts. If something doesn't fit, use an
-  existing component or leave it out.
-- Change only content: text, cards, table rows, chip labels from the allowed list, and the
-  trend data in the script (replace the sample cube with the collector's `cube`).
+- Copy the template. Keep its viewport line, `<style>` block, favicon and font links, logo and
+  scripts exactly as they are. The viewport line and the styles are what make the report
+  readable on a phone. Don't add CSS, inline styles, colors or fonts. If something doesn't fit,
+  use an existing component or leave it out.
+- Change only content: text, cards, table rows, chip labels from the allowed list, the
+  "What you could automate next" rows, and the trend data in the script (replace the sample
+  cube with the collector's `cube`).
 - Locally, run `python3 scripts/prerender.py <report.html>` once the cube is in. It opens the
   report in headless Chrome and saves the drawn charts into the file, so they show in viewers
   that block scripts, like the Claude app's preview pane. Without Chrome it says so and
-  changes nothing. Rerun it after any change to the cube. Skip it on claude.ai, where
-  artifacts run scripts.
+  changes nothing. Rerun it after any change to the cube or the automation rows. Skip it on
+  claude.ai, where artifacts run scripts.
 - Run `python3 scripts/check_report.py <report.html>`. Fix every problem it lists and run it
   again. Publish only when it prints "Design check passed."
 - If the template is missing, say so and stop.
@@ -335,55 +388,70 @@ stats in this order: Sessions, Briefed starts, Corrections (per 10 messages), Re
 Rules retyped, Long-session share. Each has a value, a plain-text change and a one-line
 meaning. When there's no earlier window to compare with (a first review, or a measure with no
 earlier data), leave the change empty: no "—", no "Baseline". Use "Not measured" only for a
-measure the sources can't give, like long-session share from claude.ai alone. Keep each stat's term card from the template, and wrap the first mention of
-each habit in the summary and in each part with the same component, even when the prose
-words it differently ("misread you", "a real brief"). See "Habit terms" in the design system.
+measure the sources can't give, like long-session share from claude.ai alone. Keep each stat's
+term card from the template, and wrap the first mention of each habit in the summary and in
+each part with the same component, even when the prose words it differently ("misread you",
+"a real brief"). See "Habit terms" in the design system.
 
 **Improve your prompts and context** (`#part-2`). A headline with the biggest finding. Then
-one card per prompting, context or memory pattern, biggest first (time lost × how often).
-Each card: a title that states the finding; tags for the tools and how sure (Clear pattern,
-Likely pattern, Unconfirmed); What happens, Evidence and Why it matters; optional collapsed
-extras ("Example and limits", "Which tools have which rules"). Then the fix in the same
-card: a tinted "Try this" block with how likely it is to help, the action and a paste-ready
-block. Every pattern with a fix gets one, and every fix goes in the plan. If they ship what
-they build with AI, include an over-trust pattern when the evidence supports it. Build it
-from both sides: checks they asked for (Output checking) and checks the agent ran (Agent
-checks, Unchecked ships). Name which side is weak, since the fixes differ: asking better
-questions, or a standing rule or hook that runs the check before a commit. The logs can't see
-checks they did themselves in a browser or in their head, so say "no check in the session",
-never "you didn't check". When
-long sessions take a large share of usage, fold that into a long-session card (see "Usage").
-When "Chats crowded with lookups" take a tenth of usage or more, add a delegation card: the fix hands
-wide reading to a subagent that returns a short answer, and hands checks to a fresh subagent
-that gets the claim and where to verify it, never the reasoning behind it. Keep building,
-taste and anything that needs their own facts in the main session. Say what you can't tell:
-whether a subagent would have found the same things, and that it costs its own tokens. Close the
-part with "Compare the fixes" (fix, will it help, effort, risk), "Your plan until <next
-review>" (every fix from this part) and the collapsed "What the <date> review will check". Keep
-each fix's bet, metric and keep-it-if rule in the log.
+one card per prompting, context, memory or repeat-work pattern, biggest first (time lost ×
+how often). Each card: a title that states the finding; tags for the tools and how sure
+(Clear pattern, Likely pattern, Unconfirmed); What happens, Evidence and Why it matters;
+optional collapsed extras ("Example and limits", "Which tools have which rules"). Then the fix
+in the same card: a tinted "Try this" block with how likely it is to help, the action and a
+paste-ready block. Every pattern with a fix gets one, and every fix goes in the plan.
+
+- **Over-trust.** If they ship what they build with AI, include an over-trust pattern when the
+  evidence supports it. Build it from both sides: checks they asked for (Output checking) and
+  checks the agent ran (Agent checks, Unchecked ships). Name which side is weak, since the
+  fixes differ: asking better questions, or a standing rule or hook that runs the check before
+  a commit. The logs can't see checks they did themselves in a browser or in their head, so say
+  "no check in the session", never "you didn't check".
+- **Long sessions.** When long sessions take a large share of usage, fold that into a
+  long-session card (see "Usage").
+- **Delegation.** When "Chats crowded with lookups" take a tenth of usage or more, add a
+  delegation card: the fix hands wide reading to a subagent that returns a short answer, and
+  hands checks to a fresh subagent that gets the claim and where to verify it, never the
+  reasoning behind it. Keep building, taste and anything that needs their own facts in the
+  main session. Say what you can't tell: whether a subagent would have found the same things,
+  and that it costs its own tokens.
+- **Repeat work.** A P1 repeat from "3. Repeat work" gets a card whose "Try this" holds the
+  schedule, hook or skill, ready to paste.
+
+Close the part with "Compare the fixes" (fix, will it help, effort, risk), "Your plan until
+<next review>" (every fix from this part) and the collapsed "What the <date> review will
+check". Keep each fix's bet, metric and keep-it-if rule in the log.
 
 **Keep your skills current** (`#part-3`). A headline with how many skills are wrong today
 and the biggest risk; the scan date and anything you couldn't read. "Skills you wrote"
 status table; "Fix first" (issue, impact, how sure, fix) with paste-ready diffs for the big
-ones; "Worth a look" (issue, why it matters, how sure, next step) with dated sources, including the
-starting-context row from "Usage" when it applies;
-collapsed "Skills you installed from others".
+ones; "Worth a look" (issue, why it matters, how sure, next step) with dated sources, including
+the starting-context row from "Usage" when it applies; collapsed "Skills you installed from
+others".
 
 **How your behavior is changing** (`#part-1`). Last, after the skills part, so the review
 opens on what to change now and ends with how it's going: did last cycle's fixes work, and
-how are the habits trending. The id stays `#part-1`. No headline;
-the summary already tells the story. Fill the scope line and "What each trend covers" from
-`SCOPE` (see "Data scope"). "Did last cycle's fixes work?" appears only when an earlier
-review logged fixes; on a first review, delete that section. One row per fix: tried?, did the habit change ("Cause unclear" when something else could
-explain it), did the work get better ("Not measured" when there's no data yet), costs,
-decision (Keep, Revise, Drop). Then "Habits over the last year" (`#trends`), filled from the
-cube. Its charts sit in four groups, one tile per question (`GROUPS` in the template script):
-explaining what you want, checking the work, handing off work, and where usage goes. The
-group with the most charts going the wrong way opens first. Each group opens with a written
-summary of what changed and how its charts measure it, and each chart ends with a "Higher
-means… Lower means…" line from `READS`. The script writes all of this; keep the groups and
-their wording as they are. Then "Usage this cycle" (by tool, skills and commands, and "Try next"). Open "Usage this
-cycle" with the usage-limit line from the template.
+how are the habits trending. The id stays `#part-1`. No headline; the summary already tells
+the story. Fill the scope line and "What each trend covers" from `SCOPE` (see "Data scope").
+
+- **Did last cycle's fixes work?** Only when an earlier review logged fixes; on a first
+  review, delete that section. One row per fix: tried?, did the habit change ("Cause unclear"
+  when something else could explain it), did the work get better ("Not measured" when there's
+  no data yet), costs, decision (Keep, Revise, Drop).
+- **Habits over the last year** (`#trends`), filled from the cube. Its charts sit in five
+  groups, one tile per question (`GROUPS` in the template script): explaining what you want,
+  checking the work, handing off searching, automating repeat work, and where usage goes. The
+  group with the most charts going the wrong way opens first. Each group opens with a written
+  summary of what changed and how its charts measure it, and each chart ends with a "Higher
+  means… Lower means…" line from `READS`. The script writes all of this; keep the groups and
+  their wording as they are.
+- **What you could automate next** (`#automate-next`). The script moves this block under the
+  automation group's charts. One row per repeat you kept from "3. Repeat work", most repeated
+  first, at most five: the request in curly quotes, trimmed to its ask; the count as
+  "<n> times in <span>" from `last_4_weeks` (or `times` with the span from `first` to `last`);
+  the fix in one short line. Delete the block when there are no repeats, and on claude.ai.
+- **Usage this cycle**: by tool, skills and commands, and "Try next". Open it with the
+  usage-limit line from the template.
 
 **Report an issue** (`#report-issue`). Keep the template's line and link to
 https://github.com/txz8096/second-look/issues/new as they are.
@@ -404,13 +472,14 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
   reviews also compare with the last one. Never compare with other people or a fixed number.
 - **Show a usage finding only when** there is a change they can make, the next review can check
   it, and the thing involved is at least a tenth of their usage. Otherwise leave it out.
-- **Long sessions** (Improve your prompts and context). Sessions past `long_line` (150k tokens, a chosen line, not a
-  measured limit). Give the share of usage they took, how a request there compares with a typical
-  one, and the biggest sessions. Say what you can't tell: whether the long history helped, and
-  that a fresh session pays to rebuild context. The fix: start fresh when a phase ends.
-- **Starting context** (Keep your skills current, "Worth a look"). What loads before the first message. Name the
-  skills and plugins not run in `unused_days`, their gain in tokens and share of usage, and any
-  instruction file that copies another. The fix for their own skills is
+- **Long sessions** (Improve your prompts and context). Sessions past `long_line` (150k tokens,
+  a chosen line, not a measured limit). Give the share of usage they took, how a request there
+  compares with a typical one, and the biggest sessions. Say what you can't tell: whether the
+  long history helped, and that a fresh session pays to rebuild context. The fix: start fresh
+  when a phase ends.
+- **Starting context** (Keep your skills current, "Worth a look"). What loads before the first
+  message. Name the skills and plugins not run in `unused_days`, their gain in tokens and share
+  of usage, and any instruction file that copies another. The fix for their own skills is
   `disable-model-invocation: true` in the frontmatter: the skill stays installed and
   `/skill-name` still runs it, but it stops loading on its own. For plugins, turn them off in
   `/plugin`. Never suggest deleting or moving skills. When `log_days` is shorter than
@@ -450,28 +519,32 @@ in one line. It stops Claude Code deleting logs after 30 days. Weeks already del
 
 ## Trend metrics
 
-| Metric | Formula | Meaning | Better |
-|---|---|---|---|
-| Briefed starts | briefed / sessions | The first message gives the goal, the context and what done looks like | Higher |
-| Corrections per 10 messages | corrections / prompts × 10 | Each "no, I meant…" is a misunderstanding paid for in time | Lower |
-| Output checking | checked / build sessions | Asked for sources, edge cases or a critique before accepting | Higher |
-| Restarts | restarts / sessions | Started over on a task begun in the last 2 days | Lower |
-| Sessions per week | sessions | How much they leaned on AI. Read the other numbers against it | — |
-| Skill use | skilled / sessions | Sessions that ran one of their skills or commands | Higher |
-| Rules retyped | retyped | Standing preferences typed by hand. Each belongs in a config file | Lower |
-| Refinements per session | refinements / sessions | Follow-ups that build on a good answer | Higher |
-| Agent checks | agent_checked / edited | The agent ran a test, build, lint or browser check after its last code edit. Claude Code and Codex only | Higher |
-| Unchecked ships | unchecked_ships | A commit, push, deploy or "ship it" while code edits were still unchecked | Lower |
-| Delegated sessions | delegated / metered | Sessions that handed work to a subagent. Claude Code and Codex only | — |
-| Chats crowded with lookups | read_heavy / metered | 25+ reads and searches in the main conversation with no subagent | Lower |
-| Long-session share | long_usage / usage | Usage from sessions past 150k tokens. Claude Code and Codex only | Lower |
-| Starting context | start_tokens / metered | Tokens loaded before the first message. Claude Code and Codex only | Lower |
+| Group | Metric | Formula | Meaning | Better |
+|---|---|---|---|---|
+| Explaining | Briefed starts | briefed / sessions | The first message gives the goal, the context and what done looks like | Higher |
+| Explaining | Corrections per 10 messages | corrections / prompts × 10 | Each "no, I meant…" is a misunderstanding paid for in time | Lower |
+| Explaining | Restarts | restarts / sessions | Started over on a task begun in the last 2 days | Lower |
+| Explaining | Rules retyped | retyped | Standing preferences typed by hand. Each belongs in a config file | Lower |
+| Explaining | Refinements per session | refinements / sessions | Follow-ups that build on a good answer | Higher |
+| Checking | Output checking | checked / build sessions | Asked for sources, edge cases or a critique before accepting | Higher |
+| Checking | Agent checks | agent_checked / edited | The agent ran a test, build, lint or browser check after its last code edit. Claude Code and Codex only | Higher |
+| Checking | Unchecked ships | unchecked_ships | A commit, push, deploy or "ship it" while code edits were still unchecked | Lower |
+| Handing off | Delegated sessions | delegated / metered | Sessions that handed work to a subagent. Claude Code and Codex only | — |
+| Handing off | Chats crowded with lookups | read_heavy / metered | 25+ reads and searches in the main conversation with no subagent | Lower |
+| Automating | Repeat tasks done by hand | repeats | Openers matching 3+ earlier ones, with no skill run and no schedule behind them. Claude Code and Codex only | Lower |
+| Automating | Runs you didn't start | unattended / logged | Sessions a scheduled task, a loop or a headless run started. Claude Code and Codex only | — |
+| Automating | Loops and schedules set up | setups | Sessions that created or changed a loop or scheduled job. Claude Code and Codex only | Higher |
+| Automating | Work run in parallel | parallel / logged | Sessions that started a background command or another agent run. Claude Code and Codex only | — |
+| Automating | Skill use | skilled / sessions | Sessions that ran one of their skills or commands | Higher |
+| Usage | Sessions per week | sessions | How much they leaned on AI. Read the other numbers against it | — |
+| Usage | Long-session share | long_usage / usage | Usage from sessions past 150k tokens. Claude Code and Codex only | Lower |
+| Usage | Starting context | start_tokens / metered | Tokens loaded before the first message. Claude Code and Codex only | Lower |
 
-The template draws long-session share and starting context from Claude Code and Codex only, and
-notes under each chart which chosen tools it leaves out. Keep the long-session share term card from the
-template on the glance stat. Every chart title has its own card in the template's `METRICS` (why it
-matters, what higher and lower mean); keep them as they are. A new metric needs a group in
-`GROUPS` and a line in `READS`, or it won't show.
+`logged` counts Claude Code and Codex sessions; `metered` counts those with token counts. The
+template notes under each Claude Code and Codex chart which chosen tools it leaves out. Keep the
+long-session share term card from the template on the glance stat. Every chart title has its
+own card in the template's `METRICS` (why it matters, what higher and lower mean); keep them as
+they are. A new metric needs a group in `GROUPS` and a line in `READS`, or it won't show.
 
 Kinds of work, from each session's opening message: Prototyping, Creating, Research,
 Brainstorming, Career, Consultation.
@@ -490,6 +563,9 @@ Brainstorming, Career, Consultation.
 - **Skills.** Agent Skills docs: a trigger description in the user's words; a lean
   SKILL.md; scripts for deterministic steps; one shared folder (`~/.agents/skills`) linked
   into each tool; tests with a no-skill baseline.
+- **Automation.** A request typed 3+ times belongs in a skill, a hook or a schedule. Claude
+  Code docs on hooks, scheduled tasks and `/loop`; the Codex docs on scheduled tasks and
+  `codex exec`. Check the current docs during the release scan before naming a command.
 
 ## Log
 
@@ -500,6 +576,7 @@ entry in a Log section at the end of the report.
 ## 2026-10-25 (covers Oct 12 – 25)            ← add "(scoped)" for scoped reviews
 Skills: 1 stale · 3 review · 3 current
 Snapshot: 94 sessions · 54% briefed · 1.1 corrections/10 · 11 restarts · 17 rules retyped · 62% long-session usage
+Repeats: 3 kept (job tracker summary ×6, voice rewrite ×5, report checker ×4) · 2 dropped
 Report: <link or path>
 Findings: P1 <one-liners> · P2 <count> · P3 <count>
 Fixes: [ ] <fix> · [ ] <fix> · [ ] <fix>
@@ -507,13 +584,14 @@ Bets: <fix>: track <metric>; keep if <rule>; check <date>   (one line per fix)
 ```
 
 The next review reads the open boxes. If a finding shows up in three reviews running, say
-so and suggest a structural fix (a hook, a skill, a template) in place of more advice.
+so and suggest a structural fix (a hook, a skill, a template) in place of more advice. When a
+repeat from the log stops appearing after its fix, say so in "Did last cycle's fixes work?".
 
 ## Rules
 
 - Quote their real prompts and skill lines. Never invent examples. If evidence is thin, say so.
 - Trim quotes. Never show secrets, emails, keys or other people's private details.
 - Be direct about weak spots. No flattery.
-- Never edit their files without a yes. Propose exact edits.
+- Never edit their files, or set up a schedule, hook or skill, without a yes. Propose exact edits.
 - Ask a clarifying question when their intent is unclear.
 - Tables for comparisons. Bullets only for list-shaped content.
