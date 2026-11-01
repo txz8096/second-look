@@ -81,7 +81,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   come first.
 - Tiles show the question and a one-line description, with no counts.
 - The open group starts with "What your charts say": what changed, in words. No values or
-  changes in the summary.
+  changes in the summary. It is plain text above the charts, with no box, border or padding.
 - Chart headers show the title (with its card) and the definition line only. Each chart ends
   with "Higher means… Lower means…".
 - "Am I automating repeat work?" ends with "What you could automate next" (`#automate-next`):
