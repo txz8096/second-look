@@ -31,9 +31,9 @@ const xLabels = [
 ];
 
 const signals = [
-  { label: "Briefed starts", term: "briefedStarts", value: "56%", delta: "+39 pts", d: SPARKLINES.briefedStarts },
-  { label: "Output checking", term: "outputChecking", value: "29%", delta: "−1 pt", d: SPARKLINES.outputChecking },
-  { label: "Restarts", term: "restarts", value: "10%", delta: "+3 pts", d: SPARKLINES.restarts },
+  { label: "Briefed starts", term: "briefedStarts", value: "52%", delta: "About the same", d: SPARKLINES.briefedStarts },
+  { label: "Output checking", term: "outputChecking", value: "34%", delta: "−11 pts", d: SPARKLINES.outputChecking },
+  { label: "Restarts", term: "restarts", value: "15%", delta: "+9 pts", d: SPARKLINES.restarts },
 ] as const;
 
 function CorrectionsPlot() {
@@ -44,7 +44,7 @@ function CorrectionsPlot() {
           viewBox={`0 0 ${PLOT_WIDTH} ${PLOT_HEIGHT}`}
           className="block h-auto w-full"
           role="img"
-          aria-label="Corrections per 10 messages by week over the last 12 months, falling from about 1.9 to 1.1"
+          aria-label="Corrections per 10 messages by week over the last 12 months, falling from about 1.9 to 1.2"
         >
           <path d={HERO_PLOT.gridlines} fill="none" strokeWidth={1} className="stroke-rule" vectorEffect="non-scaling-stroke" />
           <g className="wipe-in" style={delay(PLOT_IN)}>
@@ -88,7 +88,7 @@ function AnnotatedTrace() {
       style={delay(CARD_IN)}
       className="rise-in w-full rounded-[10px] bg-surface shadow-[0_12px_20px_#1a1a1814] outline outline-1 -outline-offset-1 outline-rule lg:w-[540px] lg:shrink-0">
       <div className="border-b border-rule px-6 py-4">
-        <p className="font-mono text-xs text-text-3">Last 12 months · 1,148 sessions</p>
+        <p className="font-mono text-xs text-text-3">Last 12 months · 1,330 sessions</p>
       </div>
       <div className="flex flex-col gap-5 p-6">
         <div className="flex flex-col gap-3.5">
@@ -100,8 +100,8 @@ function AnnotatedTrace() {
               </p>
             </div>
             <div className="flex shrink-0 flex-col items-end gap-0.5">
-              <p className="font-display text-[30px] leading-none font-medium text-ink">1.1</p>
-              <p className="font-mono text-xs text-text-2">−0.8 since Nov</p>
+              <p className="font-display text-[30px] leading-none font-medium text-ink">1.2</p>
+              <p className="font-mono text-xs text-text-2">Down from about 1.9</p>
             </div>
           </div>
           <CorrectionsPlot />
@@ -126,8 +126,8 @@ function AnnotatedTrace() {
         <figcaption className="flex gap-3 rounded-lg bg-accent-tint px-4 py-3.5">
           <CornerDownRight size={16} className="mt-[3px] shrink-0 text-accent" aria-hidden="true" />
           <p className="font-body text-sm leading-[1.55] text-ink">
-            Observed: <Term name="briefedStarts">briefs</Term> keep improving, but{" "}
-            <Term name="outputChecking">output checks</Term> fell from about half in July to 29%.
+            In the last 4 weeks, <Term name="outputChecking">output checks</Term> fell from 45% to 34% and{" "}
+            <Term name="restarts">restarts</Term> rose from 6% to 15%.
           </p>
         </figcaption>
       </div>
@@ -145,7 +145,7 @@ export function Hero() {
             Learn from how you work with AI.
           </h1>
           <p style={delay(120)} className="rise-in font-body text-lg leading-[1.55] text-text-2 md:text-xl">
-            Models change, and the way you work drifts out of step. Second Look reads your sessions across
+            Models change, and the way you work drifts out of step. second look reads your sessions across
             Claude Code, Codex, Cursor, ChatGPT and more, finds the leaks in your prompts, context and skills,
             and gives you a few fixes to try. Each one cites the sessions it came from.
           </p>

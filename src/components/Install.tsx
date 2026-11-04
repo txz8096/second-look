@@ -49,7 +49,7 @@ export function Install() {
           </p>
           <PrimaryButton href={links.github} className="gap-2.5">
             <GithubIcon size={18} />
-            Get Second Look on GitHub
+            Get second look on GitHub
           </PrimaryButton>
           <ul className="flex flex-wrap gap-x-4 gap-y-2">
             {secondaryLinks.map((link) => (

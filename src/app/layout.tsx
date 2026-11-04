@@ -13,10 +13,16 @@ const plexMono = IBM_Plex_Mono({
   weight: "400",
 });
 
+const title = "second look";
+const description =
+  "Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current.";
+
+// Link previews in Slack, iMessage and LinkedIn read these; there is no share image yet.
 export const metadata: Metadata = {
-  title: "Second Look",
-  description:
-    "An open-source reflection skill. Second Look reviews your sessions across AI tools and suggests a few changes to test.",
+  title,
+  description,
+  openGraph: { title, description, siteName: title, type: "website" },
+  twitter: { card: "summary", title, description },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

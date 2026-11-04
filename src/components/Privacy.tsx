@@ -45,7 +45,7 @@ export function Privacy() {
           <Kicker>Privacy</Kicker>
           <SectionHeading>What it reads, and where it goes.</SectionHeading>
           <p className="font-body text-[17px] leading-[1.55] text-text-2">
-            Second Look has no server and no account. Nothing about your sessions is sent to us.
+            second look has no server and no account. Nothing about your sessions is sent to us.
           </p>
         </div>
 

@@ -14,11 +14,20 @@ export function Container({
   );
 }
 
-export function Kicker({ children, className = "" }: { children: ReactNode; className?: string }) {
+// Sections without a SectionHeading render their kicker as the h2, so the outline still has one per section.
+export function Kicker({
+  children,
+  className = "",
+  as: Tag = "p",
+}: {
+  children: ReactNode;
+  className?: string;
+  as?: "p" | "h2";
+}) {
   return (
-    <p className={`font-mono text-[13px] tracking-[1.2px] text-accent uppercase ${className}`}>
+    <Tag className={`font-mono text-[13px] font-normal tracking-[1.2px] text-accent uppercase ${className}`}>
       {children}
-    </p>
+    </Tag>
   );
 }
 

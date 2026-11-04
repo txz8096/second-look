@@ -3,7 +3,7 @@
   "owner": {
     "name": "Melissa Tang"
   },
-  "description": "second look: a skill that reviews how you work with AI.",
+  "description": "Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current.",
   "plugins": [
     {
       "name": "second-look",

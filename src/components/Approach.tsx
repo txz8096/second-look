@@ -13,11 +13,11 @@ type Behavior = {
 const behaviors: Behavior[] = [
   {
     label: "Improve your prompts and setup",
-    question: "Did the first message give the goal, audience, constraints and what done looks like?",
+    question: "Did your last fixes work, and did your first message give the goal, audience, constraints and what done looks like?",
     example: [
-      { tag: "PATTERN", text: "Your prototype requests name the feature, not the user." },
-      { tag: "EVIDENCE", text: "In three examples, that cost several turns of clarifying." },
-      { tag: "CHANGE TO TRY", text: "Add who it’s for and what done means to the first message." },
+      { tag: "WHAT HAPPENS", text: "Your prototype requests name the feature but leave out the user." },
+      { tag: "EVIDENCE", text: "In three sessions, that cost several turns of clarifying." },
+      { tag: "TRY THIS", text: "Add who it’s for and what done means to the first message." },
     ],
   },
   {
@@ -25,8 +25,8 @@ const behaviors: Behavior[] = [
     question: "Which skills or configs are stale, broken, duplicated, or loading into every session unused?",
   },
   {
-    label: "See how your habits change",
-    question: "Did your changes stick, did the work improve, and where did your usage go?",
+    label: "How your habits are changing",
+    question: "Are your habits improving, and where did your usage go?",
   },
 ];
 

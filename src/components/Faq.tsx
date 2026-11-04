@@ -10,7 +10,7 @@ const faqs: Faq[] = [
   },
   {
     q: "Which AI apps does it support?",
-    a: "Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is read directly but can’t start a review, so start one from another tool on the same computer. claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they count up to the day you export. Gemini’s export has no conversation boundaries, so its sessions are grouped by time and its numbers are estimates. Antigravity support is new and built on an undocumented file format, so a release that changes it can hide your sessions until Second Look is updated.",
+    a: "Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is read directly but can’t start a review, so start one from another tool on the same computer. claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they count up to the day you export. Gemini’s export has no conversation boundaries, so its sessions are grouped by time and its numbers are estimates. Antigravity support is new and built on an undocumented file format, so a release that changes it can hide your sessions until second look is updated.",
   },
   {
     q: "Does one report cover all my AI tools?",
@@ -78,11 +78,11 @@ const faqs: Faq[] = [
   },
   {
     q: "How accurate are the findings?",
-    a: "They’re estimates read from the wording of your sessions. Each finding shows its examples and how sure the review is (Clear pattern, Likely pattern or Unconfirmed). Before trusting a number, the review spot-checks a sample of its own labels, and you can correct a label at the next review.",
+    a: "They’re estimates read from the wording of your sessions. Each finding shows its examples and how sure the review is (Sure, Likely or Hunch). Before trusting a number, the review spot-checks a sample of its own labels, and you can correct a label at the next review.",
   },
   {
     q: "Where does it run, and is anything uploaded?",
-    a: "On your machine, and the report is saved in ~/.second-look. Nothing goes to Second Look, because there’s no Second Look server. The review runs inside your assistant, so what it reads goes to your model provider like any other message you send, under your existing account settings.",
+    a: "On your machine, and the report is saved in ~/.second-look. Nothing goes to second look, because there’s no second look server. The review runs inside your assistant, so what it reads goes to your model provider like any other message you send, under your existing account settings.",
   },
   {
     q: "What is redacted?",
@@ -102,7 +102,7 @@ export function Faq() {
   return (
     <section id="faq" className="bg-dark">
       <Container className="flex flex-col gap-16 py-20 lg:py-28">
-        <Kicker>FAQ</Kicker>
+        <Kicker as="h2">FAQ</Kicker>
         <div className="border-t border-rule">
           {faqs.map((item, i) => (
             <details key={item.q} open={i === 0} className="group border-b border-rule py-[22px]">
@@ -115,9 +115,10 @@ export function Faq() {
               </summary>
               <p className="fade-down max-w-[760px] pt-3.5 pb-1 font-body text-base leading-[1.55] text-dark-text-2">{item.a}</p>
               {item.table && (
+                // Below md each row stacks into a block, like the Coverage table, and a label stands in for each hidden column header.
                 <div className="fade-down mt-4 overflow-x-auto">
-                  <table className="w-full min-w-[640px] text-left font-body text-sm leading-[1.5]">
-                    <thead>
+                  <table className="w-full text-left font-body text-sm leading-[1.5] md:min-w-[640px]">
+                    <thead className="max-md:sr-only">
                       <tr className="border-b border-rule">
                         {item.table.head.map((h) => (
                           <th key={h} className="py-2.5 pr-6 font-mono text-xs font-normal tracking-[0.8px] text-accent uppercase">
@@ -128,9 +129,25 @@ export function Faq() {
                     </thead>
                     <tbody>
                       {item.table.rows.map((row) => (
-                        <tr key={row[0]} className="border-b border-rule last:border-b-0">
+                        <tr
+                          key={row[0]}
+                          className="border-b border-rule last:border-b-0 max-md:flex max-md:flex-col max-md:gap-2.5 max-md:py-4"
+                        >
                           {row.map((cell, j) => (
-                            <td key={j} className={`py-3 pr-6 align-top ${j === 0 ? "text-ink" : "text-dark-text-2"}`}>
+                            <td
+                              key={j}
+                              className={`py-3 pr-6 align-top max-md:flex max-md:flex-col max-md:gap-1 max-md:p-0 ${
+                                j === 0 ? "text-ink max-md:font-semibold" : "text-dark-text-2"
+                              }`}
+                            >
+                              {j > 0 && (
+                                <span
+                                  className="font-mono text-xs tracking-[0.8px] text-accent uppercase md:hidden"
+                                  aria-hidden="true"
+                                >
+                                  {item.table!.head[j]}
+                                </span>
+                              )}
                               {cell}
                             </td>
                           ))}

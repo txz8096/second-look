@@ -5,7 +5,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 // Same definitions the report shows on its habit terms.
 const definitions = {
   sessions:
-    "Conversations you had with an AI tool this cycle, across every tool Second Look read. Shown for context: the count alone says nothing about how well they went.",
+    "Conversations you had with an AI tool this cycle, across every tool second look read. Shown for context: the count alone says nothing about how well they went.",
   briefedStarts:
     "Your first message gives at least two of three things: the goal, the context, and what done looks like.",
   corrections:

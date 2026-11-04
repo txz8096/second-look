@@ -45,16 +45,17 @@ A closer look pays off in a few places:
 Every two weeks, or whenever you ask, second look builds one private report in three parts.
 After your first report, it offers to set up the two-week schedule for you.
 
-**1. Improve your prompts and context.** It checks whether your first message gave the goal,
+**1. Improve your prompts and setup.** From your second review on, it starts with whether
+last cycle's fixes worked. It checks whether your first message gave the goal,
 the audience, the constraints and what done looks like, and whether your standing rules
 reach every tool. When very long sessions take most of your token usage, it says so and
 suggests where to start fresh. A finding looks like this:
 
-> **Pattern:** Your prototype requests name the feature but leave out the user.
+> **What happens:** Your prototype requests name the feature but leave out the user.
 >
 > **Evidence:** In three sessions, that cost several turns of clarifying.
 >
-> **Change to try:** Add who it's for and what done means to the first message.
+> **Try this:** Add who it's for and what done means to the first message.
 
 Generic advice like "write clearer prompts" doesn't make the cut. Each card shows quotes from
 your own sessions, how sure the review is, and a fix you can paste.
@@ -64,8 +65,7 @@ ones with wrong facts, broken folders, duplicates, missed updates from recent re
 no tests. It also names what loads into every Claude Code session before you type, like skills
 you haven't run in 60 days, and how much you'd save by having them run only when you ask.
 
-**3. See how your habits change.** It closes with how you're trending. From your second review
-on, that starts with whether last cycle's fixes stuck and whether the work got better. Then briefed starts, corrections, output
+**3. How your habits are changing.** It closes with how you're trending: briefed starts, corrections, output
 checking, restarts, and how much of your usage went to very long sessions, charted week by
 week for up to 12 months and filterable by tool and kind of work. The charts are grouped by
 the question they answer, like "Am I checking the work?", and the group that slipped most
@@ -382,7 +382,7 @@ hitting usage limits. Usage is weighted by public list prices, so treat it as an
 <summary><b>How accurate are the findings?</b></summary>
 
 They're estimates read from the wording of your sessions. Each finding shows its examples and
-how sure the review is (Clear pattern, Likely pattern or Unconfirmed). Before trusting a
+how sure the review is (Sure, Likely or Hunch). Before trusting a
 number, the review spot-checks a sample of its own labels, and you can correct a label at the
 next review.
 </details>
