@@ -256,7 +256,7 @@ export function SampleReport() {
 
           {/* Prompts and context */}
           <section className="flex flex-col gap-4 px-5 pt-8 pb-9 md:px-10">
-            <PartTitle>Improve your prompts and context</PartTitle>
+            <PartTitle>Improve your prompts and setup</PartTitle>
             <p className="font-body text-[15px] leading-normal text-text-2">
               Most <Term name="corrections">corrections</Term> start at the first message. Fix the brief and stop retyping rules to cut about a
               third of them.

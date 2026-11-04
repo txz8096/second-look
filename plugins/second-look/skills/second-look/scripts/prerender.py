@@ -4,11 +4,12 @@
 Usage: python3 prerender.py REPORT.html
 
 Runs the report once in headless Chrome (or Chromium, Edge, Brave), takes the rendered
-"Habits over the last year" section and the data-scope line above it, and writes them back
-into the file, marked data-static.
+"How your habits are changing" charts, the data-scope line above them and the phone-ready
+tables, and writes them back into the file, with the charts marked data-static.
 In a normal browser the script clears the marker and redraws with working filters.
 Without a browser it changes nothing, says so and exits 0: the charts then draw only when
-scripts run.
+scripts run. When the browser runs but the report's own script draws nothing, it says so and
+exits 1, because the charts won't draw in any browser.
 """
 import os, re, shutil, subprocess, sys, tempfile
 
@@ -21,6 +22,8 @@ MAC_APPS = [
 COMMANDS = ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "microsoft-edge", "brave-browser"]
 SECTION = re.compile(r'<section id="trends"[^>]*>.*?</section>', re.S)
 SCOPE_LINE = re.compile(r'<p class="scope-line" id="scope-line">.*?</p>', re.S)
+TABLE = re.compile(r'<div class="tbl">.*?</table></div>', re.S)
+LEAD_PLOT = re.compile(r'(<div class="chart lead[^"]*"[^>]*>.*?<div class="chart-plot")', re.S)
 
 
 def find_browser():
@@ -57,11 +60,22 @@ def main():
              "--dump-dom", "file://" + report],
             capture_output=True, text=True, timeout=120)
     drawn = SECTION.search(run.stdout)
-    if run.returncode != 0 or not drawn or 'class="chart"' not in drawn.group(0):
+    if run.returncode != 0 or not drawn:
         print("The browser couldn't draw the charts. Charts will draw only when scripts run.")
         return
+    if 'class="chart"' not in drawn.group(0):
+        sys.exit("The report's chart script failed, so no charts were drawn. Open the file in a browser, "
+                 "check the console for the error, fix it and run this again.")
 
     static = re.sub(r'^<section id="trends"[^>]*>', '<section id="trends" data-static="">', drawn.group(0))
+    # a wide chart scrolls sideways on a phone, so the keyboard has to reach it
+    static = LEAD_PLOT.sub(lambda m: m.group(1) + ' tabindex="0"', static)
+    # outside the charts, the script's phone tables, so they stack with scripts off too
+    outside = lambda text: TABLE.findall(SECTION.sub("", text))
+    written, stacked = outside(html), outside(run.stdout)
+    if len(written) == len(stacked):
+        it = iter(stacked)
+        html = "".join(TABLE.sub(lambda _: next(it), part) if not SECTION.fullmatch(part) else part for part in re.split(f"({SECTION.pattern})", html, flags=re.S))
     html = SECTION.sub(lambda _: static, html, count=1)
     line = SCOPE_LINE.search(run.stdout)
     if line:

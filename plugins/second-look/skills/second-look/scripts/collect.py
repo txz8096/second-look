@@ -74,11 +74,16 @@ SETUP_CMD = re.compile(r"\bcrontab\s+(-e\b|[^-\s])|\blaunchctl\s+(load|bootstrap
                        r"\bschedule\.py\s+set\b", re.I)
 SETUP_SLASH = {"loop", "schedule"}
 SPAWN_CMD = re.compile(r"\bclaude\b[^|;&\n]*\s-p\b|\bcodex\s+exec\b|\bnohup\b|[^&>]&\s*$", re.I)
-UNATTENDED_OPENER = re.compile(r"^\s*(<<autonomous-loop|<scheduled-task)", re.I)
+# "What is 2+2?" is the connection test a tool sends, in a session nobody opened by hand
+UNATTENDED_OPENER = re.compile(r"^\s*(<<autonomous-loop|<scheduled-task|What is 2\+2\? Reply with just the number)", re.I)
 REPEAT_MIN = 3        # earlier matching openers before a hand-typed one counts as repeat work. A chosen line
 REPEAT_SIMILAR = 0.5  # share of content words two openers must share to count as the same request
 REPEAT_WORDS = 5      # openers with fewer content words ("continue", "fix it") are too short to match
-WRAPPER = re.compile(r"<([a-z][\w-]*)\b[^>]*>.*?</\1>", re.S | re.I)   # context an app adds around the request
+# context an app adds around the request. App tags have a - or _ in the name; <div> or <task> is something the user pasted or wrote
+WRAPPER = re.compile(r"<([a-z]+[-_][\w-]*)\b[^>]*>.*?</\1>", re.S | re.I)
+APP_STATE = re.compile(r"The result of `get_app_state` tool call:.*", re.S)   # Pencil adds this after the request
+URL = re.compile(r"\S+://\S+")   # paths and domains would make unrelated requests look alike
+COMMENT_BATCH = re.compile(r"^\s*Apply this review feedback to the design\b")   # Pencil's template around review comments
 CODING_TOOLS = {"claude_code", "codex", "cursor", "antigravity"}
 LOGGED = {"claude_code", "codex"}   # the tools that log tool calls and tokens
 BUILD_CATEGORIES = {"prototyping", "creating", "research"}
@@ -595,6 +600,13 @@ def week_of(ts):
     return (d - dt.timedelta(days=d.weekday())).isoformat()
 
 
+def last_complete_week(cube, this_week):
+    """The Monday before this_week. Someone whose every session is in the week in progress gets that week, or they'd have nothing to show."""
+    last = (dt.date.fromisoformat(this_week) - dt.timedelta(days=7)).isoformat()
+    weeks = [r["week"] for r in cube if r.get("sessions")]
+    return max(weeks) if weeks and min(weeks) > last else last
+
+
 def weekly_trend(aggs):
     """One row per week (Monday) across all tools: the metrics the coach charts over time."""
     rows = collections.defaultdict(lambda: {
@@ -758,9 +770,17 @@ def scheduled_prompts(home):
     return [w for w in found if w]
 
 
+def typed_request(text):
+    """What the user asked, minus what an app added around it.
+    A batch of review comments comes back empty: it's new feedback in a tool's template, so it can't be a brief or a repeat."""
+    if COMMENT_BATCH.match(text):
+        return ""
+    return APP_STATE.sub(" ", WRAPPER.sub(" ", text)).strip()
+
+
 def request_words(text):
-    """Content words of what the user asked, minus context blocks an app wraps around it."""
-    return content_words(WRAPPER.sub(" ", text))
+    """Content words of what the user asked. Web addresses are dropped too, since they'd make unrelated requests match."""
+    return content_words(URL.sub(" ", typed_request(text)))
 
 
 def similar(a, b):
@@ -779,18 +799,20 @@ def sessions_of(aggs, metered=None, scheduled=()):
             start = next((ts for ts, _ in items if ts), None)
             if not start:
                 continue
-            category = classify(a.name, texts)
+            typed = [typed_request(t) for t in texts]
+            category = classify(a.name, typed)
             steps = a.timeline.get(session, [])
             opener = content_words(texts[0])
             out.append({
                 "source": a.name, "session": session, "start": start, "category": category,
                 "first": texts[0], "prompts": len(texts),
-                "briefed": is_briefed(texts[0]),
+                "briefable": bool(typed[0]),   # a session that opens on review comments or app context has no first message to brief
+                "briefed": is_briefed(typed[0]),
                 "corrections": sum(bool(CORRECTION.search(t)) for t in texts[1:]),
                 "refinements": sum(bool(REFINE.search(t)) and not CORRECTION.search(t) for t in texts[1:]),
-                "checked": any(CHECK.search(t) for t in texts),
+                "checked": any(CHECK.search(t) for t in typed),
                 "build": category in BUILD_CATEGORIES,
-                "retyped": sum(bool(STYLE.search(t)) for t in texts),
+                "retyped": sum(bool(STYLE.search(t)) for t in typed),
                 "skilled": session in a.skill_sessions,
                 "restart": False,
                 # started by a headless run, a loop or a scheduled job instead of by hand
@@ -805,14 +827,16 @@ def sessions_of(aggs, metered=None, scheduled=()):
     # a restart: same tool and kind of work, within 48h, opening on mostly the same words
     out.sort(key=lambda r: r["start"])
     for i, r in enumerate(out):
-        words = content_words(r["first"])
+        words = request_words(r["first"])
+        if len(words) < REPEAT_WORDS or r["unattended"]:
+            continue
         for prev in reversed(out[:i]):
             if (r["start"] - prev["start"]).total_seconds() > 48 * 3600:
                 break
             if prev["source"] != r["source"] or prev["category"] != r["category"]:
                 continue
-            pw = content_words(prev["first"])
-            if words and pw and len(words & pw) / len(words | pw) >= 0.35:
+            pw = request_words(prev["first"])
+            if not prev["unattended"] and len(pw) >= REPEAT_WORDS and len(words & pw) / len(words | pw) >= 0.35:
                 r["restart"] = True
                 break
     # repeat work: an opening request that matches 3+ earlier ones, any time in the range
@@ -837,7 +861,7 @@ def _usage_fields(m):
 
 def session_cube(sessions):
     """Additive weekly rows by source and kind of work, so the report can filter and recompute."""
-    keys = ("sessions", "prompts", "briefed", "corrections", "refinements", "build", "checked",
+    keys = ("sessions", "prompts", "briefable", "briefed", "corrections", "refinements", "build", "checked",
             "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "read_heavy",
             "metered", "usage", "long_usage", "start_tokens", "logged", "unattended", "setups", "parallel", "repeats")
     cube = collections.defaultdict(lambda: dict.fromkeys(keys, 0))
@@ -845,6 +869,7 @@ def session_cube(sessions):
         row = cube[(week_of(r["start"]), r["source"], r["category"])]
         row["sessions"] += 1
         row["prompts"] += r["prompts"]
+        row["briefable"] += r["briefable"]
         row["briefed"] += r["briefed"]
         row["corrections"] += r["corrections"]
         row["refinements"] += r["refinements"]
@@ -1097,6 +1122,8 @@ def main():
                                                    "gemini": args.gemini_export})
     if args.trend:
         result["cube"] = session_cube(sessions)
+        # the week in progress would read as a quiet full week, so the report's charts stop before it
+        result["last_complete_week"] = last_complete_week(result["cube"], week_of(dt.datetime.now(dt.timezone.utc)))
     text = json.dumps(result, indent=2, default=str)
     if args.out:
         with open(args.out, "w") as f:

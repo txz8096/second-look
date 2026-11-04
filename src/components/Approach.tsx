@@ -12,7 +12,7 @@ type Behavior = {
 
 const behaviors: Behavior[] = [
   {
-    label: "Improve your prompts and context",
+    label: "Improve your prompts and setup",
     question: "Did the first message give the goal, audience, constraints and what done looks like?",
     example: [
       { tag: "PATTERN", text: "Your prototype requests name the feature, not the user." },
