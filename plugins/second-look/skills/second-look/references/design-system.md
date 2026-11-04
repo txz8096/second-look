@@ -29,9 +29,8 @@ Pink fills one surface only: the plan.
 
 **The signature.** Two things repeat down the page, both taken from the logo. Hairline ledger rows
 carry every table and list: no filled headers, no outer box, rows that run to the column's edges.
-The logo's double rule means one thing, look here, in three places only: the `5px double` rule
-above each Try block, the same rule on the open tab, and a double underline under a glance change
-that moved. No side stripes.
+The logo's double rule marks one thing: a double underline under a glance change that moved.
+The fix in each pattern is a filled pink panel, the same as the plan. No side stripes.
 
 ## Type
 
@@ -48,9 +47,8 @@ Familjen Grotesk for everything; IBM Plex Mono for code and quoted prompts. Head
 | Small text, tables, notes | 14px |
 | Labels (sentence case, weight 500, muted), chips | 13px |
 
-Running text stops at 56ch (summary, part headlines, card leads, Try steps, group summaries,
-insights, footer). Tables, charts and code blocks use the full column. Their own quoted prompts are
-set in IBM Plex Mono, as typed.
+Running text, tables, charts and code blocks all use the full column. Quoted prompts are set in
+IBM Plex Mono, as typed.
 
 No uppercase labels. On phones (680px and narrower) the template raises the floor: small text 14px, card body 16px, chart axis text 12px, and buttons, chips and
 section toggles at least 44px tall, and Copy sits in the block's left corner, clear of the
@@ -106,8 +104,8 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
 
 - Charts sit in five groups, one per question: "Am I explaining what I want?", "Am I checking
   the work?", "Am I handing off big searches?", "Am I automating repeat work?", "Where does my
-  usage go?". One group shows at a time; the tabs switch it. The tabs are five across from
-  681px: the question only, a 2px rule above, the double pink rule on the open one.
+  usage go?". One group shows at a time; the tabs switch it. The tabs are boxed cards, five
+  across from 681px: the question only, with a pink border and tint on the open one.
 - A group whose charts have no data under the current filters is hidden (tab and panel), and
   one muted line under the charts names it and gives the true reason: its charts need Claude
   Code or Codex, the Work filter leaves it out, or too few sessions. If every group is empty, all stay.
@@ -140,7 +138,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   latest, and tooltips name any of them. Dashed lines and hatching mean only
   one thing: data second look can't see.
 - Coverage is said once under the group summary ("These charts count Claude Code and Codex
-  only."), in muted text, never yellow, at the 56ch measure.
+  only."), in muted text, never yellow.
 - "Am I automating repeat work?" ends with "What you could automate next" (`#automate-next`):
   one row per repeated request, most repeated first, with the request in quotes, the count in
   plain text ("6 times in 4 weeks") and the fix as one line to paste. The script moves the block into
@@ -158,10 +156,10 @@ and summary row (too much to read before the first chart).
 
 ## Pattern card
 
-Title; the tools as plain muted text and one how-sure chip; What happens, as the lead sentence;
+A number in a pink circle, matching the fix's row in the plan; title; the tools as plain muted text and one how-sure chip; What happens, as the lead sentence;
 Evidence and Why it matters in two uneven columns (3:2, Why muted); their own prompt in mono, when
 there is one; an optional quiet fold ("Which tools have which rules"); then the "Try this" block
-under the double rule: "Try this: <fix name>", the action in plain steps, a paste-ready block with
+in a filled pink panel: "Try this: <fix name>", the action in plain steps, a paste-ready block with
 Copy in its corner. Folds inside cards all look the same: muted text and a chevron, pink on hover.
 
 ## Habit terms
@@ -210,8 +208,8 @@ worked" · Expand all / Collapse all · "sample data" chips · bullet dots in ch
 lines between cards inside a part (dividers only between major sections) · "Review N" line
 above the glance · thesis and "Three moves" summary · light theme · the "More metrics"
 dropdown · the value and change line in chart headers · "Compare the fixes" and the separate
-"What the <date> review will check" fold (both live in the plan rows) · rank circles · tool
-pills · uppercase labels · tinted Try blocks · the "What your charts say" label · group-tile
+"What the <date> review will check" fold (both live in the plan rows) · tool
+pills · uppercase labels · the "What your charts say" label · group-tile
 blurbs · section taglines that restate a heading · a "How sure" column whose rows all match ·
 pink side stripes · boxed tables with filled headers · diffs in skill fixes · "Start with the X
 chart" · "Higher: … Lower: …" under charts · the word "cycle" · "What each trend covers" (now

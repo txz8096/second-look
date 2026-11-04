@@ -472,7 +472,7 @@ links to the plan. Then "Did the fixes from your last review work?" (`#last-cycl
 earlier review logged fixes (delete it on a first review): one line per fix, opening with its
 decision pill (Keep, Revise, Drop), then the fix's name in bold and one sentence on what changed,
 with its window. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per prompting, context, memory or repeat-work pattern,
-biggest first (time lost × how often). Each card: a title that states the finding; the tools as
+biggest first (time lost × how often). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the tools as
 plain text and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
 matters; when you have one, their own prompt quoted in the card; an optional collapsed "Which tools have which rules". Then the fix in the same
 card: the "Try this: <fix name>" block, the action in plain steps per tool ("Cursor: Settings →

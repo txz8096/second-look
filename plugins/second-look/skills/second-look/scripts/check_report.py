@@ -40,7 +40,6 @@ FORBIDDEN = {
     'data-theme="light"': "the report is dark only",
     "Part 1 of 3": "no part numbers",
     "Compare the fixes": "merged into the plan; each fix is its Try block plus one plan row",
-    'class="rank"': "rank circles were removed; the plan numbers the fixes",
     "review will check</span>": "the separate next-review fold was merged into the plan rows",
     'class="diff"': "skill fixes are prompts they can paste into their AI tool, not diffs",
     "Geist": "old font",
@@ -369,6 +368,9 @@ def main():
             problems.append(f'missing section id="{i}"')
     if 'id="plan"' not in html:
         problems.append('missing the plan (section id="plan") at the end of part 2')
+    cards = re.findall(r'<article\b[^>]*class="icard[^"]*"[^>]*>\s*<div class="ic-head">(?:<span class="rank">(\d+)</span>)?', html)
+    if cards != [str(i + 1) for i in range(len(cards))]:
+        problems.append('number the pattern cards 1, 2, 3 in order: <span class="rank">1</span> first in each .ic-head, matching the plan')
     for t in REQUIRED_TEXT:
         if t not in html:
             problems.append(f'missing "{t}"')
