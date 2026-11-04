@@ -3,7 +3,7 @@
 The source of truth is `report-template.html` (a filled-in sample report).
 Build every report from a copy of it. Keep its doctype and `<html lang>` lines, charset and viewport lines, `<style>` block, font links, logo and scripts
 exactly as they are. Without the viewport line, phones render the page at desktop width and shrink the text. Change only the text, the table rows, the cards and the data values at the top of the trends script (`END`, `CUBE`, `SCOPE`, `MILESTONES`).
-`scripts/check_report.py` also fails a report whose glance disagrees with its cube, whose text uses a banned word, that still has the template's sample data, whose script has a syntax error, whose `END` doesn't match its cube or is the week in progress, whose cube repeats a row, whose summary says "a year ago" with no date, or whose cube or scope has a source id the script doesn't know. Names and quotes from their own sessions are left out of the word check.
+`scripts/check_report.py` also fails a report whose text uses a banned word, that still has the template's sample data, whose script has a syntax error, whose `END` doesn't match its cube or is the week in progress, whose cube repeats a row, whose summary quotes a metric or has term cards, or whose cube or scope has a source id the script doesn't know. Names and quotes from their own sessions are left out of the word check.
 `scripts/check_report.py` fails any report whose styles differ from the template.
 The `<style>` block is one layer, written in page order. Change a rule where it lives; don't
 append overrides at the end.
@@ -16,7 +16,7 @@ append overrides at the end.
 | `--surface` / `--surface-2` | `#1C1F25` / `#22252C` | Buttons, menus, hover fills |
 | `--fg` | `#F2F3F5` | Text |
 | `--muted` / `--faint` | `#A8ADB7` / `#7C828D` | Secondary text, labels |
-| `--term-quiet` | `#676C76` | Dashed underline on glance labels and chart titles (3.4:1) |
+| `--term-quiet` | `#676C76` | Dashed underline on chart titles (3.4:1) |
 | `--line` / `--line-strong` | `#2B2F37` / `#3A3F49` | Dividers, borders |
 | `--accent` | `#F2A7B8` (Proof Pink) | Links, highlights, chart series |
 | `--on-accent` | `#16181D` | Text on pink fills |
@@ -29,7 +29,6 @@ Pink fills one surface only: the plan.
 
 **The signature.** Two things repeat down the page, both taken from the logo. Hairline ledger rows
 carry every table and list: no filled headers, no outer box, rows that run to the column's edges.
-The logo's double rule marks one thing: a double underline under a glance change that moved.
 The fix in each pattern is a filled pink panel, the same as the plan. No side stripes.
 
 ## Type
@@ -41,8 +40,8 @@ Familjen Grotesk for everything; IBM Plex Mono for code and quoted prompts. Head
 |---|---|
 | Part title (`.part-head h2`) | 48px |
 | Plan title | 32px |
-| Pattern title, glance values | 24px |
-| Lead sentence, summary, part headline, "Try this" title, section and glance headings | 20px |
+| Pattern title | 24px |
+| Lead sentence, summary, part headline, "Try this" title, section headings | 20px |
 | Body, chart and panel titles, plan rows, tabs | 16px |
 | Small text, tables, notes | 14px |
 | Labels (sentence case, weight 500, muted), chips | 13px |
@@ -54,7 +53,7 @@ No uppercase labels. On phones (680px and narrower) the template raises the floo
 section toggles at least 44px tall, and Copy sits in the block's left corner, clear of the
 contents button. Under 600px, the script turns each table row into a small
 card (the first cell leads, a lone chip or pill takes the corner, the rest read "label  value",
-aligned for numbers and run in for part 3's words), so nothing scrolls sideways; `prerender.py`
+aligned for numbers and run in for part 3's words; a table with the `unlabeled` class, like the model table, drops the labels), so nothing scrolls sideways; `prerender.py`
 saves those rows, and without either, tables scroll. Without scripts, Copy buttons stay hidden. Charts that didn't move wait behind one
 "Show N more charts" button. The template's styles already do this, so a report gets it by keeping
 them.
@@ -62,38 +61,32 @@ them.
 ## Radii
 
 6px code blocks and tooltips · 8px buttons and inputs · 12px the plan and the contents menu ·
-fully rounded chips and filters. Tables, charts, bar panels, the glance and "What you could
+fully rounded chips and filters. Tables, charts, bar panels and "What you could
 automate next" have no box.
 
 ## Page structure, in order
 
-1. Header: the second look logo, then the tagline "Learn from the way you work with AI" in
-   16px body text, with the review's date on the right.
-2. Summary paragraph (20px), then one "Start here" line (`#start-here`) linking to plan row 1 and
-   the plan.
-3. Last 4 weeks at a glance (`#glance`): heading, "<last 4 weeks> vs <the 4 before>", then an open
-   ledger of six rows (name, value, change, meaning) divided by hairlines, no box. Same numbers as
-   the chart table. A row past the noise floor, in either direction, is `.stat.moved`. A scoped or
-   sampled review names its scope in this heading instead.
-4. Improve your prompts and setup (`#part-2`): headline linking to the plan, "Did the
+1. Header: the second look logo as the page's `h1`, with the review's date on the right.
+2. Summary paragraph (20px), in plain words with no numbers.
+3. Improve your prompts and setup (`#part-2`): headline linking to the plan, "Did the
    fixes from your last review work?" (`#last-cycle`, one line per fix with its Keep/Revise/Drop
    pill; only after a review with logged fixes), pattern cards
    (`article.icard`), then "Your plan until <date>" (`#plan`): one numbered row per fix with
-   its name, time, what the next review checks and how-sure chip, one line each from 681px with
+   its name, time, what it saves, and what the next review checks, one line each from 681px with
    each value under its header, then a line linking the other skill fixes and the repeats to automate.
-5. Keep your skills current (`#part-3`): headline, scan line, "Fix first" (`#fix-first`, with paste-to-your-AI blocks in `.fix-block`), "Worth a look",
+4. Keep your skills current (`#part-3`): headline, scan line, "Skills to fix" (`#fix-first`, with paste-to-your-AI blocks in `.fix-block`), "Worth a look",
    collapsed "Skills you wrote", collapsed installed skills.
-6. How your habits are changing (`#part-1`, last despite its id): data-scope line, `#trends`: filters,
+5. How your habits are changing (`#part-1`, last despite its id): data-scope line, `#trends`: filters,
    then five question tiles; the open group shows its summary and charts (see "Chart groups"),
-   then "Usage since your last review". `scripts/prerender.py` saves the drawn charts, bars and tables into
+   then "Activity since your last review". `scripts/prerender.py` saves the drawn charts, bars and tables into
    the file and marks the section `data-static`, which hides the filters and shows a note.
    The script clears the mark, sets `data-live` and redraws with live filters. With neither
    mark (scripts off, nothing prerendered), the section shows one line, "Open this file in a
    browser to see the charts", and hides the empty filters, tabs and tables.
-7. Report an issue (`#report-issue`): one muted line above the footer, linking to
+6. Report an issue (`#report-issue`): one muted line above the footer, linking to
    https://github.com/txz8096/second-look/issues/new. Keep it as the template has it.
-8. Footer: method and sources.
-9. Floating contents menu (`#toc`) bottom right, listing the glance, the three parts and
+7. Footer: method and sources.
+8. Floating contents menu (`#toc`) bottom right, listing the three parts and
    Report an issue. It opens on hover and keyboard focus with CSS alone, so it works in
    viewers that block scripts; the script adds click, Escape and the current-section highlight.
    It also lists the plan.
@@ -113,23 +106,23 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   come first, biggest slip first (measured in noise floors).
 - The open group starts with one sentence of what changed, comparing the last 4 weeks with
   the 4 before, whatever the time filter. No label, no values. Changes under the noise floor
-  (see SKILL.md "Trend metrics") read "about the same" and never sort first. The glance and
-  "How each tool's use is changing" use the same two windows.
+  (see SKILL.md "Trend metrics") read "about the same" and never sort first. "How each tool's use is changing" uses the same two windows.
 - Charts have no box: title (with its card), definition line, the plot, then one clause for the
   direction the line moved ("Up: you typed more rules by hand."). It says what the measure did,
   never why. With the time filter on 4 weeks the earlier point is off the chart, so it reads "Up
   from the 4 weeks before: …". A flat chart has none. A chart with no line has only its reason.
+- Time stays visible. Tool and Work sit behind one Filter button, which names any filter that's on. The first question card with data opens first.
 - The time filter opens on the range the data covers: 3 months, 6 months or 12 months.
 - A group with an odd number of charts draws its first one full width (a wider viewBox, so the text
   stays the same size), so the grid has no hole, from 744px, where two columns fit. Plots in a row
-  share a top and a baseline; a single column keeps no blank rows for that. The group's first chart
-  labels its markers "was" and "now", and drops the word when there's no room.
+  share a top and a baseline; a single column keeps no blank rows for that. Chart markers always read "was" and "now".
 - Each line is a 4-week running value (`ROLL` in the script). Its last point is the "last 4
   weeks" number and the point 4 weeks earlier is the "4 weeks before" number; both are marked
-  with a dot and their value, so the sentence, the table and the picture agree, even when that
-  one week is a gap in the line. Each value label takes the first spot clear of the line, and a
-  flat chart prints one number. A rate with fewer than 5 sessions under it in a window leaves
-  a gap, and the tooltip says too few sessions rather than none.
+  with a dot and their value, so the sentence and the picture agree, even when that
+  one week is a gap in the line. Each value label touches its own ring, in whichever spot has the least
+  in its way, so it can't drift onto another part of the line. A flat chart prints "now" and one number. A rate with fewer than 5 sessions under it in a window leaves
+  a gap, and the tooltip says too few sessions rather than none. Untested changes shipped has the same
+  floor as Tested by the AI, because both count sessions with code changes.
 - The Change column is worked out from the rounded cells beside it. A count under 10 keeps its
   decimal and shows the plain difference, never a percent. Any change needs 10 sessions in each
   window, in every chart and table, except Sessions per week.
@@ -138,7 +131,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   latest, and tooltips name any of them. Dashed lines and hatching mean only
   one thing: data second look can't see.
 - Coverage is said once under the group summary ("These charts count Claude Code and Codex
-  only."), in muted text, never yellow.
+  only.", or "Output checking counts all your tools. The others count only Claude Code and Codex."), in muted text, never yellow.
 - "Am I automating repeat work?" ends with "What you could automate next" (`#automate-next`):
   one row per repeated request, most repeated first, with the request in quotes, the count in
   plain text ("6 times in 4 weeks") and the fix as one line to paste. The script moves the block into
@@ -159,27 +152,27 @@ and summary row (too much to read before the first chart).
 A number in a pink circle, matching the fix's row in the plan; title; the tools as plain muted text and one how-sure chip; What happens, as the lead sentence;
 Evidence and Why it matters in two uneven columns (3:2, Why muted); their own prompt in mono, when
 there is one; an optional quiet fold ("Which tools have which rules"); then the "Try this" block
-in a filled pink panel: "Try this: <fix name>", the action in plain steps, a paste-ready block with
+in a filled pink panel: "Try this: <fix name>", one pink line saying what it saves (`.try-saves`) with its working in a muted line under it (`.saves-how`), the action in plain steps, a paste-ready block with
 Copy in its corner. Folds inside cards all look the same: muted text and a chevron, pink on hover.
 
 ## Habit terms
 
-Habit names carry a dashed underline, quieter on glance labels and chart titles
+Habit names carry a dashed underline, quieter on chart titles
 (`--term-quiet`). Hover or keyboard focus opens a card that says how the habit is counted. The
-first "skills" in part 3's headline carries one too. It's pure CSS, so it works in viewers that block scripts; the script only
+first "skills" in part 3's headline carries one too, and so do the first session, model, test, ship and skill in part 2's pattern cards. It's pure CSS, so it works in viewers that block scripts; the script only
 keeps the card on screen and lets Escape close it.
 
 ```html
 <span class="term" tabindex="0" aria-describedby="def-briefed">Briefed starts<span class="term-card" role="tooltip" id="def-briefed">…</span></span>
 ```
 
-Every glance stat except Sessions keeps its card from the template. In prose, wrap the first
-mention of each habit once in the summary and once inside a card body, and in "Usage since your
-last review". Skip part headlines, and skip a term the sentence already defines. Wrap the words the sentence uses, even when they aren't the habit's name: "corrections",
-"Claude misread you only six times", "start with a real brief". Skip headings, table cells and
+In prose, wrap the first
+mention of each habit once inside a card body, and in "Activity since your
+last review". Skip the summary and part headlines, and skip a term the sentence already defines. Wrap the words the sentence uses, even when they aren't the habit's name: "corrections",
+"Claude misread you only six times", "start with a real brief". Metric column headers in tables carry a card too (`def-<habit>-tools`, `def-<habit>-work`). Skip other headings, table cells and
 chart text (each chart carries a short definition line, and its title opens a card from `METRICS` in the template script). One card per habit per section, so a
 paragraph never shows the same card twice. Ids are `def-<habit>-<section>`, for example
-`def-corrections-summary`, and must be unique. Cards work inside `p` and `dd`.
+`def-corrections-rules`, and must be unique. Cards work inside `p`, `dd` and `th`.
 Use these definitions word for word:
 
 | Term | Definition |
@@ -189,6 +182,11 @@ Use these definitions word for word:
 | Restarts | A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track. |
 | Rules retyped per week | A rule typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in the saved instructions of every tool you use. |
 | Long-session share | Share of your usage from very long sessions, about a novel’s worth of text or more. Each message there makes the AI re-read the whole session first, so they use up your limit fastest. Starting fresh between tasks lowers it. Claude Code and Codex only. |
+| Session | One conversation with an AI, from your first message until you start a new one. |
+| Model | The version of the AI you’re talking to. Stronger ones use up your limit faster. |
+| Test | A check that the code really works, run by the AI or by you. |
+| Ship | Put it where other people can use it. |
+| Skill | A skill is a saved set of steps the AI follows the same way each time. |
 
 Chart titles carry their own cards, in `METRICS` in the template script.
 
@@ -206,11 +204,11 @@ Numerals before part titles · goals box and "Personalize goals" · slot labels 
 Practice, Explore) · "How sure" rows in cards · "How we know this" · "How we'll know it
 worked" · Expand all / Collapse all · "sample data" chips · bullet dots in chips · divider
 lines between cards inside a part (dividers only between major sections) · "Review N" line
-above the glance · thesis and "Three moves" summary · light theme · the "More metrics"
+above the summary · the at-a-glance table and the "Start here" line (the summary and plan do that job) · thesis and "Three moves" summary · light theme · the "More metrics"
 dropdown · the value and change line in chart headers · "Compare the fixes" and the separate
 "What the <date> review will check" fold (both live in the plan rows) · tool
 pills · uppercase labels · the "What your charts say" label · group-tile
-blurbs · section taglines that restate a heading · a "How sure" column whose rows all match ·
+blurbs · the header tagline · impact pills in "Skills to fix" · how-sure chips in the plan · "Try next" (a feature worth trying is a fix) · section taglines that restate a heading · a "How sure" column whose rows all match ·
 pink side stripes · boxed tables with filled headers · diffs in skill fixes · "Start with the X
 chart" · "Higher: … Lower: …" under charts · the word "cycle" · "What each trend covers" (now
 inside "How these are measured") · the "Habits over the last year" heading.

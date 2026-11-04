@@ -370,7 +370,7 @@ weekly totals, so weeks your tools later delete stay in the trend.
 <details>
 <summary><b>Does it show where my token usage goes?</b></summary>
 
-For Claude Code and Codex, the only tools that log tokens. The glance tracks how much of your
+For Claude Code and Codex, the only tools that log tokens. The charts track how much of your
 usage came from very long sessions, where every request re-reads a long history. The skills
 check names what loads into every session before you type, like skills you haven't run in 60
 days, and how much you'd save by having them run only when you ask. Numbers compare you with

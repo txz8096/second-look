@@ -262,6 +262,8 @@ and still works on current models.
    - `delegation`: sessions that handed work to a subagent (by purpose: research, check,
      build) and "Sessions crowded with lookups" (`read_heavy`: 25+ reads and searches in the main
      conversation, no subagent) with their share of usage.
+   - `usage.models`: which model each session mostly ran on, each model's share of usage, and
+     the light sessions on it (short, no code edits) with samples. See "Saving time and usage".
    - `automation`: see "3. Repeat work".
 2. If you can also search their past Claude chats, open the real work chats in the window.
    Note restarts, corrections, restated preferences, and polished output accepted without a
@@ -292,14 +294,49 @@ and still works on current models.
   the first message), corrections ("no", "actually", "I meant", "that's not" openers),
   output checked (asked for sources, edge cases or a critique), restart (same topic again
   within 2 days), rules retyped. Keep a short quote for each pattern you'll cite.
-- Compute the first five glance stats from those rows and label them as a sample ("Sample of 24
-  sessions"). See "Last 4 weeks at a glance" for its heading. Long-session share is "Not measured" here: claude.ai doesn't share token counts.
+- Say in the summary that the review rests on a sample ("This is based on a sample of 24 sessions"). Long-session share is "Not measured" here: claude.ai doesn't share token counts.
 - For the year view, use `conversations.json` if they upload it. Without an export, show
   the trends as "No data". Never draw a line from one window's sample.
 
 Rank findings. P1: a wrong fact in a skill, a broken skill, or a habit that recurred 3+
 times and cost real time. P2: an available update or a smaller habit. P3: housekeeping.
 Drop findings with weak evidence.
+
+## Saving time and usage
+
+People use this review to get more back for what they put in, so look for savings on purpose.
+Rank findings and fixes by what they save, and give every fix a saving. A much quicker fix may go
+first if the part's headline says so.
+
+- **Time.** Work it out from their counts: rules retyped × a minute each, restarts × their typical
+  session, corrections × a couple of minutes. Compare it with what the fix takes. Round down.
+- **Usage.** Take it from `usage`: long sessions, what loads at the start, lookups in the main
+  session, and the model mix below.
+- **How to write it.** "About 30 minutes a week", "About a tenth of your Claude Code usage". Always "about". With
+  no count behind it, name what it saves in words ("Fewer fixes after launch") and give no number.
+  Show the working for every number in a `.saves-how` line inside `.try-saves`: "About 2 restarts avoided
+  a week × 15 minutes of repeated setup." Use their real counts, and say what's assumed.
+  Never present a guess as measured. A usage saving names the tools it covers, since only Claude Code
+  and Codex log usage.
+
+**Match the model to the job.** Open two `usage.models` light samples and confirm they were simple
+before citing them. Write a card when light sessions on their strongest model take at least 5% of
+usage. The saving is `light_share` × the price gap. Look up the provider's current prices for that
+gap; if you can't, say "a cheaper model" and give no number. On a plan, usage is a limit, so say it
+leaves more room in their limit. Use the models they have today, at these levels, naming each as
+"Cheapest (on Claude, Haiku)". Keep the `unlabeled` class on that table so phones don't repeat a label:
+
+| Level | Good for | Keep off it |
+|---|---|---|
+| Cheapest | Lookups, summaries, renames, formatting, quick questions, helper agents that only read | Anything it can't check itself |
+| Middle | Everyday building, edits, first drafts | Decisions that are expensive to undo |
+| Strongest | Hard bugs, big design decisions, work others rely on | Routine work |
+
+Give the way to switch for their tool: `/model` in Claude Code and Codex, the model menu in Cursor,
+and for a Claude Code helper agent, `model:` in its file. Add "If you correct a cheaper model twice,
+move up a level", because a retry can cost more than the difference. The next review checks corrections
+in the sessions they moved. Logs show the model only for Claude Code and Codex, so make no claim about
+other tools. Never suggest a cheaper model for career, legal, medical or money work.
 
 ## 3. Repeat work
 
@@ -343,13 +380,12 @@ One HTML page, built from `report-template.html` and named "second look · <star
 Lead with the answer, then the evidence.
 
 **One comparison window.** Every habit number that shows a change compares the last 4 weeks with
-the 4 before: the glance, the cards, the charts and the tables. So a habit has one number and one
-change, and signs can't disagree. Take them from the chart table "Last 4 weeks vs the 4 before"
-(the script works it out from `CUBE`). A card may also cite dated events ("Oct 14–15"), with the
+the 4 before: the cards, the charts and the tables. So a habit has one number and one
+change, and signs can't disagree. Take them from the collector's `last_4_weeks`,
+which works them out from the cube the charts draw; `can_report_change` says whether a change has enough sessions. A card may also cite dated events ("Oct 14–15"), with the
 dates. Name every window: a 4-week number says "last 4 weeks"; something counted over the review
 period says "since your last review" with its dates. Never write "cycle". On a first review, say
-what it covers ("Sep 28 – Oct 25") instead. One exception: the summary may tell the year's story
-in words, with its own dates ("up from three in ten in Nov 2025"). Every number shown with a change
+what it covers ("Sep 28 – Oct 25") instead. Every number shown with a change
 stays on the 4-week window. A change needs 10 sessions in each 4-week window, wherever it's
 reported, in the tables and in your prose. Below that, say there are too few sessions to compare.
 
@@ -363,7 +399,7 @@ agent), rules (never standing preferences), helper agent, usage and usage limit,
 fix, second look (never "the coach" or "I"). Each fix keeps one name everywhere. Cut a line that
 only restates a heading, a column or a term card. An action they can't do by hand gets a prompt
 to paste into their AI tool, and says which tool. Every next step, in any table or list, says where
-to go or gives the line to paste ("Tell Claude Code: “Reinstall mermaid-diagrams.”"), so nothing
+to go or gives the line to paste ("In Claude Code, paste: “Reinstall mermaid-diagrams.”"), so nothing
 ends on "update it" or "remove it" alone. Say what the logs show and nothing about why unless the
 evidence shows why: "no check in the session", never "you didn't check".
 
@@ -383,7 +419,7 @@ one breath. The caps below apply to your text even where the template's sample l
 
 **Caps.** At most five cards, biggest first; the rest go in the log. Card title: a finding, ten
 words or fewer. What happens: two sentences. Evidence: up to three facts, each with its window.
-Why it matters: one sentence about their work. Fix first and Worth a look: five rows each.
+Why it matters: one sentence about their work. Skills to fix and Worth a look: five rows each.
 
 **Design rules.** `report-template.html` is the design. `references/design-system.md`
 explains its tokens, type, radii, structure and the parts removed on purpose.
@@ -392,8 +428,7 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
   scripts exactly as they are. The viewport line and the styles are what make the report
   readable on a phone. Don't add CSS, inline styles, colors or fonts. If something doesn't fit,
   use an existing component or leave it out.
-- Change only content: text, cards, table rows, chip labels from the allowed list, the
-  `moved` class on glance rows, the "What you could automate next" rows, and the four data values at the top of the trends
+- Change only content: text, cards, table rows, chip labels from the allowed list, the "What you could automate next" rows, and the four data values at the top of the trends
   script. Leave the rest of the script as it is.
   - `END`: the Monday of the last complete week, as `"YYYY-MM-DD"` (the collector's
     `last_complete_week`). The week in progress stays out, because a few days would read as a
@@ -415,8 +450,7 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
   error the console shows, and run it again. Rerun it after any change to the data or the
   automation rows. Skip it on claude.ai, where artifacts run scripts.
 - Run `python3 scripts/check_report.py <report.html>`. Fix every problem it lists and run it
-  again. With a pasted cube it works out the six glance rows and prints the right number for
-  any row that's off. Publish only when it prints "Design check passed."
+  again. Publish only when it prints "Design check passed."
 - If the template is missing, say so and stop.
 - On claude.ai, publish the filled template as an HTML artifact, from its first line
   through the closing `</script>`, in order.
@@ -431,52 +465,34 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
 
 Sections, in order. Each maps to a block in the template.
 
-**Header.** The logo, then "Learn from the way you work with AI", with the review's date on the
+**Header.** The logo, with the review's date on the
 right ("Oct 25, 2026").
 
-**Summary.** Three sentences at most. First what improved over the year, in words, with the earlier
-number's month and year ("up from three in ten in Nov 2025"); the checker fails "a year ago" with no
-date. This is the one exception to the 4-week window, so show no change figure here. Then
-what slipped, with the date it began ("Since Sep 28, when the Streak redesign started"), so it
-matches the charts' last 4 weeks. If a data source starting or changing could explain a change,
+**Summary.** Two or three plain sentences, the way you'd tell a friend what you noticed: what's going
+better, what slipped, and the project or moment behind it when you know it. No numbers, percentages,
+metric names or term cards; the charts have those. Describe what they did in everyday
+words: "you've been checking prototypes less and starting over more often", never "checking fell
+20 points". Say only what the charts and cards show, and leave out a guess about why. If a data source starting or changing could explain a change,
 don't claim the change: compare only tools present in both windows, or leave it out. Tool coverage
-goes in the scope line, not here. With no history, say that plainly: on a first review, say it's
+goes in the scope line, not here. A scoped review says its scope in the summary ("This covers your
+MAT study sessions since Sep 28"). If the year's trend and the recent one differ, say which is which in words ("Over the past year… Lately…"). With no history, say that plainly: on a first review, say it's
 the first and what it covers ("It covers the 26 days your tools kept").
 
-**Start here** (`#start-here`). One line under the summary: plan row 1's name linking to its Try
-block, its time, and a link to the plan. Keep the template's wording.
-
-**Last 4 weeks at a glance** (`#glance`). "<last 4 weeks> vs <the 4 before>" next to the heading,
-from `END` ("Sep 28 – Oct 25 vs Aug 31 – Sep 27"). Then exactly six rows in this order: Sessions
-per week, Briefed starts, Corrections (per 10 messages), Restarts (% of sessions), Rules retyped
-per week, Long-session share. The value and the change are the numbers in the chart table
-"Last 4 weeks vs the 4 before", all tools and all work, printed the same way (`CUBE` is the
-source; the checker recomputes them). A row whose change is past the noise floor in "Trend
-metrics", in either direction, uses `class="stat moved"`; every other row uses `class="stat"`. The
-meaning line is one line: where it moved, if you can say ("Up, mostly in prototype sessions."), then
-which way is better ("Lower is better."). The change column already says flat or up, so don't
-repeat it. The Sessions row gives the 4-week total instead ("164 in the last 4 weeks."). No colour.
-When there's nothing to compare with (a first review, a measure with no earlier data, or under 10
-sessions in either window), leave the change empty: no "—", no "Baseline". Use "Not measured" when
-the sources can't give a measure, like long-session share from claude.ai alone, or there are too
-few sessions in the last 4 weeks to show it. A scoped or sampled review works the same rows out from its
-own scope: add `data-scoped` to the `#glance` section (a sampled one says "Sample of 24 sessions"
-next to the heading) and name the scope in the heading and the contents menu ("Since Oct 1 at a
-glance"), because "Last 4 weeks" would be false there. Keep each stat's term card from the template, and wrap the
-first mention of each habit once in the summary and once inside a card body, even when the prose
+**Habit terms.** Wrap the first mention of each habit once inside a card body, even when the prose
 words it differently ("misread you", "a real brief"). Skip the term when the sentence already
-defines it. Skip part headlines. See "Habit terms" in the design system.
+defines it. Skip the summary and part headlines. In part 2's pattern cards, also wrap the first session,
+model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design system.
 
 **Improve your prompts and setup** (`#part-2`). A headline with the biggest finding that
-links to the plan. Then "Did the fixes from your last review work?" (`#last-cycle`), only when an
+links to the plan. If a much quicker fix goes first, the headline says so. Then "Did the fixes from your last review work?" (`#last-cycle`), only when an
 earlier review logged fixes (delete it on a first review): one line per fix, opening with its
 decision pill (Keep, Revise, Drop), then the fix's name in bold and one sentence on what changed,
-with its window. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per prompting, context, memory or repeat-work pattern,
-biggest first (time lost × how often). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the tools as
-plain text and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
+with its window. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per prompting, context, memory or repeat-work pattern,
+biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the tools as
+plain text, including every tool its evidence names, and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
 matters; when you have one, their own prompt quoted in the card; an optional collapsed "Which tools have which rules". Then the fix in the same
-card: the "Try this: <fix name>" block, the action in plain steps per tool ("Cursor: Settings →
-Rules"), and a paste-ready block. Every pattern with a fix gets one, and every fix goes in the
+card: the "Try this: <fix name>" block, a `.try-saves` line with what it saves (see "Saving time and usage"), the action in plain steps per tool ("Cursor: Cursor Settings,
+then Rules"), and a paste-ready block. Every pattern with a fix gets one, and every fix goes in the
 plan. How-sure chips mean: Sure, seen repeatedly or checked in their files. Likely, repeated, but
 something else could explain it. Hunch, thin evidence.
 
@@ -499,9 +515,9 @@ something else could explain it. Hunch, thin evidence.
 
 Close the part with "Your plan until <next review>" (`#plan`), the only pink panel: one
 numbered row per fix, in card order. Each row has the fix's name (the same words as its Try
-block, linking to it), the same how-sure chip as its card, the time it takes
-(`.plan-effort`) and what the next review will check, naming real charts (`.plan-check`, with the
-template's `data-label`). The column line above the list carries the review date. A skill fix that blocks a
+block, linking to it), the time it takes
+(`.plan-effort`), what it saves (`.plan-saves`, the same saving as its Try block, without the word "Saves") and what the next review will check, naming real charts (`.plan-check`, with the
+template's `data-label`). The column line above the list carries the review date. A skill fix that blocks or improves a
 row gets a `.plan-first` line linking to it. End with the `.plan-next` line linking to the other
 skill fixes and to "What you could automate next"; drop a link with nothing behind it. A fix
 appears twice in the report: its Try block and its plan row. Keep each fix's bet, metric and
@@ -510,13 +526,11 @@ keep-it-if rule in the log.
 **Keep your skills current** (`#part-3`). A one-sentence headline with how many skills are
 wrong today (count every skill marked Stale, and a wrong fact is Stale); the scan date and anything
 you couldn't read, named as a place ("your Cursor skills folder"), with what that means for the
-counts. "Fix first" (`#fix-first`; issue, impact pill, fix), blockers first. The fix cell names an
-action; a sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
-isn't High. The big ones get a prompt to paste into their AI tool in a `.fix-block`, shown open,
-with an id the plan can link to (`fix-pr-review`), saying which tool to open. Never show a diff.
+counts. "Skills to fix" (`#fix-first`; issue, fix), blockers first, then biggest impact. Every fix cell reads "In [tool], paste: “…”", or "In any AI chat, paste: “…”" when the tool doesn't matter; a cell that links to a `.fix-block` reads "Paste the fix (5 min)". A sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
+goes low. The big ones get a prompt to paste into their AI tool in a `.fix-block`, shown open,
+with an id the plan can link to (`fix-pr-review`), saying which tool to open. The block's last line is always "Then tell me in plain words what changed before you save it." Never show a diff.
 "Worth a look" (issue, why it matters, how sure, next step), including the
-starting-context row from "Usage" when it applies. Next steps are something they can do or ask
-their AI to do. Collapsed "Skills you wrote" (a status table, with the counts in its summary line);
+starting-context row from "Usage" when it applies. Next steps are something they can do, or a line to paste in the same "In [tool], paste: “…”" form. Collapsed "Skills you wrote" (a status table, with the counts in its summary line);
 collapsed "Skills you installed from others". Counts agree across all of it. Keep the tap
 definition on the first "skills" in the headline.
 When every row of a column says the same thing, drop the column and say it once. Dated sources
@@ -532,7 +546,7 @@ and "How these are measured" from `SCOPE` (see "Data scope").
   has data under the current filters is hidden, and one line names it and says why: its charts
   need Claude Code or Codex, the Work filter leaves it out, or too few sessions. Each group opens
   with one written summary comparing the last 4 weeks with the 4 before (whatever the time
-  filter), so it agrees with the glance and the cards; each line is a 4-week running value with
+  filter), so it agrees with the cards; each line is a 4-week running value with
   those two points marked; milestones are labelled on the group's first chart; a chart that
   moved ends with one clause from `READS` for the direction it moved, and a flat chart has none.
   Those clauses say only what the measure did, never why. The view opens on the time range the
@@ -544,10 +558,8 @@ and "How these are measured" from `SCOPE` (see "Data scope").
   first, at most five: the request in curly quotes, trimmed to its ask; the count as
   "<n> times in <span>" from `last_4_weeks` (or `times` with the span from `first` to `last`);
   the fix as one line to paste, naming the tool ("Tell Claude Code: “Every Monday, …”"). Delete the block when there are no repeats, and on claude.ai.
-- **Usage since your last review** (with its dates; on a first review, "Usage, <dates>"): the
-  usage-limit line, then "Try next" (up to two features that fit how they worked, shown open, each
-  saying how to turn it on),
-  then the collapsed "By tool" and "Skills and commands", counted over the same dates.
+- **Activity since your last review** (with its dates; on a first review, "Activity, <dates>"): the
+  usage-limit line, then the collapsed "By tool" and "Skills and commands", counted over the same dates.
 
 **Report an issue** (`#report-issue`). One line above the footer. Keep the template's line and
 link to https://github.com/txz8096/second-look/issues/new as they are.
@@ -585,7 +597,7 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
   `unused_days`, say "since <date>, when your logs begin" and that some may simply not have come
   up yet.
 - **Usage breakdown.** Doing the work, re-reading long sessions, redoing work. Show it in
-  "Usage since your last review" only when `limit_hits` is 3 or more; otherwise keep the one-line note.
+  "Activity since your last review" only when `limit_hits` is 3 or more; otherwise keep the one-line note.
 - Cursor, Antigravity, claude.ai, ChatGPT and Gemini don't record usage. Say so once.
 
 ## Data scope
@@ -607,8 +619,12 @@ steps to add the data. Write none of this by hand.
   claude.ai `export` only when they uploaded `conversations.json`.
 - Keep "no sessions" apart from "can't see". A tool they didn't use yet is an empty track with
   no card. Only data second look can't reach is dashed.
-- **First review.** Same report, no extra sections. The glance leaves changes empty when there's
-  nothing earlier, "Did the fixes from your last review work?" is deleted, and each chart shows whatever
+- **Someone new.** When they have no skills of their own (second look doesn't count) and nothing
+  installed needs fixing, `#part-3` is its heading and one line: "You haven't saved any skills yet. A
+  skill is a saved set of steps the AI follows the same way each time." Delete "Skills to fix", "Worth
+  a look" and both skill tables, and drop their links from the plan. For everyone, write fixes only for
+  tools they use.
+- **First review.** Same report, no extra sections. "Did the fixes from your last review work?" is deleted, and each chart shows whatever
   weeks exist. A first review usually still has earlier data: Claude Code keeps 30 days, Codex
   and Cursor keep everything, so compare with the window before from logs whenever it exists.
 
@@ -643,8 +659,7 @@ The page's wording for each lives in `METRICS` in the template script. Checking'
 off, all of Automating except Skill use, and the last two of Usage come from Claude Code and Codex only.
 
 `logged` counts Claude Code and Codex sessions; `metered` counts those with token counts. Each
-group says once which of its charts count Claude Code and Codex only. Keep the
-long-session share term card from the template on the glance stat. Every chart title has its
+group says once which of its charts count Claude Code and Codex only. Every chart title has its
 own card in the template's `METRICS` (how it's counted, plus one caveat); keep them as they are.
 A new metric needs a group in `GROUPS` and a line in `READS`, or it won't show.
 
@@ -653,7 +668,7 @@ points for shares, 0.1 per 10 messages for corrections, 0.1 per session for refi
 counts. The change is worked out from the rounded numbers on the page, so the three agree. A
 count is a 4-week average, so under 10 it keeps one decimal when it has one (6.8), shows the plain
 difference (0.5 to 2.5 is +2) and reads "about the same" when that difference is under 0.5. A rate
-needs 5 sessions under it in a 4-week window before it shows. A change needs 10 sessions in each
+needs 5 sessions under it in a 4-week window before it shows, and Untested changes shipped needs the same 5 sessions with code changes as Tested by the AI, so the two start together. A change needs 10 sessions in each
 window, except Sessions per week, which counts itself. A comparison needs 8 weeks since that
 measure's data began; a quiet week after that counts as a quiet week.
 

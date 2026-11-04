@@ -440,6 +440,7 @@ def gemini_export(path, since, gap_minutes=30):
 # Usage: tokens weighted by relative list price, new input = 1. An estimate; it compares sessions with each other.
 WEIGHTS = {"claude_code": {"input": 1, "write_5m": 1.25, "write_1h": 2, "read": 0.1, "output": 5},
            "codex": {"input": 1, "read": 0.1, "output": 8}}
+LIGHT_PROMPTS = 5     # a session this short with no code edits is light work a cheaper model can usually do. A chosen line
 LONG_LINE = 150_000   # a session is long once its context passes this. A chosen line, not a measured limit
 UNUSED_DAYS = 60      # a skill counts as unused after this many days without a run
 LIMIT_HIT = re.compile(r"usage limit|rate.?limit|limit reached|5-hour limit|weekly limit", re.I)
@@ -453,11 +454,12 @@ def _turn(source, ctx, usage, out_rows):
 
 def usage_by_session(home, since):
     """Per-session usage from the token counts Claude Code and Codex log. Other tools don't record tokens."""
-    out, limit_hits = {}, 0
+    out, limit_hits, used_model = {}, 0, {}
     for path in glob.glob(os.path.join(home, ".claude/projects/*/*.jsonl")):
         if os.path.getmtime(path) < since.timestamp():
             continue
         turns, seen, w = [], set(), WEIGHTS["claude_code"]
+        models = collections.Counter()
         for e in iter_jsonl(path):
             ts = parse_ts(e.get("timestamp"))
             if ts and ts < since:
@@ -469,6 +471,8 @@ def usage_by_session(home, since):
             if not u or msg.get("id") in seen:
                 continue
             seen.add(msg.get("id"))
+            if msg.get("model") and not str(msg["model"]).startswith("<"):
+                models[msg["model"]] += 1
             write = u.get("cache_creation_input_tokens", 0)
             write_1h = (u.get("cache_creation") or {}).get("ephemeral_1h_input_tokens", 0)
             ctx = u.get("input_tokens", 0) + write + u.get("cache_read_input_tokens", 0)
@@ -477,12 +481,14 @@ def usage_by_session(home, since):
             _turn("claude_code", ctx, cost, turns)
         if turns:
             out[("claude_code", os.path.basename(path)[:-6])] = turns
+            used_model[("claude_code", os.path.basename(path)[:-6])] = models.most_common(1)[0][0] if models else None
     for path in glob.glob(os.path.join(home, ".codex/sessions/**/*.jsonl"), recursive=True):
         if os.path.getmtime(path) < since.timestamp():
             continue
-        turns, last, w = [], None, WEIGHTS["codex"]
+        turns, last, w, model = [], None, WEIGHTS["codex"], None
         for e in iter_jsonl(path):
             p = e.get("payload") if isinstance(e.get("payload"), dict) else {}
+            model = p.get("model") or model
             if p.get("type") != "token_count" or not p.get("info"):
                 continue
             total, u = p["info"].get("total_token_usage"), p["info"].get("last_token_usage") or {}
@@ -493,8 +499,9 @@ def usage_by_session(home, since):
             _turn("codex", inp, (inp - cached) * w["input"] + cached * w["read"] + out_t * w["output"], turns)
         if turns:
             out[("codex", os.path.basename(path)[:-6])] = turns
+            used_model[("codex", os.path.basename(path)[:-6])] = model
     sessions = {k: {"usage": sum(t[1] for t in v), "reread": sum(t[2] for t in v), "turns": len(v),
-                    "peak": max(t[0] for t in v), "start_tokens": v[0][0]} for k, v in out.items()}
+                    "peak": max(t[0] for t in v), "start_tokens": v[0][0], "model": used_model.get(k)} for k, v in out.items()}
     return sessions, limit_hits
 
 
@@ -565,6 +572,23 @@ def starting_context(home, metered):
     }
 
 
+def model_mix(rows, total):
+    """Which model each session mostly ran on, and how much usage went to light work on each. Prices aren't here: they change."""
+    usage, sessions, light = collections.Counter(), collections.Counter(), collections.defaultdict(list)
+    for r in rows:
+        if not r.get("model"):
+            continue
+        usage[r["model"]] += r["usage"]
+        sessions[r["model"]] += 1
+        if not r["edited"] and r["prompts"] <= LIGHT_PROMPTS and not r["long"] and not r["unattended"]:
+            light[r["model"]].append(r)
+    return [{"model": m, "sessions": sessions[m], "share": round(u / total, 3),
+             "light_sessions": len(light[m]), "light_share": round(sum(r["usage"] for r in light[m]) / total, 3),
+             "light_samples": [{"date": r["start"].astimezone().strftime("%b %-d"), "first": clean(r["first"], 120)}
+                               for r in sorted(light[m], key=lambda r: -r["usage"])[:5]]}
+            for m, u in usage.most_common()]
+
+
 def usage_summary(sessions, metered, limit_hits, home):
     """The numbers usage findings need: where usage went, compared only with the user's own typical session."""
     rows = [r for r in sessions if r.get("usage")]
@@ -591,6 +615,7 @@ def usage_summary(sessions, metered, limit_hits, home):
         "biggest": [{"source": r["source"], "date": r["start"].astimezone().strftime("%b %-d"), "share": round(r["usage"] / total, 3),
                      "prompts": r["prompts"], "peak": r["peak"], "first": clean(r["first"], 120)} for r in biggest],
         "limit_hits": limit_hits,
+        "models": model_mix(rows, total),
         "starting_context": start,
     }
 
@@ -605,6 +630,31 @@ def last_complete_week(cube, this_week):
     last = (dt.date.fromisoformat(this_week) - dt.timedelta(days=7)).isoformat()
     weeks = [r["week"] for r in cube if r.get("sessions")]
     return max(weeks) if weeks and min(weeks) > last else last
+
+
+# name, cube count, what it's divided by (None: a weekly average), and the sessions a change rests on
+WINDOW_METRICS = (("sessions_per_week", "sessions", None, "sessions"), ("briefed", "briefed", "briefable", "briefable"),
+                  ("corrections_per_message", "corrections", "prompts", "sessions"), ("restarts", "restarts", "sessions", "sessions"),
+                  ("retyped_per_week", "retyped", None, "sessions"), ("checked", "checked", "build", "build"),
+                  ("long_session_share", "long_usage", "usage", "metered"))
+MIN_CHANGE = 10   # sessions needed in each window before a change is reported
+
+
+def last_4_weeks(cube, last_week):
+    """Every habit number in the report's prose: the last 4 weeks and the 4 before, all tools and all work."""
+    end = dt.date.fromisoformat(last_week)
+    def part(a, b):
+        return [r for r in cube if end - dt.timedelta(weeks=a) <= dt.date.fromisoformat(r["week"]) <= end - dt.timedelta(weeks=b)]
+    def value(rows, num, den):
+        n, d = sum(r.get(num, 0) for r in rows), sum(r.get(den, 0) for r in rows) if den else 4
+        return round(n / d, 3) if d else None
+    now, then = part(3, 0), part(7, 4)
+    out = {}
+    for name, num, den, base in WINDOW_METRICS:
+        a, b = sum(r.get(base, 0) for r in now), sum(r.get(base, 0) for r in then)
+        out[name] = {"now": value(now, num, den), "before": value(then, num, den), "sessions_now": a, "sessions_before": b,
+                     "can_report_change": a >= MIN_CHANGE and b >= MIN_CHANGE}
+    return out
 
 
 def weekly_trend(aggs):
@@ -856,7 +906,7 @@ def _usage_fields(m):
     if not m:
         return {}
     return {"usage": m["usage"], "reread": m["reread"], "peak": m["peak"], "start_tokens": m["start_tokens"],
-            "turns": m.get("turns", 0), "long": m["peak"] > LONG_LINE}
+            "turns": m.get("turns", 0), "long": m["peak"] > LONG_LINE, "model": m.get("model")}
 
 
 def session_cube(sessions):
@@ -1124,6 +1174,7 @@ def main():
         result["cube"] = session_cube(sessions)
         # the week in progress would read as a quiet full week, so the report's charts stop before it
         result["last_complete_week"] = last_complete_week(result["cube"], week_of(dt.datetime.now(dt.timezone.utc)))
+        result["last_4_weeks"] = last_4_weeks(result["cube"], result["last_complete_week"])
     text = json.dumps(result, indent=2, default=str)
     if args.out:
         with open(args.out, "w") as f:
