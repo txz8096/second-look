@@ -23,7 +23,7 @@ REQUIRED_TEXT = [
 CHIPS = {"Sure", "Likely", "Hunch"}
 PILLS = {
     "Stale", "Review", "Minor", "Current", "Behind", "Broken", "Duplicate", "Not checked",
-    "High", "Medium", "Low", "Keep", "Revise", "Drop",
+    "High", "Medium", "Low",
 }
 FORBIDDEN = {
     "Personalize goals": "goals box was removed",
@@ -38,6 +38,7 @@ FORBIDDEN = {
     'class="sample"': "no sample-data chips on real reports",
     'data-theme="light"': "the report is dark only",
     "Part 1 of 3": "no part numbers",
+    'class="last-list"': "fixes from the last review now sit in .last-group cards",
     'id="glance"': "the at-a-glance table was removed; the numbers live in the charts",
     'id="start-here"': "the Start here line was removed; the plan says where to start",
     "Compare the fixes": "merged into the plan; each fix is its Try block plus one plan row",

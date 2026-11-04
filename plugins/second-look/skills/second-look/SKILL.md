@@ -485,9 +485,7 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 
 **Improve your prompts and setup** (`#part-2`). A headline with the biggest finding that
 links to the plan. If a much quicker fix goes first, the headline says so. Then "Did the fixes from your last review work?" (`#last-cycle`), only when an
-earlier review logged fixes (delete it on a first review): one line per fix, opening with its
-decision pill (Keep, Revise, Drop), then the fix's name in bold and one sentence on what changed,
-with its window. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per prompting, context, memory or repeat-work pattern,
+earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Changed since your last review" (Revise) or "Stopped" (Drop). Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result of five words or so with the number when there is one ("Use rose from 11% to 18%", "Too soon to tell"), and what changed, with its window, in the fold. Only the first fix starts open. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per prompting, context, memory or repeat-work pattern,
 biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the tools as
 plain text, including every tool its evidence names, and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
 matters; when you have one, their own prompt quoted in the card; an optional collapsed "Which tools have which rules". Then the fix in the same
@@ -513,7 +511,7 @@ something else could explain it. Hunch, thin evidence.
   schedule, hook or skill, ready to paste. In the fix line, say what it does ("runs on its own
   every Monday"), not the mechanism ("Stop hook").
 
-Close the part with "Your plan until <next review>" (`#plan`), the only pink panel: one
+Close the part with "Your plan until <next review>" (`#plan`), a pink panel: one
 numbered row per fix, in card order. Each row has the fix's name (the same words as its Try
 block, linking to it), the time it takes
 (`.plan-effort`), what it saves (`.plan-saves`, the same saving as its Try block, without the word "Saves") and what the next review will check, naming real charts (`.plan-check`, with the

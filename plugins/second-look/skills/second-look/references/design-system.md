@@ -12,24 +12,23 @@ append overrides at the end.
 
 | Token | Value | Use |
 |---|---|---|
-| `--bg` | `#16181D` | Page background |
-| `--surface` / `--surface-2` | `#1C1F25` / `#22252C` | Buttons, menus, hover fills |
-| `--fg` | `#F2F3F5` | Text |
-| `--muted` / `--faint` | `#A8ADB7` / `#7C828D` | Secondary text, labels |
-| `--term-quiet` | `#676C76` | Dashed underline on chart titles (3.4:1) |
-| `--line` / `--line-strong` | `#2B2F37` / `#3A3F49` | Dividers, borders |
+| `--bg` | `#0A0A0A` | Page background |
+| `--surface` / `--surface-2` | `#171717` / `#262626` | Cards, buttons, menus / neutral fills, tracks |
+| `--fg` | `#FAFAFA` | Text |
+| `--primary` / `--on-primary` | `#E5E5E5` / `#171717` | The firmest chip (Sure) |
+| `--muted` / `--faint` | `#A1A1A1` / `#8A8A8A` | Secondary text, labels |
+| `--term-quiet` | `#737373` | Dashed underline on chart titles, Hunch chip border |
+| `--line` / `--line-strong` | white at 10% / 15% | Dividers, borders |
 | `--accent` | `#F2A7B8` (Proof Pink) | Links, highlights, chart series |
-| `--on-accent` | `#16181D` | Text on pink fills |
-| `--p1` / `--p2` / `--good` | danger / warning / success | States only |
+| `--accent-soft` / `--accent-soft-2` | pink at 8% / 28% | Pink panels and their borders |
+| `--on-accent` | `#0A0A0A` | Text on pink fills |
+| `--p1` | `#FF6568` | A broken or stale skill, high risk. States only |
 
-There is no light theme. Status colours (danger, warning, success) mark states, such as a
-broken skill, a stale skill or a fix that was kept. Never use them to grade the user's habits:
+The neutrals are shadcn/ui's dark theme, written as plain CSS: the report stays one file, so it uses the look and none of the React components. There is no light theme. The one status colour (`--p1`) marks states, such as a broken skill. Never use it to grade the user's habits:
 changes in their numbers are plain text, and "best" cells are pink, never green or red.
-Pink fills one surface only: the plan.
+Pink marks the things to act on: "Try this" panels, the plan, the fix-review group headers, the chosen tile, chart lines and counts.
 
-**The signature.** Two things repeat down the page, both taken from the logo. Hairline ledger rows
-carry every table and list: no filled headers, no outer box, rows that run to the column's edges.
-The fix in each pattern is a filled pink panel, the same as the plan. No side stripes.
+**The signature.** Neutral cards with hairline borders hold the findings, charts, panels and tables; headers are never filled. The fix in each pattern is a pink panel with a pink hairline, the same as the plan. No side stripes on panels.
 
 ## Type
 
@@ -38,16 +37,16 @@ Familjen Grotesk for everything; IBM Plex Mono for code and quoted prompts. Head
 
 | Role | Size |
 |---|---|
-| Part title (`.part-head h2`) | 48px |
-| Plan title | 32px |
-| Pattern title | 24px |
-| Lead sentence, summary, part headline, "Try this" title, section headings | 20px |
-| Body, chart and panel titles, plan rows, tabs | 16px |
-| Small text, tables, notes | 14px |
-| Labels (sentence case, weight 500, muted), chips | 13px |
+| Part title (`.part-head h2`) | 32px |
+| Plan title | 24px |
+| Summary, section headings | 20px |
+| Pattern title | 18px |
+| Part headline, "Try this" title, chart and panel titles, chart group summary | 16px |
+| Card text, tables, plan rows, tabs, notes | 14px |
+| Labels (sentence case, weight 500, muted), code, small notes | 13px |
+| Chips | 12px |
 
-Running text, tables, charts and code blocks all use the full column. Quoted prompts are set in
-IBM Plex Mono, as typed.
+Running text, tables, charts and code blocks all use the full column. Pasted text and the automation counts are set in IBM Plex Mono; a quoted prompt sits on a neutral rule beside what came of it.
 
 No uppercase labels. On phones (680px and narrower) the template raises the floor: small text 14px, card body 16px, chart axis text 12px, and buttons, chips and
 section toggles at least 44px tall, and Copy sits in the block's left corner, clear of the
@@ -60,17 +59,15 @@ them.
 
 ## Radii
 
-6px code blocks and tooltips · 8px buttons and inputs · 12px the plan and the contents menu ·
-fully rounded chips and filters. Tables, charts, bar panels and "What you could
-automate next" have no box.
+6px tooltips and the chosen filter · 8px buttons, inputs, tiles, code blocks and the filter track · 10px "Try this" panels · 14px cards, tables, the plan and the contents menu ·
+fully rounded chips.
 
 ## Page structure, in order
 
 1. Header: the second look logo as the page's `h1`, with the review's date on the right.
 2. Summary paragraph (20px), in plain words with no numbers.
 3. Improve your prompts and setup (`#part-2`): headline linking to the plan, "Did the
-   fixes from your last review work?" (`#last-cycle`, one line per fix with its Keep/Revise/Drop
-   pill; only after a review with logged fixes), pattern cards
+   fixes from your last review work?" (`#last-cycle`, one card per decision, one folded row per fix; only after a review with logged fixes), pattern cards
    (`article.icard`), then "Your plan until <date>" (`#plan`): one numbered row per fix with
    its name, time, what it saves, and what the next review checks, one line each from 681px with
    each value under its header, then a line linking the other skill fixes and the repeats to automate.
@@ -107,7 +104,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
 - The open group starts with one sentence of what changed, comparing the last 4 weeks with
   the 4 before, whatever the time filter. No label, no values. Changes under the noise floor
   (see SKILL.md "Trend metrics") read "about the same" and never sort first. "How each tool's use is changing" uses the same two windows.
-- Charts have no box: title (with its card), definition line, the plot, then one clause for the
+- Each chart is a card: title (with its card), definition line, the plot, then one clause for the
   direction the line moved ("Up: you typed more rules by hand."). It says what the measure did,
   never why. With the time filter on 4 weeks the earlier point is off the chart, so it reads "Up
   from the 4 weeks before: …". A flat chart has none. A chart with no line has only its reason.
@@ -149,11 +146,14 @@ and summary row (too much to read before the first chart).
 
 ## Pattern card
 
-A number in a pink circle, matching the fix's row in the plan; title; the tools as plain muted text and one how-sure chip; What happens, as the lead sentence;
-Evidence and Why it matters in two uneven columns (3:2, Why muted); their own prompt in mono, when
-there is one; an optional quiet fold ("Which tools have which rules"); then the "Try this" block
-in a filled pink panel: "Try this: <fix name>", one pink line saying what it saves (`.try-saves`) with its working in a muted line under it (`.saves-how`), the action in plain steps, a paste-ready block with
-Copy in its corner. Folds inside cards all look the same: muted text and a chevron, pink on hover.
+A number in a pink circle, matching the fix's row in the plan; title; the tools as plain muted text and one how-sure chip; What happens, Evidence and Why it matters as labelled rows; their own prompt, when
+there is one; an optional fold ("Which tools have which rules"); then the "Try this" block
+in a pink panel: "Try this: <fix name>", one pink line saying what it saves (`.try-saves`) with its working in a muted line under it (`.saves-how`), the action in plain steps, a paste-ready block with
+Copy in its corner. Folds inside cards all look the same: a row between hairlines with a chevron, pink on hover.
+
+## Fix review
+
+"Did the fixes from your last review work?" sits in cards that scale with the number of fixes. Each decision is a `.last-group`: a pink header with its icon (Lucide `check` for "Keep doing these", `pencil` for "Changed since your last review", `x` for "Stopped"), then one `details.last-fix` per fix. A closed row shows the fix's name and one short result; the sentence on what changed is in the fold. Only the first fix starts open. Groups sit side by side and take the full row when alone.
 
 ## Habit terms
 
@@ -195,8 +195,8 @@ Chart titles carry their own cards, in `METRICS` in the template script.
 - How sure, for patterns, fixes and skill findings alike: Sure · Likely · Hunch. Each opens a
   one-line meaning on hover or tap.
 - State pills: Stale · Review · Minor · Current · Behind · Broken · Duplicate · Not checked ·
-  High · Medium · Low · Keep · Revise · Drop
-- In "Did the fixes from your last review work?", each line opens with a decision pill.
+  High · Medium · Low
+- Chip weights: Sure is filled, Likely is neutral, Hunch is dashed. Stale, Broken and High are red outlines.
 
 ## Removed on purpose (don't bring back)
 
@@ -209,6 +209,6 @@ dropdown · the value and change line in chart headers · "Compare the fixes" an
 "What the <date> review will check" fold (both live in the plan rows) · tool
 pills · uppercase labels · the "What your charts say" label · group-tile
 blurbs · the header tagline · impact pills in "Skills to fix" · how-sure chips in the plan · "Try next" (a feature worth trying is a fix) · section taglines that restate a heading · a "How sure" column whose rows all match ·
-pink side stripes · boxed tables with filled headers · diffs in skill fixes · "Start with the X
+pink side stripes on panels · filled table headers · Keep, Revise and Drop pills (a bare "Keep" didn't say what to keep; group headers do) · diffs in skill fixes · "Start with the X
 chart" · "Higher: … Lower: …" under charts · the word "cycle" · "What each trend covers" (now
 inside "How these are measured") · the "Habits over the last year" heading.
