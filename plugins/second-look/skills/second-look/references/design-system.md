@@ -197,6 +197,7 @@ Chart titles carry their own cards, in `METRICS` in the template script.
 - State pills: Stale · Review · Minor · Current · Behind · Broken · Duplicate · Not checked ·
   High · Medium · Low
 - Chip weights: Sure is filled, Likely is neutral, Hunch is dashed. Stale, Broken and High are red outlines.
+- Chip size: 18px tall, 12px text, with the text box trimmed to the capitals so they sit centred.
 
 ## Removed on purpose (don't bring back)
 

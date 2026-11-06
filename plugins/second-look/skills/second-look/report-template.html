@@ -151,8 +151,8 @@ a.row-link:hover { color: var(--accent); text-decoration-color: currentColor; }
 .flash { animation: flash 1.6s ease-out; }
 @keyframes flash { 0%, 30% { background: var(--accent-soft-2); } }
 
-/* chips: how sure (Sure, Likely, Hunch) and state pills */
-.conf, .pill { display: inline-flex; align-items: center; height: 22px; box-sizing: border-box; padding: 0 8px; border: 1px solid transparent; border-radius: var(--r-pill); font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
+/* chips: how sure (Sure, Likely, Hunch) and state pills. The text box hugs the capitals, so they sit centred; the 7px line height does the same where text-box isn't supported */
+.conf, .pill { display: inline-block; height: 18px; box-sizing: border-box; padding: 4px 8px; border: 1px solid transparent; border-radius: var(--r-pill); font-size: 12px; line-height: 7px; text-box: trim-both cap alphabetic; font-weight: 500; white-space: nowrap; }
 .conf { cursor: help; }
 .conf.strong { color: var(--on-primary); background: var(--primary); }
 .conf.sugg { color: var(--fg); background: var(--surface-2); }

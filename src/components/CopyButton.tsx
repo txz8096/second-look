@@ -3,7 +3,17 @@
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
-export function CopyButton({ text, label, compact = false }: { text: string; label: string; compact?: boolean }) {
+export function CopyButton({
+  text,
+  label,
+  compact = false,
+  bare = false,
+}: {
+  text: string;
+  label: string;
+  compact?: boolean;
+  bare?: boolean;
+}) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -36,7 +46,7 @@ export function CopyButton({ text, label, compact = false }: { text: string; lab
       type="button"
       onClick={copy}
       aria-label={copied ? "Copied" : label}
-      className="relative inline-flex shrink-0 items-center gap-1.5 rounded border border-rule px-2 py-1 font-mono text-xs text-text-3 transition-colors after:absolute after:-inset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-accent"
+      className={`relative inline-flex shrink-0 items-center gap-1.5 rounded px-2 py-1 font-mono text-xs text-text-3 transition-colors after:absolute after:-inset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-accent ${bare ? "" : "border border-rule"}`}
     >
       <Icon key={String(copied)} size={14} className={copied ? "icon-in" : undefined} aria-hidden="true" />
       {copied ? "Copied" : "Copy"}

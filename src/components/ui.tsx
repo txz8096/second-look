@@ -62,19 +62,32 @@ export function SecondaryButton({ className = "", ...props }: ComponentProps<"a"
   );
 }
 
-type PillVariant = "neutral" | "tint" | "solid" | "outline";
+export type PillVariant = "strong" | "neutral" | "dashed" | "red" | "outline";
 
+// The report's chips: .conf and .pill in report-template.html.
 const pillStyles: Record<PillVariant, string> = {
-  neutral: "bg-pill text-text-2",
-  tint: "bg-accent-tint text-accent",
-  solid: "bg-accent text-on-accent",
-  outline: "text-text-2 outline outline-1 -outline-offset-1 outline-rule",
+  strong: "border-transparent bg-report-primary text-report-on-primary",
+  neutral: "border-transparent bg-report-surface-2 text-report-fg",
+  dashed: "border-dashed border-report-quiet text-report-muted",
+  red: "border-report-red text-report-red",
+  outline: "border-report-line-strong text-report-fg",
 };
 
-export function Pill({ variant, children }: { variant: PillVariant; children: ReactNode }) {
+export function Pill({
+  variant,
+  title,
+  className = "",
+  children,
+}: {
+  variant: PillVariant;
+  title?: string;
+  className?: string;
+  children: ReactNode;
+}) {
   return (
     <span
-      className={`inline-flex shrink-0 rounded-full px-2.5 py-1 font-body text-xs font-semibold whitespace-nowrap ${pillStyles[variant]}`}
+      title={title}
+      className={`inline-block h-[18px] shrink-0 rounded-full border px-2 py-1 font-body text-xs leading-[7px] font-medium whitespace-nowrap [text-box:trim-both_cap_alphabetic] ${pillStyles[variant]} ${className}`}
     >
       {children}
     </span>
