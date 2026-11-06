@@ -28,10 +28,53 @@
 html, body { background: #0A0A0A; }
 html { overflow-x: clip; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 var(--sans); overflow-wrap: anywhere; -webkit-font-smoothing: antialiased;
-  padding: 28px max(16px, env(safe-area-inset-right, 0px)) 64px max(16px, env(safe-area-inset-left, 0px)); }
+  }
 table { line-height: 1.35; }
 th, td { overflow-wrap: break-word; }
-.wrap { max-width: 880px; margin: 0 auto; display: grid; gap: 56px; }
+html { scroll-padding-top: 80px; }
+/* the app bar, then a sidebar beside one page of the report at a time */
+.appbar { position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; height: 64px; padding-right: 24px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.bar-brand { display: flex; flex: none; align-items: center; gap: 14px; box-sizing: border-box; width: 256px; padding: 0 24px; }
+button.menu-btn { position: relative; display: block; flex: none; visibility: hidden; width: 20px; height: 20px; padding: 0; border: 0; border-radius: var(--r-4); background: none; color: var(--muted); }
+button.menu-btn::after { content: ""; position: absolute; inset: -12px; }
+button.menu-btn:hover { background: none; border: 0; color: var(--fg); }
+.paged button.menu-btn { visibility: visible; }
+.bar-actions { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.report-pick { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-8); white-space: nowrap; }
+.report-pick-t { font-size: 14px; line-height: 20px; font-weight: 500; }
+a.feedback { display: flex; align-items: center; min-height: 40px; box-sizing: border-box; padding: 8px 12px; color: var(--fg); font-size: 14px; line-height: 20px; font-weight: 500; text-decoration: none; }
+a.feedback:hover { color: var(--accent); }
+.shell { display: grid; grid-template-columns: 256px minmax(0, 1fr); min-height: calc(100dvh - 64px); }
+.side { position: sticky; top: 64px; display: flex; flex-direction: column; gap: 32px; box-sizing: border-box; height: calc(100dvh - 64px); overflow-y: auto; padding: 20px; background: var(--surface); border-right: 1px solid var(--line); }
+.side-nav { display: grid; gap: 4px; }
+.side-nav a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; box-sizing: border-box; padding: 8px 12px; border-radius: var(--r-8); color: var(--muted); font-size: 14px; line-height: 20px; font-weight: 500; text-decoration: none; }
+.side-nav a:hover { color: var(--fg); }
+.side-nav a.on, .side-nav a.on:hover { background: var(--accent-soft); color: var(--accent); }
+.nav-count { font: 400 13px/20px var(--mono); font-variant-numeric: tabular-nums; }
+.side-note { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; line-height: 20px; color: var(--muted); }
+.wrap { display: grid; align-content: start; gap: 32px; box-sizing: border-box; width: 100%; max-width: 1184px; min-width: 0; margin: 0 auto; padding: 32px 48px; outline: 0; }
+.page { display: grid; gap: 32px; min-width: 0; }
+.paged .page:not(.on) { display: none; }
+.paged[data-page="overview"] footer { display: none; }
+.side-closed .shell { grid-template-columns: minmax(0, 1fr); }
+.side-closed .side { display: none; }
+.opening { display: grid; gap: 24px; }
+.opening h1 { font-size: 32px; line-height: 1.25; }
+.explore { gap: 16px; }
+.explore h2 { font-size: 20px; line-height: 1.4; }
+.dests { display: grid; overflow: hidden; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-14); }
+a.dest { display: flex; align-items: center; gap: 24px; padding: 20px; color: var(--fg); text-decoration: none; }
+a.dest + a.dest { border-top: 1px solid var(--line); }
+a.dest:hover { background: var(--surface-2); }
+.dest-text { display: grid; flex: 1; gap: 4px; min-width: 0; }
+.dest-t { font-size: 16px; line-height: 24px; font-weight: 600; }
+.dest-d { font-size: 14px; line-height: 20px; color: var(--muted); }
+.dest-go { display: flex; flex: none; align-items: center; gap: 8px; color: var(--accent); font-size: 14px; line-height: 20px; font-weight: 500; }
+@media print {
+  .appbar, .side { display: none; }
+  .shell { display: block; }
+  .paged .page:not(.on) { display: grid; }
+}
 h1, h2, h3, h4 { margin: 0; font-family: var(--display); font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; text-wrap: balance; }
 p { margin: 0; }
 b, strong { font-weight: 600; color: var(--fg); }
@@ -40,7 +83,7 @@ code, pre { font-family: var(--mono); font-size: 0.86em; }
 code { overflow-wrap: anywhere; }
 .muted { color: var(--muted); }
 /* labels: sentence case, quiet */
-.eyebrow, .flabel, .toc-h { font-size: 13px; line-height: 1.3; font-weight: 500; color: var(--muted); letter-spacing: 0; text-transform: none; }
+.eyebrow, .flabel { font-size: 13px; line-height: 1.3; font-weight: 500; color: var(--muted); letter-spacing: 0; text-transform: none; }
 th { font-size: 14px; line-height: 1.4; font-weight: 500; color: var(--muted); }
 .def { font-size: 14px; line-height: 1.5; color: var(--muted); }
 [hidden] { display: none !important; }
@@ -54,13 +97,9 @@ button:focus-visible, summary:focus-visible, select:focus-visible, a:focus-visib
 select { font: 500 14px var(--sans); color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-8); height: 36px; padding: 0 10px; }
 
 /* header and summary */
-header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
-.report-date { font-size: 14px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
-.title-row { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; }
+.report-date { font-size: 13px; line-height: 20px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .brand { display: inline-flex; line-height: 0; }
 .brand-logo { height: 32px; width: auto; display: block; }
-.brand-h { line-height: 0; }
-.lead { display: grid; gap: 12px; margin-top: -8px; }
 .summary { font-size: 20px; line-height: 1.5; text-wrap: pretty; }
 
 /* sections */
@@ -70,12 +109,11 @@ section { display: grid; gap: 14px; }
 .sec-head .muted { font-size: 14px; font-variant-numeric: tabular-nums; }
 
 /* parts */
-.part { display: grid; gap: 20px; padding-top: 40px; scroll-margin-top: 20px; }
+.part { gap: 20px; scroll-margin-top: 20px; }
 .part-head { display: grid; gap: 8px; }
 .part-head h2 { font-size: 32px; line-height: 1.25; }
 .part-head .headline { font-size: 16px; line-height: 1.5; color: var(--muted); text-wrap: pretty; }
 .part-meta { font-size: 14px; color: var(--muted); }
-#plan, #report-issue { scroll-margin-top: 20px; }
 
 /* the fixes from the last review: a card per decision, one short result per fix, the detail folded */
 #last-cycle { gap: 12px; }
@@ -156,7 +194,7 @@ a.row-link:hover { color: var(--accent); text-decoration-color: currentColor; }
 .conf { cursor: help; }
 .conf.strong { color: var(--on-primary); background: var(--primary); }
 .conf.sugg { color: var(--fg); background: var(--surface-2); }
-.conf.val { color: var(--muted); border: 1px dashed var(--term-quiet); }
+.conf.val { color: var(--muted); border-color: var(--term-quiet); }
 .p1 { color: var(--p1); border-color: var(--p1); } .p2 { color: var(--on-primary); background: var(--primary); }
 .p3 { color: var(--fg); background: var(--surface-2); } .ok { color: var(--fg); border-color: var(--line-strong); }
 .tip-pop { position: fixed; z-index: 60; max-width: 260px; padding: 8px 12px; border-radius: var(--r-6); background: var(--fg); color: var(--bg);
@@ -225,7 +263,7 @@ button.grp-tile[aria-pressed="true"], button.grp-tile[aria-pressed="true"]:hover
 .grp-title { display: none; font-size: 20px; }
 .grp-sum { font-size: 16px; line-height: 1.5; text-wrap: pretty; margin-top: 8px; }
 .grp-note { margin-bottom: 4px; }
-.multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 0 12px; margin-top: 12px; }
+.multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 0 12px; margin-top: 12px; }
 /* each chart is a card whose five rows line up across its row, so plots share a baseline. The gap is a margin: an empty row must add nothing */
 .chart { position: relative; display: grid; grid-row: span 5; grid-template-rows: subgrid; row-gap: 0; align-content: start; min-width: 0; margin-bottom: 12px; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-14); }
 .chart.lead { grid-column: 1 / -1; }
@@ -237,7 +275,8 @@ button.grp-tile[aria-pressed="true"], button.grp-tile[aria-pressed="true"]:hover
 .chart-head h3 { font-size: 16px; line-height: 1.3; }
 .chart-plot { position: relative; }
 button.more-charts { display: none; }
-.chart svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
+.chart svg { display: block; width: 100%; max-width: 425px; height: auto; overflow: visible; touch-action: pan-y; }
+.chart.lead svg { max-width: 850px; }
 .chart svg text { fill: var(--muted); font-family: var(--sans); font-size: 10px; font-variant-numeric: tabular-nums; }
 .chart svg text.ms, .chart svg text.pt { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
 .chart svg text.ms { fill: var(--muted); }
@@ -304,7 +343,6 @@ button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--sur
 #trends[data-nodata] .filters, #trends[data-nodata] > details:not(#scope-details) { display: none; }
 
 /* usage, report an issue, footer */
-.report-issue { font-size: 14px; color: var(--muted); }
 footer { padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; line-height: 20px; color: var(--muted); }
 
 /* habit terms: a dashed underline that opens a card on hover or focus. Pure CSS, so it works with scripts off */
@@ -341,37 +379,30 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 .term-card .card-step { display: block; margin-top: 6px; }
 .term-card code { font-size: 12px; background: rgb(0 0 0 / .08); padding: 0 4px; border-radius: 4px; }
 
-/* floating table of contents */
-.toc { position: fixed; z-index: 40; right: max(20px, env(safe-area-inset-right, 0px)); bottom: calc(20px + env(safe-area-inset-bottom, 0px));
-  display: flex; flex-direction: column-reverse; align-items: flex-end; gap: 10px; pointer-events: none; }
-/* the nav's box spans the closed panel's area; only the button and the open panel take taps, so it can't block the page */
-.toc > * { pointer-events: auto; }
-button.toc-btn { width: 48px; height: 48px; padding: 0; border-radius: 50%; display: grid; place-items: center; color: var(--accent); background: var(--surface);
-  border: 1px solid var(--line-strong); box-shadow: 0 6px 18px rgb(0 0 0 / .2); }
-.toc-btn:hover, .toc.open .toc-btn, .toc:not(.scripted):focus-within .toc-btn { background: var(--surface); border-color: var(--accent-soft-2); }
-.toc-panel { box-sizing: border-box; width: min(300px, calc(100vw - 40px)); max-height: calc(100dvh - 98px - env(safe-area-inset-bottom, 0px)); overflow-y: auto; overscroll-behavior: contain;
-  padding: 12px; border-radius: var(--r-14); background: var(--surface); border: 1px solid var(--line); box-shadow: 0 20px 48px rgb(0 0 0 / .3);
-  opacity: 0; visibility: hidden; transform: translateY(6px); transition: opacity .16s, transform .16s, visibility 0s .16s; }
-/* without scripts the menu opens on hover and keyboard focus; the script adds .scripted and takes over */
-.toc:not(.scripted):hover .toc-panel, .toc:not(.scripted):focus-within .toc-panel, .toc.open .toc-panel { opacity: 1; visibility: visible; transform: none; transition: opacity .16s, transform .16s; }
-.toc-h { margin: 0 0 8px 8px; }
-.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
-.toc a { box-sizing: border-box; display: block; padding: 8px; border-radius: var(--r-8); color: var(--fg); text-decoration: none; font-size: 14px; }
-.toc a:hover { background: var(--surface-2); }
-.toc a.on { background: var(--accent-soft); color: var(--accent); }
-.toc a.toc-top { display: flex; align-items: center; justify-content: center; margin-top: 8px; height: 34px; padding: 0 14px; border: 1px solid var(--line); color: var(--muted); font-weight: 500; }
-.toc a.toc-top:hover { border-color: var(--line-strong); color: var(--fg); }
-@media print { .toc { display: none; } }
-
 @media (prefers-reduced-motion: reduce) {
-  button, .chev, .term-card, .toc-panel, .toc.open .toc-panel { transition: none; transform: none; }
+  button, .chev, .term-card { transition: none; transform: none; }
   button:active { transform: none; }
   .flash { animation: flash 1.6s step-end; }
 }
 
 /* the tabs fold at the same width the type floor rises */
+@media (max-width: 900px) {
+  .bar-brand { width: auto; }
+  .shell, .side-closed .shell { grid-template-columns: minmax(0, 1fr); }
+  .side, .side-closed .side { position: fixed; z-index: 45; top: 64px; bottom: 0; left: 0; display: flex; width: min(256px, 85vw); height: auto; visibility: hidden; transform: translateX(-100%); transition: transform .16s, visibility 0s .16s; box-shadow: 0 20px 48px rgb(0 0 0 / .4); }
+  .side-open .side { visibility: visible; transform: none; transition: transform .16s; }
+}
+@media (prefers-reduced-motion: reduce) { .side { transition: none !important; } }
+
 @media (max-width: 680px) {
-  body { line-height: 1.6; padding-bottom: 104px; }
+  body { line-height: 1.6; }
+  .bar-brand { padding: 0 8px 0 16px; }
+  .appbar { padding-right: 4px; }
+  .report-pick { padding: 0; background: none; border: 0; }
+  .report-pick-t { display: none; }
+  .wrap { padding: 24px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); }
+  .opening h1 { font-size: 28px; }
+  a.dest { flex-direction: column; align-items: flex-start; gap: 12px; }
   .brand-logo { height: 26px; }
   .summary { font-size: 17px; }
   .part-head h2 { font-size: 28px; }
@@ -405,17 +436,15 @@ button.toc-btn { width: 48px; height: 48px; padding: 0; border-radius: 50%; disp
   .chart svg text { font-size: 12px; }
   .term { text-underline-offset: 5px; }
   /* type floor: nothing under 13px, secondary text 14px */
-  .eyebrow, .flabel, th, .toc-h, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval { font-size: 13px; }
+  .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval { font-size: 13px; }
   .def, .sum-meta, .part-meta, .fsum, button.chip, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
-    footer, table, pre, details.nested > summary, .toc a, .report-issue, .grp-read, .auto-row .fix { font-size: 14px; }
+    footer, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
   .scope-line, .tl-name, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
   /* tap targets */
-  button:not(.brow), select, .toc a { min-height: 44px; }
+  button:not(.brow):not(.menu-btn), select { min-height: 44px; }
   .seg { min-height: 48px; }
   button.chip, button#f-toggle { height: 44px; }
   button.copy { min-height: 32px; height: 32px; top: 4px; left: 4px; right: auto; }
-  .toc { right: max(12px, env(safe-area-inset-right, 0px)); bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
-  button.toc-btn { width: 44px; height: 44px; }
   details > summary { min-height: 44px; box-sizing: border-box; }
 }
 @media (max-width: 600px) {
@@ -450,48 +479,77 @@ button.toc-btn { width: 48px; height: 48px; padding: 0; border-radius: 50%; disp
 }
 </style>
 
-<main class="wrap">
-
-<header>
-  <div class="title-row">
-    <h1 class="brand-h"><a class="brand" href="#" aria-label="second look"><svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="1.1 0 322.8 63.7" role="img" aria-label="second look">
+<header class="appbar">
+  <div class="bar-brand">
+    <button type="button" class="menu-btn" id="menu-btn" aria-label="Report pages" aria-expanded="true" aria-controls="side"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+    <a class="brand" href="#overview" aria-label="second look"><svg class="brand-logo" xmlns="http://www.w3.org/2000/svg" viewBox="1.1 0 322.8 63.7" role="img" aria-label="second look">
   <title>second look</title>
   <path fill="var(--fg)" transform="translate(0 42.67)" d="M15.893333333333334 0.8Q10.56 0.8 7.386666666666667 -0.88Q4.213333333333334 -2.56 2.746666666666667 -5.12Q1.28 -7.680000000000001 1.0666666666666667 -10.24H9.280000000000001Q9.546666666666667 -8.853333333333333 10.426666666666666 -7.706666666666667Q11.306666666666667 -6.5600000000000005 12.773333333333333 -5.92Q14.24 -5.28 16.32 -5.28Q18.880000000000003 -5.28 20.0 -6.16Q21.12 -7.04 21.12 -8.426666666666668Q21.12 -9.706666666666667 20.080000000000002 -10.586666666666666Q19.040000000000003 -11.466666666666667 16.693333333333335 -12.213333333333335L12.853333333333333 -13.493333333333334Q10.08 -14.453333333333335 7.733333333333333 -15.600000000000001Q5.386666666666667 -16.746666666666666 3.9733333333333336 -18.560000000000002Q2.56 -20.373333333333335 2.56 -23.253333333333334Q2.56 -27.520000000000003 5.8133333333333335 -30.160000000000004Q9.066666666666666 -32.800000000000004 15.040000000000001 -32.800000000000004Q19.360000000000003 -32.800000000000004 22.10666666666667 -31.46666666666667Q24.853333333333335 -30.133333333333336 26.240000000000002 -27.92Q27.62666666666667 -25.706666666666667 27.840000000000003 -23.040000000000003H19.94666666666667Q19.68 -24.96 18.346666666666668 -26.0Q17.013333333333335 -27.040000000000003 14.72 -27.040000000000003Q12.64 -27.040000000000003 11.600000000000001 -26.240000000000002Q10.56 -25.44 10.56 -24.053333333333335Q10.56 -22.666666666666668 11.68 -21.76Q12.8 -20.853333333333335 15.093333333333334 -20.10666666666667L18.933333333333334 -18.880000000000003Q21.706666666666667 -18.026666666666667 24.026666666666667 -16.880000000000003Q26.346666666666668 -15.733333333333334 27.733333333333334 -13.893333333333334Q29.12 -12.053333333333335 29.12 -9.120000000000001Q29.12 -4.640000000000001 25.733333333333334 -1.9200000000000004Q22.346666666666668 0.8 15.893333333333334 0.8Z M46.13333333333334 0.8Q38.56 0.8 34.586666666666666 -3.733333333333334Q30.613333333333333 -8.266666666666667 30.613333333333333 -16.053333333333335Q30.613333333333333 -21.28 32.4 -25.013333333333335Q34.18666666666667 -28.74666666666667 37.626666666666665 -30.773333333333337Q41.06666666666667 -32.800000000000004 46.02666666666667 -32.800000000000004Q53.17333333333333 -32.800000000000004 56.986666666666665 -28.480000000000004Q60.8 -24.16 60.8 -15.786666666666667V-13.973333333333334H39.04Q39.30666666666667 -9.92 41.14666666666667 -7.6Q42.986666666666665 -5.28 46.13333333333334 -5.28Q48.64 -5.28 50.160000000000004 -6.773333333333333Q51.68000000000001 -8.266666666666667 52.160000000000004 -10.24H60.373333333333335Q59.89333333333333 -7.3066666666666675 58.24 -4.800000000000001Q56.58666666666667 -2.2933333333333334 53.60000000000001 -0.7466666666666667Q50.61333333333334 0.8 46.13333333333334 0.8ZM39.04 -19.413333333333334H52.373333333333335Q52.160000000000004 -23.040000000000003 50.56 -25.040000000000003Q48.96 -27.040000000000003 45.973333333333336 -27.040000000000003Q43.04 -27.040000000000003 41.25333333333333 -25.14666666666667Q39.46666666666667 -23.253333333333334 39.04 -19.413333333333334Z M77.81333333333333 0.8Q70.4 0.8 66.50666666666667 -3.733333333333334Q62.61333333333334 -8.266666666666667 62.61333333333334 -16.0Q62.61333333333334 -24.16 66.74666666666667 -28.480000000000004Q70.88000000000001 -32.800000000000004 77.92 -32.800000000000004Q84.26666666666668 -32.800000000000004 87.89333333333335 -29.440000000000005Q91.52000000000001 -26.080000000000002 92.21333333333334 -20.26666666666667H83.68Q83.30666666666667 -23.413333333333334 81.81333333333333 -25.06666666666667Q80.32000000000001 -26.720000000000002 77.97333333333334 -26.720000000000002Q74.88000000000001 -26.720000000000002 73.22666666666667 -23.94666666666667Q71.57333333333334 -21.173333333333336 71.57333333333334 -16.0Q71.57333333333334 -10.826666666666668 73.2 -8.053333333333335Q74.82666666666667 -5.28 77.92 -5.28Q80.32000000000001 -5.28 81.81333333333333 -6.960000000000001Q83.30666666666667 -8.64 83.68 -11.733333333333334H92.21333333333334Q91.46666666666667 -6.026666666666667 87.81333333333333 -2.6133333333333337Q84.16000000000001 0.8 77.81333333333333 0.8Z M109.86666666666667 0.8Q101.92 0.8 98.0 -3.7600000000000002Q94.08 -8.32 94.08 -16.0Q94.08 -23.680000000000003 98.0 -28.240000000000002Q101.92 -32.800000000000004 109.86666666666667 -32.800000000000004Q117.81333333333333 -32.800000000000004 121.73333333333333 -28.240000000000002Q125.65333333333334 -23.680000000000003 125.65333333333334 -16.0Q125.65333333333334 -8.32 121.73333333333333 -3.7600000000000002Q117.81333333333333 0.8 109.86666666666667 0.8ZM109.86666666666667 -4.96Q113.38666666666667 -4.96 115.03999999999999 -7.733333333333334Q116.69333333333333 -10.506666666666668 116.69333333333333 -16.053333333333335Q116.69333333333333 -21.546666666666667 115.03999999999999 -24.293333333333337Q113.38666666666667 -27.040000000000003 109.86666666666667 -27.040000000000003Q106.34666666666666 -27.040000000000003 104.69333333333333 -24.293333333333337Q103.03999999999999 -21.546666666666667 103.03999999999999 -16.053333333333335Q103.03999999999999 -10.506666666666668 104.69333333333333 -7.733333333333334Q106.34666666666666 -4.96 109.86666666666667 -4.96Z M129.81333333333333 0.0V-32.0H137.81333333333333V-27.200000000000003H139.09333333333333Q140.05333333333334 -29.6 142.05333333333334 -31.200000000000003Q144.05333333333334 -32.800000000000004 147.9466666666667 -32.800000000000004Q153.28 -32.800000000000004 155.94666666666666 -29.440000000000005Q158.61333333333334 -26.080000000000002 158.61333333333334 -20.32V0.0H149.97333333333336V-18.880000000000003Q149.97333333333336 -22.186666666666667 148.8 -23.973333333333336Q147.62666666666667 -25.76 144.96 -25.76Q141.86666666666667 -25.76 140.16000000000003 -23.333333333333336Q138.45333333333335 -20.906666666666666 138.45333333333335 -17.28V0.0Z M175.14666666666668 0.64Q170.77333333333334 0.64 167.94666666666666 -1.52Q165.12 -3.68 163.73333333333335 -7.466666666666667Q162.34666666666666 -11.253333333333334 162.34666666666666 -16.053333333333335Q162.34666666666666 -21.013333333333335 163.76 -24.74666666666667Q165.17333333333335 -28.48 168.02666666666667 -30.560000000000002Q170.88 -32.64 175.14666666666668 -32.64Q178.29333333333332 -32.64 180.29333333333332 -31.520000000000003Q182.29333333333332 -30.400000000000002 183.46666666666667 -28.48H184.74666666666667V-42.66666666666667H193.38666666666666V0.0H185.38666666666666V-4.16H184.10666666666665Q182.98666666666668 -2.1333333333333333 180.85333333333335 -0.7466666666666666Q178.72 0.64 175.14666666666668 0.64ZM177.6 -5.44Q180.85333333333332 -5.44 182.8 -8.293333333333333Q184.74666666666667 -11.146666666666667 184.74666666666667 -16.0Q184.74666666666667 -20.906666666666666 182.8 -23.733333333333334Q180.85333333333332 -26.560000000000002 177.6 -26.560000000000002Q174.66666666666666 -26.560000000000002 172.98666666666668 -23.92Q171.30666666666667 -21.28 171.30666666666667 -16.0Q171.30666666666667 -10.72 172.98666666666668 -8.08Q174.66666666666666 -5.44 177.6 -5.44Z M213.49333333333334 0.0Q212.0 -1.7066666666666668 211.38666666666666 -3.866666666666667Q210.77333333333334 -6.026666666666667 210.77333333333334 -9.546666666666667V-42.66666666666667H219.41333333333333V-10.453333333333333Q219.41333333333333 -6.4 220.32 -4.133333333333334Q221.22666666666666 -1.8666666666666667 222.72 -0.32V0.0Z M239.68 0.8Q231.73333333333335 0.8 227.81333333333333 -3.7600000000000002Q223.89333333333335 -8.32 223.89333333333335 -16.0Q223.89333333333335 -23.680000000000003 227.81333333333333 -28.240000000000002Q231.73333333333335 -32.800000000000004 239.68 -32.800000000000004Q247.62666666666667 -32.800000000000004 251.54666666666668 -28.240000000000002Q255.4666666666667 -23.680000000000003 255.4666666666667 -16.0Q255.4666666666667 -8.32 251.54666666666668 -3.7600000000000002Q247.62666666666667 0.8 239.68 0.8ZM239.68 -4.96Q243.20000000000002 -4.96 244.85333333333335 -7.733333333333334Q246.5066666666667 -10.506666666666668 246.5066666666667 -16.053333333333335Q246.5066666666667 -21.546666666666667 244.85333333333335 -24.293333333333337Q243.20000000000002 -27.040000000000003 239.68 -27.040000000000003Q236.16000000000003 -27.040000000000003 234.5066666666667 -24.293333333333337Q232.85333333333335 -21.546666666666667 232.85333333333335 -16.053333333333335Q232.85333333333335 -10.506666666666668 234.5066666666667 -7.733333333333334Q236.16000000000003 -4.96 239.68 -4.96Z M273.28000000000003 0.8Q265.3333333333333 0.8 261.4133333333333 -3.7600000000000002Q257.49333333333334 -8.32 257.49333333333334 -16.0Q257.49333333333334 -23.680000000000003 261.4133333333333 -28.240000000000002Q265.3333333333333 -32.800000000000004 273.28000000000003 -32.800000000000004Q281.2266666666667 -32.800000000000004 285.14666666666665 -28.240000000000002Q289.06666666666666 -23.680000000000003 289.06666666666666 -16.0Q289.06666666666666 -8.32 285.14666666666665 -3.7600000000000002Q281.2266666666667 0.8 273.28000000000003 0.8ZM273.28000000000003 -4.96Q276.8 -4.96 278.4533333333334 -7.733333333333334Q280.1066666666667 -10.506666666666668 280.1066666666667 -16.053333333333335Q280.1066666666667 -21.546666666666667 278.4533333333334 -24.293333333333337Q276.8 -27.040000000000003 273.28000000000003 -27.040000000000003Q269.76 -27.040000000000003 268.1066666666667 -24.293333333333337Q266.4533333333333 -21.546666666666667 266.4533333333333 -16.053333333333335Q266.4533333333333 -10.506666666666668 268.1066666666667 -7.733333333333334Q269.76 -4.96 273.28000000000003 -4.96Z M293.2266666666667 0.0V-42.66666666666667H301.8666666666667V-19.733333333333334H304.4266666666667L313.3866666666667 -32.0H322.56000000000006V-31.680000000000003L311.6266666666667 -17.066666666666666L323.84000000000003 -0.32V0.0H313.76000000000005L304.4266666666667 -13.333333333333334H301.8666666666667V0.0Z"/>
   <rect x="206.9" y="50.7" width="116.9" height="4.5" fill="var(--accent-fill)"/>
   <rect x="206.9" y="58.2" width="116.9" height="4.5" fill="var(--accent-fill)"/>
-</svg></a></h1>
+</svg></a>
   </div>
-  <span class="report-date">Oct 25, 2026</span>
+  <div class="bar-actions">
+    <p class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25, 2026</span></p>
+    <a class="feedback" id="report-issue" href="https://github.com/txz8096/second-look/issues/new" target="_blank" rel="noopener" title="Report an issue on GitHub. Leave your prompts out of it.">Feedback</a>
+  </div>
 </header>
 
-<div class="lead">
-  <p class="summary">Over the past year, you’ve gotten better at explaining what you want, and the AI misreads you less. Lately the Streak redesign pulled the other way: you’ve been checking prototypes less and starting over more often.</p>
+<div class="shell">
+<aside class="side" id="side">
+  <nav class="side-nav" aria-label="Report pages">
+    <a href="#overview" data-page="overview">Overview</a>
+    <a href="#part-2" data-page="part-2">Prompts &amp; setup<span class="nav-count" id="count-fixes">5</span></a>
+    <a href="#part-3" data-page="part-3">Skills<span class="nav-count" id="count-skills">5</span></a>
+    <a href="#part-1" data-page="part-1">Habits &amp; usage</a>
+  </nav>
+  <p class="side-note">Sample data. Habits are estimated from session wording.</p>
+</aside>
+
+<main class="wrap" id="main" tabindex="-1">
+
+<!-- OVERVIEW (#overview) -->
+<div class="page" id="overview">
+  <div class="opening">
+    <h1>Your latest review</h1>
+    <p class="summary">Over the past year, you’ve gotten better at explaining what you want, and the AI misreads you less. Lately the Streak redesign pulled the other way: you’ve been checking prototypes less and starting over more often.</p>
+  </div>
+
+<section id="last-cycle" data-needs-prior aria-labelledby="last-cycle-h">
+  <h3 id="last-cycle-h">Did the fixes from your last review work?</h3>
+  <div class="last-groups">
+    <div class="last-group">
+      <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Keep doing these</h4>
+      <details class="last-fix" open><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Confirm the plan before editing</span><span class="fix-result">Too soon to tell</span></span></summary>
+        <p>You’re correcting the AI about as often as before, at 1.2 per 10 messages. The fix is only 2 weeks old.</p></details>
+      <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Send research comparisons to a <span class="term" tabindex="0" aria-describedby="def-helper-last">helper agent<span class="term-card" role="tooltip" id="def-helper-last">A helper agent works on the side and brings back only the result, so your main session stays short.</span></span></span><span class="fix-result">Use rose from 11% to 18%</span></span></summary>
+        <p>Sessions crowded with lookups stayed about the same.</p></details>
+    </div>
+    <div class="last-group">
+      <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Changed since your last review</h4>
+      <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Brief before big prototype tasks</span><span class="fix-result">Not tried yet, so it’s smaller now</span></span></summary>
+        <p>It’s only for longer prototype sessions now. It’s fix 2 in your plan.</p></details>
+    </div>
+  </div>
+</section>
+
+  <section class="explore" aria-labelledby="explore-h">
+    <h2 id="explore-h">Explore your report</h2>
+    <div class="dests">
+      <a class="dest" href="#part-2"><span class="dest-text"><span class="dest-t">Prompts &amp; setup</span><span class="dest-d">Five fixes for your rules, prototype starts, final checks, long sessions and model choice.</span></span><span class="dest-go">View fixes<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
+      <a class="dest" href="#part-3"><span class="dest-text"><span class="dest-t">Skills</span><span class="dest-d">Three of your seven skills give wrong information today.</span></span><span class="dest-go">Review skills<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
+      <a class="dest" href="#part-1"><span class="dest-text"><span class="dest-t">Habits &amp; usage</span><span class="dest-d">How you brief, check, refine and use your tools over the last 12 months.</span></span><span class="dest-go">View trends<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
+    </div>
+  </section>
 </div>
 
 <!-- PROMPTS AND SETUP (#part-2) -->
-<div class="part" id="part-2">
+<div class="part page" id="part-2">
   <div class="part-head">
     <h2>Improve your prompts and setup</h2>
     <p class="headline">Vague prototype starts take the most time. Syncing your rules is the quickest fix, so it comes first. Five fixes below, all in <a href="#plan" data-jump="plan">your plan until Nov 8</a>.</p>
   </div>
 
-  <section id="last-cycle" data-needs-prior aria-labelledby="last-cycle-h">
-    <h3 id="last-cycle-h">Did the fixes from your last review work?</h3>
-    <div class="last-groups">
-      <div class="last-group">
-        <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Keep doing these</h4>
-        <details class="last-fix" open><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Confirm the plan before editing</span><span class="fix-result">Too soon to tell</span></span></summary>
-          <p>You’re correcting the AI about as often as before, at 1.2 per 10 messages. The fix is only 2 weeks old.</p></details>
-        <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Send research comparisons to a <span class="term" tabindex="0" aria-describedby="def-helper-last">helper agent<span class="term-card" role="tooltip" id="def-helper-last">A helper agent works on the side and brings back only the result, so your main session stays short.</span></span></span><span class="fix-result">Use rose from 11% to 18%</span></span></summary>
-          <p>Sessions crowded with lookups stayed about the same.</p></details>
-      </div>
-      <div class="last-group">
-        <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Changed since your last review</h4>
-        <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Brief before big prototype tasks</span><span class="fix-result">Not tried yet, so it’s smaller now</span></span></summary>
-          <p>It’s only for longer prototype sessions now. It’s fix 2 in your plan.</p></details>
-      </div>
-    </div>
-  </section>
 
   <article id="p-rules" class="icard">
     <div class="ic-head"><span class="rank">1</span><h3>You retype the same rules across your tools</h3>
@@ -625,7 +683,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
 </div>
 
 <!-- SKILLS (#part-3) -->
-<div class="part" id="part-3">
+<div class="part page" id="part-3">
   <div class="part-head">
     <h2>Keep your skills current</h2>
     <p class="headline">Three of your seven <span class="term" tabindex="0" aria-describedby="def-skill-part3">skills<span class="term-card" role="tooltip" id="def-skill-part3">A skill is a saved set of steps the AI follows the same way each time.</span></span> give wrong information today.</p>
@@ -660,7 +718,7 @@ Then tell me in plain words what changed before you save it.</pre></div>
   <section>
     <div class="sec-head"><h3>Worth a look</h3></div>
     <div class="tbl"><table>
-      <thead><tr><th>Issue</th><th>Why it matters</th><th>How sure</th><th>Next step</th></tr></thead>
+      <thead><tr><th>Issue</th><th>Why it matters</th><th>How&nbsp;sure</th><th>Next step</th></tr></thead>
       <tbody>
         <tr><td>Your team details are copied into beta-feedback-synth, ui-review and metrics-check</td><td>The copies already disagree</td><td><span class="conf strong">Sure</span></td><td>In claude.ai, paste: “Move my team details out of those three skills and into one shared file.”</td></tr>
         <tr><td>Your skills are set up for Claude, with none for Codex. Cursor’s folder couldn’t be read.</td><td>Codex and Cursor can run the same files</td><td><span class="conf sugg">Likely</span></td><td>In Claude Code, paste: “Copy my skills to Codex, then check my Cursor skills folder.”</td></tr>
@@ -702,7 +760,7 @@ Then tell me in plain words what changed before you save it.</pre></div>
 </div>
 
 <!-- HABITS (#part-1), last -->
-<div class="part" id="part-1">
+<div class="part page" id="part-1">
   <div class="part-head">
     <h2>How your habits are changing</h2>
     <p class="scope-line" id="scope-line"></p>
@@ -808,30 +866,11 @@ Then tell me in plain words what changed before you save it.</pre></div>
   </section>
 </div>
 
-<p class="report-issue" id="report-issue">Found a wrong number or a broken chart? <a href="https://github.com/txz8096/second-look/issues/new" target="_blank" rel="noopener">Report an issue on GitHub</a>. Leave your prompts out of it.</p>
-
-<footer><p>Sample data. A real report reads your Claude Code, Codex and Cursor logs and your claude.ai and ChatGPT exports, with secrets removed. Habits are read from wording, so treat them as estimates. Sources: Anthropic’s AI Fluency Index, prompting guide, Claude Code best practices and Agent Skills docs; the Claude Code changelog; Anthropic on plugin evals (Sep 2026), skill-creator evals (Mar 2026) and Claude Design (Jun 2026); Codex and Cursor skills docs.</p>
+<footer><p>A real report reads your Claude Code, Codex and Cursor logs and your claude.ai and ChatGPT exports, with secrets removed. Habits are read from wording, so treat them as estimates. Sources: Anthropic’s AI Fluency Index, prompting guide, Claude Code best practices and Agent Skills docs; the Claude Code changelog; Anthropic on plugin evals (Sep 2026), skill-creator evals (Mar 2026) and Claude Design (Jun 2026); Codex and Cursor skills docs.</p>
 </footer>
 
 </main>
-
-
-<nav class="toc" id="toc" aria-label="Sections">
-  <button type="button" class="toc-btn" id="toc-btn" aria-expanded="false" aria-controls="toc-panel" aria-label="Table of contents">
-    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r=".6" fill="currentColor"/><circle cx="4" cy="12" r=".6" fill="currentColor"/><circle cx="4" cy="18" r=".6" fill="currentColor"/></svg>
-  </button>
-  <div class="toc-panel" id="toc-panel">
-    <p class="toc-h">On this page</p>
-    <ol>
-      <li><a href="#part-2" data-target="part-2">Improve your prompts and setup</a></li>
-      <li><a href="#plan" data-target="plan">Your plan</a></li>
-      <li><a href="#part-3" data-target="part-3">Keep your skills current</a></li>
-      <li><a href="#part-1" data-target="part-1">How your habits are changing</a></li>
-      <li><a href="#report-issue" data-target="report-issue">Report an issue</a></li>
-    </ol>
-    <a href="#" class="toc-top" id="toc-top">Back to top</a>
-  </div>
-</nav>
+</div>
 <script>
 
 // Copy needs a script, so the buttons stay hidden without one
@@ -1212,11 +1251,13 @@ stackTables();
       if (panel) panel.classList.toggle("off", g.id !== id);
       if (tile) tile.setAttribute("aria-pressed", String(g.id === id));
     });
+    // the filters sit between the open group's summary and its charts
+    document.getElementById("grp-" + id)?.querySelector(".grp-sum")?.after(filtersEl);
   }
   groupsEl.addEventListener("click", e => { const t = e.target.closest("[data-g]"); if (t) { state.picked = t.dataset.g; showGroup(t.dataset.g); } });
 
   // charts drawn at build time: drop their filter controls, then redraw live
-  const trendsEl = document.getElementById("trends");
+  const trendsEl = document.getElementById("trends"), filtersEl = trendsEl.querySelector(".filters");
   if (trendsEl.hasAttribute("data-static")) {
     trendsEl.querySelectorAll("#f-range .chip, #f-source .chip, #f-cat option").forEach(n => n.remove());
     trendsEl.removeAttribute("data-static");
@@ -1500,6 +1541,8 @@ stackTables();
   }
 
   function render() {
+    // back out of the group while the groups redraw
+    groupsEl.before(filtersEl);
     renderScope();
     const i0 = WEEKS - state.range;
     rangeEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.n === state.range)));
@@ -1679,6 +1722,7 @@ document.addEventListener("focusin", e => { if (e.target.closest(".tbl")) e.targ
   document.querySelectorAll("a[data-jump]").forEach(a => a.addEventListener("click", e => {
     e.preventDefault();
     const el = document.getElementById(a.dataset.jump); if (!el) return;
+    goTo(a.dataset.jump, false);
     // a target inside a closed chart tab opens that tab first
     const panel = el.closest(".grp-panel.off");
     if (panel) document.querySelector(`[data-g="${panel.id.replace("grp-", "")}"]`)?.click();
@@ -1688,37 +1732,56 @@ document.addEventListener("focusin", e => { if (e.target.closest(".tbl")) e.targ
   }));
 })();
 
-// ---- floating table of contents ----
+// ---- one page at a time: the sidebar, the explore rows and every in-page link ----
+// Scripts off, every page stays on show, one after the other.
+function showPage(id) {
+  const page = document.getElementById(id) || document.getElementById("overview");
+  document.querySelectorAll(".page").forEach(p => p.classList.toggle("on", p === page));
+  document.querySelectorAll(".side-nav a").forEach(a => {
+    const on = a.dataset.page === page.id;
+    a.classList.toggle("on", on);
+    if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
+  });
+  document.body.dataset.page = page.id;
+}
+// a target can be a page or anything inside one. scroll false leaves the scrolling to the caller
+function goTo(id, scroll = true) {
+  const el = id && document.getElementById(id), page = el && el.closest(".page");
+  const changed = !page || !page.classList.contains("on");
+  showPage(page ? page.id : "overview");
+  document.body.classList.remove("side-open");
+  document.getElementById("menu-btn").setAttribute("aria-expanded", String(!matchMedia("(max-width: 900px)").matches));
+  if (scroll) {
+    if (el && el !== page) el.scrollIntoView({block: "start"}); else window.scrollTo(0, 0);
+  } else if (changed) window.scrollTo(0, 0);
+  if (id) try { history.pushState(null, "", "#" + id); } catch (e) { /* a sandboxed viewer can refuse the address change */ }
+  if (changed) document.getElementById("main").focus({preventScroll: true});
+}
 (function () {
-  const toc = document.getElementById("toc"), btn = document.getElementById("toc-btn"), links = [...toc.querySelectorAll("a[data-target]")];
-  toc.classList.add("scripted");
-  const setOpen = on => { toc.classList.toggle("open", on); btn.setAttribute("aria-expanded", String(on)); };
-  let closeTimer;
-  // hover opens it for a mouse only; a tap on a phone also sends hover events, which would open it under the finger
-  let hoverOpened = false;
-  toc.addEventListener("pointerenter", e => { if (e.pointerType !== "mouse") return; clearTimeout(closeTimer); if (!toc.classList.contains("open")) hoverOpened = true; setOpen(true); });
-  toc.addEventListener("pointerleave", e => { if (e.pointerType !== "mouse") return; hoverOpened = false; closeTimer = setTimeout(() => setOpen(false), 180); });
-  // a click right after hover opened it keeps it open instead of toggling it shut
-  btn.addEventListener("click", e => { e.stopPropagation(); setOpen(hoverOpened || !toc.classList.contains("open")); hoverOpened = false; });
-  toc.addEventListener("focusout", e => { if (!toc.contains(e.relatedTarget)) setOpen(false); });
-  document.addEventListener("click", e => { if (!toc.contains(e.target)) setOpen(false); });
-  document.addEventListener("keydown", e => { if (e.key === "Escape" && toc.classList.contains("open")) { setOpen(false); btn.focus(); } });
-  const reduce = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  links.forEach(a => a.addEventListener("click", e => {
-    e.preventDefault();
-    const el = document.getElementById(a.dataset.target); if (!el) return;
-    el.scrollIntoView({behavior: reduce() ? "auto" : "smooth", block: "start"});
-    setOpen(false);
-  }));
-  document.getElementById("toc-top").addEventListener("click", e => { e.preventDefault(); window.scrollTo({top: 0, behavior: reduce() ? "auto" : "smooth"}); setOpen(false); });
-  // highlight the section you're in
-  const spy = () => {
-    let cur = links[0];
-    if (innerHeight + scrollY >= document.documentElement.scrollHeight - 2) cur = links[links.length - 1];
-    else links.forEach(a => { const el = document.getElementById(a.dataset.target); if (el && el.getBoundingClientRect().top < window.innerHeight * 0.35) cur = a; });
-    links.forEach(a => a.classList.toggle("on", a === cur));
+  document.body.classList.add("paged");
+  const count = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n || ""; };
+  count("count-fixes", document.querySelectorAll("#part-2 article.icard").length);
+  count("count-skills", document.querySelectorAll("#fix-first tbody tr").length);
+  const narrow = () => matchMedia("(max-width: 900px)").matches, btn = document.getElementById("menu-btn"), side = document.getElementById("side");
+  btn.setAttribute("aria-expanded", String(!narrow()));
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    const open = narrow() ? document.body.classList.toggle("side-open") : !document.body.classList.toggle("side-closed");
+    btn.setAttribute("aria-expanded", String(open));
+  });
+  document.addEventListener("click", e => {
+    const a = e.target.closest('a[href^="#"]:not([data-jump])');
+    if (a) { e.preventDefault(); goTo(a.getAttribute("href").slice(1)); return; }
+    if (narrow() && document.body.classList.contains("side-open") && !side.contains(e.target)) { document.body.classList.remove("side-open"); btn.setAttribute("aria-expanded", "false"); }
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && document.body.classList.contains("side-open")) { document.body.classList.remove("side-open"); btn.setAttribute("aria-expanded", "false"); btn.focus(); } });
+  const fromAddress = () => {
+    const id = decodeURIComponent(location.hash.slice(1)), el = id && document.getElementById(id), page = el && el.closest(".page");
+    showPage(page ? page.id : "overview");
+    if (el && el !== page) el.scrollIntoView({block: "start"}); else window.scrollTo(0, 0);
   };
-  window.addEventListener("scroll", spy, {passive: true}); spy();
+  window.addEventListener("popstate", fromAddress);
+  fromAddress();
 })();
 
 // ---- habit terms: keep each definition card on screen; Escape closes it ----

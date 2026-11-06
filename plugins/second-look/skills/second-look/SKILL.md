@@ -16,7 +16,7 @@ A review runs in four steps, then the report:
 2. **Habit evidence.** What do their sessions show about briefing, correcting, checking,
    handing off and usage?
 3. **Repeat work.** Which requests keep coming back by hand, and what runs without them?
-4. **The report.** One page, built from the template, that ends in a plan they can try.
+4. **The report.** One file, built from the template, with an overview and three pages, including a plan they can try.
 
 ## Where you're running
 
@@ -376,7 +376,7 @@ P1 habit: give it a card in "Improve your prompts and setup" so its fix joins th
 
 ## 4. The report
 
-One HTML page, built from `report-template.html` and named "second look · <start> – <end>".
+One HTML file with four pages (Overview, Prompts & setup, Skills, Habits & usage), built from `report-template.html` and named "second look · <start> – <end>".
 Lead with the answer, then the evidence.
 
 **One comparison window.** Every habit number that shows a change compares the last 4 weeks with
@@ -483,8 +483,12 @@ words it differently ("misread you", "a real brief"). Skip the term when the sen
 defines it. Skip the summary and part headlines. In part 2's pattern cards, also wrap the first session,
 model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design system.
 
+**App bar and sidebar.** Set the review's date in `.report-date`. Keep the Feedback link (`#report-issue`, https://github.com/txz8096/second-look/issues/new) as it is. In the sidebar, the note at the bottom reads "Habits are estimated from session wording." with no "Sample data". The script counts the fixes and skills beside each page's name.
+
+**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then "Did the fixes from your last review work?" if there's an earlier review, then "Explore your report": keep its three rows and their links. Prompts & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
+
 **Improve your prompts and setup** (`#part-2`). A headline with the biggest finding that
-links to the plan. If a much quicker fix goes first, the headline says so. Then "Did the fixes from your last review work?" (`#last-cycle`), only when an
+links to the plan. If a much quicker fix goes first, the headline says so. "Did the fixes from your last review work?" (`#last-cycle`) sits on the Overview, only when an
 earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Changed since your last review" (Revise) or "Stopped" (Drop). Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result of five words or so with the number when there is one ("Use rose from 11% to 18%", "Too soon to tell"), and what changed, with its window, in the fold. Only the first fix starts open. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per prompting, context, memory or repeat-work pattern,
 biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the tools as
 plain text, including every tool its evidence names, and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
@@ -558,9 +562,6 @@ and "How these are measured" from `SCOPE` (see "Data scope").
   the fix as one line to paste, naming the tool ("Tell Claude Code: “Every Monday, …”"). Delete the block when there are no repeats, and on claude.ai.
 - **Activity since your last review** (with its dates; on a first review, "Activity, <dates>"): the
   usage-limit line, then the collapsed "By tool" and "Skills and commands", counted over the same dates.
-
-**Report an issue** (`#report-issue`). One line above the footer. Keep the template's line and
-link to https://github.com/txz8096/second-look/issues/new as they are.
 
 **Footer.** Method and sources in three sentences at most (the sources list lives here, not
 under tables), the profile (on claude.ai) and the Log entry (on claude.ai).

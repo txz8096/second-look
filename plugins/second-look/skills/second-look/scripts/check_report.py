@@ -10,8 +10,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_TEMPLATE = os.path.join(os.path.dirname(HERE), "report-template.html")
 
 FONT_LINK = "family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500"
-REQUIRED_IDS = ["part-1", "part-2", "part-3", "trends", "report-issue", "toc"]
-SECTION_ORDER = ["part-2", "part-3", "part-1", "report-issue"]
+REQUIRED_IDS = ["overview", "side", "part-1", "part-2", "part-3", "trends", "report-issue"]
+SECTION_ORDER = ["overview", "part-2", "part-3", "part-1"]
 REQUIRED_TEXT = [
     "Improve your prompts and setup",
     "Keep your skills current",
@@ -41,6 +41,7 @@ FORBIDDEN = {
     'class="last-list"': "fixes from the last review now sit in .last-group cards",
     'id="glance"': "the at-a-glance table was removed; the numbers live in the charts",
     'id="start-here"': "the Start here line was removed; the plan says where to start",
+    'id="toc"': "the floating contents menu was replaced by the sidebar",
     "Compare the fixes": "merged into the plan; each fix is its Try block plus one plan row",
     "review will check</span>": "the separate next-review fold was merged into the plan rows",
     'class="diff"': "skill fixes are prompts they can paste into their AI tool, not diffs",
@@ -52,7 +53,7 @@ FORBIDDEN = {
 SAMPLE = {
     "CUBE = sampleCube()": "the charts still use the template's sample data; replace sampleCube() with the collector's cube",
     "Streak redesign starts": "MILESTONES still holds the template's sample milestones; use the person's own, or []",
-    "Sample data. A real report": "the footer still says the page uses sample data",
+    "Sample data.": "the sidebar note still says the page uses sample data",
     "you’ve gotten better at explaining what you want": "the summary is still the template's sample text",
     "Check the job tracker and summarize what changed": "the automation list still holds the template's sample rows",
 }
@@ -245,10 +246,10 @@ def main():
     for t in REQUIRED_TEXT:
         if t not in html:
             problems.append(f'missing "{t}"')
-    # prompts, then skills, then habits last, then the report-an-issue line
+    # overview, then prompts, then skills, then habits last
     order = [html.find(f'id="{i}"') for i in SECTION_ORDER]
     if -1 not in order and order != sorted(order):
-        problems.append("parts out of order: prompts and setup, skills, habits, then report an issue")
+        problems.append("pages out of order: overview, prompts and setup, skills, then habits")
     markup = re.sub(r"<style>.*?</style>", "", html, flags=re.S)
     for needle, why in FORBIDDEN.items():
         if needle in markup:

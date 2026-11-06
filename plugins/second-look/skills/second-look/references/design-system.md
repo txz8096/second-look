@@ -17,7 +17,7 @@ append overrides at the end.
 | `--fg` | `#FAFAFA` | Text |
 | `--primary` / `--on-primary` | `#E5E5E5` / `#171717` | The firmest chip (Sure) |
 | `--muted` / `--faint` | `#A1A1A1` / `#8A8A8A` | Secondary text, labels |
-| `--term-quiet` | `#737373` | Dashed underline on chart titles, Hunch chip border |
+| `--term-quiet` | `#737373` | Dashed underline on chart titles, Hunch chip outline |
 | `--line` / `--line-strong` | white at 10% / 15% | Dividers, borders |
 | `--accent` | `#F2A7B8` (Proof Pink) | Links, highlights, chart series |
 | `--accent-soft` / `--accent-soft-2` | pink at 8% / 28% | Pink panels and their borders |
@@ -64,29 +64,26 @@ fully rounded chips.
 
 ## Page structure, in order
 
-1. Header: the second look logo as the page's `h1`, with the review's date on the right.
-2. Summary paragraph (20px), in plain words with no numbers.
-3. Improve your prompts and setup (`#part-2`): headline linking to the plan, "Did the
-   fixes from your last review work?" (`#last-cycle`, one card per decision, one folded row per fix; only after a review with logged fixes), pattern cards
+An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs (Nov 6, 2026). Scripts off, every page shows in turn and the links still work.
+
+1. App bar (64px, stays on screen): the sidebar toggle and logo on the left; "Latest report" with the review's date, and the Feedback link (`#report-issue`, to https://github.com/txz8096/second-look/issues/new) on the right. A report holds one review, so there's no menu of earlier ones.
+2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Prompts & setup, Skills, Habits & usage, with the script's counts of fixes and of skills to fix, and a note at the bottom saying habits are estimated from wording.
+3. Overview (`#overview`): "Your latest review" as the `h1`, the summary paragraph (20px, plain words, no numbers), "Did the
+   fixes from your last review work?" (`#last-cycle`, one card per decision, one folded row per fix; only after a review with logged fixes), then "Explore your report", one row per page.
+4. Improve your prompts and setup (`#part-2`): headline linking to the plan, pattern cards
    (`article.icard`), then "Your plan until <date>" (`#plan`): one numbered row per fix with
    its name, time, what it saves, and what the next review checks, one line each from 681px with
    each value under its header, then a line linking the other skill fixes and the repeats to automate.
-4. Keep your skills current (`#part-3`): headline, scan line, "Skills to fix" (`#fix-first`, with paste-to-your-AI blocks in `.fix-block`), "Worth a look",
+5. Keep your skills current (`#part-3`): headline, scan line, "Skills to fix" (`#fix-first`, with paste-to-your-AI blocks in `.fix-block`), "Worth a look",
    collapsed "Skills you wrote", collapsed installed skills.
-5. How your habits are changing (`#part-1`, last despite its id): data-scope line, `#trends`: filters,
-   then five question tiles; the open group shows its summary and charts (see "Chart groups"),
+6. How your habits are changing (`#part-1`, last despite its id): data-scope line, `#trends`: five question
+   tiles; the open group shows its summary, the filters and its charts (see "Chart groups"),
    then "Activity since your last review". `scripts/prerender.py` saves the drawn charts, bars and tables into
    the file and marks the section `data-static`, which hides the filters and shows a note.
    The script clears the mark, sets `data-live` and redraws with live filters. With neither
    mark (scripts off, nothing prerendered), the section shows one line, "Open this file in a
    browser to see the charts", and hides the empty filters, tabs and tables.
-6. Report an issue (`#report-issue`): one muted line above the footer, linking to
-   https://github.com/txz8096/second-look/issues/new. Keep it as the template has it.
-7. Footer: method and sources.
-8. Floating contents menu (`#toc`) bottom right, listing the three parts and
-   Report an issue. It opens on hover and keyboard focus with CSS alone, so it works in
-   viewers that block scripts; the script adds click, Escape and the current-section highlight.
-   It also lists the plan.
+7. Footer on every page but the Overview: method and sources.
 
 ## Chart groups
 
@@ -196,7 +193,7 @@ Chart titles carry their own cards, in `METRICS` in the template script.
   one-line meaning on hover or tap.
 - State pills: Stale · Review · Minor · Current · Behind · Broken · Duplicate · Not checked ·
   High · Medium · Low
-- Chip weights: Sure is filled, Likely is neutral, Hunch is dashed. Stale, Broken and High are red outlines.
+- Chip weights: Sure is filled, Likely is neutral, Hunch is outlined. Stale, Broken and High are red outlines.
 - Chip size: 18px tall, 12px text, with the text box trimmed to the capitals so they sit centred.
 
 ## Removed on purpose (don't bring back)

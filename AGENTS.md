@@ -12,7 +12,7 @@ The product is the source of truth: `SKILL.md`, the scripts and `report-template
 |---|---|---|
 | Skill | `plugins/second-look/skills/second-look/SKILL.md`, `references/design-system.md`, `scripts/`, `install.sh` | The `description` in the `SKILL.md` frontmatter is also marketing copy |
 | Report template | `plugins/second-look/skills/second-look/report-template.html` | Published as `/sample-report.html`. `public/sample-report.html` is a build copy, so never edit it |
-| Landing page | `src/components/`, metadata in `src/app/layout.tsx` | `SampleReport.tsx` is a hand-built copy of the report and `Faq.tsx` a hand-kept copy of the README FAQ. Neither updates itself |
+| Landing page | `src/components/`, metadata in `src/app/layout.tsx` | `SampleReport.tsx` embeds `/sample-report.html`, so the report updates it. `Faq.tsx` is a hand-kept copy of the README FAQ and doesn't update itself |
 | GitHub README | `README.md` | Repeats the tool table, schedule table, install steps, privacy and FAQ |
 | GitHub About box | Outside the repo. Read with `gh repo view --json description,homepageUrl`, change with `gh repo edit` | Ask before changing it, because it's public |
 | Plugin listings | `plugins/second-look/.claude-plugin/plugin.json`, `.claude-plugin/marketplace.json` | |

@@ -61,35 +61,3 @@ export function SecondaryButton({ className = "", ...props }: ComponentProps<"a"
     />
   );
 }
-
-export type PillVariant = "strong" | "neutral" | "dashed" | "red" | "outline";
-
-// The report's chips: .conf and .pill in report-template.html.
-const pillStyles: Record<PillVariant, string> = {
-  strong: "border-transparent bg-report-primary text-report-on-primary",
-  neutral: "border-transparent bg-report-surface-2 text-report-fg",
-  dashed: "border-dashed border-report-quiet text-report-muted",
-  red: "border-report-red text-report-red",
-  outline: "border-report-line-strong text-report-fg",
-};
-
-export function Pill({
-  variant,
-  title,
-  className = "",
-  children,
-}: {
-  variant: PillVariant;
-  title?: string;
-  className?: string;
-  children: ReactNode;
-}) {
-  return (
-    <span
-      title={title}
-      className={`inline-block h-[18px] shrink-0 rounded-full border px-2 py-1 font-body text-xs leading-[7px] font-medium whitespace-nowrap [text-box:trim-both_cap_alphabetic] ${pillStyles[variant]} ${className}`}
-    >
-      {children}
-    </span>
-  );
-}

@@ -13,24 +13,9 @@
   --color-dark: #0d0f14;
   --color-dark-text-2: #c4c6cb;
   --color-on-accent: #0d0f14;
-  --color-pill: #2c2f36;
   --color-code: #e5e6e8;
   --color-warning: #e59b37;
 
-  /* The report's own palette, from report-template.html. Only the landing page's sample report uses these. */
-  --color-report-bg: #0a0a0a;
-  --color-report-surface: #171717;
-  --color-report-surface-2: #262626;
-  --color-report-fg: #fafafa;
-  --color-report-muted: #a1a1a1;
-  --color-report-quiet: #737373;
-  --color-report-line: rgb(255 255 255 / 0.1);
-  --color-report-line-strong: rgb(255 255 255 / 0.15);
-  --color-report-primary: #e5e5e5;
-  --color-report-on-primary: #171717;
-  --color-report-red: #ff6568;
-  --color-report-soft: rgb(242 167 184 / 0.08);
-  --color-report-soft-2: rgb(242 167 184 / 0.28);
 
   --font-display: var(--font-familjen), system-ui, sans-serif;
   --font-body: var(--font-familjen), system-ui, sans-serif;
