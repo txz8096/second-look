@@ -8,7 +8,9 @@ exactly as they are. Without the viewport line, phones render the page at deskto
 The `<style>` block is one layer, written in page order. Change a rule where it lives; don't
 append overrides at the end.
 
-## Tokens (dark only)
+## Tokens
+
+The values below are the dark theme, which is the default. The app bar's switch sets `data-mode="light"` on `<html>`, and `:root[data-mode="light"]` in the template overrides the tokens with shadcn's light neutrals and a darker pink for text (`--accent` `#B02A55`, `--series` `#D1416B`). `--accent-fill` stays Proof Pink in both, for the logo's underline. Components use tokens only, so a new color goes in both blocks. The choice is saved in `localStorage` as `second-look-theme`.
 
 | Token | Value | Use |
 |---|---|---|
@@ -24,7 +26,7 @@ append overrides at the end.
 | `--on-accent` | `#0A0A0A` | Text on pink fills |
 | `--p1` | `#FF6568` | A broken or stale skill, high risk. States only |
 
-The neutrals are shadcn/ui's dark theme, written as plain CSS: the report stays one file, so it uses the look and none of the React components. There is no light theme. The one status colour (`--p1`) marks states, such as a broken skill. Never use it to grade the user's habits:
+The neutrals are shadcn/ui's dark theme, written as plain CSS: the report stays one file, so it uses the look and none of the React components. The one status colour (`--p1`) marks states, such as a broken skill. Never use it to grade the user's habits:
 changes in their numbers are plain text, and "best" cells are pink, never green or red.
 Pink marks the things to act on: "Try this" panels, the plan, the fix-review group headers, the chosen tile, chart lines and counts.
 
@@ -66,11 +68,11 @@ fully rounded chips.
 
 An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs (Nov 6, 2026). Scripts off, every page shows in turn and the links still work.
 
-1. App bar (64px, stays on screen): the sidebar toggle and logo on the left; the report menu (`#report-menu`, a `details` that works with scripts off) and the Feedback link (`#report-issue`, to https://github.com/txz8096/second-look/issues/new) on the right. The menu shows "Latest report" or "Earlier report" with this report's date, and opens a scrolling list of every saved report, newest first, with the latest marked. `scripts/report_menu.py` writes the list between the `report-menu` comments, using relative links, and switching reports stays on the same page. With one report, or on claude.ai, it's a plain label. Phones show only the date, and at 400px and narrower the year drops too, so the bar fits. The sample report's earlier dates are plain text, since it has no other reports to open.
-2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Prompts & setup, Skills, Habits & usage, with the script's counts of fixes and of skills to fix. The sample report alone adds a note at the bottom saying it's sample data; a real report has none.
+1. App bar (64px, stays on screen): the sidebar toggle and logo on the left; the report menu (`#report-menu`, a `details` that works with scripts off) the Feedback link (`#report-issue`, to https://github.com/txz8096/second-look/issues/new) and the light and dark switch (`#theme-btn`, hidden with scripts off) on the right. The menu shows "Latest report" or "Earlier report" with this report's date, and opens a scrolling list of every saved report, newest first, with the latest marked. `scripts/report_menu.py` writes the list between the `report-menu` comments, using relative links, and switching reports stays on the same page. With one report, or on claude.ai, it's a plain label. Phones show only the date, and at 400px and narrower the year drops too, so the bar fits. The sample report's earlier dates are plain text, since it has no other reports to open.
+2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Briefs & setup, Skills, Habits & usage, with the script's counts of fixes and of skills to fix. At the bottom, on every page, a note (`#side-about`) always shows the method, and a folded "Guidance and references" list sits under it. The template's note also says it's a sample report. Both print after the report.
 3. Overview (`#overview`): "Your latest review" as the `h1`, the summary paragraph (20px, plain words, no numbers), "Did the
    fixes from your last review work?" (`#last-cycle`, one card per decision, one folded row per fix; only after a review with logged fixes), then "Explore your report", one row per page.
-4. Improve your prompts and setup (`#part-2`): headline linking to the plan, pattern cards
+4. How you brief AI and set up your tools (`#part-2`): headline linking to the plan, pattern cards
    (`article.icard`), then "Your plan until <date>" (`#plan`): one numbered row per fix with
    its name, time, what it saves, and what the next review checks, one line each from 681px with
    each value under its header, then a line linking the other skill fixes and the repeats to automate.
@@ -83,14 +85,13 @@ An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs
    The script clears the mark, sets `data-live` and redraws with live filters. With neither
    mark (scripts off, nothing prerendered), the section shows one line, "Open this file in a
    browser to see the charts", and hides the empty filters, tabs and tables.
-7. Footer on every page but the Overview: method and sources.
 
 ## Chart groups
 
 Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1, 2026.
 
 - Charts sit in five groups, one per question: "Am I explaining what I want?", "Am I checking
-  the work?", "Am I handing off big searches?", "Am I automating repeat work?", "Where does my
+  the work?", "Am I handing off the right work?", "Am I automating repeat work?", "Where does my
   usage go?". One group shows at a time; the tabs switch it. The tabs are boxed cards, five
   across from 681px: the question only, with a pink border and tint on the open one.
 - A group whose charts have no data under the current filters is hidden (tab and panel), and
@@ -105,10 +106,12 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   direction the line moved ("Up: you typed more rules by hand."). It says what the measure did,
   never why. With the time filter on 4 weeks the earlier point is off the chart, so it reads "Up
   from the 4 weeks before: …". A flat chart has none. A chart with no line has only its reason.
-- Time stays visible. Tool and Work sit behind one Filter button, which names any filter that's on. The first question card with data opens first.
+- Time, Tool and Work are always on show: Time and the session count on the first row, Tool and Work on the next. The first question card with data opens first.
 - The time filter opens on the range the data covers: 3 months, 6 months or 12 months.
-- A group with an odd number of charts draws its first one full width (a wider viewBox, so the text
-  stays the same size), so the grid has no hole, from 744px, where two columns fit. Plots in a row
+- Every chart fills its card: the script sets the viewBox from the card's width and redraws when the page's width changes, so text and height stay the same.
+- Each group opens by answering its question in plain words (`say` and `opens` in `GROUPS`), then names at most two changes from `READS` and says "The rest held steady." when that's true. It compares the last 4 weeks with the 4 before, and says "lately" for that. Metric names stay on the charts.
+- The handing-off group pairs its one line chart with "What you handed off": static bars (`.brow`, no filter) sharing the card's rows.
+- Any other group with an odd number of charts draws its first one full width, so the grid has no hole, from 744px, where two columns fit. Plots in a row
   share a top and a baseline; a single column keeps no blank rows for that. Chart markers always read "was" and "now".
 - Each line is a 4-week running value (`ROLL` in the script). Its last point is the "last 4
   weeks" number and the point 4 weeks earlier is the "4 weeks before" number; both are marked
@@ -202,7 +205,7 @@ Numerals before part titles · goals box and "Personalize goals" · slot labels 
 Practice, Explore) · "How sure" rows in cards · "How we know this" · "How we'll know it
 worked" · Expand all / Collapse all · "sample data" chips · bullet dots in chips · divider
 lines between cards inside a part (dividers only between major sections) · "Review N" line
-above the summary · the at-a-glance table and the "Start here" line (the summary and plan do that job) · thesis and "Three moves" summary · light theme · the "More metrics"
+above the summary · the at-a-glance table and the "Start here" line (the summary and plan do that job) · thesis and "Three moves" summary · the "More metrics"
 dropdown · the value and change line in chart headers · "Compare the fixes" and the separate
 "What the <date> review will check" fold (both live in the plan rows) · tool
 pills · uppercase labels · the "What your charts say" label · group-tile

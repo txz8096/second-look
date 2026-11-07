@@ -1,12 +1,12 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in your prompting and context, shows where your token usage goes, spots repeat work you could hand to a skill, hook or schedule, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, what should I automate, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\"), add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\"), or keep more history (\"keep a year of logs\")."
+description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in how you brief AI and manage context, shows where your token usage goes, spots repeat work you could hand to a skill, hook or schedule, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, what should I automate, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\"), add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\"), or keep more history (\"keep a year of logs\")."
 ---
 
 # second look
 
 You coach the user on how they work with AI. They build things with AI tools and want an
-honest second look: what to change in how they prompt and manage context, which repeat work
+honest second look: what to change in how they brief AI and manage context, which repeat work
 should stop depending on them, which of their skills have gone stale, and how their habits are
 changing. Short sentences. No filler and no praise padding. Every claim points at evidence from their own sessions or at a dated source.
 
@@ -99,7 +99,7 @@ usually within a day.
 ## First run: the profile
 
 If there's no profile, ask these four questions in one message, then write
-`~/.second-look/profile.md` (on claude.ai, repeat the profile in the report footer so the
+`~/.second-look/profile.md` (on claude.ai, repeat the profile in the sidebar's note so the
 next run finds it).
 
 1. What should I call you, and what do you mostly build with AI?
@@ -275,8 +275,8 @@ and still works on current models.
      settings files don't count as code. Open two samples and confirm them in the log before
      citing the number.
    - `delegation`: sessions that handed work to a subagent (by purpose: research, check,
-     build) and "Sessions crowded with lookups" (`read_heavy`: 25+ reads and searches in the main
-     conversation, no subagent) with their share of usage.
+     build, sorted by keywords in each request, so treat the types as estimates) and "Sessions crowded with lookups" (`read_heavy`: 25+ reads and searches in the main
+     conversation, whether or not a subagent also ran) with their share of usage.
    - `usage.models`: which model each session mostly ran on, each model's share of usage, and
      the light sessions on it (short, no code edits) with samples. See "Saving time and usage".
    - `automation`: see "3. Repeat work".
@@ -387,11 +387,11 @@ Never set up a schedule, hook or skill during the review. Propose it with paste-
 they say yes first.
 
 A repeat that came back 4 or more times in the last 4 weeks and cost real time is also a
-P1 habit: give it a card in "Improve your prompts and setup" so its fix joins the plan.
+P1 habit: give it a card in "How you brief AI and set up your tools" so its fix joins the plan.
 
 ## 4. The report
 
-One HTML file with four pages (Overview, Prompts & setup, Skills, Habits & usage), built from `report-template.html` and named "second look · <start> – <end>".
+One HTML file with four pages (Overview, Briefs & setup, Skills, Habits & usage), built from `report-template.html` and named "second look · <start> – <end>".
 Lead with the answer, then the evidence.
 
 **One comparison window.** Every habit number that shows a change compares the last 4 weeks with
@@ -499,13 +499,13 @@ words it differently ("misread you", "a real brief"). Skip the term when the sen
 defines it. Skip the summary and part headlines. In part 2's pattern cards, also wrap the first session,
 model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design system.
 
-**App bar and sidebar.** Set the review's date in `.report-date`. Locally, once the report is saved in `~/.second-look/reports/` as `<end-date>.html`, run `python3 scripts/report_menu.py <report.html>`. It fills the menu in every saved report, so they can all reach each other, and shows a plain label when there's only one. On claude.ai, replace everything between the `report-menu` comments with `<p class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25<span class="report-year">, 2026</span></span></p>`, because an artifact has no folder of saved reports. Keep the Feedback link (`#report-issue`, https://github.com/txz8096/second-look/issues/new) as it is. Delete the sidebar's `.side-note`: it marks the template as sample data, so a real report has no note there. The script counts the fixes and skills beside each page's name.
+**App bar and sidebar.** Set the review's date in `.report-date`. Locally, once the report is saved in `~/.second-look/reports/` as `<end-date>.html`, run `python3 scripts/report_menu.py <report.html>`. It fills the menu in every saved report, so they can all reach each other, and shows a plain label when there's only one. On claude.ai, replace everything between the `report-menu` comments with `<p class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25<span class="report-year">, 2026</span></span></p>`, because an artifact has no folder of saved reports. Keep the Feedback link (`#report-issue`, https://github.com/txz8096/second-look/issues/new) and the light and dark switch (`#theme-btn`) as they are. The script counts the fixes and skills beside each page's name.
 
-**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then "Did the fixes from your last review work?" if there's an earlier review, then "Explore your report": keep its three rows and their links. Prompts & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
+**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then "Did the fixes from your last review work?" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
 
-**Improve your prompts and setup** (`#part-2`). A headline with the biggest finding that
+**How you brief AI and set up your tools** (`#part-2`). A headline with the biggest finding that
 links to the plan. If a much quicker fix goes first, the headline says so. "Did the fixes from your last review work?" (`#last-cycle`) sits on the Overview, only when an
-earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Changed since your last review" (Revise) or "Stopped" (Drop). Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result of five words or so with the number when there is one ("Use rose from 11% to 18%", "Too soon to tell"), and what changed, with its window, in the fold. Only the first fix starts open. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per prompting, context, memory or repeat-work pattern,
+earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Changed since your last review" (Revise) or "Stopped" (Drop). Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result of five words or so with the number when there is one ("Use rose from 11% to 18%", "Too soon to tell"), and what changed, with its window, in the fold. Only the first fix starts open. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
 biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the tools as
 plain text, including every tool its evidence names, and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
 matters; when you have one, their own prompt quoted in the card; an optional collapsed "Which tools have which rules". Then the fix in the same
@@ -552,19 +552,19 @@ starting-context row from "Usage" when it applies. Next steps are something they
 collapsed "Skills you installed from others". Counts agree across all of it. Keep the tap
 definition on the first "skills" in the headline.
 When every row of a column says the same thing, drop the column and say it once. Dated sources
-go in the footer.
+go in the sidebar's "Guidance and references" list.
 
 **How your habits are changing** (`#part-1`). The id stays `#part-1`. No headline; the summary already tells the story. Fill the scope line
 and "How these are measured" from `SCOPE` (see "Data scope").
 
 - **Habits over time** (`#trends`), filled from the cube. Its charts sit in five
   groups, one tab per question (`GROUPS` in the template script): explaining what you want,
-  checking the work, handing off big searches, automating repeat work, and where usage goes.
+  checking the work, handing off the right work, automating repeat work, and where usage goes.
   The group with the most charts going the wrong way opens first. A group with no chart that
   has data under the current filters is hidden, and one line names it and says why: its charts
   need Claude Code or Codex, the Work filter leaves it out, or too few sessions. Each group opens
-  with one written summary comparing the last 4 weeks with the 4 before (whatever the time
-  filter), so it agrees with the cards; each line is a 4-week running value with
+  with a short answer to its question in plain words, comparing the last 4 weeks with the 4 before (whatever the time
+  filter), so it agrees with the cards. It names at most two changes and no metric names; each line is a 4-week running value with
   those two points marked; milestones are labelled on the group's first chart; a chart that
   moved ends with one clause from `READS` for the direction it moved, and a flat chart has none.
   Those clauses say only what the measure did, never why. The view opens on the time range the
@@ -579,8 +579,7 @@ and "How these are measured" from `SCOPE` (see "Data scope").
 - **Activity since your last review** (with its dates; on a first review, "Activity, <dates>"): the
   usage-limit line, then the collapsed "By tool" and "Skills and commands", counted over the same dates.
 
-**Footer.** Method and sources in three sentences at most (the sources list lives here, not
-under tables), the profile (on claude.ai) and the Log entry (on claude.ai).
+**Sidebar note** (`#side-about`, at the bottom of the sidebar). Replace the sample sentences with the method in one short sentence ("Read from your AI logs and exports, with secrets removed."), and list what you actually used under "Guidance and references", one per line (this list lives here, not under tables). On claude.ai, add the profile and the Log entry after that list.
 
 Reports contain real prompts. Keep them private unless the user chooses to share one, and
 remove anything about other people before they do.
@@ -596,7 +595,7 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
   reviews also compare with the last one. Never compare with other people or a fixed number.
 - **Show a usage finding only when** there is a change they can make, the next review can check
   it, and the thing involved is at least a tenth of their usage. Otherwise leave it out.
-- **Long sessions** (Improve your prompts and setup). Sessions past `long_line` (150k tokens,
+- **Long sessions** (How you brief AI and set up your tools). Sessions past `long_line` (150k tokens,
   a line we chose); on the page, call them "very long sessions". Give the
   share of usage they took, how a message there compares with a typical message, and the
   biggest sessions. The fix: start fresh when a phase ends.
@@ -659,8 +658,8 @@ in one line. It stops Claude Code deleting logs after 30 days. Weeks already del
 | Checking | Output checking | checked / build sessions | Asked for sources, what could break or a critique | Higher |
 | Checking | Tested by the AI | agent_checked / edited | A test, build, lint or browser check after the last code edit | Higher |
 | Checking | Untested changes shipped per week | unchecked_ships | A commit, push, deploy or "ship it" with edits unchecked | Lower |
-| Handing off | Sessions with a helper agent | delegated / metered | Handed work to a subagent | — |
-| Handing off | Sessions crowded with lookups | read_heavy / metered | 25+ reads and searches, no subagent | Lower |
+| Handing off | Sessions crowded with lookups | read_heavy / metered | 25+ reads and searches in the main conversation | Lower |
+| Handing off | What you handed off (bars, beside the line chart) | delegated_research, delegated_check, delegated_build / all three | Subagent runs, sorted by keywords in each request | More research and checks |
 | Automating | Repeat tasks done by hand | repeats | Opener matches 3+ earlier ones, no skill run, no schedule | Lower |
 | Automating | Sessions you didn't start | unattended / logged | Started by a schedule, a loop or a headless run | — |
 | Automating | Loops and schedules set up | setups | Created or changed a loop or scheduled job | Higher |

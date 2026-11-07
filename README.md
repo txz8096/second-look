@@ -3,7 +3,7 @@
 **Learn from how you work with AI.**
 
 Models change every few months, and the way you work drifts out of step with them. Tokens
-leak in three places: your prompts (corrections, rules you retype in every tool), your
+leak in three places: how you brief AI (missing details, rules you retype in every tool), your
 context (long sessions, memory you no longer need) and your setup (skills written for an
 older model, still loading every session). You can't see any of it from inside one chat, and
 a leak you don't see costs you again every session after.
@@ -45,7 +45,7 @@ A closer look pays off in a few places:
 Every two weeks, or whenever you ask, second look builds one private report in three parts.
 After your first report, it offers to set up the two-week schedule for you.
 
-**1. Improve your prompts and setup.** From your second review on, it starts with whether
+**1. How you brief AI and set up your tools.** From your second review on, it starts with whether
 last cycle's fixes worked. It checks whether your first message gave the goal,
 the audience, the constraints and what done looks like, and whether your standing rules
 reach every tool. When very long sessions take most of your token usage, it says so and
@@ -125,7 +125,7 @@ Using AI tools at work? Check your company's AI policy before you review work se
 | **Return to the evidence** | Next review: did it stick, did it help, and what did it cost? |
 
 Compared with other AI reflection tools, second look covers several tools in one report,
-checks your skills and config as well as your prompts, and follows up on whether last
+checks your skills, tool setup and how you brief AI, and follows up on whether last
 cycle's changes worked.
 
 ## Install

@@ -146,7 +146,7 @@ export function Hero() {
           </h1>
           <p style={delay(120)} className="rise-in font-body text-lg leading-[1.55] text-text-2 md:text-xl">
             Models change, and the way you work drifts out of step. second look reads your sessions across
-            Claude Code, Codex, Cursor, ChatGPT and more, finds the leaks in your prompts, context and skills,
+            Claude Code, Codex, Cursor, ChatGPT and more, finds the leaks in how you brief AI, manage context and use skills,
             and gives you a few fixes to try. Each one cites the sessions it came from.
           </p>
           <div style={delay(180)} className="rise-in flex flex-wrap items-center gap-3 pt-3">

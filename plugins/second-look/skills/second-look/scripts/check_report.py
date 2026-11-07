@@ -13,7 +13,7 @@ FONT_LINK = "family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:w
 REQUIRED_IDS = ["overview", "side", "part-1", "part-2", "part-3", "trends", "report-issue"]
 SECTION_ORDER = ["overview", "part-2", "part-3", "part-1"]
 REQUIRED_TEXT = [
-    "Improve your prompts and setup",
+    "How you brief AI and set up your tools",
     "Keep your skills current",
     "How your habits are changing",
     "Report an issue",
@@ -36,7 +36,6 @@ FORBIDDEN = {
     "How we'll know it worked": "removed from Try this blocks",
     'id="expand-all"': "Expand all / Collapse all was removed",
     'class="sample"': "no sample-data chips on real reports",
-    'data-theme="light"': "the report is dark only",
     "Part 1 of 3": "no part numbers",
     'class="last-list"': "fixes from the last review now sit in .last-group cards",
     'id="glance"': "the at-a-glance table was removed; the numbers live in the charts",
@@ -53,7 +52,7 @@ FORBIDDEN = {
 SAMPLE = {
     "CUBE = sampleCube()": "the charts still use the template's sample data; replace sampleCube() with the collector's cube",
     "Streak redesign starts": "MILESTONES still holds the template's sample milestones; use the person's own, or []",
-    "Sample data.": "the sidebar note still says the page uses sample data",
+    "This is a sample report": "the sidebar note still says this is a sample report",
     "report-opt-sample": "the report menu still holds the template's sample dates; run report_menu.py, or on claude.ai use a plain label",
     "you’ve gotten better at explaining what you want": "the summary is still the template's sample text",
     "Check the job tracker and summarize what changed": "the automation list still holds the template's sample rows",
@@ -250,7 +249,7 @@ def main():
     # overview, then prompts, then skills, then habits last
     order = [html.find(f'id="{i}"') for i in SECTION_ORDER]
     if -1 not in order and order != sorted(order):
-        problems.append("pages out of order: overview, prompts and setup, skills, then habits")
+        problems.append("pages out of order: overview, briefs and setup, skills, then habits")
     markup = re.sub(r"<style>.*?</style>", "", html, flags=re.S)
     for needle, why in FORBIDDEN.items():
         if needle in markup:

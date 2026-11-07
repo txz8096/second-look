@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* second look report: one layer. Dark only, shadcn neutrals, Proof Pink, Familjen Grotesk. See references/design-system.md */
+/* second look report: one layer. Dark by default with a light switch, shadcn neutrals, Proof Pink, Familjen Grotesk. See references/design-system.md */
 :root {
   --bg: #0A0A0A; --surface: #171717; --surface-2: #262626; --fg: #FAFAFA; --muted: #A1A1A1; --faint: #8A8A8A; --term-quiet: #737373;
   --line: rgb(255 255 255 / .1); --line-strong: rgb(255 255 255 / .15); --primary: #E5E5E5; --on-primary: #171717;
@@ -17,7 +17,7 @@
   --accent-soft: rgb(242 167 184 / .08); --accent-soft-2: rgb(242 167 184 / .28);
   /* status: states only (a skill is broken, a fix was kept), never a grade of the person */
   --p1: #FF6568;
-  --code-bg: #0A0A0A;
+  --code-bg: #0A0A0A; --term-code: rgb(0 0 0 / .08); --drawer-shadow: rgb(0 0 0 / .4);
   --series: #F2A7B8; --grid: rgb(255 255 255 / .1); --cursor: rgb(255 255 255 / .2); --seg-track: #262626; --seg-on: #0A0A0A;
   --display: "Familjen Grotesk", ui-sans-serif, system-ui, sans-serif; --sans: var(--display);
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -25,7 +25,18 @@
   color-scheme: dark;
 }
 :root, :root[data-theme="light"], :root[data-theme="dark"] { color-scheme: dark; }
-html, body { background: #0A0A0A; }
+/* the switch sets data-mode, so a host page's own data-theme can't change the report */
+:root[data-mode="light"] {
+  --bg: #FAFAFA; --surface: #FFFFFF; --surface-2: #F5F5F5; --fg: #0A0A0A; --muted: #525252; --faint: #6B6B6B; --term-quiet: #A3A3A3;
+  --line: rgb(0 0 0 / .1); --line-strong: rgb(0 0 0 / .15); --primary: #171717; --on-primary: #FAFAFA;
+  --accent: #B02A55; --accent-strong: #8A1F42;
+  --accent-soft: rgb(176 42 85 / .07); --accent-soft-2: rgb(176 42 85 / .28);
+  --p1: #C81E2B;
+  --code-bg: #F5F5F5; --term-code: rgb(255 255 255 / .16); --drawer-shadow: rgb(0 0 0 / .14);
+  --series: #D1416B; --grid: rgb(0 0 0 / .1); --cursor: rgb(0 0 0 / .2); --seg-track: #E5E5E5; --seg-on: #FFFFFF;
+  color-scheme: light;
+}
+html, body { background: var(--bg); }
 html { overflow-x: clip; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 var(--sans); overflow-wrap: anywhere; -webkit-font-smoothing: antialiased;
   }
@@ -55,6 +66,11 @@ a.report-opt[aria-current] { background: var(--surface-2); font-weight: 500; }
 .report-opt-sample { color: var(--muted); }
 a.feedback { display: flex; align-items: center; min-height: 40px; box-sizing: border-box; padding: 8px 12px; color: var(--fg); font-size: 14px; line-height: 20px; font-weight: 500; text-decoration: none; }
 a.feedback:hover { color: var(--accent); }
+button.theme-btn { display: none; flex: none; align-items: center; justify-content: center; width: 36px; height: 36px; padding: 0; border: 0; background: none; color: var(--muted); }
+button.theme-btn:hover { border: 0; background: var(--surface-2); color: var(--fg); }
+.paged button.theme-btn { display: flex; }
+.theme-btn .moon, :root[data-mode="light"] .theme-btn .sun { display: none; }
+:root[data-mode="light"] .theme-btn .moon { display: block; }
 .shell { display: grid; grid-template-columns: 256px minmax(0, 1fr); min-height: calc(100dvh - 64px); }
 .side { position: sticky; top: 64px; display: flex; flex-direction: column; gap: 32px; box-sizing: border-box; height: calc(100dvh - 64px); overflow-y: auto; padding: 20px; background: var(--surface); border-right: 1px solid var(--line); }
 .side-nav { display: grid; gap: 4px; }
@@ -62,11 +78,15 @@ a.feedback:hover { color: var(--accent); }
 .side-nav a:hover { color: var(--fg); }
 .side-nav a.on, .side-nav a.on:hover { background: var(--accent-soft); color: var(--accent); }
 .nav-count { font: 400 13px/20px var(--mono); font-variant-numeric: tabular-nums; }
-.side-note { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--line); font-size: 13px; line-height: 20px; color: var(--muted); }
+.side-about { display: grid; gap: 4px; margin-top: auto; padding: 16px 12px 0; border-top: 1px solid var(--line); font-size: 13px; line-height: 20px; color: var(--muted); }
+.side-about details.nested { border-block: 0; }
+.side-about details.nested > summary { align-items: center; color: var(--muted); }
+.side-about details.nested > summary:hover { color: var(--fg); }
+.side-about details.nested .chev { margin-top: 0; }
+.side-about ul { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
 .wrap { display: grid; align-content: start; gap: 32px; box-sizing: border-box; width: 100%; max-width: 1184px; min-width: 0; margin: 0 auto; padding: 32px 48px; outline: 0; }
 .page { display: grid; gap: 32px; min-width: 0; }
 .paged .page:not(.on) { display: none; }
-.paged[data-page="overview"] footer { display: none; }
 .side-closed .shell { grid-template-columns: minmax(0, 1fr); }
 .side-closed .side { display: none; }
 .opening { display: grid; gap: 24px; }
@@ -82,8 +102,7 @@ a.dest:hover { background: var(--surface-2); }
 .dest-d { font-size: 14px; line-height: 20px; color: var(--muted); }
 .dest-go { display: flex; flex: none; align-items: center; gap: 8px; color: var(--accent); font-size: 14px; line-height: 20px; font-weight: 500; }
 @media print {
-  .appbar, .side { display: none; }
-  .shell { display: block; }
+  .appbar { display: none; }
   .paged .page:not(.on) { display: grid; }
 }
 h1, h2, h3, h4 { margin: 0; font-family: var(--display); font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; text-wrap: balance; }
@@ -257,11 +276,7 @@ td.best { color: var(--accent); font-weight: 600; }
 button.chip { height: 28px; padding: 0 10px; border: 0; border-radius: var(--r-6); background: transparent; color: var(--muted); font-size: 13px; }
 button.chip:hover { background: transparent; color: var(--fg); }
 #f-range .chip[aria-pressed="true"], #f-source .chip[aria-pressed="true"] { background: var(--seg-on); color: var(--fg); font-weight: 500; }
-button#f-toggle { height: 32px; padding: 0 12px; border: 1px solid var(--line-strong); border-radius: var(--r-8); color: var(--fg); font-weight: 500; }
-button#f-toggle:hover { background: var(--surface); }
-#f-toggle[aria-expanded="true"] { background: var(--surface-2); }
 .f-more { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
-.f-more[hidden] { display: none; }
 .fsum { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 /* group tabs: one question each, five across */
 .grp-tiles { display: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; margin: 8px 0 4px; }
@@ -286,8 +301,7 @@ button.grp-tile[aria-pressed="true"], button.grp-tile[aria-pressed="true"]:hover
 .chart-head h3 { font-size: 16px; line-height: 1.3; }
 .chart-plot { position: relative; }
 button.more-charts { display: none; }
-.chart svg { display: block; width: 100%; max-width: 425px; height: auto; overflow: visible; touch-action: pan-y; }
-.chart.lead svg { max-width: 850px; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; touch-action: pan-y; }
 .chart svg text { fill: var(--muted); font-family: var(--sans); font-size: 10px; font-variant-numeric: tabular-nums; }
 .chart svg text.ms, .chart svg text.pt { paint-order: stroke; stroke: var(--surface); stroke-width: 3px; stroke-linejoin: round; }
 .chart svg text.ms { fill: var(--muted); }
@@ -311,7 +325,7 @@ button.more-charts { display: none; }
 .panel { display: grid; gap: 8px; align-content: start; min-width: 0; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-14); }
 .panel h3 { font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.5; margin-bottom: 2px; }
 .bars { display: grid; gap: 2px; }
-button.brow { display: grid; grid-template-columns: 100px minmax(0, 1fr) 64px; gap: 8px; align-items: center; width: 100%; height: auto; min-height: 32px;
+.brow { display: grid; grid-template-columns: 100px minmax(0, 1fr) 64px; gap: 8px; align-items: center; width: 100%; height: auto; min-height: 32px;
   padding: 4px 0; border: 0; border-radius: 0; background: none; text-align: left; font-size: 13px; font-weight: 400; }
 button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--surface-2), 6px 0 0 var(--surface-2); }
 .btrack { position: relative; height: 6px; border-radius: var(--r-pill); background: var(--surface-2); }
@@ -353,9 +367,6 @@ button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--sur
 /* nothing to draw at all, like a claude.ai run with no export */
 #trends[data-nodata] .filters, #trends[data-nodata] > details:not(#scope-details) { display: none; }
 
-/* usage, report an issue, footer */
-footer { padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; line-height: 20px; color: var(--muted); }
-
 /* habit terms: a dashed underline that opens a card on hover or focus. Pure CSS, so it works with scripts off */
 .term { position: relative; display: inline-block; cursor: help; text-decoration: underline dashed var(--faint); text-decoration-thickness: 1px; text-underline-offset: 4px; border-radius: var(--r-4); }
 .term:hover, .term:focus-visible { text-decoration-color: var(--accent); }
@@ -388,7 +399,7 @@ th > .term > .term-card { top: auto; left: auto; margin-top: calc(1.3em + 8px); 
 th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 8px); }
 .term-card .card-h { display: block; font-weight: 600; margin-bottom: 4px; }
 .term-card .card-step { display: block; margin-top: 6px; }
-.term-card code { font-size: 12px; background: rgb(0 0 0 / .08); padding: 0 4px; border-radius: 4px; }
+.term-card code { font-size: 12px; background: var(--term-code); padding: 0 4px; border-radius: 4px; }
 
 @media (prefers-reduced-motion: reduce) {
   button, .chev, .term-card { transition: none; transform: none; }
@@ -400,10 +411,16 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 @media (max-width: 900px) {
   .bar-brand { width: auto; }
   .shell, .side-closed .shell { grid-template-columns: minmax(0, 1fr); }
-  .side, .side-closed .side { position: fixed; z-index: 45; top: 64px; bottom: 0; left: 0; display: flex; width: min(256px, 85vw); height: auto; visibility: hidden; transform: translateX(-100%); transition: transform .16s, visibility 0s .16s; box-shadow: 0 20px 48px rgb(0 0 0 / .4); }
+  .side, .side-closed .side { position: fixed; z-index: 45; top: 64px; bottom: 0; left: 0; display: flex; width: min(256px, 85vw); height: auto; visibility: hidden; transform: translateX(-100%); transition: transform .16s, visibility 0s .16s; box-shadow: 0 20px 48px var(--drawer-shadow); }
   .side-open .side { visibility: visible; transform: none; transition: transform .16s; }
 }
 @media (prefers-reduced-motion: reduce) { .side { transition: none !important; } }
+/* on paper the sidebar's note prints after the report, opened by the beforeprint script */
+@media print {
+  .shell { display: flex; flex-direction: column; }
+  .side, .side-closed .side { position: static; order: 1; display: block; width: auto; height: auto; overflow: visible; visibility: visible; transform: none; padding: 0 48px 32px; background: none; border: 0; box-shadow: none; }
+  .side-nav { display: none; }
+}
 
 @media (max-width: 680px) {
   body { line-height: 1.6; }
@@ -413,6 +430,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   details.report-menu > summary { gap: 8px; min-height: 44px; box-sizing: border-box; padding: 0 4px; }
   .bar-actions { gap: 4px; }
   a.feedback { padding: 8px; white-space: nowrap; }
+  button.theme-btn { width: 40px; height: 44px; }
   a.report-opt { min-height: 44px; box-sizing: border-box; }
   .report-pick-t { display: none; }
   .wrap { padding: 24px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); }
@@ -433,7 +451,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   #trends[data-static] button.more-charts { display: none; }
   /* prerendered at desktop width: the wide chart scrolls so its text stays readable */
   .chart.lead .chart-plot { overflow-x: auto; }
-  .chart.lead svg { min-width: 560px; }
+  .chart.lead svg { min-width: 590px; }
   .rank { width: 32px; height: 32px; font-size: 16px; }
   .icard { padding: 16px; }
   .ic-grid { grid-template-columns: 1fr; gap: 0; }
@@ -453,12 +471,12 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   /* type floor: nothing under 13px, secondary text 14px */
   .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval { font-size: 13px; }
   .def, .sum-meta, .part-meta, .fsum, button.chip, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
-    footer, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
+    .side-about, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
   .scope-line, .tl-name, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
   /* tap targets */
   button:not(.brow):not(.menu-btn), select { min-height: 44px; }
   .seg { min-height: 48px; }
-  button.chip, button#f-toggle { height: 44px; }
+  button.chip { height: 44px; }
   button.copy { min-height: 32px; height: 32px; top: 4px; left: 4px; right: auto; }
   details > summary { min-height: 44px; box-sizing: border-box; }
 }
@@ -496,7 +514,16 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .report-year { display: none; }
   .brand-logo { height: 22px; }
 }
+/* the smallest phones: everything in the bar gives up a little so the switch still fits */
+@media (max-width: 360px) {
+  .bar-brand { gap: 8px; padding: 0 4px 0 12px; }
+  .brand-logo { height: 20px; }
+  .bar-actions { gap: 0; }
+  a.feedback { padding: 8px 4px; }
+  button.theme-btn { width: 32px; }
+}
 </style>
+<script>try { if (localStorage.getItem("second-look-theme") === "light") document.documentElement.dataset.mode = "light"; } catch (e) { /* storage can be blocked; the report stays dark */ }</script>
 
 <header class="appbar">
   <div class="bar-brand">
@@ -511,6 +538,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   <div class="bar-actions">
     <!-- report-menu --><details class="report-menu" id="report-menu"><summary class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25<span class="report-year">, 2026</span></span><svg class="report-chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><ul class="report-list"><li><a class="report-opt" href="#overview" aria-current="page">Oct 25, 2026<span class="report-opt-note">Latest</span></a></li><li><span class="report-opt report-opt-sample">Oct 11, 2026</span></li><li><span class="report-opt report-opt-sample">Sep 27, 2026</span></li></ul></details><!-- /report-menu -->
     <a class="feedback" id="report-issue" href="https://github.com/txz8096/second-look/issues/new" target="_blank" rel="noopener" title="Report an issue on GitHub. Leave your prompts out of it.">Feedback</a>
+    <button type="button" class="theme-btn" id="theme-btn" role="switch" aria-checked="false" aria-label="Light mode" title="Switch to light mode"><svg class="sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
   </div>
 </header>
 
@@ -518,11 +546,27 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 <aside class="side" id="side">
   <nav class="side-nav" aria-label="Report pages">
     <a href="#overview" data-page="overview">Overview</a>
-    <a href="#part-2" data-page="part-2">Prompts &amp; setup<span class="nav-count" id="count-fixes">5</span></a>
+    <a href="#part-2" data-page="part-2">Briefs &amp; setup<span class="nav-count" id="count-fixes">5</span></a>
     <a href="#part-3" data-page="part-3">Skills<span class="nav-count" id="count-skills">5</span></a>
     <a href="#part-1" data-page="part-1">Habits &amp; usage</a>
   </nav>
-  <p class="side-note">Sample data. Habits are estimated from session wording.</p>
+  <div class="side-about" id="side-about">
+    <p>This is a sample report. A real report reads your AI logs and exports, with secrets removed.</p>
+    <details class="nested">
+      <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Guidance and references</span></summary>
+      <ul>
+        <li>Anthropic’s AI Fluency Index</li>
+        <li>Anthropic’s prompting guide</li>
+        <li>Claude Code best practices</li>
+        <li>Agent Skills docs</li>
+        <li>Claude Code changelog</li>
+        <li>Anthropic on plugin evals (Sep 2026)</li>
+        <li>Anthropic on skill-creator evals (Mar 2026)</li>
+        <li>Anthropic on Claude Design (Jun 2026)</li>
+        <li>Codex and Cursor skills docs</li>
+      </ul>
+    </details>
+  </div>
 </aside>
 
 <main class="wrap" id="main" tabindex="-1">
@@ -555,17 +599,17 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   <section class="explore" aria-labelledby="explore-h">
     <h2 id="explore-h">Explore your report</h2>
     <div class="dests">
-      <a class="dest" href="#part-2"><span class="dest-text"><span class="dest-t">Prompts &amp; setup</span><span class="dest-d">Five fixes for your rules, prototype starts, final checks, long sessions and model choice.</span></span><span class="dest-go">View fixes<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
+      <a class="dest" href="#part-2"><span class="dest-text"><span class="dest-t">Briefs &amp; setup</span><span class="dest-d">Five fixes for your rules, prototype starts, final checks, long sessions and model choice.</span></span><span class="dest-go">View fixes<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
       <a class="dest" href="#part-3"><span class="dest-text"><span class="dest-t">Skills</span><span class="dest-d">Three of your seven skills give wrong information today.</span></span><span class="dest-go">Review skills<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
       <a class="dest" href="#part-1"><span class="dest-text"><span class="dest-t">Habits &amp; usage</span><span class="dest-d">How you brief, check, refine and use your tools over the last 12 months.</span></span><span class="dest-go">View trends<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
     </div>
   </section>
 </div>
 
-<!-- PROMPTS AND SETUP (#part-2) -->
+<!-- BRIEFS AND SETUP (#part-2) -->
 <div class="part page" id="part-2">
   <div class="part-head">
-    <h2>Improve your prompts and setup</h2>
+    <h2>How you brief AI and set up your tools</h2>
     <p class="headline">Vague prototype starts take the most time. Syncing your rules is the quickest fix, so it comes first. Five fixes below, all in <a href="#plan" data-jump="plan">your plan until Nov 8</a>.</p>
   </div>
 
@@ -791,9 +835,8 @@ Then tell me in plain words what changed before you save it.</pre></div>
 
   <div class="filters" role="group" aria-label="Filter the charts">
     <div class="fgroup" role="group" aria-label="Time range"><span class="flabel">Time</span><span class="seg" id="f-range"></span></div>
-    <button type="button" class="chip" id="f-toggle" aria-expanded="false" aria-controls="f-more">Filter</button>
     <span class="fsum" id="f-sum"></span>
-    <div class="f-more" id="f-more" hidden>
+    <div class="f-more" id="f-more">
       <div class="fgroup" role="group" aria-label="Tool"><span class="flabel">Tool</span><span class="seg" id="f-source"></span></div>
       <div class="fgroup"><label class="flabel" for="f-cat">Work</label><select id="f-cat"></select></div>
     </div>
@@ -884,9 +927,6 @@ Then tell me in plain words what changed before you save it.</pre></div>
     </details>
   </section>
 </div>
-
-<footer><p>A real report reads your Claude Code, Codex and Cursor logs and your claude.ai and ChatGPT exports, with secrets removed. Habits are read from wording, so treat them as estimates. Sources: Anthropic’s AI Fluency Index, prompting guide, Claude Code best practices and Agent Skills docs; the Claude Code changelog; Anthropic on plugin evals (Sep 2026), skill-creator evals (Mar 2026) and Claude Design (Jun 2026); Codex and Cursor skills docs.</p>
-</footer>
 
 </main>
 </div>
@@ -984,8 +1024,10 @@ stackTables();
   const agentChecks = (src, c, sessions, i) => {
     const edited = (src === "claude_code" || src === "codex") && c === "prototyping" ? rr(sessions * 0.7) : 0;
     const logged = src === "claude_code" || src === "codex" ? sessions : 0;
-    return {edited, agent_checked: rr(edited * ramp(0.55, 0.72, i, 10, 40) * (i >= 48 ? 0.6 : 1)), unchecked_ships: rr(edited * (i >= 48 ? 0.25 : 0.08)),
-      delegated: rr(logged * ramp(0, 0.18, i, 30, 51)), read_heavy: rr(logged * ramp(0.16, 0.09, i, 30, 51))};
+    const agent_checked = rr(edited * ramp(0.55, 0.72, i, 10, 40) * (i >= 48 ? 0.6 : 1)), unchecked_ships = rr(edited * (i >= 48 ? 0.25 : 0.08));
+    const delegated = rr(logged * ramp(0, 0.18, i, 30, 51)), read_heavy = rr(logged * ramp(0.16, 0.09, i, 30, 51));
+    return {edited, agent_checked, unchecked_ships, delegated, read_heavy,
+      delegated_research: Math.round(delegated * 1.1), delegated_check: Math.round(delegated * 0.4), delegated_build: Math.round(delegated * 0.3)};
   };
   // automation: only Claude Code and Codex log how a session started and the tools it called
   // its own random stream, so adding it left the other sample charts unchanged
@@ -1133,11 +1175,8 @@ stackTables();
     {id: "uncheckedships", el: "g-check", title: "Untested changes shipped per week", num: "unchecked_ships", den: null, floor: "edited", fmt: count, d: "rel", better: "down", logs: true,
      def: "Code saved or shipped after changes with no test in the session.",
      card: "Checks you ran outside the session don’t show, so open a few sessions before acting on this. A saved rule to test before shipping brings it down."},
-    {id: "delegated", el: "g-delegate", title: "Sessions with a helper agent", num: "delegated", den: "metered", fmt: pct, d: "pts", better: "none", logs: true,
-     def: "Sessions that handed work to a helper agent.",
-     card: "Pays off on wide searches, uses extra on small tasks. Read it next to Sessions crowded with lookups."},
     {id: "readheavy", el: "g-delegate", title: "Sessions crowded with lookups", num: "read_heavy", den: "metered", fmt: pct, d: "pts", better: "down", logs: true,
-     def: "Sessions where the AI did 25 or more lookups itself, with no helper agent.",
+     def: "Sessions where the AI did 25 or more lookups in your main conversation. A helper could have taken that reading.",
      card: "Everything the AI opens stays in the session and gets re-read with every message. Past 25 lookups, even a small follow-up takes a lot of usage."},
     {id: "repeats", el: "g-automate", title: "Repeat tasks done by hand", num: "repeats", den: null, fmt: count, d: "rel", better: "down", logs: true,
      def: "Opening messages that match 3 or more earlier ones, with no skill or schedule behind them.",
@@ -1158,33 +1197,36 @@ stackTables();
 
   // ---- chart groups: the questions people bring to the report ----
   const GROUPS = [
-    {id: "clear", ids: ["briefed", "corrections", "restarts", "retyped", "refinements"], title: "Am I explaining what I want?"},
-    {id: "check", ids: ["checked", "agentchecked", "uncheckedships"], title: "Am I checking the work?"},
-    {id: "delegate", ids: ["delegated", "readheavy"], title: "Am I handing off big searches?"},
-    {id: "automate", ids: ["repeats", "unattended", "setups", "parallel", "skilled"], title: "Am I automating repeat work?"},
-    {id: "usage", ids: ["sessions", "longshare", "starttokens"], title: "Where does my usage go?"},
+    {id: "clear", ids: ["briefed", "corrections", "restarts", "retyped", "refinements"], title: "Am I explaining what I want?",
+     say: ["You’ve been clearer lately.", "You’ve been less clear lately.", "Clearer in some ways lately, less in others.", "You’re about as clear as you were."]},
+    {id: "check", ids: ["checked", "agentchecked", "uncheckedships"], title: "Am I checking the work?",
+     say: ["You’ve been checking more lately.", "You’ve been checking less lately.", "Checking more in some ways lately, less in others.", "You’re checking about as much as you were."]},
+    {id: "delegate", ids: ["readheavy"], title: "Am I handing off the right work?", beside: handoffCard, opens: handoffRead, noDetail: true,
+     say: ["Your main sessions have had less reading to carry lately.", "Your main sessions have had more reading to carry lately.", "", "Your main sessions are about as crowded as they were."]},
+    {id: "automate", ids: ["repeats", "unattended", "setups", "parallel", "skilled"], title: "Am I automating repeat work?",
+     say: ["You’ve been automating more lately.", "You’ve been doing more by hand lately.", "Automating more in some ways lately, less in others.", "You’re automating about as much as you were."]},
+    {id: "usage", ids: ["sessions", "longshare", "starttokens"], title: "Where does my usage go?", opens: usageRead},
   ];
-  // what each chart says when it moves: rose/fell for the summary, up/down for the line under the chart
+  // what each chart says when it moves: rose/fell in plain words for the group's answer, up/down for the line under the chart
   // up/down say only what the measure did. No causes and no credit: the logs can't see why
   const READS = {
-    briefed: {rose: "you opened more sessions with a brief", fell: "you opened fewer sessions with a brief", up: "more sessions opened with a brief", down: "fewer sessions opened with a brief"},
-    corrections: {rose: "you corrected the AI more often", fell: "you corrected the AI less often", up: "more of your messages corrected the AI", down: "fewer of your messages corrected the AI"},
-    restarts: {rose: "you restarted more tasks", fell: "you restarted fewer tasks", up: "more sessions started a recent task over", down: "fewer sessions started a recent task over"},
-    retyped: {rose: "you retyped rules more", fell: "you retyped rules less", up: "you typed more rules by hand", down: "you typed fewer rules by hand"},
-    refinements: {rose: "you built on good answers more", fell: "you built on good answers less", up: "more follow-ups per session built on an answer", down: "fewer follow-ups per session built on an answer"},
-    checked: {rose: "you checked the work more often", fell: "you checked the work less often", up: "you asked for checks in more build and research sessions", down: "you asked for checks in fewer build and research sessions"},
-    agentchecked: {rose: "the AI tested its code changes more often", fell: "the AI tested its code changes less often", up: "a larger share of sessions with code changes had a test by the AI", down: "a smaller share of sessions with code changes had a test by the AI"},
-    uncheckedships: {rose: "more untested changes went out", fell: "fewer untested changes went out", up: "more changes per week were saved or shipped with no test in the session", down: "fewer changes per week were saved or shipped with no test in the session"},
-    delegated: {rose: "you handed more work to helper agents", fell: "you handed less work to helper agents", up: "more sessions handed work to a helper agent", down: "fewer sessions handed work to a helper agent"},
+    briefed: {rose: "you’re giving the AI more to go on at the start", fell: "you’re giving the AI less to go on at the start", up: "more sessions opened with a brief", down: "fewer sessions opened with a brief"},
+    corrections: {rose: "you’re correcting the AI more often", fell: "you’re correcting the AI less often", up: "more of your messages corrected the AI", down: "fewer of your messages corrected the AI"},
+    restarts: {rose: "you’re starting over more often", fell: "you’re starting over less often", up: "more sessions started a recent task over", down: "fewer sessions started a recent task over"},
+    retyped: {rose: "you’re repeating the same instructions more", fell: "you’re repeating the same instructions less", up: "you typed more rules by hand", down: "you typed fewer rules by hand"},
+    refinements: {rose: "you’re building on good answers more", fell: "you’re building on good answers less", up: "more follow-ups per session built on an answer", down: "fewer follow-ups per session built on an answer"},
+    checked: {rose: "you’re double-checking the work more often", fell: "you’re double-checking the work less often", up: "you asked for checks in more build and research sessions", down: "you asked for checks in fewer build and research sessions"},
+    agentchecked: {rose: "the AI is testing its changes more often", fell: "the AI is testing its changes less often", up: "a larger share of sessions with code changes had a test by the AI", down: "a smaller share of sessions with code changes had a test by the AI"},
+    uncheckedships: {rose: "more untested changes are going out", fell: "fewer untested changes are going out", up: "more changes per week were saved or shipped with no test in the session", down: "fewer changes per week were saved or shipped with no test in the session"},
     readheavy: {rose: "more sessions filled up with lookups", fell: "fewer sessions filled up with lookups", up: "more sessions had 25 or more lookups", down: "fewer sessions had 25 or more lookups"},
-    skilled: {rose: "more sessions ran one of your skills", fell: "fewer sessions ran one of your skills", up: "more sessions ran one of your skills", down: "fewer sessions ran one of your skills"},
-    repeats: {rose: "the same requests came back by hand more often", fell: "fewer requests came back by hand", up: "more repeat requests were typed by hand", down: "fewer repeat requests were typed by hand"},
-    unattended: {rose: "more of your work ran without you starting it", fell: "less of your work ran without you starting it", up: "more sessions started without you", down: "fewer sessions started without you"},
-    setups: {rose: "you set up more loops and schedules", fell: "you set up fewer loops and schedules", up: "more sessions set up a repeating job", down: "fewer sessions set up a repeating job"},
-    parallel: {rose: "more work ran side by side", fell: "less work ran side by side", up: "more sessions ran something side by side", down: "fewer sessions ran something side by side"},
-    sessions: {rose: "you used AI more", fell: "you used AI less", up: "more sessions per week", down: "fewer sessions per week"},
-    longshare: {rose: "more of your usage went to very long sessions", fell: "less of your usage went to very long sessions", up: "very long sessions took more of your usage", down: "very long sessions took less of your usage"},
-    starttokens: {rose: "more loaded before you typed", fell: "less loaded before you typed", up: "more loaded before your first message", down: "less loaded before your first message"},
+    skilled: {rose: "you’re using your skills more", fell: "you’re using your skills less", up: "more sessions ran one of your skills", down: "fewer sessions ran one of your skills"},
+    repeats: {rose: "you’re doing the same tasks by hand more often", fell: "you’re doing the same tasks by hand less often", up: "more repeat requests were typed by hand", down: "fewer repeat requests were typed by hand"},
+    unattended: {rose: "more of your work is running on its own", fell: "less of your work is running on its own", up: "more sessions started without you", down: "fewer sessions started without you"},
+    setups: {rose: "you’re setting up more repeating jobs", fell: "you’re setting up fewer repeating jobs", up: "more sessions set up a repeating job", down: "fewer sessions set up a repeating job"},
+    parallel: {rose: "more work is running side by side", fell: "less work is running side by side", up: "more sessions ran something side by side", down: "fewer sessions ran something side by side"},
+    sessions: {rose: "you’re using AI more", fell: "you’re using AI less", up: "more sessions per week", down: "fewer sessions per week"},
+    longshare: {rose: "very long sessions are taking more of your usage", fell: "very long sessions are taking less of your usage", up: "very long sessions took more of your usage", down: "very long sessions took less of your usage"},
+    starttokens: {rose: "more is loading before you type", fell: "less is loading before you type", up: "more loaded before your first message", down: "less loaded before your first message"},
   };
   const groupsEl = document.getElementById("groups");
   // "What you could automate next" sits under the automation group's charts
@@ -1200,35 +1242,33 @@ stackTables();
     if (autoNext) document.getElementById("grp-automate").appendChild(autoNext);
   }
   // what changed in one group over the last 4 weeks, and how to read each chart
-  function groupSummary(g, results, none) {
+  function groupSummary(g, results, none, i0) {
     const rs = results.filter(r => g.ids.includes(r.m.id));
     const moved = r => r.dlt && !r.dlt.flat;
     const clause = r => r.dlt.v > 0 ? READS[r.m.id].rose : READS[r.m.id].fell;
-    const good = rs.filter(r => trendOf(r) === "good").map(clause);
-    const bad = rs.filter(r => trendOf(r) === "bad");
-    const context = rs.filter(r => r.m.better === "none" && moved(r)).map(clause);
-    const lower = r => r.m.title.replace(/ per .+$/, "").toLowerCase().replace(/\bai\b/g, "AI");
-    const steady = rs.filter(r => r.m.better !== "none" && r.dlt && !moved(r)).map(lower);
-    const noCmp = w => rs.filter(r => !r.dlt && !r.unmeasured && !r.empty && r.noCmp === w).map(lower);
+    const good = rs.filter(r => trendOf(r) === "good"), bad = rs.filter(r => trendOf(r) === "bad");
+    const context = rs.filter(r => r.m.better === "none" && moved(r));
+    const noCmp = w => rs.filter(r => !r.dlt && !r.unmeasured && !r.empty && r.noCmp === w);
     const young = noCmp("young"), fewNow = noCmp("few_now"), fewThen = noCmp("few_then");
-    const unlogged = rs.filter(r => r.unmeasured).map(lower);
-    const said = [];
+    const unlogged = rs.filter(r => r.unmeasured);
     // biggest slip first, measured in noise floors so points, rates and counts compare
     const size = r => r.dlt ? Math.abs(r.m.d === "rel" ? r.dlt.v / (r.cmpA || 1) : r.dlt.v) / NOISE[r.m.d] : 0;
     bad.sort((a, b) => size(b) - size(a));
-    if (good.length && bad.length) said.push(`${listed(good)}, but ${listed(bad.map(clause))}.`);
-    else if (good.length) said.push(`${listed(good)}.`);
-    else if (bad.length) said.push(`${listed(bad.map(clause))}.`);
-    if (context.length) said.push(`${cap(listed(context))}.`);
-    if (steady.length) said.push(`${cap(listed(steady))} stayed about the same.`);
-    let lead = !rows.length ? "No data." : none ? "No sessions match these filters." : said.length ? `In the last 4 weeks, ${said.join(" ").replace(/^./, c => c.toLowerCase())}` : "";
-    // why a chart has no comparison: too little history, or too few sessions in one of the two windows
+    // answer the group's question first, then name at most two changes in plain words. Metric names stay on the charts
+    const compared = rs.filter(r => r.dlt);
+    const verdict = !g.say || !compared.length ? "" : g.say[good.length && bad.length ? 2 : good.length ? 0 : bad.length ? 1 : 3];
+    const named = g.noDetail ? [] : [...bad, ...good, ...context].slice(0, 2);
+    const said = [g.opens ? g.opens(i0, rs) : "", verdict].filter(Boolean);
+    if (named.length) said.push(`${cap(listed(named.map(clause)))}.`);
+    if (named.length && compared.length > named.length && compared.every(r => named.includes(r) || !moved(r))) said.push("The rest held steady.");
+    let lead = !rows.length ? "No data." : none ? "No sessions match these filters." : said.join(" ");
+    // why part of the group has no comparison: too little history, or too few sessions in one of the two windows
     const only = !said.length && [young, fewNow, fewThen].filter(a => a.length).length === 1;
     const also = t => { lead += (lead ? " " : "") + t; };
-    if (!none && young.length) also(only ? "A trend needs 8 weeks of data, and there isn’t that much here yet." : `${cap(listed(young))} ${young.length === 1 ? "needs" : "need"} more weeks of data.`);
-    if (!none && fewNow.length) also(`Too few sessions in the last 4 weeks to compare${only ? "" : ": " + listed(fewNow)}.`);
-    if (!none && fewThen.length) also(`Too few sessions in the 4 weeks before to compare${only ? "" : ": " + listed(fewThen)}.`);
-    if (unlogged.length && !none) also(`${cap(listed(unlogged))} ${unlogged.length === 1 ? "needs" : "need"} Claude Code or Codex.`);
+    if (!none && young.length) also(only ? "A trend needs 8 weeks of data, and there isn’t that much here yet." : "Some of this needs more weeks of data.");
+    if (!none && fewNow.length) also(only ? "Too few sessions in the last 4 weeks to compare." : "Some of this has too few recent sessions to compare.");
+    if (!none && fewThen.length) also(only ? "Too few sessions in the 4 weeks before to compare." : "Some of this has too few earlier sessions to compare.");
+    if (unlogged.length && !none) also("Some of this needs Claude Code or Codex.");
     const panel = document.getElementById("grp-" + g.id);
     panel.querySelector(".grp-sum").textContent = lead;
     // the coverage note, said once for the whole group
@@ -1239,14 +1279,45 @@ stackTables();
     const order = {bad: 0, good: 1, flat: 2};
     return {slips: bad.length, ordered: [...rs].sort((a, b) => order[trendOf(a)] - order[trendOf(b)] || size(b) - size(a))};
   }
+  // what helper agents were asked to do, beside the lookups a helper could have taken. Types come from each request's wording
+  function handoffKinds(i0) {
+    const inView = rows.filter(r => r.w >= i0 && srcOk(r) && catOk(r));
+    const runs = key => inView.reduce((a, r) => a + (r[key] || 0), 0);
+    const kinds = [["Research", runs("delegated_research")], ["Checks", runs("delegated_check")], ["Building", runs("delegated_build")]];
+    return {kinds, total: kinds.reduce((a, [, n]) => a + n, 0), building: kinds[2][1]};
+  }
+  function handoffRead(i0) {
+    const {total, building} = handoffKinds(i0);
+    if (!total) return "You haven’t handed anything off in this view.";
+    if (total < MIN_DEN) return "You’ve handed off too little here to see a pattern.";
+    return building > total / 2 ? "Most of what you hand off is building, which is worth a look." : "Most of what you hand off is research and checks, which suit a helper.";
+  }
+  // the answer to where usage goes, from the share very long sessions took in the last 4 weeks
+  function usageRead(i0, rs) {
+    const long = rs.find(r => r.m.id === "longshare");
+    if (!long || long.lastA == null) return "";
+    return long.lastA >= 0.5 ? "Most of your usage goes to very long sessions." : "Very long sessions take less than half of your usage.";
+  }
+  function handoffCard(i0) {
+    const {kinds, total} = handoffKinds(i0);
+    const card = document.createElement("div"); card.className = "chart"; card.dataset.id = "handoff";
+    card.innerHTML = `<div class="chart-head"><h3>What you handed off</h3></div><p class="def">What your helper agents were asked to do. Research and checks usually suit them. Building usually needs your facts and taste.</p>`;
+    if (total < MIN_DEN) {
+      card.insertAdjacentHTML("beforeend", `<p class="gapnote">${total ? "Too few helper agent runs in this view to show a split" : "No helper agent runs in this view"}</p>`);
+      return card;
+    }
+    const plain = (n, pick) => `<div class="brow"><span class="bname">${pick}</span><span class="btrack"><span style="width:${(n / total * 100).toFixed(1)}%"></span></span><span class="bval"><b>${n / total > 0 && n / total < 0.005 ? "&lt;1%" : pct(n / total)}</b></span></div>`;
+    card.insertAdjacentHTML("beforeend", `<div class="chart-plot bars">${kinds.map(([label, n]) => plain(n, label)).join("")}</div><p class="grp-read">${total.toLocaleString()} helper agent runs. Types are estimated from each request.</p>`);
+    return card;
+  }
   // the group's charts, in reading order. An odd count leads with a full-width chart, so the grid has no hole.
   // The first chart names every milestone and the rest name only the latest, so plots in a row share a top.
   function drawGroup(g, ordered, totals, i0) {
     const grid = document.getElementById("g-" + g.id), panel = document.getElementById("grp-" + g.id); grid.innerHTML = "";
     const lead = ordered[0], canDraw = r => r && !r.empty && !r.unmeasured;
-    const wide = twoColumns() && ordered.length % 2 === 1 && canDraw(lead);
+    const wide = twoColumns() && !g.beside && ordered.length % 2 === 1 && canDraw(lead);
     // plots in a row share a top; one column has no row to line up with
-    const narrowRows = msLayout(i0, 340, true).rows, restRows = wide || !canDraw(lead) || !twoColumns() ? msLayout(i0, 340, false).rows : narrowRows;
+    const narrowRows = msLayout(i0, chartW(false), true).rows, restRows = wide || !canDraw(lead) || !twoColumns() ? msLayout(i0, chartW(false), false).rows : narrowRows;
     const movedAny = ordered.some(r => r.dlt && !r.dlt.flat);
     ordered.forEach((r, k) => {
       const isLead = k === 0 && canDraw(r);
@@ -1257,6 +1328,7 @@ stackTables();
       if (canDraw(r) && moved) card.insertAdjacentHTML("beforeend", `<p class="grp-read">${r.dlt.v > 0 ? "Up" : "Down"}${state.range === 4 ? " from the 4 weeks before" : ""}: ${r.dlt.v > 0 ? READS[r.m.id].up : READS[r.m.id].down}.</p>`);
       if (movedAny ? !moved : k > 0) card.classList.add("extra");
     });
+    if (g.beside) grid.appendChild(g.beside(i0));
     panel.querySelector(".more-charts")?.remove();
     const extra = grid.querySelectorAll(".chart.extra").length;
     if (extra && !state.allCharts.has(g.id)) {
@@ -1311,13 +1383,11 @@ stackTables();
   });
   [["all", "All work"], ...CATS].forEach(([id, label]) => { const o = document.createElement("option"); o.value = id; o.textContent = label; catEl.appendChild(o); });
   catEl.addEventListener("change", () => { state.cat = catEl.value; render(); });
-  const toggleEl = document.getElementById("f-toggle"), moreEl = document.getElementById("f-more");
-  toggleEl.addEventListener("click", () => { moreEl.hidden = !moreEl.hidden; toggleEl.setAttribute("aria-expanded", String(!moreEl.hidden)); });
 
   const srcOk = r => !state.sources.size || state.sources.has(r.s);
   const catOk = r => state.cat === "all" || r.c === state.cat;
   const sumRows = (list, keys) => { const t = {}; keys.forEach(k => t[k] = 0); list.forEach(r => keys.forEach(k => t[k] += r[k] || 0)); return t; };
-  const KEYS = ["sessions", "prompts", "briefable", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "read_heavy", "metered", "usage", "long_usage", "start_tokens", "logged", "unattended", "setups", "parallel", "repeats"];
+  const KEYS = ["sessions", "prompts", "briefable", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "delegated_research", "delegated_check", "delegated_build", "read_heavy", "metered", "usage", "long_usage", "start_tokens", "logged", "unattended", "setups", "parallel", "repeats"];
   const weekTotals = filter => { const t = weeks.map(() => { const o = {}; KEYS.forEach(k => o[k] = 0); return o; }); rows.filter(filter).forEach(r => KEYS.forEach(k => t[r.w][k] += r[k] || 0)); return t; };
   const seen = (m, t) => t[m.logs ? "logged" : "sessions"] > 0; // counts only mean something in weeks with sessions
   const value = (m, t) => m.den ? (t[m.den] ? t[m.num] / t[m.den] : null) : (seen(m, t) ? t[m.num] : null);
@@ -1360,7 +1430,15 @@ stackTables();
     return {v, flat: Math.abs(p) < NOISE.rel * 100, t: signed(p, x => x + "%")};
   };
   const mon = d => d.toLocaleDateString("en-US", {month: "short", day: "numeric"});
-  const NS = "http://www.w3.org/2000/svg", L = 36, R = 10, B = 22;
+  const NS = "http://www.w3.org/2000/svg", L = 36, R = 6, B = 22;
+  // charts draw to the card's width at 1.25px a unit, so text and height hold steady however wide the card is.
+  // Measured from #main, because the page and group holding a chart may be hidden when it draws.
+  function chartW(wide) {
+    const main = document.getElementById("main"), cs = getComputedStyle(main);
+    const full = main.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const col = wide || full < 892 ? full : (full - 12) / 2;  // .multiples fits two 440px columns and a 12px gap from 892px
+    return Math.max(340, (col - 34) / 1.25);  // 34px: the card's padding and border
+  }
   const isPhone = () => matchMedia("(max-width: 680px)").matches;
   // the chart grid fits two columns from here
   const TWO_COLUMNS = "(min-width: 744px)", twoColumns = () => matchMedia(TWO_COLUMNS).matches;
@@ -1386,7 +1464,7 @@ stackTables();
   }
 
     function chart(m, totals, i0, opts = {}) {
-    const W = opts.wide ? 680 : 340, H = opts.wide ? 190 : 150;
+    const W = chartW(opts.wide), H = opts.wide ? 190 : 150;
     const idx = []; for (let i = i0; i < WEEKS; i++) idx.push(i);
     // a week with no sessions stays a gap; otherwise the point is the running value up to that week
     const raw = idx.map(i => value(m, totals[i]) == null ? null : windowVal(m, totals, i - ROLL + 1, i));
@@ -1567,10 +1645,6 @@ stackTables();
     rangeEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.n === state.range)));
     srcEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === "all" ? !state.sources.size : state.sources.has(b.dataset.id))));
     catEl.value = state.cat;
-    // a filter set with the panel closed still has to show
-    const picks = [...state.sources].map(id => name(SOURCES, id));
-    if (state.cat !== "all") picks.push(name(CATS, state.cat));
-    toggleEl.textContent = picks.length ? "Filter: " + picks.join(", ") : "Filter";
     const totals = weekTotals(r => srcOk(r) && catOk(r));
     const inRange = rows.filter(r => r.w >= i0 && srcOk(r) && catOk(r));
     const nIn = inRange.reduce((a, r) => a + r.sessions, 0);
@@ -1579,7 +1653,7 @@ stackTables();
     groupShells();
     const results = METRICS.map(m => chart(m, totals, i0));
     // open the group with the most charts going the wrong way, unless one was picked
-    const summed = GROUPS.map(g => groupSummary(g, results, !nIn));
+    const summed = GROUPS.map(g => groupSummary(g, results, !nIn, i0));
     GROUPS.forEach((g, k) => drawGroup(g, summed[k].ordered, totals, i0));
     // a group with no chart that has data under these filters is hidden, and one line says so
     const drawn = g => results.some(r => g.ids.includes(r.m.id) && !r.unmeasured && !r.empty);
@@ -1694,6 +1768,13 @@ stackTables();
   render();
   // the lead chart's width and the milestone rows depend on the screen
   [ "(max-width: 680px)", TWO_COLUMNS ].forEach(q => matchMedia(q).addEventListener("change", render));
+  // and the charts' width follows the page's, including when the sidebar opens or closes
+  const mainEl = document.getElementById("main");
+  let mainW = mainEl.clientWidth, redraw = 0;
+  new ResizeObserver(() => {
+    cancelAnimationFrame(redraw);
+    redraw = requestAnimationFrame(() => { const w = mainEl.clientWidth; if (w && w !== mainW) { mainW = w; render(); } });
+  }).observe(mainEl);
   document.addEventListener("pointerdown", e => document.querySelectorAll(".chart").forEach(c => { if (c.hideTip && !c.contains(e.target)) c.hideTip(); }));
 })();
 
@@ -1705,9 +1786,9 @@ document.addEventListener("focusin", e => { if (e.target.closest(".tbl")) e.targ
 // ---- hover / tap explanations for the how-sure chips ----
 (function () {
   const TIPS = [
-    [/^Sure$/, "Seen again and again, or checked directly in your files."],
-    [/^Likely$/, "Shows up repeatedly, but something else could explain it."],
-    [/^Hunch$/, "Thin evidence so far. Test it before you rely on it."],
+    [/^Sure$/, "Confidence level: sure. Seen again and again, or checked directly in your files."],
+    [/^Likely$/, "Confidence level: likely. Shows up repeatedly, but something else could explain it."],
+    [/^Hunch$/, "Confidence level: hunch. Thin evidence so far. Test it before you rely on it."],
   ];
   const pop = document.createElement("div"); pop.className = "tip-pop"; pop.id = "tip-pop"; pop.setAttribute("role", "tooltip"); pop.hidden = true;
   document.body.appendChild(pop);
@@ -1801,6 +1882,20 @@ function goTo(id, scroll = true) {
   };
   window.addEventListener("popstate", fromAddress);
   fromAddress();
+  window.addEventListener("beforeprint", () => side.querySelectorAll("details").forEach(d => { d.open = true; }));
+  // the light and dark switch; it remembers the choice where the browser allows it
+  const themeBtn = document.getElementById("theme-btn"), showMode = () => {
+    const light = document.documentElement.dataset.mode === "light";
+    themeBtn.setAttribute("aria-checked", String(light));
+    themeBtn.title = light ? "Switch to dark mode" : "Switch to light mode";
+    return light;
+  };
+  showMode();
+  themeBtn.addEventListener("click", () => {
+    const root = document.documentElement;
+    if (root.dataset.mode === "light") delete root.dataset.mode; else root.dataset.mode = "light";
+    try { localStorage.setItem("second-look-theme", showMode() ? "light" : "dark"); } catch (e) { showMode(); }
+  });
   // the report menu: stay on the same page when switching reports; click away or Escape closes it
   const reportMenu = document.getElementById("report-menu");
   if (reportMenu) {

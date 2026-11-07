@@ -12,7 +12,7 @@ type Behavior = {
 
 const behaviors: Behavior[] = [
   {
-    label: "Improve your prompts and setup",
+    label: "How you brief AI and set up your tools",
     question: "Did your last fixes work, and did your first message give the goal, audience, constraints and what done looks like?",
     example: [
       { tag: "WHAT HAPPENS", text: "Your prototype requests name the feature but leave out the user." },
@@ -42,7 +42,7 @@ export function Approach() {
       <Container className="flex flex-col gap-14 py-20 lg:flex-row lg:gap-24 lg:py-28">
         <div className="flex flex-col gap-6 lg:w-[440px] lg:shrink-0">
           <Kicker>Our approach</Kicker>
-          <SectionHeading>AI use is more than the prompt you type.</SectionHeading>
+          <SectionHeading>How you work with AI shapes what you get back.</SectionHeading>
           <p className="font-body text-[17px] leading-[1.55] text-text-2">
             It also reads the context you give, your skills and config, and how your habits change. Each
             finding shows its evidence and one small change to try.
