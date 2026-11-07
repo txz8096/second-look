@@ -798,7 +798,7 @@ def agent_checks(steps):
     return {"edited": last_edit >= 0, "agent_checked": last_edit >= 0 and last_check > last_edit,
             "unchecked_ships": ships, "unchecked_samples": samples,
             "delegations": dict(delegated), "reads": reads,
-            "read_heavy": reads >= READ_HEAVY and not delegated}
+            "read_heavy": reads >= READ_HEAVY}
 
 
 def scheduled_prompts(home):
@@ -912,7 +912,8 @@ def _usage_fields(m):
 def session_cube(sessions):
     """Additive weekly rows by source and kind of work, so the report can filter and recompute."""
     keys = ("sessions", "prompts", "briefable", "briefed", "corrections", "refinements", "build", "checked",
-            "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "read_heavy",
+            "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "delegated_research",
+            "delegated_check", "delegated_build", "read_heavy",
             "metered", "usage", "long_usage", "start_tokens", "logged", "unattended", "setups", "parallel", "repeats")
     cube = collections.defaultdict(lambda: dict.fromkeys(keys, 0))
     for r in sessions:
@@ -932,6 +933,8 @@ def session_cube(sessions):
         row["agent_checked"] += r["agent_checked"]
         row["unchecked_ships"] += r["unchecked_ships"]
         row["delegated"] += bool(r["delegations"])
+        for purpose in ("research", "check", "build"):
+            row["delegated_" + purpose] += r["delegations"].get(purpose, 0)
         row["read_heavy"] += r["read_heavy"]
         if r["source"] in LOGGED:
             row["logged"] += 1
