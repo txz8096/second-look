@@ -54,6 +54,7 @@ SAMPLE = {
     "CUBE = sampleCube()": "the charts still use the template's sample data; replace sampleCube() with the collector's cube",
     "Streak redesign starts": "MILESTONES still holds the template's sample milestones; use the person's own, or []",
     "Sample data.": "the sidebar note still says the page uses sample data",
+    "report-opt-sample": "the report menu still holds the template's sample dates; run report_menu.py, or on claude.ai use a plain label",
     "you’ve gotten better at explaining what you want": "the summary is still the template's sample text",
     "Check the job tracker and summarize what changed": "the automation list still holds the template's sample rows",
 }

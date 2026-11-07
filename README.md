@@ -236,13 +236,16 @@ asks four questions to set up your profile.
 Every review covers all your tools since the last one. To narrow it, say so: "just my Cursor
 sessions" or "since Oct 1".
 
+If a scheduled review has finished and you haven't opened its report, asking for a second look
+offers that report first, so you can go through it or run a new one.
+
 After your first report, second look asks whether to run the review every two weeks, or at
 another cadence, and sets it up with the best option where you are:
 
 | Where you use it | How the review recurs |
 |---|---|
-| Claude desktop app, Codex app | A scheduled task in the app runs the full review on your computer. You open it afterwards to read the report and pick fixes |
-| Terminal (Claude Code or Codex CLI) | A small daily job runs the review in the background when it's due, then notifies you the report is ready |
+| Claude desktop app, Codex app | A scheduled task in the app runs the full review on your computer. Afterwards, ask for a second look to open the report and pick fixes |
+| Terminal (Claude Code or Codex CLI) | A small daily job runs the review in the background when it's due, then notifies you the report is ready. Ask for a second look to open it |
 | Cursor, or if you'd rather not run reviews unattended | A notification tells you a review is due |
 | claude.ai | A claude.ai scheduled task, which only sees your claude.ai chats |
 
@@ -333,7 +336,8 @@ one. Name a narrower scope, like "my Cursor sessions", if that's all you want.
 
 Yes, if you say yes after your first report. In the Claude desktop app or the Codex app, a
 scheduled task runs the full review on your computer. In a terminal, a small daily job runs
-it in the background and tells you when the report is ready. In Cursor or Antigravity, which
+it in the background and tells you when the report is ready. Either way, ask for a second look
+to open the finished report. In Cursor or Antigravity, which
 can't schedule anything on your computer, you get a notification when a review is due
 instead. Every scheduled review includes Antigravity sessions and your exports, and the
 notification tells you when an export is over 90 days old. Each run

@@ -42,6 +42,17 @@ button.menu-btn:hover { background: none; border: 0; color: var(--fg); }
 .bar-actions { display: flex; align-items: center; gap: 12px; min-width: 0; }
 .report-pick { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--bg); border: 1px solid var(--line); border-radius: var(--r-8); white-space: nowrap; }
 .report-pick-t { font-size: 14px; line-height: 20px; font-weight: 500; }
+details.report-menu { position: relative; }
+details.report-menu > summary { display: flex; align-items: center; gap: 12px; min-height: 0; padding: 8px 12px; }
+details.report-menu > summary:hover, details.report-menu[open] > summary { border-color: var(--line-strong); }
+.report-chev { flex: none; margin-left: -4px; color: var(--muted); }
+details.report-menu[open] .report-chev { transform: rotate(180deg); }
+.report-list { position: absolute; top: calc(100% + 8px); right: 0; min-width: 200px; max-height: min(320px, calc(100dvh - 88px)); overflow-y: auto; box-sizing: border-box; margin: 0; padding: 4px; list-style: none; background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-14); }
+.report-opt { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 8px 12px; border-radius: var(--r-8); color: var(--fg); font-size: 14px; line-height: 20px; text-decoration: none; white-space: nowrap; }
+a.report-opt:hover { background: var(--surface-2); color: var(--fg); }
+a.report-opt[aria-current] { background: var(--surface-2); font-weight: 500; }
+.report-opt-note { color: var(--muted); font-size: 13px; font-weight: 400; }
+.report-opt-sample { color: var(--muted); }
 a.feedback { display: flex; align-items: center; min-height: 40px; box-sizing: border-box; padding: 8px 12px; color: var(--fg); font-size: 14px; line-height: 20px; font-weight: 500; text-decoration: none; }
 a.feedback:hover { color: var(--accent); }
 .shell { display: grid; grid-template-columns: 256px minmax(0, 1fr); min-height: calc(100dvh - 64px); }
@@ -398,7 +409,11 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   body { line-height: 1.6; }
   .bar-brand { padding: 0 8px 0 16px; }
   .appbar { padding-right: 4px; }
-  .report-pick { padding: 0; background: none; border: 0; }
+  .report-pick, details.report-menu > summary { padding: 0; background: none; border: 0; }
+  details.report-menu > summary { gap: 8px; min-height: 44px; box-sizing: border-box; padding: 0 4px; }
+  .bar-actions { gap: 4px; }
+  a.feedback { padding: 8px; white-space: nowrap; }
+  a.report-opt { min-height: 44px; box-sizing: border-box; }
   .report-pick-t { display: none; }
   .wrap { padding: 24px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); }
   .opening h1 { font-size: 28px; }
@@ -477,6 +492,10 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   #part-3 > section table.stack td:not(:first-child)::before { display: inline; margin-right: 8px; }
   #part-3 > section table.stack td > .v { display: inline; }
 }
+@media (max-width: 400px) {
+  .report-year { display: none; }
+  .brand-logo { height: 22px; }
+}
 </style>
 
 <header class="appbar">
@@ -490,7 +509,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 </svg></a>
   </div>
   <div class="bar-actions">
-    <p class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25, 2026</span></p>
+    <!-- report-menu --><details class="report-menu" id="report-menu"><summary class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25<span class="report-year">, 2026</span></span><svg class="report-chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></summary><ul class="report-list"><li><a class="report-opt" href="#overview" aria-current="page">Oct 25, 2026<span class="report-opt-note">Latest</span></a></li><li><span class="report-opt report-opt-sample">Oct 11, 2026</span></li><li><span class="report-opt report-opt-sample">Sep 27, 2026</span></li></ul></details><!-- /report-menu -->
     <a class="feedback" id="report-issue" href="https://github.com/txz8096/second-look/issues/new" target="_blank" rel="noopener" title="Report an issue on GitHub. Leave your prompts out of it.">Feedback</a>
   </div>
 </header>
@@ -1782,6 +1801,16 @@ function goTo(id, scroll = true) {
   };
   window.addEventListener("popstate", fromAddress);
   fromAddress();
+  // the report menu: stay on the same page when switching reports; click away or Escape closes it
+  const reportMenu = document.getElementById("report-menu");
+  if (reportMenu) {
+    reportMenu.addEventListener("click", e => {
+      const a = e.target.closest('a.report-opt:not([href^="#"])');
+      if (a && location.hash) a.href = a.getAttribute("href").split("#")[0] + location.hash;
+    });
+    document.addEventListener("click", e => { if (reportMenu.open && !reportMenu.contains(e.target)) reportMenu.open = false; });
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && reportMenu.open) { reportMenu.open = false; reportMenu.querySelector("summary").focus(); } });
+  }
 })();
 
 // ---- habit terms: keep each definition card on screen; Escape closes it ----

@@ -41,6 +41,7 @@ STALE_EXPORT_DAYS = 90
 EXPORTS = (("claude.ai", "claude/conversations.json"), ("ChatGPT", "chatgpt/conversations.json"),
            ("Gemini", "gemini/MyActivity.json"))
 HEADLESS_TIMEOUT = 45 * 60
+REPORT_NAME = re.compile(r"(\d{4}-\d{2}-\d{2})\.html")
 
 HEADLESS_PROMPT = (
     "Run a full second look review using the skill at ~/.agents/skills/second-look (read its "
@@ -54,6 +55,35 @@ HEADLESS_PROMPT = (
 
 def today():
     return dt.date.today()
+
+
+def latest_report():
+    """The newest full report as (date, path), or (None, None). Other files, like usage reports, don't count."""
+    reports = os.path.join(DIR, "reports")
+    if not os.path.isdir(reports):
+        return None, None
+    dates = [m.group(1) for m in (REPORT_NAME.fullmatch(f) for f in os.listdir(reports)) if m]
+    if not dates:
+        return None, None
+    date = max(dates)
+    return date, os.path.join(reports, date + ".html")
+
+
+def unopened_report(s):
+    """The path of a report a scheduled run saved that hasn't been opened yet, or None."""
+    date, path = latest_report()
+    return path if date and date > (s.get("report_opened") or "") else None
+
+
+def mark_opened(report):
+    """Record that a report was opened. open_report.py calls this; scheduled runs never do."""
+    m = REPORT_NAME.fullmatch(os.path.basename(report))
+    if not m or os.path.dirname(os.path.realpath(report)) != os.path.realpath(os.path.join(DIR, "reports")):
+        return
+    s = load()
+    if m.group(1) > (s.get("report_opened") or ""):
+        s["report_opened"] = m.group(1)
+        save(s)
 
 
 def every(days):
@@ -181,11 +211,17 @@ def stale_exports():
             "to add it." % (names, STALE_EXPORT_DAYS))
 
 
+def ready_message():
+    date, _ = latest_report()
+    saved = "Saved as %s.html in ~/.second-look/reports." % date if date else "Saved in ~/.second-look/reports."
+    return "Your review is ready. Ask your assistant for a second look to go through it. " + saved
+
+
 def run_headless(s, dry):
     cmd = agent_command(s["agent"], s["agent_path"])
     if dry:
         print("would run:", " ".join(cmd[:2]), "...")
-        notify("Your second look report is ready in ~/.second-look/reports." + stale_exports(), dry)
+        notify(ready_message() + stale_exports(), dry)
         return
     os.makedirs(os.path.join(DIR, "reports"), exist_ok=True)
     log = os.path.join(DIR, "reports", "run-%s.log" % today().isoformat())
@@ -197,7 +233,7 @@ def run_headless(s, dry):
             out.write("\n%s\n" % e)
             code = 1
     if code == 0 and load().get("last_review") == today().isoformat():
-        notify("Your second look report is ready in ~/.second-look/reports." + stale_exports(), dry)
+        notify(ready_message() + stale_exports(), dry)
     else:
         notify("Your scheduled review didn't finish. Ask your assistant for a second look. Details: " + log, dry)
 
@@ -206,7 +242,7 @@ def status(s):
     due = next_due(s)
     return {"enabled": bool(s.get("enabled")), "every_days": s["every_days"], "method": s.get("method"),
             "app": s.get("app"), "agent": s.get("agent"), "last_review": s.get("last_review"),
-            "next_due": due.isoformat() if due else None}
+            "next_due": due.isoformat() if due else None, "unopened_report": unopened_report(s)}
 
 
 def main():

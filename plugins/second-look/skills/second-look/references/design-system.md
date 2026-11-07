@@ -59,15 +59,15 @@ them.
 
 ## Radii
 
-6px tooltips and the chosen filter · 8px buttons, inputs, tiles, code blocks and the filter track · 10px "Try this" panels · 14px cards, tables, the plan and the contents menu ·
+6px tooltips and the chosen filter · 8px buttons, inputs, tiles, code blocks and the filter track · 10px "Try this" panels · 14px cards, tables, the plan and the report menu ·
 fully rounded chips.
 
 ## Page structure, in order
 
 An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs (Nov 6, 2026). Scripts off, every page shows in turn and the links still work.
 
-1. App bar (64px, stays on screen): the sidebar toggle and logo on the left; "Latest report" with the review's date, and the Feedback link (`#report-issue`, to https://github.com/txz8096/second-look/issues/new) on the right. A report holds one review, so there's no menu of earlier ones.
-2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Prompts & setup, Skills, Habits & usage, with the script's counts of fixes and of skills to fix, and a note at the bottom saying habits are estimated from wording.
+1. App bar (64px, stays on screen): the sidebar toggle and logo on the left; the report menu (`#report-menu`, a `details` that works with scripts off) and the Feedback link (`#report-issue`, to https://github.com/txz8096/second-look/issues/new) on the right. The menu shows "Latest report" or "Earlier report" with this report's date, and opens a scrolling list of every saved report, newest first, with the latest marked. `scripts/report_menu.py` writes the list between the `report-menu` comments, using relative links, and switching reports stays on the same page. With one report, or on claude.ai, it's a plain label. Phones show only the date, and at 400px and narrower the year drops too, so the bar fits. The sample report's earlier dates are plain text, since it has no other reports to open.
+2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Prompts & setup, Skills, Habits & usage, with the script's counts of fixes and of skills to fix. The sample report alone adds a note at the bottom saying it's sample data; a real report has none.
 3. Overview (`#overview`): "Your latest review" as the `h1`, the summary paragraph (20px, plain words, no numbers), "Did the
    fixes from your last review work?" (`#last-cycle`, one card per decision, one folded row per fix; only after a review with logged fixes), then "Explore your report", one row per page.
 4. Improve your prompts and setup (`#part-2`): headline linking to the plan, pattern cards

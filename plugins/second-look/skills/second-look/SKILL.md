@@ -59,7 +59,7 @@ message, so quote only what a finding needs.
 | `history.json` | Weekly habit rows, kept longer than the tools keep their own logs |
 | `exports/claude/conversations.json`, `exports/chatgpt/conversations.json`, `exports/gemini/MyActivity.json` | Data exports for the 12-month view |
 | `reports/` | Saved reports, when they aren't published as artifacts |
-| `schedule.json` | Recurring review setting: on or off, days between reviews, how they run, date of the last review |
+| `schedule.json` | Recurring review setting: on or off, days between reviews, how they run, date of the last review, date of the last report they opened |
 
 Files that ship with this skill:
 
@@ -71,6 +71,7 @@ Files that ship with this skill:
 | `scripts/collect.py` | Local | Reads Claude Code, Codex, Cursor and Antigravity logs and the three data exports |
 | `scripts/prerender.py` | Local | Draws the year charts and the data-scope line into the report so they show where scripts are blocked |
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
+| `scripts/report_menu.py` | Local | Lists every saved report in each report's "Latest report" menu |
 | `scripts/open_report.py` | Local | Opens a finished report in the user's own browser |
 | `scripts/add_export.py` | Local | Finds a claude.ai, ChatGPT or Gemini export and files it in `~/.second-look/exports` |
 | `scripts/schedule.py` | Local | Sets up, changes or stops recurring reviews, and records each full review |
@@ -122,6 +123,20 @@ cadence: every 14 days
 hand.
 
 ## Running a review
+
+**Check for a finished report first (locally).** A scheduled run saves its report without opening
+it, so someone who comes back and asks for a second look usually wants that report. When they ask
+for a review, run `python3 scripts/schedule.py status`. If `unopened_report` has a path, ask once:
+
+"Your <Month D> review is ready. Want to go through it, or run a new one?"
+
+If they want to go through it, run `python3 scripts/open_report.py <path>`, offer the walkthrough
+(below) and close with which fixes they want to try. Don't collect anything or run `reviewed`, so
+the schedule doesn't move. If they want a new one, carry on with a full review.
+
+Skip this check when they name a scope, when they already asked for a new review, and on scheduled
+runs, whose prompt starts "Run a full second look review using the skill at". A scheduled run never
+stops to ask; it builds the next report.
 
 Every review is a full review: all their tools, everything since the last review (or the last
 14 days if there's none), the full skill check and the full report. Narrow it only when they
@@ -460,8 +475,9 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
   so the report opens in their own browser. App preview panes, like the Claude desktop app's,
   can show a local file without its scripts or keep an old copy after a rebuild. In your
   closing message, give the path and the command to open it again (`open <path>` on macOS).
-  Skip this on scheduled runs, so a private report never pops up while they're away; the
-  notification tells them it's ready.
+  This also records the report as opened. Skip this on scheduled runs, so a private report never
+  pops up while they're away. The task's session in the app, or the notification in a terminal,
+  tells them it's ready, and the check at the start of "Running a review" opens it when they ask.
 
 Sections, in order. Each maps to a block in the template.
 
@@ -483,7 +499,7 @@ words it differently ("misread you", "a real brief"). Skip the term when the sen
 defines it. Skip the summary and part headlines. In part 2's pattern cards, also wrap the first session,
 model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design system.
 
-**App bar and sidebar.** Set the review's date in `.report-date`. Keep the Feedback link (`#report-issue`, https://github.com/txz8096/second-look/issues/new) as it is. In the sidebar, the note at the bottom reads "Habits are estimated from session wording." with no "Sample data". The script counts the fixes and skills beside each page's name.
+**App bar and sidebar.** Set the review's date in `.report-date`. Locally, once the report is saved in `~/.second-look/reports/` as `<end-date>.html`, run `python3 scripts/report_menu.py <report.html>`. It fills the menu in every saved report, so they can all reach each other, and shows a plain label when there's only one. On claude.ai, replace everything between the `report-menu` comments with `<p class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25<span class="report-year">, 2026</span></span></p>`, because an artifact has no folder of saved reports. Keep the Feedback link (`#report-issue`, https://github.com/txz8096/second-look/issues/new) as it is. Delete the sidebar's `.side-note`: it marks the template as sample data, so a real report has no note there. The script counts the fixes and skills beside each page's name.
 
 **Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then "Did the fixes from your last review work?" if there's an earlier review, then "Explore your report": keep its three rows and their links. Prompts & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
 

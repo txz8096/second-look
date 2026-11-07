@@ -34,7 +34,7 @@ const faqs: Faq[] = [
   },
   {
     q: "Does it run by itself? Can I change or stop it?",
-    a: "Yes, if you say yes after your first report. In the Claude desktop app or the Codex app, a scheduled task runs the full review on your computer. In a terminal, a small daily job runs it in the background and tells you when the report is ready. In Cursor or Antigravity, which can’t schedule anything on your computer, you get a notification when a review is due instead. Every scheduled review includes Antigravity sessions and your exports, and the notification tells you when an export is over 90 days old. Each run uses your quota and needs your computer on. Ask your assistant to change the cadence (“make it monthly”) or stop it (“stop the reviews”).",
+    a: "Yes, if you say yes after your first report. In the Claude desktop app or the Codex app, a scheduled task runs the full review on your computer. In a terminal, a small daily job runs it in the background and tells you when the report is ready. Either way, ask for a second look to open the finished report. In Cursor or Antigravity, which can’t schedule anything on your computer, you get a notification when a review is due instead. Every scheduled review includes Antigravity sessions and your exports, and the notification tells you when an export is over 90 days old. Each run uses your quota and needs your computer on. Ask your assistant to change the cadence (“make it monthly”) or stop it (“stop the reviews”).",
   },
   {
     q: "Which apps can run it on a schedule?",
