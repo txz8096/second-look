@@ -14,7 +14,7 @@ const faqs: Faq[] = [
   },
   {
     q: "Does one report cover all my AI apps?",
-    a: "Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the computer where you use them. One run reads their logs and Antigravity’s, plus claude.ai, ChatGPT and Gemini if you add their data exports. Started from claude.ai in a browser or from a cloud session, it can’t see those logs, so it covers only your claude.ai chats.",
+    a: "Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the computer where you use them. One run reads their logs and Antigravity’s, plus claude.ai, ChatGPT and Gemini if you add their data exports. In Settings → Data coverage, use Add export or Replace export on the app’s row for instructions. The next review can include the new history. Started from claude.ai in a browser or from a cloud session, it can’t see those logs, so it covers only your claude.ai chats.",
   },
   {
     q: "What data does it read?",
