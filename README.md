@@ -1,82 +1,50 @@
 # second look
 
-**Learn from how you work with AI.**
+**A performance review for how you work with AI.**
 
-Models change every few months, and the way you work drifts out of step with them. Tokens
-leak in three places: how you brief AI (missing details, rules you retype in every app), your
-context (long sessions, memory you no longer need) and your setup (skills written for an
-older model, still loading every session). You can't see any of it from inside one chat, and
-a leak you don't see costs you again every session after.
+second look is a free, open-source skill for people who use AI to build things. It
+reviews your past sessions, shows where your workflow could improve, and gives you
+specific changes to try. The next review checks how those changes held up.
 
-second look is an open-source skill that reads your sessions across Claude Code, Codex,
-Cursor, Antigravity, claude.ai, ChatGPT and Gemini. It shows where your tokens go and gives
-you a few fixes to try, each with the sessions behind it. Run it again later and it checks
-whether the fix stuck.
+[See a sample report](https://txz8096.github.io/second-look/sample-report.html) ·
+[Check supported apps](#supported-apps) ·
+[Privacy](#privacy)
 
-Paste this into Claude Code, Codex or Cursor:
+## Try your first review
+
+Paste this into Claude Code, Codex or Cursor.
 
 ```
 Install second look from github.com/txz8096/second-look.
 ```
 
-[Website](https://txz8096.github.io/second-look/) ·
-[Sample report](https://txz8096.github.io/second-look/sample-report.html) ·
-[Supported apps](#supported-apps) ·
-[Install](#install) ·
-[Privacy](#privacy) ·
-[FAQ](#faq)
+Then ask for **"a second look"**. Answer four short questions to set up your first
+review. second look reads the local history your supported coding apps already keep.
+Browser history can be added separately.
 
-## Why
+The skill is free under the MIT license. Reviews use your existing AI quota.
 
-A closer look pays off in a few places:
+[Other install options](#install)
 
-| | |
-|---|---|
-| **Less overhead** | Cut the setup and back-and-forth around each task, so your usage goes further |
-| **Better first results** | Find the habits behind rework, so output needs less fixing |
-| **More reliable code** | Ask for code with a clear scope and a way to check it |
-| **Your own judgment** | Notice when you accept polished output without checking it |
-| **Less repeated setup** | Stop retyping the same rules. Move them into memory and skills |
-| **Apps that work together** | See which app you use for what, and match each task to the right one |
-| **Skills that last** | Keep your skills accurate as models and apps change |
+<a id="what-you-get"></a>
 
-## What you get
+## What a review shows you
 
-On your chosen schedule or whenever you ask, second look builds one private report.
-After your first report, it offers to set up the two-week schedule for you.
+In the sample report, 14 of 72 Claude Code and Codex sessions were very long and
+accounted for 61% of usage over four weeks. Some continued into a new project
+after the previous task was done. The suggested fix is to open a fresh chat
+when you switch projects.
 
-**Overview.** See what you use AI for across the last 13 complete weeks and how fixes from your previous review worked.
+- **How you brief AI and set up your apps.** See where a missing detail slowed you down,
+  where a standing rule could help, or when to start a fresh session.
+- **Keep your skills current.** Find stale instructions, broken or duplicate skills,
+  and updates you may have missed.
+- **How your habits are changing.** See how often you check the work, where you might
+  turn a recurring task into a skill, hook or scheduled task, and how those habits
+  change over time.
 
-**1. How you brief AI and set up your apps.** It checks whether your first message gave the goal,
-the audience, the constraints and what done looks like, and whether your standing rules
-reach every app. When very long sessions take most of your token usage, it says so and
-suggests where to start fresh. A finding looks like this:
-
-> **What happens:** Your prototype requests name the feature but leave out the user.
->
-> **Evidence:** In three sessions, that cost several turns of clarifying.
->
-> **Try this:** Add who it's for and what done means to the first message.
-
-Generic advice like "write clearer prompts" doesn't make the cut. Each card shows quotes from
-your own sessions, how sure the review is, and a fix you can paste.
-
-**2. Keep your skills current.** It reads the skills and config you've built and flags the
-ones with wrong facts, broken folders, duplicates, missed updates from recent releases, and
-no tests. It also names what loads into every Claude Code session before you type, like skills
-you haven't run in 60 days, and how much you'd save by having them run only when you ask.
-
-**3. How your habits are changing.** It closes with how you're trending: briefed starts, corrections, output
-checking, restarts, and how much of your usage went to very long sessions, charted week by
-week for up to 12 months and filterable by app and kind of work. The charts are grouped by
-the question they answer, like "Am I checking the work?", and the group that slipped most
-opens first with a short written summary. "Am I automating repeat work?" also lists the
-requests you keep typing by hand, each with a fix: a skill, a hook or a scheduled task.
-
-**Settings.** See the review schedule and data coverage, including when session history starts for each app. Use Add export or Replace export on the app’s row for instructions. The next review can include the new history.
-
-See the [sample report](https://txz8096.github.io/second-look/sample-report.html) for the full
-layout. It uses made-up data.
+Each finding shows evidence from your sessions and gives you a fix to try.
+The [sample report](https://txz8096.github.io/second-look/sample-report.html) uses made-up sessions.
 
 <a id="supported-tools"></a>
 
@@ -97,56 +65,38 @@ that's on that computer.
 
 ## Privacy
 
-second look has no server and no account. It runs inside the assistant you already use,
-reads files on your computer, and saves its report to `~/.second-look/`. Nothing about your
-sessions is sent to us. What the review reads goes to your model provider like any message
-you send your assistant, under your existing account settings.
+For local reviews, second look reads session logs, skill files and configuration
+on your computer and saves the report in `~/.second-look/`. second look has no
+server or account. Your assistant sends what it reads to your model provider
+under your existing account settings.
 
-| | |
-|---|---|
-| **Redaction** | API keys, emails, and token or password values are stripped before anything is quoted. It works by pattern, so it can miss a client's name or confidential code. Read a report before you share it |
-| **Scope** | Limit any review to a window, a app or a project: "only my Cursor sessions", "since Oct 1" |
-| **Sharing** | Reports stay private unless you share them |
-| **Deleting** | Stop recurring reviews, then remove `~/.second-look/` and the skill folder ([How do I uninstall it?](#faq)). If you kept a year of Claude Code history, set `cleanupPeriodDays` back to `30` |
+You can limit a review to an app, project or date range. Pattern-based redaction
+removes common secrets before quoting sessions, so read the report before
+sharing it.
 
-Both scripts, [`collect.py`](plugins/second-look/skills/second-look/scripts/collect.py) and
-[`check_report.py`](plugins/second-look/skills/second-look/scripts/check_report.py), use
-Python's standard library and make no network calls. To see exactly what your assistant will
-read, run the collector yourself:
+<details>
+<summary>Inspect what the collector reads</summary>
+
+Both [collect.py](plugins/second-look/skills/second-look/scripts/collect.py) and
+[check_report.py](plugins/second-look/skills/second-look/scripts/check_report.py)
+use Python's standard library and make no network calls.
 
 ```bash
 python3 ~/.agents/skills/second-look/scripts/collect.py --days 14
 ```
 
-Using AI apps at work? Check your company's AI policy before you review work sessions.
+Using AI apps at work? Check your company's AI policy before reviewing work sessions.
 
-## How it works
-
-| Step | What happens |
-|---|---|
-| **Coach this cycle** | Get a fix to test for every pattern |
-| **Maintain your setup** | Fix stale, broken or duplicate skills and config |
-| **Review change over time** | Compare habits and outcomes across apps |
-| **Return to the evidence** | Next review: did it stick, did it help, and what did it cost? |
-
-Compared with other AI reflection tools, second look covers several apps in one report,
-checks your skills, app setup and how you brief AI, and follows up on whether last
-cycle's changes worked.
+</details>
 
 ## Install
 
-### Ask your assistant (easiest)
+[Try your first review](#try-your-first-review) for the shortest path in Claude Code, Codex or Cursor.
 
-Paste this into Claude Code, Codex or Cursor:
+<a id="terminal"></a>
 
-```
-Install second look from github.com/txz8096/second-look.
-```
-
-Your assistant follows the steps in [For AI assistants](#for-ai-assistants): it shows you
-which apps it found and asks before changing anything.
-
-### Terminal
+<details>
+<summary>Install from the terminal</summary>
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash
@@ -169,7 +119,12 @@ and what it would change without changing anything, run it with `--check`:
 curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --check
 ```
 
+</details>
+
 ### For AI assistants
+
+<details>
+<summary>Installer instructions for assistants</summary>
 
 If a user asks you to install second look, follow these steps. Don't skip the first two.
 
@@ -191,9 +146,14 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
 
 4. Tell the user what was installed and where, and that they can start a review by asking
    for "a second look" or typing `/second-look` in Claude Code. Mention that adding their
-   claude.ai, ChatGPT and Gemini exports is optional (see below).
+   claude.ai, ChatGPT and Gemini exports is optional ([add browser history](#add-your-claudeai-chatgpt-and-gemini-history)).
 
-### Claude Code plugin
+</details>
+
+<a id="claude-code-plugin"></a>
+
+<details>
+<summary>Install the Claude Code plugin</summary>
 
 ```
 /plugin marketplace add txz8096/second-look
@@ -203,7 +163,12 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
 The plugin installs the skill for Claude Code only. Use the installer above to add Codex and
 Cursor, or to change the retention setting.
 
-### claude.ai
+</details>
+
+<a id="claudeai"></a>
+
+<details>
+<summary>Install in claude.ai</summary>
 
 1. Download [`second-look.zip`](https://github.com/txz8096/second-look/releases/latest/download/second-look.zip).
 2. In claude.ai, go to Settings > Capabilities, turn on code execution, and upload the zip
@@ -214,7 +179,12 @@ Cursor, or to change the retention setting.
 On claude.ai it can read your claude.ai chats only. Run it in Claude Code, Codex or Cursor
 to include those apps.
 
+</details>
+
 ## Add your claude.ai, ChatGPT and Gemini history
+
+<details>
+<summary>Add optional browser exports</summary>
 
 This step is optional. You can add it any time.
 
@@ -233,29 +203,15 @@ To file one by hand instead, put `conversations.json` in `~/.second-look/exports
 `~/.second-look/exports/chatgpt/`, and Gemini's `MyActivity.json` in
 `~/.second-look/exports/gemini/`.
 
+</details>
+
 ## Run it
 
-Ask your assistant for "a second look", or type `/second-look` in Claude Code. The first run
-asks four questions to set up your profile.
+Ask for "a second look" any time, or type `/second-look` in Claude Code. You can
+narrow the review by asking for "just my Cursor sessions" or "since Oct 1".
 
-Every review covers all your apps since the last one. To narrow it, say so: "just my Cursor
-sessions" or "since Oct 1".
-
-If a scheduled review has finished and you haven't opened its report, asking for a second look
-offers that report first, so you can go through it or run a new one.
-
-After your first report, second look asks whether to run the review every two weeks, or at
-another cadence, and sets it up with the best option where you are:
-
-| Where you use it | How the review recurs |
-|---|---|
-| Claude desktop app, Codex app | A scheduled task in the app runs the full review on your computer. Afterwards, ask for a second look to open the report and pick fixes |
-| Terminal (Claude Code or Codex CLI) | A small daily job runs the review in the background when it's due, then notifies you the report is ready. Ask for a second look to open it |
-| Cursor, or if you'd rather not run reviews unattended | A notification tells you a review is due |
-| claude.ai | A claude.ai scheduled task, which only sees your claude.ai chats |
-
-Scheduled reviews read your sessions and use your quota each time, and need your computer on.
-To change or stop them, ask your assistant: "make it monthly" or "stop the reviews".
+After your first report, you can opt into a review every two weeks or choose
+another cadence. [Scheduling options](#faq) depend on where you run the skill.
 
 ## FAQ
 
@@ -283,8 +239,9 @@ until second look is updated.
 
 Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the
 computer where you use them. One run reads their logs and Antigravity's, plus claude.ai,
-ChatGPT and Gemini if you add their data exports. Started from claude.ai in a browser or from a cloud session,
-it can't see those logs, so it covers only your claude.ai chats.
+ChatGPT and Gemini if you add their data exports. A review started in claude.ai
+covers your claude.ai chats. Local coding sessions need a review on the computer
+where their logs are saved.
 </details>
 
 <details>
@@ -342,9 +299,8 @@ one. Name a narrower scope, like "my Cursor sessions", if that's all you want.
 Yes, if you say yes after your first report. In the Claude desktop app or the Codex app, a
 scheduled task runs the full review on your computer. In a terminal, a small daily job runs
 it in the background and tells you when the report is ready. Either way, ask for a second look
-to open the finished report. In Cursor or Antigravity, which
-can't schedule anything on your computer, you get a notification when a review is due
-instead. Every scheduled review includes Antigravity sessions and your exports, and the
+to open the finished report. In Cursor you get a reminder to start the review. For Antigravity history,
+set up reviews from Claude Code, Codex or Cursor on the same computer. Every scheduled review includes Antigravity sessions and your exports, and the
 notification tells you when an export is over 90 days old. Each run
 uses your quota and needs your computer on. Ask your assistant to change the cadence ("make
 it monthly") or stop it ("stop the reviews").
