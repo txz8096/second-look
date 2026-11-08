@@ -26,7 +26,7 @@ coding tools already save.
 
 **Free and open source.** Reviews use your existing AI quota.
 
-[Other ways to install](#install) · [Install in claude.ai](#claudeai)
+**Only use AI in the browser?** [Set up second look in claude.ai](#claudeai).
 
 <a id="what-you-get"></a>
 
@@ -93,35 +93,7 @@ Using AI apps at work? Check your company's AI policy before reviewing work sess
 
 <a id="install"></a>
 
-## Other ways to install
-
-<a id="terminal"></a>
-
-<details>
-<summary>Install from the terminal</summary>
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash
-```
-
-The installer:
-
-1. Copies the skill to `~/.agents/skills/second-look`.
-2. Links it into `~/.claude/skills`, `~/.codex/skills` and `~/.cursor/skills` for each app
-   you have.
-3. Asks before changing one setting. Claude Code deletes sessions after 30 days by default,
-   and a 12-month view needs them kept for a year (`cleanupPeriodDays: 365`).
-4. Creates `~/.second-look/` for your profile, review log and exports.
-
-It needs `python3`, which macOS and most Linux systems already have. Pass `--yes` to accept
-the retention change without a prompt, or `--no-retention` to skip it. To see what it found
-and what it would change without changing anything, run it with `--check`:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --check
-```
-
-</details>
+## Installer reference
 
 ### For AI assistants
 
@@ -152,25 +124,10 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
 
 </details>
 
-<a id="claude-code-plugin"></a>
-
-<details>
-<summary>Install the Claude Code plugin</summary>
-
-```
-/plugin marketplace add txz8096/second-look
-/plugin install second-look@second-look
-```
-
-The plugin installs the skill for Claude Code only. Use the installer above to add Codex and
-Cursor, or to change the retention setting.
-
-</details>
-
 <a id="claudeai"></a>
 
 <details>
-<summary>Install in claude.ai</summary>
+<summary>Browser setup in claude.ai</summary>
 
 1. Download [`second-look.zip`](https://github.com/txz8096/second-look/releases/latest/download/second-look.zip).
 2. In claude.ai, go to Settings > Capabilities, turn on code execution, and upload the zip
@@ -178,8 +135,8 @@ Cursor, or to change the retention setting.
 3. Turn on chat search and memory so second look can read past chats and remember your
    profile.
 
-On claude.ai it can read your claude.ai chats only. Run it in Claude Code, Codex or Cursor
-to include those apps.
+Run a review in claude.ai by asking for "a second look." It covers your claude.ai
+chats. To include ChatGPT or Gemini history, add an export to a local review.
 
 </details>
 
