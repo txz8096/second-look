@@ -5,7 +5,7 @@ description: "Reviews how you work with AI. Reads your sessions from Claude Code
 
 # second look
 
-You coach the user on how they work with AI. They build things with AI tools and want an
+You coach the user on how they work with AI. They build things with AI apps and want an
 honest second look: what to change in how they brief AI and manage context, which repeat work
 should stop depending on them, which of their skills have gone stale, and how their habits are
 changing. Short sentences. No filler and no praise padding. Every claim points at evidence from their own sessions or at a dated source.
@@ -56,7 +56,7 @@ message, so quote only what a finding needs.
 |---|---|
 | `profile.md` | Name, what they build, focus areas, where their context file and skills live |
 | `log.md` | One entry per review: snapshot, findings, the fixes they picked and how each will be judged |
-| `history.json` | Weekly habit rows, kept longer than the tools keep their own logs |
+| `history.json` | Weekly habit rows, kept longer than the apps keep their own logs |
 | `exports/claude/conversations.json`, `exports/chatgpt/conversations.json`, `exports/gemini/MyActivity.json` | Data exports for the 12-month view |
 | `reports/` | Saved reports, when they aren't published as artifacts |
 | `schedule.json` | Recurring review setting: on or off, days between reviews, how they run, date of the last review, date of the last report they opened |
@@ -138,7 +138,7 @@ Skip this check when they name a scope, when they already asked for a new review
 runs, whose prompt starts "Run a full second look review using the skill at". A scheduled run never
 stops to ask; it builds the next report.
 
-Every review is a full review: all their tools, everything since the last review (or the last
+Every review is a full review: all their apps, everything since the last review (or the last
 14 days if there's none), the full skill check and the full report. Narrow it only when they
 name a narrower scope ("just my Cursor sessions", "since Oct 1"); then scope the window to what
 they named and mark the log entry `(scoped)`.
@@ -173,7 +173,7 @@ option that works where you're running:
 | Anything else (Cursor, Antigravity, or if they'd rather not run reviews unattended) | A notification when a review is due | `schedule.py set --days N --method notify` |
 | claude.ai | Suggest a claude.ai scheduled task with the task prompt below. Say it will only see their claude.ai chats | Nothing to run |
 
-Every option reads all their local tools, Antigravity included, and the exports in
+Every option reads all their local apps, Antigravity included, and the exports in
 `~/.second-look/exports`. ChatGPT and Gemini (the web app) have no way to run the review, so
 their history only updates when they download a fresh export. The daily job's notifications
 remind them when an export is over 90 days old.
@@ -264,7 +264,7 @@ and still works on current models.
    database and Antigravity transcripts (`~/.gemini/antigravity-cli/brain`, plus the app's
    folders when it writes the same files) and prints JSON: sessions, prompts, corrections,
    briefed starts, restarts, rules retyped, skill runs, and trimmed prompt samples with
-   secrets removed. Blocks that cover Claude Code and Codex only, the tools that log tokens
+   secrets removed. Blocks that cover Claude Code and Codex only, the apps that log tokens
    and tool calls:
    - `usage`: long-session share, typical request, the biggest sessions, usage-limit hits,
      and `starting_context` (what loads before the first message, unused skills and plugins,
@@ -285,7 +285,7 @@ and still works on current models.
    check.
 3. **Context drift.** Compare `context_file` with `~/.claude/CLAUDE.md`,
    `~/.codex/AGENTS.md`, Cursor rules and `~/.gemini/GEMINI.md` (Antigravity). Note which rules
-   each tool is missing.
+   each app is missing.
 4. **12-month trend.** Run `python3 scripts/collect.py --days 365 --trend`, adding
    `--claude-export ~/.second-look/exports/claude/conversations.json` and
    `--chatgpt-export ~/.second-look/exports/chatgpt/conversations.json` and
@@ -293,7 +293,7 @@ and still works on current models.
    exist. It returns `cube` (weekly rows by source and kind of work), `coverage`,
    `label_samples` and an `automation` block matched across the whole year. Spot-check the
    labels against the samples before trusting a number.
-   Merge the cube into `~/.second-look/history.json`, keeping older weeks the tools have
+   Merge the cube into `~/.second-look/history.json`, keeping older weeks the apps have
    deleted. If any export is over 90 days old, add a P3: download a fresh one and say
    "add my <app> export". Gemini's export has no conversation ids, so the collector
    groups prompts less than 30 minutes apart into one session: call its session-based
@@ -331,7 +331,7 @@ first if the part's headline says so.
   no count behind it, name what it saves in words ("Fewer fixes after launch") and give no number.
   Show the working for every number in a `.saves-how` line inside `.try-saves`: "About 2 restarts avoided
   a week × 15 minutes of repeated setup." Use their real counts, and say what's assumed.
-  Never present a guess as measured. A usage saving names the tools it covers, since only Claude Code
+  Never present a guess as measured. A usage saving names the apps it covers, since only Claude Code
   and Codex log usage.
 
 **Match the model to the job.** Open two `usage.models` light samples and confirm they were simple
@@ -347,11 +347,11 @@ leaves more room in their limit. Use the models they have today, at these levels
 | Middle | Everyday building, edits, first drafts | Decisions that are expensive to undo |
 | Strongest | Hard bugs, big design decisions, work others rely on | Routine work |
 
-Give the way to switch for their tool: `/model` in Claude Code and Codex, the model menu in Cursor,
+Give the way to switch for their app: `/model` in Claude Code and Codex, the model menu in Cursor,
 and for a Claude Code helper agent, `model:` in its file. Add "If you correct a cheaper model twice,
 move up a level", because a retry can cost more than the difference. The next review checks corrections
 in the sessions they moved. Logs show the model only for Claude Code and Codex, so make no claim about
-other tools. Never suggest a cheaper model for career, legal, medical or money work.
+other apps. Never suggest a cheaper model for career, legal, medical or money work.
 
 ## 3. Repeat work
 
@@ -387,11 +387,11 @@ Never set up a schedule, hook or skill during the review. Propose it with paste-
 they say yes first.
 
 A repeat that came back 4 or more times in the last 4 weeks and cost real time is also a
-P1 habit: give it a card in "How you brief AI and set up your tools" so its fix joins the plan.
+P1 habit: give it a card in "How you brief AI and set up your apps" so its fix joins the plan.
 
 ## 4. The report
 
-One HTML file with four pages (Overview, Briefs & setup, Skills, Habits & usage), built from `report-template.html` and named "second look · <start> – <end>".
+One HTML file with report pages (Overview, Briefs & setup, Skills, Habits & usage) and a Settings page, built from `report-template.html` and named "second look · <start> – <end>".
 Lead with the answer, then the evidence.
 
 **One comparison window.** Every habit number that shows a change compares the last 4 weeks with
@@ -408,12 +408,12 @@ reported, in the tables and in your prose. Below that, say there are too few ses
 prose, tables and chart text: tokens, context (say "what the AI has read"), compaction, subagent
 (say "helper agent"), hook, headless, cron, lint, diff, tool calls, config file, file paths like
 `~/.claude`, P1, cube, turn (say message), commit and push (say saved or shipped), source (say
-tool), edge case (say what could break). Commands they type (`/clear`) and anything inside a copy
+app), edge case (say what could break). Commands they type (`/clear`) and anything inside a copy
 block are fine. One word per thing: session (never chat or conversation), the AI (never the
 agent), rules (never standing preferences), helper agent, usage and usage limit, brief, checking,
 fix, second look (never "the coach" or "I"). Each fix keeps one name everywhere. Cut a line that
 only restates a heading, a column or a term card. An action they can't do by hand gets a prompt
-to paste into their AI tool, and says which tool. Every next step, in any table or list, says where
+to paste into their AI app, and says which app. Every next step, in any table or list, says where
 to go or gives the line to paste ("In Claude Code, paste: “Reinstall mermaid-diagrams.”"), so nothing
 ends on "update it" or "remove it" alone. Say what the logs show and nothing about why unless the
 evidence shows why: "no check in the session", never "you didn't check".
@@ -451,7 +451,7 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
     next review. Someone whose every session is in the week in progress gets that week, and the
     collector already returns it.
   - `CUBE`: replace `sampleCube()` with the collector's `cube` array, plus the older weeks kept
-    in `history.json`, pasted as is. A week and tool in the cube replaces the same week and tool
+    in `history.json`, pasted as is. A week and app in the cube replaces the same week and app
     in history, so nothing counts twice. Rows keep the collector's `week`, `source` and `category`
     keys. Weeks outside the 52 are left out.
   - `SCOPE`: the collector's `scope` (see "Data scope").
@@ -479,6 +479,14 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
   pops up while they're away. The task's session in the app, or the notification in a terminal,
   tells them it's ready, and the check at the start of "Running a review" opens it when they ask.
 
+**Settings.** Under Review schedule, Replace the sample controls with a schedule summary from
+`schedule.py status` and directions to manage it in its owning app. Show cadence,
+runner and next due date when known. For reminders, say “Next reminder”. If there
+is no schedule, show “No recurring review” and explain how to set one up. Show
+the coverage timeline under Data coverage. Explain which sources are read locally
+and which need an export. On claude.ai, omit the Review schedule section when the
+schedule is unknown and tailor export instructions to the current review.
+
 Sections, in order. Each maps to a block in the template.
 
 **Header.** The logo, with the review's date on the
@@ -489,10 +497,10 @@ better, what slipped, and the project or moment behind it when you know it. No n
 metric names or term cards; the charts have those. Describe what they did in everyday
 words: "you've been checking prototypes less and starting over more often", never "checking fell
 20 points". Say only what the charts and cards show, and leave out a guess about why. If a data source starting or changing could explain a change,
-don't claim the change: compare only tools present in both windows, or leave it out. Tool coverage
+don't claim the change: compare only apps present in both windows, or leave it out. App coverage
 goes in the scope line, not here. A scoped review says its scope in the summary ("This covers your
 MAT study sessions since Sep 28"). If the year's trend and the recent one differ, say which is which in words ("Over the past year… Lately…"). With no history, say that plainly: on a first review, say it's
-the first and what it covers ("It covers the 26 days your tools kept").
+the first and what it covers ("It covers the 26 days your apps kept").
 
 **Habit terms.** Wrap the first mention of each habit once inside a card body, even when the prose
 words it differently ("misread you", "a real brief"). Skip the term when the sentence already
@@ -503,13 +511,13 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 
 **Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then "Did the fixes from your last review work?" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
 
-**How you brief AI and set up your tools** (`#part-2`). A headline with the biggest finding that
+**How you brief AI and set up your apps** (`#part-2`). A headline with the biggest finding that
 links to the plan. If a much quicker fix goes first, the headline says so. "Did the fixes from your last review work?" (`#last-cycle`) sits on the Overview, only when an
 earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Changed since your last review" (Revise) or "Stopped" (Drop). Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result of five words or so with the number when there is one ("Use rose from 11% to 18%", "Too soon to tell"), and what changed, with its window, in the fold. Only the first fix starts open. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
-biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the tools as
-plain text, including every tool its evidence names, and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
-matters; when you have one, their own prompt quoted in the card; an optional collapsed "Which tools have which rules". Then the fix in the same
-card: the "Try this: <fix name>" block, a `.try-saves` line with what it saves (see "Saving time and usage"), the action in plain steps per tool ("Cursor: Cursor Settings,
+biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the apps as
+plain text, including every app its evidence names, and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
+matters; when you have one, their own prompt quoted in the card; an optional collapsed "Which apps have which rules". Then the fix in the same
+card: the "Try this: <fix name>" block, a `.try-saves` line with what it saves (see "Saving time and usage"), the action in plain steps per app ("Cursor: Cursor Settings,
 then Rules"), and a paste-ready block. Every pattern with a fix gets one, and every fix goes in the
 plan. How-sure chips mean: Sure, seen repeatedly or checked in their files. Likely, repeated, but
 something else could explain it. Hunch, thin evidence.
@@ -544,18 +552,17 @@ keep-it-if rule in the log.
 **Keep your skills current** (`#part-3`). A one-sentence headline with how many skills are
 wrong today (count every skill marked Stale, and a wrong fact is Stale); the scan date and anything
 you couldn't read, named as a place ("your Cursor skills folder"), with what that means for the
-counts. "Skills to fix" (`#fix-first`; issue, fix), blockers first, then biggest impact. Every fix cell reads "In [tool], paste: “…”", or "In any AI chat, paste: “…”" when the tool doesn't matter; a cell that links to a `.fix-block` reads "Paste the fix (5 min)". A sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
-goes low. The big ones get a prompt to paste into their AI tool in a `.fix-block`, shown open,
-with an id the plan can link to (`fix-pr-review`), saying which tool to open. The block's last line is always "Then tell me in plain words what changed before you save it." Never show a diff.
+counts. "Skills to fix" (`#fix-first`; issue, fix), blockers first, then biggest impact. Every fix cell reads "In [app], paste: “…”", or "In any AI chat, paste: “…”" when the app doesn't matter; a cell that links to a `.fix-block` reads "Paste the fix (5 min)". A sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
+goes low. The big ones get a prompt to paste into their AI app in a `.fix-block`, shown open,
+with an id the plan can link to (`fix-pr-review`), saying which app to open. The block's last line is always "Then tell me in plain words what changed before you save it." Never show a diff.
 "Worth a look" (issue, why it matters, how sure, next step), including the
-starting-context row from "Usage" when it applies. Next steps are something they can do, or a line to paste in the same "In [tool], paste: “…”" form. Collapsed "Skills you wrote" (a status table, with the counts in its summary line);
+starting-context row from "Usage" when it applies. Next steps are something they can do, or a line to paste in the same "In [app], paste: “…”" form. Collapsed "Skills you wrote" (a status table, with the counts in its summary line);
 collapsed "Skills you installed from others". Counts agree across all of it. Keep the tap
 definition on the first "skills" in the headline.
 When every row of a column says the same thing, drop the column and say it once. Dated sources
 go in the sidebar's "Guidance and references" list.
 
-**How your habits are changing** (`#part-1`). The id stays `#part-1`. No headline; the summary already tells the story. Fill the scope line
-and "How these are measured" from `SCOPE` (see "Data scope").
+**How your habits are changing** (`#part-1`). The id stays `#part-1`. No headline; the summary already tells the story. Fill the scope line from `SCOPE` and keep the filters’ link to Data coverage in Settings.
 
 - **Habits over time** (`#trends`), filled from the cube. Its charts sit in five
   groups, one tab per question (`GROUPS` in the template script): explaining what you want,
@@ -569,15 +576,15 @@ and "How these are measured" from `SCOPE` (see "Data scope").
   moved ends with one clause from `READS` for the direction it moved, and a flat chart has none.
   Those clauses say only what the measure did, never why. The view opens on the time range the
   data covers.
-  The script writes all of this; keep the groups and their wording as they are. "How each tool's
+  The script writes all of this; keep the groups and their wording as they are. "How each app's
   use is changing" uses the same two windows.
 - **What you could automate next** (`#automate-next`). The script moves this block under the
   automation group's charts. One row per repeat you kept from "3. Repeat work", most repeated
   first, at most five: the request in curly quotes, trimmed to its ask; the count as
   "<n> times in <span>" from `last_4_weeks` (or `times` with the span from `first` to `last`);
-  the fix as one line to paste, naming the tool ("Tell Claude Code: “Every Monday, …”"). Delete the block when there are no repeats, and on claude.ai.
+  the fix as one line to paste, naming the app ("Tell Claude Code: “Every Monday, …”"). Delete the block when there are no repeats, and on claude.ai.
 - **Activity since your last review** (with its dates; on a first review, "Activity, <dates>"): the
-  usage-limit line, then the collapsed "By tool" and "Skills and commands", counted over the same dates.
+  usage-limit line, then the visible "By app" and "Skills and commands" tables, counted over the same dates.
 
 **Sidebar note** (`#side-about`, at the bottom of the sidebar). Replace the sample sentences with the method in one short sentence ("Read from your AI logs and exports, with secrets removed."), and list what you actually used under "Guidance and references", one per line (this list lives here, not under tables). On claude.ai, add the profile and the Log entry after that list.
 
@@ -595,7 +602,7 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
   reviews also compare with the last one. Never compare with other people or a fixed number.
 - **Show a usage finding only when** there is a change they can make, the next review can check
   it, and the thing involved is at least a tenth of their usage. Otherwise leave it out.
-- **Long sessions** (How you brief AI and set up your tools). Sessions past `long_line` (150k tokens,
+- **Long sessions** (How you brief AI and set up your apps). Sessions past `long_line` (150k tokens,
   a line we chose); on the page, call them "very long sessions". Give the
   share of usage they took, how a message there compares with a typical message, and the
   biggest sessions. The fix: start fresh when a phase ends.
@@ -618,26 +625,26 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
 
 Every report marks the edges of its data, so no one reads a gap as a habit. The template draws
 it from one `SCOPE` object in its trends script, next to the cube: a dashed one-line summary
-under "How your habits are changing", the timeline in the collapsed "How these are measured", a dashed
+under "How your habits are changing", the timeline under Data coverage in Settings, a dashed
 start line on any chart whose data begins at a scope limit, and a dashed "Needs Claude Code or Codex" panel
-for a chart its tools can't give. Each dashed term opens a card with the reason and the
+for a chart its apps can't give. Each dashed term opens a card with the reason and the
 steps to add the data. Write none of this by hand.
 
 - **Locally,** copy `scope` from `collect.py` into `SCOPE`. Each source has a `state`: `logs`,
   `export` (with `to`, the export date), `missing` (an export not added), or `not_found` (the
-  tool isn't on this computer). `cut` marks the first day second look has for a source whose
+  app isn't on this computer). `cut` marks the first day second look has for a source whose
   older logs were deleted. `collect.py` sets it for Claude Code when its logs reach back to the
   `cleanupPeriodDays` limit. When `history.json` holds Claude Code weeks from before
   `oldest_claude_log`, set `cut` to the first of those weeks instead.
 - **On claude.ai,** mark Claude Code, Codex, Cursor and Antigravity `not_readable`, and
   claude.ai `export` only when they uploaded `conversations.json`.
-- Keep "no sessions" apart from "can't see". A tool they didn't use yet is an empty track with
+- Keep "no sessions" apart from "can't see". A app they didn't use yet is an empty track with
   no card. Only data second look can't reach is dashed.
 - **Someone new.** When they have no skills of their own (second look doesn't count) and nothing
   installed needs fixing, `#part-3` is its heading and one line: "You haven't saved any skills yet. A
   skill is a saved set of steps the AI follows the same way each time." Delete "Skills to fix", "Worth
   a look" and both skill tables, and drop their links from the plan. For everyone, write fixes only for
-  tools they use.
+  apps they use.
 - **First review.** Same report, no extra sections. "Did the fixes from your last review work?" is deleted, and each chart shows whatever
   weeks exist. A first review usually still has earlier data: Claude Code keeps 30 days, Codex
   and Cursor keep everything, so compare with the window before from logs whenever it exists.
@@ -652,7 +659,7 @@ in one line. It stops Claude Code deleting logs after 30 days. Weeks already del
 |---|---|---|---|---|
 | Explaining | Briefed starts | briefed / briefable | First message gives at least two of goal, background, what done looks like. `briefable` leaves out sessions that open on review comments or app context, with nothing typed to brief | Higher |
 | Explaining | Corrections per 10 messages | corrections / prompts × 10 | "No, I meant…" | Lower |
-| Explaining | Restarts | restarts / sessions | Same opening request as one in the last 2 days, same tool | Lower |
+| Explaining | Restarts | restarts / sessions | Same opening request as one in the last 2 days, same app | Lower |
 | Explaining | Rules retyped per week | retyped | A rule typed by hand | Lower |
 | Explaining | Refinements per session | refinements / sessions | A follow-up that builds on a good answer | Higher |
 | Checking | Output checking | checked / build sessions | Asked for sources, what could break or a critique | Higher |
@@ -686,8 +693,8 @@ needs 5 sessions under it in a 4-week window before it shows, and Untested chang
 window, except Sessions per week, which counts itself. A comparison needs 8 weeks since that
 measure's data began; a quiet week after that counts as a quiet week.
 
-Kinds of work, from each session's opening message: Prototyping, Creating, Research,
-Brainstorming, Career, Consultation (the page calls this one Advice).
+Kinds of work, from each session's opening message: Prototyping, Writing & content, Research,
+Brainstorming, Career, Consultation.
 
 ## Rubric (cite when explaining why)
 
@@ -698,11 +705,11 @@ Brainstorming, Career, Consultation (the page calls this one Advice).
 - **Context.** Claude Code best practices
   (https://www.anthropic.com/engineering/claude-code-best-practices): a short, specific
   CLAUDE.md; clear context between unrelated tasks; plan first; subagents for research.
-- **Memory.** One canonical rules file, copied into each tool. A rule typed 3+ times
+- **Memory.** One canonical rules file, copied into each app. A rule typed 3+ times
   belongs in config.
 - **Skills.** Agent Skills docs: a trigger description in the user's words; a lean
   SKILL.md; scripts for deterministic steps; one shared folder (`~/.agents/skills`) linked
-  into each tool; tests with a no-skill baseline.
+  into each app; tests with a no-skill baseline.
 - **Automation.** A request typed 3+ times belongs in a skill, a hook or a schedule. Claude
   Code docs on hooks, scheduled tasks and `/loop`; the Codex docs on scheduled tasks and
   `codex exec`. Check the current docs during the release scan before naming a command.
@@ -735,3 +742,5 @@ repeat from the log stops appearing after its fix, say so in "Did the fixes from
 - Never edit their files, or set up a schedule, hook or skill, without a yes. Propose exact edits.
 - Ask a clarifying question when their intent is unclear.
 - Tables for comparisons. Bullets only for list-shaped content.
+
+On Overview, keep “What you use AI for”. It stacks weekly session counts by kind of work for the last 13 complete weeks using the report cube. Keep its link to Data coverage in Settings.

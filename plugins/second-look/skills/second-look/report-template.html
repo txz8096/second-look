@@ -78,6 +78,28 @@ button.theme-btn:hover { border: 0; background: var(--surface-2); color: var(--f
 .side-nav a:hover { color: var(--fg); }
 .side-nav a.on, .side-nav a.on:hover { background: var(--accent-soft); color: var(--accent); }
 .nav-count { font: 400 13px/20px var(--mono); font-variant-numeric: tabular-nums; }
+#settings .icard { margin-bottom: 16px; }
+.schedule-fields { display: flex; flex-wrap: wrap; gap: 16px; margin: 16px 0; }
+.schedule-fields label { display: grid; flex: 1 1 12rem; min-width: 0; gap: 4px; font-weight: 600; }
+.schedule-fields select { width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--fg); font: inherit; font-size: 16px; }
+.schedule-fields option { background: var(--surface); color: var(--fg); }
+.schedule-fields select:disabled { opacity: .55; }
+@supports (appearance: base-select) and selector(::picker(select)) {
+  .schedule-fields select,
+  .schedule-fields select::picker(select) { appearance: base-select; }
+  .schedule-fields select::picker(select) {
+    margin-block: 4px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    color: var(--fg);
+  }
+  .schedule-fields option { padding: 8px 12px; border-radius: 4px; }
+  .schedule-fields option:checked { color: var(--accent); }
+  .schedule-fields option:is(:hover, :focus-visible) { background: var(--accent-soft); }
+}
+@media print { #review-schedule { display: none !important; } }
 .side-about { display: grid; gap: 4px; margin-top: auto; padding: 16px 12px 0; border-top: 1px solid var(--line); font-size: 13px; line-height: 20px; color: var(--muted); }
 .side-about details.nested { border-block: 0; }
 .side-about details.nested > summary { align-items: center; color: var(--muted); }
@@ -146,6 +168,17 @@ section { display: grid; gap: 14px; }
 .part-meta { font-size: 14px; color: var(--muted); }
 
 /* the fixes from the last review: a card per decision, one short result per fix, the detail folded */
+.activity-group { margin-top: 20px; }
+.activity-group h4 { margin: 0 0 8px; }
+.work-mix { margin-block: 24px; }
+.work-mix-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 12px 0; color: var(--muted); font-size: 13px; }
+.work-mix-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.work-mix-legend i { width: 10px; height: 10px; border-radius: 2px; }
+.work-mix-scroll { overflow-x: auto; }
+.work-mix-bars { display: grid; grid-template-columns: repeat(13, minmax(34px, 1fr)); gap: 4px; }
+.work-mix-week { display: grid; grid-template-rows: 160px auto; gap: 6px; text-align: center; color: var(--muted); font-size: 11px; }
+.work-mix-stack { display: flex; flex-direction: column-reverse; align-items: stretch; width: 65%; margin-inline: auto; }
+.work-mix-week:hover .work-mix-stack { background: var(--surface-2); }
 #last-cycle { gap: 12px; }
 #last-cycle h3 { font-size: 20px; line-height: 1.4; }
 .last-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 12px; align-items: start; }
@@ -242,10 +275,10 @@ details > summary:hover .sum-title { color: var(--accent); }
 .body { display: grid; gap: 14px; min-width: 0; padding: 4px 0 20px 28px; }
 section > details, .part > details, #trends > details { border-top: 1px solid var(--line); }
 section > details + details, .part > details + details, #trends > details + details { margin-top: -14px; }
-section > details:not(:has(+ details)), .part > details:not(:has(+ details)), #trends > details:not(:has(+ details)) { border-bottom: 1px solid var(--line); }
 .part > details + details { margin-top: -20px; }
 /* folds inside a card: a row between hairlines */
 details.nested { border-block: 1px solid var(--line); }
+#scope-details > details.nested:last-child { border-bottom: 0; }
 details.nested > summary { padding: 10px 0; gap: 8px; font-size: 14px; line-height: 20px; font-weight: 500; }
 details.nested > summary:hover { color: var(--accent); }
 details.nested > .body { padding: 4px 0 16px 24px; }
@@ -258,7 +291,7 @@ details.nested > .body { padding: 4px 0 16px 24px; }
 table.unlabeled thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 table { width: 100%; border-collapse: collapse; font-size: 14px; }
 th, td { text-align: left; vertical-align: top; padding: 12px 8px; border-bottom: 1px solid var(--line); }
-tbody tr:last-child td { border-bottom: 0; }
+tbody tr:last-child :is(th, td) { border-bottom: 0; }
 th:first-child, td:first-child { padding-left: 16px; }
 th:last-child, td:last-child { padding-right: 16px; }
 th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
@@ -277,6 +310,8 @@ button.chip { height: 28px; padding: 0 10px; border: 0; border-radius: var(--r-6
 button.chip:hover { background: transparent; color: var(--fg); }
 #f-range .chip[aria-pressed="true"], #f-source .chip[aria-pressed="true"] { background: var(--seg-on); color: var(--fg); font-weight: 500; }
 .f-more { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
+.filter-coverage { font-size: 13px; }
+.filter-coverage:hover { color: var(--accent-strong); }
 .fsum { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
 /* group tabs: one question each, five across */
 .grp-tiles { display: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; margin: 8px 0 4px; }
@@ -365,7 +400,7 @@ button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--sur
 #trends[data-empty] .multiples, #trends[data-empty] .split, #trends[data-empty] .insight, #trends[data-empty] .grp-tiles, #trends[data-empty] .grp-note, #trends[data-empty] .more-charts { display: none; }
 #f-clear { justify-self: start; margin-top: 8px; }
 /* nothing to draw at all, like a claude.ai run with no export */
-#trends[data-nodata] .filters, #trends[data-nodata] > details:not(#scope-details) { display: none; }
+#trends[data-nodata] .filters, #trends[data-nodata] > details { display: none; }
 
 /* habit terms: a dashed underline that opens a card on hover or focus. Pure CSS, so it works with scripts off */
 .term { position: relative; display: inline-block; cursor: help; text-decoration: underline dashed var(--faint); text-decoration-thickness: 1px; text-underline-offset: 4px; border-radius: var(--r-4); }
@@ -549,6 +584,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     <a href="#part-2" data-page="part-2">Briefs &amp; setup<span class="nav-count" id="count-fixes">5</span></a>
     <a href="#part-3" data-page="part-3">Skills<span class="nav-count" id="count-skills">5</span></a>
     <a href="#part-1" data-page="part-1">Habits &amp; usage</a>
+    <a href="#settings" data-page="settings">Settings</a>
   </nav>
   <div class="side-about" id="side-about">
     <p>This is a sample report. A real report reads your AI logs and exports, with secrets removed.</p>
@@ -578,6 +614,13 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     <p class="summary">Over the past year, you’ve gotten better at explaining what you want, and the AI misreads you less. Lately the Streak redesign pulled the other way: you’ve been checking prototypes less and starting over more often.</p>
   </div>
 
+<section class="icard work-mix" aria-labelledby="work-mix-title">
+  <h2 id="work-mix-title">What you use AI for</h2>
+  <p class="def">Sessions per week by kind of work · Last 13 complete weeks</p>
+  <div id="work-mix"></div>
+  <p class="def"><a href="#scope-details">View data coverage</a></p>
+</section>
+
 <section id="last-cycle" data-needs-prior aria-labelledby="last-cycle-h">
   <h3 id="last-cycle-h">Did the fixes from your last review work?</h3>
   <div class="last-groups">
@@ -601,7 +644,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     <div class="dests">
       <a class="dest" href="#part-2"><span class="dest-text"><span class="dest-t">Briefs &amp; setup</span><span class="dest-d">Five fixes for your rules, prototype starts, final checks, long sessions and model choice.</span></span><span class="dest-go">View fixes<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
       <a class="dest" href="#part-3"><span class="dest-text"><span class="dest-t">Skills</span><span class="dest-d">Three of your seven skills give wrong information today.</span></span><span class="dest-go">Review skills<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
-      <a class="dest" href="#part-1"><span class="dest-text"><span class="dest-t">Habits &amp; usage</span><span class="dest-d">How you brief, check, refine and use your tools over the last 12 months.</span></span><span class="dest-go">View trends<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
+      <a class="dest" href="#part-1"><span class="dest-text"><span class="dest-t">Habits &amp; usage</span><span class="dest-d">How you brief, check, refine and use your apps over the last 12 months.</span></span><span class="dest-go">View trends<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
     </div>
   </section>
 </div>
@@ -609,20 +652,20 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 <!-- BRIEFS AND SETUP (#part-2) -->
 <div class="part page" id="part-2">
   <div class="part-head">
-    <h2>How you brief AI and set up your tools</h2>
+    <h2>How you brief AI and set up your apps</h2>
     <p class="headline">Vague prototype starts take the most time. Syncing your rules is the quickest fix, so it comes first. Five fixes below, all in <a href="#plan" data-jump="plan">your plan until Nov 8</a>.</p>
   </div>
 
 
   <article id="p-rules" class="icard">
-    <div class="ic-head"><span class="rank">1</span><h3>You retype the same rules across your tools</h3>
+    <div class="ic-head"><span class="rank">1</span><h3>You retype the same rules across your apps</h3>
       <p class="ic-tags">Claude Code · Codex · Cursor · claude.ai · ChatGPT <span class="conf strong">Sure</span></p></div>
     <dl class="ic-grid">
-      <dt>What happens</dt><dd>You type the same rules by hand, because only some of your tools have them saved.</dd>
+      <dt>What happens</dt><dd>You type the same rules by hand, because only some of your apps have them saved.</dd>
       <dt>Evidence</dt><dd>You retyped rules 27 times in the last 4 weeks. “just show the diff, skip the recap” alone came up in 9 <span class="term" tabindex="0" aria-describedby="def-session-part2">sessions<span class="term-card" role="tooltip" id="def-session-part2">One conversation with an AI, from your first message until you start a new one.</span></span>. Codex and ChatGPT are missing all 4 of your rules, Cursor 2.</dd>
       <dt>Why it matters</dt><dd>You lose time every session, and Codex, Cursor and ChatGPT still answer without your rules.</dd>
     </dl>
-    <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Which tools have which rules</span></summary>
+    <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Which apps have which rules</span></summary>
       <div class="body"><div class="tbl"><table>
         <thead><tr><th>Rule</th><th>Claude Code</th><th>Codex</th><th>Cursor</th><th>claude.ai</th><th>ChatGPT</th></tr></thead>
         <tbody>
@@ -632,7 +675,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
           <tr><td>Prototype stack: React + Tailwind</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>—</td></tr>
         </tbody></table></div></div></details>
     <section class="try" id="try-rules" aria-labelledby="try-rules-h">
-      <h4 id="try-rules-h">Try this: Add your rules to the tools missing them</h4>
+      <h4 id="try-rules-h">Try this: Add your rules to the apps missing them</h4>
       <p class="try-saves">Saves about 5 minutes a week<span class="saves-how">About 7 rules retyped a week × under a minute each.</span></p>
       <p class="try-do">Copy the block once. Codex: paste it into a new session and say “Save these as my rules for every project.” Cursor: Cursor Settings, then Rules. ChatGPT: Settings → Personalization → Custom instructions. Claude Code and claude.ai already have them.</p>
       <div class="field"><button type="button" class="copy" hidden>Copy</button>
@@ -648,7 +691,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
       <p class="ic-tags">Claude Code · Codex · Cursor · claude.ai <span class="conf sugg">Likely</span></p></div>
     <dl class="ic-grid">
       <dt>What happens</dt><dd>Your first message names what to build, but not who it’s for or what done looks like. You fill in the gaps over the next few messages, and sometimes start a new session.</dd>
-      <dt>Evidence</dt><dd>In the last 4 weeks, 16 of your 25 <span class="term" tabindex="0" aria-describedby="def-restarts-part2">restarts<span class="term-card" role="tooltip" id="def-restarts-part2">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span> were prototype sessions, including 4 Streak settings-screen sessions on Oct 14–15. In those 4 weeks, 44% of prototype sessions opened with a brief.</dd>
+      <dt>Evidence</dt><dd>In the last 4 weeks, 16 of your 25 <span class="term" tabindex="0" aria-describedby="def-restarts-part2">restarts<span class="term-card" role="tooltip" id="def-restarts-part2">A new session that opens with mostly the same request as one from the last two days, in the same app. It usually means the first try went off track.</span></span> were prototype sessions, including 4 Streak settings-screen sessions on Oct 14–15. In those 4 weeks, 44% of prototype sessions opened with a brief.</dd>
       <dt>Why it matters</dt><dd>Each restart repeats the setup, and without a definition of done it’s hard to tell when a prototype is finished.</dd>
     </dl>
     <blockquote>“build the settings screen for streak, make it look good and hook up reminders”</blockquote>
@@ -735,7 +778,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
     <h3 id="plan-h">Your plan until Nov 8</h3>
     <div class="plan-cols"><span>Time</span><span>Saves</span><span>Nov 8 review checks</span></div>
     <ol class="plan-list">
-      <li><a class="row-link" href="#try-rules" data-jump="try-rules">Add your rules to the tools missing them</a><span class="plan-effort">5 minutes, once</span><span class="plan-saves">About 5 minutes a week</span><span class="plan-check" data-label="Nov 8 checks">Rules retyped, and corrections in Codex and Cursor</span></li>
+      <li><a class="row-link" href="#try-rules" data-jump="try-rules">Add your rules to the apps missing them</a><span class="plan-effort">5 minutes, once</span><span class="plan-saves">About 5 minutes a week</span><span class="plan-check" data-label="Nov 8 checks">Rules retyped, and corrections in Codex and Cursor</span></li>
       <li><a class="row-link" href="#try-brief" data-jump="try-brief">Brief before big prototype tasks</a><span class="plan-effort">A minute before any prototype that’s more than a quick tweak</span><span class="plan-saves">About 30 minutes a week</span><span class="plan-check" data-label="Nov 8 checks">Briefed starts and restarts in prototype sessions</span></li>
       <li><a class="row-link" href="#try-trust" data-jump="try-trust">Check beta work before it ships</a><span class="plan-effort">5 minutes per piece others will see</span><span class="plan-saves">Fewer fixes after launch</span><span class="plan-check" data-label="Nov 8 checks">Output checking and untested changes shipped</span><span class="plan-first">Better with your pr-review skill. <a href="#fix-pr-review" data-jump="fix-pr-review">Fix it when you have 5 minutes</a>.</span></li>
       <li><a class="row-link" href="#try-long" data-jump="try-long">Start fresh between projects</a><span class="plan-effort">A habit, whenever you switch projects</span><span class="plan-saves">About a tenth of your Claude Code and Codex usage</span><span class="plan-check" data-label="Nov 8 checks">Long-session share</span></li>
@@ -785,7 +828,7 @@ Then tell me in plain words what changed before you save it.</pre></div>
       <tbody>
         <tr><td>Your team details are copied into beta-feedback-synth, ui-review and metrics-check</td><td>The copies already disagree</td><td><span class="conf strong">Sure</span></td><td>In claude.ai, paste: “Move my team details out of those three skills and into one shared file.”</td></tr>
         <tr><td>Your skills are set up for Claude, with none for Codex. Cursor’s folder couldn’t be read.</td><td>Codex and Cursor can run the same files</td><td><span class="conf sugg">Likely</span></td><td>In Claude Code, paste: “Copy my skills to Codex, then check my Cursor skills folder.”</td></tr>
-        <tr><td>ui-review doesn’t know about Claude Design, and loads all three platform guides every time</td><td>It misses a current tool and loads more than it needs</td><td><span class="conf sugg">Likely</span></td><td>In claude.ai, paste: “Add Claude Design to my ui-review skill and have it load one platform guide at a time.”</td></tr>
+        <tr><td>ui-review doesn’t know about Claude Design, and loads all three platform guides every time</td><td>It misses a current app and loads more than it needs</td><td><span class="conf sugg">Likely</span></td><td>In claude.ai, paste: “Add Claude Design to my ui-review skill and have it load one platform guide at a time.”</td></tr>
         <tr><td>No skill has a test</td><td>A model update could change how a skill behaves without you noticing</td><td><span class="conf val">Hunch</span></td><td>In claude.ai, paste: “Write 3 test prompts for my release-notes and ui-review skills.”</td></tr>
         <tr><td>commit-message and pdf-tools are behind their source.</td><td>You may be missing fixes</td><td><span class="conf strong">Sure</span></td><td>In Claude Code, paste: “Show me what changed in commit-message and pdf-tools since I installed them.”</td></tr>
       </tbody></table></div>
@@ -799,7 +842,7 @@ Then tell me in plain words what changed before you save it.</pre></div>
         <tr><td>release-notes</td><td>claude.ai</td><td><span class="pill p1">Stale</span></td><td>Pricing tiers, description, no tests</td></tr>
         <tr><td>pr-review</td><td>This computer</td><td><span class="pill p1">Stale</span></td><td>Names a tool that doesn’t exist</td></tr>
         <tr><td>beta-feedback-synth</td><td>claude.ai</td><td><span class="pill p1">Stale</span></td><td>Team size, no tests</td></tr>
-        <tr><td>ui-review</td><td>claude.ai</td><td><span class="pill p2">Review</span></td><td>Tool list; loads too much at once</td></tr>
+        <tr><td>ui-review</td><td>claude.ai</td><td><span class="pill p2">Review</span></td><td>App list; loads too much at once</td></tr>
         <tr><td>metrics-check</td><td>claude.ai</td><td><span class="pill p3">Minor</span></td><td>Example query names an old table</td></tr>
         <tr><td>explain-like-pm, test-plan</td><td>claude.ai</td><td><span class="pill ok">Current</span></td><td>Nothing found</td></tr>
       </tbody></table></div></div>
@@ -831,13 +874,14 @@ Then tell me in plain words what changed before you save it.</pre></div>
 
 <section id="trends">
   <p class="def nojs-note">Open this file in a browser to see the charts.</p>
-  <p class="def static-note">Showing the last 12 months across every tool. Open this file in a browser to filter the charts.</p>
+  <p class="def static-note">Showing the last 12 months across every app. Open this file in a browser to filter the charts.</p>
 
   <div class="filters" role="group" aria-label="Filter the charts">
     <div class="fgroup" role="group" aria-label="Time range"><span class="flabel">Time</span><span class="seg" id="f-range"></span></div>
     <span class="fsum" id="f-sum"></span>
+    <a class="filter-coverage" href="#scope-details">View data coverage</a>
     <div class="f-more" id="f-more">
-      <div class="fgroup" role="group" aria-label="Tool"><span class="flabel">Tool</span><span class="seg" id="f-source"></span></div>
+      <div class="fgroup" role="group" aria-label="App"><span class="flabel">App</span><span class="seg" id="f-source"></span></div>
       <div class="fgroup"><label class="flabel" for="f-cat">Work</label><select id="f-cat"></select></div>
     </div>
   </div>
@@ -865,55 +909,44 @@ Then tell me in plain words what changed before you save it.</pre></div>
 
   <details>
     <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
-      <span class="sum-main"><span class="sum-title">How each tool’s use is changing</span><span class="sum-meta" id="prod-meta"></span></span></summary>
+      <span class="sum-main"><span class="sum-title">How each app’s use is changing</span><span class="sum-meta" id="prod-meta"></span></span></summary>
     <div class="body">
       <p class="insight" id="prod-insight"></p>
       <div class="tbl"><table id="prod-table">
-        <thead><tr><th>Tool</th><th class="num">Sessions, last 4 weeks</th><th>Main uses (change)</th><th class="num"><span class="term" tabindex="0" aria-describedby="def-briefed-tools">Briefed starts<span class="term-card" role="tooltip" id="def-briefed-tools">Your first message gives at least two of three things: the goal, the background, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.”</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-corrections-tools">Corrections / 10<span class="term-card" role="tooltip" id="def-corrections-tools">Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly.</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-checking-tools">Output checking<span class="term-card" role="tooltip" id="def-checking-tools">In build and research sessions, the share where you asked for sources, what could break or a critique before accepting the result. It tends to drop when output looks finished.</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-restarts-tools">Restarts<span class="term-card" role="tooltip" id="def-restarts-tools">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span></th></tr></thead>
+        <thead><tr><th>App</th><th class="num">Sessions, last 4 weeks</th><th>Main uses (change)</th><th class="num"><span class="term" tabindex="0" aria-describedby="def-briefed-tools">Briefed starts<span class="term-card" role="tooltip" id="def-briefed-tools">Your first message gives at least two of three things: the goal, the background, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.”</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-corrections-tools">Corrections / 10<span class="term-card" role="tooltip" id="def-corrections-tools">Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly.</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-checking-tools">Output checking<span class="term-card" role="tooltip" id="def-checking-tools">In build and research sessions, the share where you asked for sources, what could break or a critique before accepting the result. It tends to drop when output looks finished.</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-restarts-tools">Restarts<span class="term-card" role="tooltip" id="def-restarts-tools">A new session that opens with mostly the same request as one from the last two days, in the same app. It usually means the first try went off track.</span></span></th></tr></thead>
         <tbody></tbody></table></div>
-      <p class="def">Changes are in brackets. A tool needs 10 sessions in each 4-week window to show a change.</p>
+      <p class="def">Changes are in brackets. A app needs 10 sessions in each 4-week window to show a change.</p>
     </div>
   </details>
   <details>
     <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
       <span class="sum-main"><span class="sum-title">Habits by kind of work</span><span class="sum-meta" id="cat-meta"></span></span></summary>
     <div class="body"><div class="tbl"><table id="cat-table">
-      <thead><tr><th>Work</th><th class="num">Sessions</th><th class="num"><span class="term" tabindex="0" aria-describedby="def-briefed-work">Briefed starts<span class="term-card" role="tooltip" id="def-briefed-work">Your first message gives at least two of three things: the goal, the background, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.”</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-corrections-work">Corrections<span class="term-card" role="tooltip" id="def-corrections-work">Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly.</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-checking-work">Output checking<span class="term-card" role="tooltip" id="def-checking-work">In build and research sessions, the share where you asked for sources, what could break or a critique before accepting the result. It tends to drop when output looks finished.</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-restarts-work">Restarts<span class="term-card" role="tooltip" id="def-restarts-work">A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.</span></span></th></tr></thead>
+      <thead><tr><th>Work</th><th class="num">Sessions</th><th class="num"><span class="term" tabindex="0" aria-describedby="def-briefed-work">Briefed starts<span class="term-card" role="tooltip" id="def-briefed-work">Your first message gives at least two of three things: the goal, the background, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.”</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-corrections-work">Corrections<span class="term-card" role="tooltip" id="def-corrections-work">Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly.</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-checking-work">Output checking<span class="term-card" role="tooltip" id="def-checking-work">In build and research sessions, the share where you asked for sources, what could break or a critique before accepting the result. It tends to drop when output looks finished.</span></span></th><th class="num"><span class="term" tabindex="0" aria-describedby="def-restarts-work">Restarts<span class="term-card" role="tooltip" id="def-restarts-work">A new session that opens with mostly the same request as one from the last two days, in the same app. It usually means the first try went off track.</span></span></th></tr></thead>
       <tbody></tbody></table></div>
       <p class="def">Pink marks where each habit is strongest.</p></div>
   </details>
-  <details id="scope-details">
-    <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
-      <span class="sum-main"><span class="sum-title">How these are measured</span></span></summary>
-    <div class="body">
-      <div class="tl" id="tl-sources"></div>
-      <p class="eyebrow tl-group">Usage</p>
-      <div class="tl" id="tl-usage"></div>
-      <div class="tl-axis" id="tl-axis"></div>
-      <div class="tl-legend"><span><i class="seg-data"></i>Data</span><span><i style="background:var(--seg-track)"></i>No sessions</span><span><i class="seg-out"></i>Outside what second look can see</span></div>
-      <p class="def">Savings are estimates: your counts × a typical time, or your share of usage × what a fix could cut. Each line is a 4-week running value, so one odd week can’t swing it. Each review, second look spot-checks a dozen sessions, and you can correct a label at the next review.</p>
-    </div>
-  </details>
+  <p class="def">Savings are estimates: your counts × a typical time, or your share of usage × what a fix could cut. Each line is a 4-week running value, so one odd week can’t swing it. Each review, second look spot-checks a dozen sessions, and you can correct a label at the next review.</p>
 </section>
 
   <section class="usage">
     <div class="sec-head"><h3>Activity since your last review</h3><span class="muted">Oct 12–25</span></div>
     <p>You hit 1 usage limit.</p>
-    <details>
-      <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">By tool</span></span></summary>
-      <div class="body"><div class="tbl"><table>
-        <thead><tr><th>Tool</th><th class="num">Sessions</th><th class="num">Messages</th><th class="num">Typical message (characters)</th><th class="num">Corrections</th></tr></thead>
+    <div class="activity-group">
+      <h4>By app</h4>
+      <div class="tbl"><table>
+        <thead><tr><th>App</th><th class="num">Sessions</th><th class="num">Messages</th><th class="num">Typical message (characters)</th><th class="num">Corrections</th></tr></thead>
         <tbody>
           <tr><td>claude.ai</td><td class="num">36</td><td class="num">204</td><td class="num">212</td><td class="num">20</td></tr>
           <tr><td>Claude Code</td><td class="num">31</td><td class="num">249</td><td class="num">148</td><td class="num">33</td></tr>
           <tr><td>Codex</td><td class="num">6</td><td class="num">54</td><td class="num">96</td><td class="num">8</td></tr>
           <tr><td>Cursor</td><td class="num">6</td><td class="num">54</td><td class="num">41</td><td class="num">7</td></tr>
           <tr><td>ChatGPT</td><td class="num">3</td><td class="num">15</td><td class="num">158</td><td class="num">1</td></tr>
-        </tbody></table></div></div>
-    </details>
-    <details>
-      <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="sum-title">Skills and commands</span><span class="sum-meta">6 used · 1 unused for 30+ days</span></span></summary>
-      <div class="body"><div class="tbl"><table>
+        </tbody></table></div>
+    </div>
+    <div class="activity-group">
+      <h4>Skills and commands</h4><p class="def">6 used · 1 unused for 30+ days</p>
+      <div class="tbl"><table>
         <thead><tr><th>Skill</th><th class="num">Runs</th></tr></thead>
         <tbody>
           <tr><td>ui-review</td><td class="num">7</td></tr>
@@ -923,11 +956,53 @@ Then tell me in plain words what changed before you save it.</pre></div>
           <tr><td>release-notes</td><td class="num">2</td></tr>
           <tr><td>explain-like-pm</td><td class="num">1</td></tr>
           <tr><td>test-plan</td><td class="num">0 <span class="muted">· unused 30 days</span></td></tr>
-        </tbody></table></div></div>
-    </details>
+        </tbody></table></div>
+    </div>
   </section>
 </div>
 
+<div class="part page" id="settings">
+  <h2>Settings</h2>
+  <section class="icard" id="review-schedule" aria-labelledby="schedule-settings-title">
+    <h3 id="schedule-settings-title">Review schedule</h3>
+    <p id="sample-schedule-summary" aria-live="polite">Sample schedule · Next review Nov 8 · Runs in Codex</p>
+    <div class="schedule-fields">
+      <label>Frequency
+        <select id="sample-frequency">
+          <option value="7">Weekly</option>
+          <option value="14" selected>Every two weeks</option>
+          <option value="28">Every four weeks</option>
+          <option value="0">Off</option>
+        </select>
+      </label>
+      <label>Run reviews in
+        <select id="sample-runner">
+          <option selected>Codex</option>
+          <option>Claude Code (terminal)</option>
+        </select>
+      </label>
+    </div>
+    <p>Try the controls here. To change a real schedule, ask second look in the app that runs it. When switching apps, stop the old task before starting the new one.</p>
+  </section>
+  <section class="icard" id="scope-details" aria-labelledby="coverage-title">
+    <h3 id="coverage-title">Data coverage</h3>
+    <p>One local review can read Codex, Claude Code, Cursor and Antigravity sessions on this computer. To include sessions from web apps in a local review, add an export.</p>
+      <div class="tl" id="tl-sources"></div>
+      <p class="eyebrow tl-group">Usage</p>
+      <div class="tl" id="tl-usage"></div>
+      <div class="tl-axis" id="tl-axis"></div>
+      <div class="tl-legend"><span><i class="seg-data"></i>Data</span><span><i style="background:var(--seg-track)"></i>No sessions</span><span><i class="seg-out"></i>Outside what second look can see</span></div>
+    <details class="nested">
+      <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>How to add or update an export</span></summary>
+      <ul>
+        <li><strong>claude.ai</strong> — Settings → Privacy → Export data.</li>
+        <li><strong>ChatGPT</strong> — Settings → Data controls → Export data.</li>
+        <li><strong>Gemini</strong> — In Google Takeout, select My Activity, filter to Gemini Apps and choose JSON.</li>
+      </ul>
+      <p>Download the export, then attach it in the app where you run second look and ask it to add the export. Keep the file private.</p>
+    </details>
+  </section>
+</div>
 </main>
 </div>
 <script>
@@ -960,7 +1035,7 @@ stackTables();
 (function () {
   const WEEKS = 52;
   const SOURCES = [["claude_ai", "claude.ai"], ["claude_code", "Claude Code"], ["codex", "Codex"], ["cursor", "Cursor"], ["antigravity", "Antigravity"], ["chatgpt", "ChatGPT"], ["gemini_web", "Gemini"]];
-  const CATS = [["prototyping", "Prototyping"], ["creating", "Creating"], ["research", "Research"], ["brainstorming", "Brainstorming"], ["career", "Career"], ["consultation", "Advice"]];
+  const CATS = [["prototyping", "Prototyping"], ["creating", "Writing & content"], ["research", "Research"], ["brainstorming", "Brainstorming"], ["career", "Career"], ["consultation", "Consultation"]];
   const BUILD = new Set(["prototyping", "creating", "research"]);
   const name = (list, id) => list.find(x => x[0] === id)[1];
 
@@ -971,7 +1046,7 @@ stackTables();
   // Rows for weeks outside the 52 are left out.
   const CUBE = sampleCube();
   // SCOPE: the collector's "scope" object, pasted as is. What each source can show.
-  // state: logs | export | missing (an export not added) | not_found (tool not on this computer) | not_readable (a claude.ai run)
+  // state: logs | export | missing (an export not added) | not_found (app not on this computer) | not_readable (a claude.ai run)
   // cut: the first day second look has for a source whose earlier data was deleted
   const SCOPE = {"retention_days": 30, "sources": [
     {"id": "claude_ai", "state": "export", "to": "2026-10-19"}, {"id": "claude_code", "state": "logs", "cut": "2026-06-29"},
@@ -988,6 +1063,37 @@ stackTables();
   const idxOf = iso => WEEKS - 1 - Math.round((end - monday(new Date(iso + "T00:00:00"))) / (7 * 864e5));
   // history saved before "briefable" existed counts every session
   const rows = CUBE.map(r => ({...r, briefable: r.briefable ?? r.sessions, w: idxOf(r.week), s: r.source, c: r.category})).filter(r => r.w >= 0 && r.w < WEEKS);
+
+  const workMix = document.getElementById("work-mix");
+  if (workMix) {
+    const colors = ["#CA6386", "#5D9BDF", "#54A88C", "#A98CD8", "#C89950", "#8B9CAA", "#A1A1A1"];
+    const counts = weeks.slice(-13).map(() => Array(colors.length).fill(0));
+    for (const row of rows) {
+      const week = counts[row.w - (WEEKS - counts.length)];
+      if (!week) continue;
+      const category = CATS.findIndex(([id]) => id === row.c);
+      week[category < 0 ? colors.length - 1 : category] += row.sessions;
+    }
+    const labels = [...CATS.map(([, label]) => label), "Other"];
+    const max = Math.max(...counts.map(week => week.reduce((a, b) => a + b, 0)));
+    const date = new Intl.DateTimeFormat("en-US", {month: "short", day: "numeric"});
+    if (!max) {
+      workMix.textContent = "No sessions recorded in this period.";
+    } else {
+      const legend = labels.map((label, i) => counts.some(week => week[i])
+        ? `<span><i style="background:${colors[i]}"></i>${label}</span>` : "").join("");
+      const bars = counts.map((week, i) => {
+        const day = date.format(weeks[WEEKS - counts.length + i]);
+        const total = week.reduce((a, b) => a + b, 0);
+        const detail = week.flatMap((n, j) => n ? [`${labels[j]} ${n}`] : []).join(", ");
+        const summary = `Week of ${day} · ${total} sessions${detail ? " · " + detail : ""}`;
+        const stack = week.map((n, j) => n
+          ? `<span style="height:${100 * n / max}%;background:${colors[j]}"></span>` : "").join("");
+        return `<div class="work-mix-week" role="img" aria-label="${summary}" title="${summary}" tabindex="0"><div class="work-mix-stack" aria-hidden="true">${stack}</div><span aria-hidden="true">${day}</span></div>`;
+      }).join("");
+      workMix.innerHTML = `<div class="work-mix-legend">${legend}</div><div class="work-mix-scroll"><div class="work-mix-bars">${bars}</div></div>`;
+    }
+  }
   const milestones = MILESTONES.map(m => ({i: idxOf(m.week), label: m.label})).filter(m => m.i >= 0 && m.i < WEEKS);
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   // long names stay whole in the tooltip; on the chart they stop here so they can't run off it
@@ -1005,12 +1111,11 @@ stackTables();
     claude_ai: i => ramp(9, 19, i, 0, 51), chatgpt: i => ramp(7, 1.5, i, 0, 51),
     claude_code: i => i < 35 ? 0 : 15, codex: i => i < 25 ? 0 : ramp(1, 3, i, 25, 51), cursor: i => i < 15 ? 0 : ramp(1, 3, i, 15, 51),
   };
-  const mix = (src, i) => {
-    const careerShare = i >= 45 ? 0.12 : 0.04;
+  const mix = src => {
     return {
-      claude_ai: {prototyping: .1, creating: .2, research: .2, brainstorming: .15, career: careerShare, consultation: .22},
-      chatgpt: {prototyping: .02, creating: .15, research: .2, brainstorming: .13, career: .02, consultation: .5},
-      claude_code: {prototyping: .72, creating: .14, research: .04, brainstorming: 0, career: .1, consultation: 0},
+      claude_ai: {prototyping: .1, creating: .2, research: .2, brainstorming: .15, career: 0, consultation: .22},
+      chatgpt: {prototyping: .02, creating: .15, research: .2, brainstorming: .13, career: 0, consultation: .5},
+      claude_code: {prototyping: .72, creating: .14, research: .04, brainstorming: 0, career: 0, consultation: 0},
       codex: {prototyping: .9, creating: .1, research: 0, brainstorming: 0, career: 0, consultation: 0},
       cursor: {prototyping: .9, creating: .1, research: 0, brainstorming: 0, career: 0, consultation: 0},
     }[src];
@@ -1040,7 +1145,7 @@ stackTables();
   };
   const rows = [];
   for (let i = 0; i < WEEKS; i++) SOURCES.filter(([src]) => base[src]).forEach(([src]) => {
-    const m = mix(src, i), tot = Object.values(m).reduce((a, b) => a + b, 0), n = base[src](i);
+    const m = mix(src), tot = Object.values(m).reduce((a, b) => a + b, 0), n = base[src](i);
     CATS.forEach(([c]) => {
       const sessions = rr(n * m[c] / tot * (0.85 + rnd() * 0.3));
       if (!sessions) return;
@@ -1110,7 +1215,7 @@ stackTables();
         : src.cut ? cutCard(src, `Since ${dayLabel(src.cut)}`, "end") : (Math.min(...on) === 0 ? "Full year" : `Since ${mon(weeks[Math.min(...on)])}`);
       return row(label, segs(on, out), st);
     });
-    usageRows.push(row("Other tools", `<i class="seg-out" style="left:0;width:100%"></i>`, scopeCard("Not recorded", "Other tools don't record usage", "Usage covers Claude Code and Codex only.", [], "end")));
+    usageRows.push(row("Other apps", `<i class="seg-out" style="left:0;width:100%"></i>`, scopeCard("Not recorded", "Other apps don't record usage", "Usage covers Claude Code and Codex only.", [], "end")));
     document.getElementById("tl-usage").innerHTML = usageRows.join("");
     const q = [0, 13, 26, 39, WEEKS - 1].map(i => weeks[i].toLocaleDateString("en-US", {month: "short", year: i === 0 || i === WEEKS - 1 ? "numeric" : undefined}));
     document.getElementById("tl-axis").innerHTML = `<span></span><span>${q.map(t => `<span>${t}</span>`).join("")}</span><span></span>`;
@@ -1130,9 +1235,9 @@ stackTables();
     if (absent.length) {
       const names = absent.map(s => name(SOURCES, s.id)), list = names.length > 1 ? names.slice(0, -1).join(", ") + " and " + names[names.length - 1] : names[0];
       const steps = absent.flatMap(s => (EXPORT_STEPS[s.id] || []).slice(0, 1).map(t => `${name(SOURCES, s.id)}: ${t}`));
-      line += ` ${scopeCard(`${list} ${names.length > 1 ? "aren't" : "isn't"} added`, names.length > 1 ? "These tools aren't added yet" : `${list} isn't added yet`, "Add them and their history joins every trend below.", steps)}.`;
+      line += ` ${scopeCard(`${list} ${names.length > 1 ? "aren't" : "isn't"} added`, names.length > 1 ? "These apps aren't added yet" : `${list} isn't added yet`, "Add them and their history joins every trend below.", steps)}.`;
     }
-    if (unreadable.length) line += ` ${scopeCard(`${listed(unreadable)} can’t be read here`, "Run second look on your computer", "These tools keep their history on your computer, which a claude.ai run can’t open.")}.`;
+    if (unreadable.length) line += ` ${scopeCard(`${listed(unreadable)} can’t be read here`, "Run second look on your computer", "These apps keep their history on your computer, which a claude.ai run can’t open.")}.`;
     document.getElementById("scope-line").innerHTML = line.trim();
   }
 
@@ -1153,7 +1258,7 @@ stackTables();
      card: "Polished-looking output gets checked less. This chart only sees checks you typed in the session."},
     {id: "restarts", el: "g-clear", title: "Restarts", num: "restarts", den: "sessions", fmt: pct, d: "pts", better: "down",
      def: "Sessions that start over on a task you began in the last 2 days.",
-     card: "Same tool, mostly the same opening request."},
+     card: "Same app, mostly the same opening request."},
     {id: "sessions", el: "g-usage", title: "Sessions per week", num: "sessions", den: null, fmt: count, d: "rel", better: "none",
      def: "How many sessions you started each week.",
      card: "Busy weeks leave more room for corrections and restarts. Read the other charts against this one."},
@@ -1168,7 +1273,7 @@ stackTables();
      card: "Long means about a novel’s worth of text or more. Each message there makes the AI re-read the whole session first. Starting fresh between tasks lowers it."},
     {id: "starttokens", el: "g-usage", title: "Loaded before you type", num: "start_tokens", den: "metered", fmt: v => v * 0.75 >= 999500 ? +(v * 0.75 / 1e6).toFixed(1) + "M" : Math.round(v * 0.75 / 1000) + "k", unit: " words", d: "rel", better: "down",
      def: "About how many words the AI reads before your first message, on average.",
-     card: "Tool instructions, your skill list and your instruction files load into every session, and every message re-reads them. Skills and plugins you rarely use add to it."},
+     card: "App instructions, your skill list and your instruction files load into every session, and every message re-reads them. Skills and plugins you rarely use add to it."},
     {id: "agentchecked", el: "g-check", title: "Tested by the AI", num: "agent_checked", den: "edited", fmt: pct, d: "pts", better: "up", logs: true,
      def: "Sessions with code changes where the AI tested them before moving on.",
      card: "A test, build or browser check after its last edit counts. Checks you did yourself don’t show."},
@@ -1274,7 +1379,7 @@ stackTables();
     // the coverage note, said once for the whole group
     const left = rs.filter(r => r.leftOut), note = panel.querySelector(".grp-note");
     const drawnHere = rs.filter(r => !r.empty && !r.unmeasured);
-    if (left.length && !none) { note.hidden = false; const rest = drawnHere.filter(r => !r.leftOut); note.textContent = !rest.length ? `${left.length === 1 ? "This chart counts" : "These charts count"} Claude Code and Codex only.` : `${listed(rest.map(r => r.m.title))} ${rest.length === 1 ? "counts" : "count"} ${state.sources.size ? "the tools you picked" : "all your tools"}. ${left.length === 1 ? "The other counts" : "The others count"} only Claude Code and Codex.`; }
+    if (left.length && !none) { note.hidden = false; const rest = drawnHere.filter(r => !r.leftOut); note.textContent = !rest.length ? `${left.length === 1 ? "This chart counts" : "These charts count"} Claude Code and Codex only.` : `${listed(rest.map(r => r.m.title))} ${rest.length === 1 ? "counts" : "count"} ${state.sources.size ? "the apps you picked" : "all your apps"}. ${left.length === 1 ? "The other counts" : "The others count"} only Claude Code and Codex.`; }
     // slipping charts first; the caller redraws them in this order
     const order = {bad: 0, good: 1, flat: 2};
     return {slips: bad.length, ordered: [...rs].sort((a, b) => order[trendOf(a)] - order[trendOf(b)] || size(b) - size(a))};
@@ -1362,7 +1467,7 @@ stackTables();
   const DEFAULT_RANGE = (RANGES.find(([n]) => n >= 13 && n >= dataWeeks) || [WEEKS])[0];
   const state = {range: DEFAULT_RANGE, sources: new Set(), cat: "all", picked: null, allCharts: new Set()};
   const staticNote = trendsEl.querySelector(".static-note");
-  if (staticNote) staticNote.textContent = `Showing the last ${RANGES.find(([n]) => n === DEFAULT_RANGE)[1]} across every tool. Open this file in a browser to filter the charts.`;
+  if (staticNote) staticNote.textContent = `Showing the last ${RANGES.find(([n]) => n === DEFAULT_RANGE)[1]} across every app. Open this file in a browser to filter the charts.`;
   trendsEl.toggleAttribute("data-nodata", !rows.length);
   const rangeEl = document.getElementById("f-range"), srcEl = document.getElementById("f-source"), catEl = document.getElementById("f-cat");
   RANGES.forEach(([n, label]) => {
@@ -1381,7 +1486,7 @@ stackTables();
     b.addEventListener("click", () => toggleSource(id));
     srcEl.appendChild(b);
   });
-  [["all", "All work"], ...CATS].forEach(([id, label]) => { const o = document.createElement("option"); o.value = id; o.textContent = label; catEl.appendChild(o); });
+  [["all", "All work"], ...CATS.filter(([id]) => rows.some(row => row.c === id && row.sessions > 0))].forEach(([id, label]) => { const o = document.createElement("option"); o.value = id; o.textContent = label; catEl.appendChild(o); });
   catEl.addEventListener("change", () => { state.cat = catEl.value; render(); });
 
   const srcOk = r => !state.sources.size || state.sources.has(r.s);
@@ -1489,7 +1594,7 @@ stackTables();
     const inWindow = id => rows.some(r => r.s === id && r.w >= i0 && catOk(r) && r.sessions > 0);
     const unmeasured = logged && !chosen.some(id => METERED.has(id) && inWindow(id));
     const anySessions = idx.some(i => totals[i].sessions > 0);
-    // the chosen tools do log this, but none of their sessions is this kind of work
+    // the chosen apps do log this, but none of their sessions is this kind of work
     const workCut = unmeasured && chosen.some(id => METERED.has(id) && rows.some(r => r.s === id && r.w >= i0 && r.sessions > 0));
     if (unmeasured && !workCut && anySessions) {
       const canPick = [...METERED].some(id => !chosen.includes(id) && inWindow(id));
@@ -1497,7 +1602,7 @@ stackTables();
       box.textContent = canPick ? "Needs Claude Code or Codex" : "Needs Claude Code or Codex, and neither has sessions in this view";
       card.appendChild(box); document.getElementById(m.el).appendChild(card); return opts.wide !== undefined ? card : {m, cmpA, lastA, dlt, noCmp, unmeasured: true, why: "tools"};
     }
-    // the chosen tools it leaves out; the group says this once
+    // the chosen apps it leaves out; the group says this once
     const leftOut = logged && firstData !== -1 && chosen.some(id => !METERED.has(id) && inWindow(id));
     // a dashed start line only when a scope limit explains the gap, not when there were simply no sessions
     let scopeAt = null;
@@ -1661,7 +1766,7 @@ stackTables();
     const shown = hidden.length < GROUPS.length ? GROUPS.filter(drawn) : GROUPS;
     if (shown !== GROUPS) hidden.forEach(g => { document.getElementById("grp-tile-" + g.id).remove(); document.getElementById("grp-" + g.id).remove(); });
     if (shown !== GROUPS && hidden.length) {
-      // one sentence per reason: the tools don't log it, the Work filter leaves it out, or too few sessions
+      // one sentence per reason: the apps don't log it, the Work filter leaves it out, or too few sessions
       const whyHidden = g => { const w = new Set(results.filter(r => g.ids.includes(r.m.id)).map(r => r.why)); return w.size === 1 ? [...w][0] : "mixed"; };
       const WHY = {
         tools: many => `${many ? "their" : "its"} charts need Claude Code or Codex`,
@@ -1713,7 +1818,7 @@ stackTables();
       ctb.appendChild(tr);
     });
 
-    // ---- how each tool's use and habits shifted: the last 4 weeks vs the 4 before, like every other comparison ----
+    // ---- how each app's use and habits shifted: the last 4 weeks vs the 4 before, like every other comparison ----
     const ptb = document.querySelector("#prod-table tbody"); ptb.innerHTML = "";
     const habit = t => ({briefed: t.briefable ? t.briefed / t.briefable : null, corr: t.prompts ? t.corrections / t.prompts : null,
       checked: t.build ? t.checked / t.build : null, restarts: t.sessions ? t.restarts / t.sessions : null});
@@ -1830,6 +1935,29 @@ document.addEventListener("focusin", e => { if (e.target.closest(".tbl")) e.targ
     el.tabIndex = -1; el.focus({preventScroll: true});
     el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
   }));
+})();
+
+// ---- sample schedule controls ----
+(function () {
+  const frequency = document.getElementById("sample-frequency");
+  const runner = document.getElementById("sample-runner");
+  const summary = document.getElementById("sample-schedule-summary");
+  if (!frequency || !runner || !summary) return;
+
+  const dateFormat = new Intl.DateTimeFormat("en-US", {
+    month: "short", day: "numeric", timeZone: "UTC",
+  });
+  const update = () => {
+    const days = Number(frequency.value);
+    runner.disabled = days === 0;
+    const next = dateFormat.format(new Date(Date.UTC(2026, 9, 25 + days)));
+    summary.textContent = days
+      ? `Sample schedule · Next review ${next} · Runs in ${runner.value}`
+      : "Sample schedule · Recurring reviews off";
+  };
+  frequency.addEventListener("change", update);
+  runner.addEventListener("change", update);
+  update();
 })();
 
 // ---- one page at a time: the sidebar, the explore rows and every in-page link ----

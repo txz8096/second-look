@@ -1,6 +1,10 @@
 # second look
 
-second look reviews how a person works with AI tools and tracks their habits over time. These are the words its reports use.
+second look reviews how a person works with AI apps and tracks their habits over time. These are the words its reports use.
+
+## App
+
+An AI product where you work, such as Codex, Claude Code or Cursor. A tool call is an action an assistant takes, such as reading a file. A helper agent handles a task in a separate session.
 
 ## Usage
 
@@ -25,7 +29,7 @@ The conversation length past which re-reading counts separately. It is a chosen 
 _Avoid_: Context limit, bloat threshold
 
 **Starting context**:
-Everything loaded before the person's first message in a session: the tool's own instructions, the skill list, connectors and instruction files.
+Everything loaded before the person's first message in a session: the app's own instructions, the skill list, connectors and instruction files.
 _Avoid_: Baseline, system prompt, overhead
 
 **Typical session**:
@@ -73,3 +77,7 @@ _Avoid_: Habit, pattern
 **Habit**:
 A pattern that recurs across review periods. Only habits get paired with a fix to try.
 _Avoid_: Incident, behavior
+
+## Work categories
+
+**Writing & content** covers drafting and editing documents, decks, posts, and similar material. **Consultation** covers sessions classified as asking for advice.

@@ -6,8 +6,8 @@ const benefits = [
   { title: "More reliable code", body: "Ask for code with a clear scope and a way to check it." },
   { title: "Keep your own judgement", body: "Depend less on AI for the thinking." },
   { title: "Deeper research", body: "Get more thorough research and sharper reasoning from each session." },
-  { title: "Skills that transfer", body: "Build skills that carry over to new tools and models." },
-  { title: "Bring tools together", body: "Get more from several AI tools by matching each task to the right one." },
+  { title: "Skills that transfer", body: "Build skills that carry over to new apps and models." },
+  { title: "Bring apps together", body: "Get more from several AI apps by matching each task to the right one." },
   { title: "Less repeated setup", body: "Stop retyping context. Move it into memory and skills." },
 ];
 

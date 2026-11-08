@@ -3,7 +3,7 @@
 **Learn from how you work with AI.**
 
 Models change every few months, and the way you work drifts out of step with them. Tokens
-leak in three places: how you brief AI (missing details, rules you retype in every tool), your
+leak in three places: how you brief AI (missing details, rules you retype in every app), your
 context (long sessions, memory you no longer need) and your setup (skills written for an
 older model, still loading every session). You can't see any of it from inside one chat, and
 a leak you don't see costs you again every session after.
@@ -21,7 +21,7 @@ Install second look from github.com/txz8096/second-look.
 
 [Website](https://txz8096.github.io/second-look/) ·
 [Sample report](https://txz8096.github.io/second-look/sample-report.html) ·
-[Supported tools](#supported-tools) ·
+[Supported apps](#supported-apps) ·
 [Install](#install) ·
 [Privacy](#privacy) ·
 [FAQ](#faq)
@@ -37,18 +37,19 @@ A closer look pays off in a few places:
 | **More reliable code** | Ask for code with a clear scope and a way to check it |
 | **Your own judgment** | Notice when you accept polished output without checking it |
 | **Less repeated setup** | Stop retyping the same rules. Move them into memory and skills |
-| **Tools that work together** | See which tool you use for what, and match each task to the right one |
-| **Skills that last** | Keep your skills accurate as models and tools change |
+| **Apps that work together** | See which app you use for what, and match each task to the right one |
+| **Skills that last** | Keep your skills accurate as models and apps change |
 
 ## What you get
 
-Every two weeks, or whenever you ask, second look builds one private report in three parts.
+On your chosen schedule or whenever you ask, second look builds one private report.
 After your first report, it offers to set up the two-week schedule for you.
 
-**1. How you brief AI and set up your tools.** From your second review on, it starts with whether
-last cycle's fixes worked. It checks whether your first message gave the goal,
+**Overview.** See what you use AI for across the last 13 complete weeks and how fixes from your previous review worked.
+
+**1. How you brief AI and set up your apps.** It checks whether your first message gave the goal,
 the audience, the constraints and what done looks like, and whether your standing rules
-reach every tool. When very long sessions take most of your token usage, it says so and
+reach every app. When very long sessions take most of your token usage, it says so and
 suggests where to start fresh. A finding looks like this:
 
 > **What happens:** Your prototype requests name the feature but leave out the user.
@@ -67,25 +68,29 @@ you haven't run in 60 days, and how much you'd save by having them run only when
 
 **3. How your habits are changing.** It closes with how you're trending: briefed starts, corrections, output
 checking, restarts, and how much of your usage went to very long sessions, charted week by
-week for up to 12 months and filterable by tool and kind of work. The charts are grouped by
+week for up to 12 months and filterable by app and kind of work. The charts are grouped by
 the question they answer, like "Am I checking the work?", and the group that slipped most
 opens first with a short written summary. "Am I automating repeat work?" also lists the
 requests you keep typing by hand, each with a fix: a skill, a hook or a scheduled task.
 
+**Settings.** See the review schedule and data coverage, including which sessions came from local logs or exports and how to add a fresh export.
+
 See the [sample report](https://txz8096.github.io/second-look/sample-report.html) for the full
 layout. It uses made-up data.
 
-## Supported tools
+<a id="supported-tools"></a>
+
+## Supported apps
 
 Start a review from Claude Code, Codex or Cursor, and one run covers every source below
 that's on that computer.
 
-| Tool | What's read | Setup needed | How far back |
+| App | What's read | Setup needed | How far back |
 |---|---|---|---|
 | **Claude Code** | Session logs in `~/.claude/projects`, your skills and `CLAUDE.md` | None. The installer links the skill in | Last 30 days only, unless you raise `cleanupPeriodDays` in `~/.claude/settings.json` |
 | **Codex** | Session logs in `~/.codex/sessions`, your skills and `AGENTS.md` | None. The installer links the skill in | Full history |
 | **Cursor** | Chats in Cursor's local database, plus `.cursor/rules` | None. The installer links the skill in | Full history |
-| **Antigravity** | Agent transcripts in `~/.gemini/antigravity-cli`, plus `~/.gemini/GEMINI.md` | None. Reviews start from one of the tools above | Whatever the CLI keeps on disk. Support is new, and app chats may be missing |
+| **Antigravity** | Agent transcripts in `~/.gemini/antigravity-cli`, plus `~/.gemini/GEMINI.md` | None. Reviews start from one of the apps above | Whatever the CLI keeps on disk. Support is new, and app chats may be missing |
 | **claude.ai** | `conversations.json` from your data export | Optional. [Add your export](#add-your-claudeai-chatgpt-and-gemini-history) | Up to your export date |
 | **ChatGPT** | `conversations.json` from your data export | Optional. [Add your export](#add-your-claudeai-chatgpt-and-gemini-history) | Up to your export date |
 | **Gemini** | `MyActivity.json` from a Google Takeout export of your Gemini Apps activity | Optional. [Add your export](#add-your-claudeai-chatgpt-and-gemini-history) | Chats saved with Gemini Apps Activity on, up to your export date |
@@ -100,7 +105,7 @@ you send your assistant, under your existing account settings.
 | | |
 |---|---|
 | **Redaction** | API keys, emails, and token or password values are stripped before anything is quoted. It works by pattern, so it can miss a client's name or confidential code. Read a report before you share it |
-| **Scope** | Limit any review to a window, a tool or a project: "only my Cursor sessions", "since Oct 1" |
+| **Scope** | Limit any review to a window, a app or a project: "only my Cursor sessions", "since Oct 1" |
 | **Sharing** | Reports stay private unless you share them |
 | **Deleting** | Stop recurring reviews, then remove `~/.second-look/` and the skill folder ([How do I uninstall it?](#faq)). If you kept a year of Claude Code history, set `cleanupPeriodDays` back to `30` |
 
@@ -113,7 +118,7 @@ read, run the collector yourself:
 python3 ~/.agents/skills/second-look/scripts/collect.py --days 14
 ```
 
-Using AI tools at work? Check your company's AI policy before you review work sessions.
+Using AI apps at work? Check your company's AI policy before you review work sessions.
 
 ## How it works
 
@@ -121,11 +126,11 @@ Using AI tools at work? Check your company's AI policy before you review work se
 |---|---|
 | **Coach this cycle** | Get a fix to test for every pattern |
 | **Maintain your setup** | Fix stale, broken or duplicate skills and config |
-| **Review change over time** | Compare habits and outcomes across tools |
+| **Review change over time** | Compare habits and outcomes across apps |
 | **Return to the evidence** | Next review: did it stick, did it help, and what did it cost? |
 
-Compared with other AI reflection tools, second look covers several tools in one report,
-checks your skills, tool setup and how you brief AI, and follows up on whether last
+Compared with other AI reflection tools, second look covers several apps in one report,
+checks your skills, app setup and how you brief AI, and follows up on whether last
 cycle's changes worked.
 
 ## Install
@@ -139,7 +144,7 @@ Install second look from github.com/txz8096/second-look.
 ```
 
 Your assistant follows the steps in [For AI assistants](#for-ai-assistants): it shows you
-which tools it found and asks before changing anything.
+which apps it found and asks before changing anything.
 
 ### Terminal
 
@@ -150,7 +155,7 @@ curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh
 The installer:
 
 1. Copies the skill to `~/.agents/skills/second-look`.
-2. Links it into `~/.claude/skills`, `~/.codex/skills` and `~/.cursor/skills` for each tool
+2. Links it into `~/.claude/skills`, `~/.codex/skills` and `~/.cursor/skills` for each app
    you have.
 3. Asks before changing one setting. Claude Code deletes sessions after 30 days by default,
    and a 12-month view needs them kept for a year (`cleanupPeriodDays: 365`).
@@ -174,7 +179,7 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
    curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash -s -- --check
    ```
 
-2. Show the user its output: the tools and exports it found, and what the install will
+2. Show the user its output: the apps and exports it found, and what the install will
    change. If it lists the question about Claude Code's history setting, ask the user
    yourself. The installer can't prompt them from your shell.
 3. Run the installer with the flag that matches their answer: `--yes` to keep a year of
@@ -207,7 +212,7 @@ Cursor, or to change the retention setting.
    profile.
 
 On claude.ai it can read your claude.ai chats only. Run it in Claude Code, Codex or Cursor
-to include those tools.
+to include those apps.
 
 ## Add your claude.ai, ChatGPT and Gemini history
 
@@ -233,7 +238,7 @@ To file one by hand instead, put `conversations.json` in `~/.second-look/exports
 Ask your assistant for "a second look", or type `/second-look` in Claude Code. The first run
 asks four questions to set up your profile.
 
-Every review covers all your tools since the last one. To narrow it, say so: "just my Cursor
+Every review covers all your apps since the last one. To narrow it, say so: "just my Cursor
 sessions" or "since Oct 1".
 
 If a scheduled review has finished and you haven't opened its report, asking for a second look
@@ -255,17 +260,17 @@ To change or stop them, ask your assistant: "make it monthly" or "stop the revie
 ## FAQ
 
 <details>
-<summary><b>Do I need to install it in every tool?</b></summary>
+<summary><b>Do I need to install it in every app?</b></summary>
 
-No. The installer puts one copy on your computer and links it into each tool you have. A
-review runs in the tool where you start it, and it reads every tool's files from there.
+No. The installer puts one copy on your computer and links it into each app you have. A
+review runs in the app where you start it, and it reads every app's files from there.
 </details>
 
 <details>
 <summary><b>Which AI apps does it support?</b></summary>
 
 Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is
-read directly but can't start a review, so start one from another tool on the same computer.
+read directly but can't start a review, so start one from another app on the same computer.
 claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they
 count up to the day you export. Gemini's export has no conversation boundaries, so its
 sessions are grouped by time and its numbers are estimates. Antigravity support is new and
@@ -274,7 +279,7 @@ until second look is updated.
 </details>
 
 <details>
-<summary><b>Does one report cover all my AI tools?</b></summary>
+<summary><b>Does one report cover all my AI apps?</b></summary>
 
 Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the
 computer where you use them. One run reads their logs and Antigravity's, plus claude.ai,
@@ -357,8 +362,8 @@ session logs are.
 | Codex app | Yes | A scheduled task in the app runs the full review | The app open, computer on |
 | Terminal (Claude Code or Codex CLI) | Yes | A daily job runs the review in the background, then tells you the report is ready | Computer on; file access approved in advance |
 | Cursor | No | A notification when a review is due; you start it | Computer on (macOS or Linux) |
-| Antigravity | No | A notification when a review is due; start it from Claude Code, Codex or Cursor. Any scheduled review includes your Antigravity sessions | Computer on, and one of those tools installed |
-| claude.ai | Yes, claude.ai only | A claude.ai scheduled task. It can't see your coding tools | Chat search on |
+| Antigravity | No | A notification when a review is due; start it from Claude Code, Codex or Cursor. Any scheduled review includes your Antigravity sessions | Computer on, and one of those apps installed |
+| claude.ai | Yes, claude.ai only | A claude.ai scheduled task. It can't see your coding apps | Chat search on |
 | ChatGPT | No | Reviews don't run here. Its history comes in through the data export | A `conversations.json` export |
 | Gemini (web app) | No | Reviews don't run here. Its history comes in through the Takeout export, and you're reminded when it's 90 days old | A `MyActivity.json` export |
 </details>
@@ -368,13 +373,13 @@ session logs are.
 
 As far as your logs do. Claude Code keeps 30 days by default, which is why the installer
 offers to keep a year. claude.ai, ChatGPT and Gemini count up to the day you export. Each run saves
-weekly totals, so weeks your tools later delete stay in the trend.
+weekly totals, so weeks your apps later delete stay in the trend.
 </details>
 
 <details>
 <summary><b>Does it show where my token usage goes?</b></summary>
 
-For Claude Code and Codex, the only tools that log tokens. The charts track how much of your
+For Claude Code and Codex, the only apps that log tokens. The charts track how much of your
 usage came from very long sessions, where every request re-reads a long history. The skills
 check names what loads into every session before you type, like skills you haven't run in 60
 days, and how much you'd save by having them run only when you ask. Numbers compare you with
