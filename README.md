@@ -10,21 +10,23 @@ specific changes to try. The next review checks how those changes held up.
 [Check supported apps](#supported-apps) ·
 [Privacy](#privacy)
 
-## Try your first review
+<a id="try-your-first-review"></a>
 
-Paste this into Claude Code, Codex or Cursor.
+## Try second look
 
-```
+Open Claude Code, Codex or Cursor on the computer where you use it and paste this prompt.
+
+```text
 Install second look from github.com/txz8096/second-look.
 ```
 
-Then ask for **"a second look"**. Answer four short questions to set up your first
-review. second look reads the local history your supported coding apps already keep.
-Browser history can be added separately.
+Once it's installed, ask for **"a second look."** Answer four short questions to
+get your first report. second look reads the session history your supported
+coding tools already save.
 
-The skill is free under the MIT license. Reviews use your existing AI quota.
+**Free and open source.** Reviews use your existing AI quota.
 
-[Other install options](#install)
+[Other ways to install](#install) · [Install in claude.ai](#claudeai)
 
 <a id="what-you-get"></a>
 
@@ -89,9 +91,9 @@ Using AI apps at work? Check your company's AI policy before reviewing work sess
 
 </details>
 
-## Install
+<a id="install"></a>
 
-[Try your first review](#try-your-first-review) for the shortest path in Claude Code, Codex or Cursor.
+## Other ways to install
 
 <a id="terminal"></a>
 
@@ -186,7 +188,7 @@ to include those apps.
 <details>
 <summary>Add optional browser exports</summary>
 
-This step is optional. You can add it any time.
+You can add browser history any time, including after your first local review.
 
 | App | Get your export | Then tell your assistant |
 |---|---|---|
