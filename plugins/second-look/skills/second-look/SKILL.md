@@ -87,6 +87,8 @@ chat, file it for them. Never ask them to open `~/.second-look`.
   inside, so the zip's name doesn't matter. Repeat its result lines in plain words, like
   "Added your ChatGPT export: 1,240 chats, Jan 2025 to Oct 2026." If it finds nothing,
   give them its steps for getting one and say they can drag the zip in when it arrives.
+  After a successful import, confirm the dates the file covers and offer to run a new review
+  now or use the export in the next review. Treat the current report as a snapshot.
   If macOS asks for access to Downloads, tell them to allow it, or to drag the zip in instead.
 - **claude.ai:** ask them to upload `conversations.json` (or Gemini's `MyActivity.json`)
   here. It's used for this review only.
@@ -513,7 +515,7 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 
 **How you brief AI and set up your apps** (`#part-2`). A headline with the biggest finding that
 links to the plan. If a much quicker fix goes first, the headline says so. "Did the fixes from your last review work?" (`#last-cycle`) sits on the Overview, only when an
-earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Changed since your last review" (Revise) or "Stopped" (Drop). Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result of five words or so with the number when there is one ("Use rose from 11% to 18%", "Too soon to tell"), and what changed, with its window, in the fold. Only the first fix starts open. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
+earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Changed since your last review" (Revise) or "Stopped" (Drop). Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result of five words or so with the number when there is one ("Use rose from 11% to 18%", "Too soon to tell"), and what changed, with its window, in the fold. All fixes start collapsed. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
 biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the apps as
 plain text, including every app its evidence names, and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
 matters; when you have one, their own prompt quoted in the card; an optional collapsed "Which apps have which rules". Then the fix in the same

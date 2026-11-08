@@ -73,7 +73,7 @@ the question they answer, like "Am I checking the work?", and the group that sli
 opens first with a short written summary. "Am I automating repeat work?" also lists the
 requests you keep typing by hand, each with a fix: a skill, a hook or a scheduled task.
 
-**Settings.** See the review schedule and data coverage, including which sessions came from local logs or exports and how to add a fresh export.
+**Settings.** See the review schedule and data coverage, including when session history starts for each app. Use Add export or Replace export on the app’s row for instructions. The next review can include the new history.
 
 See the [sample report](https://txz8096.github.io/second-look/sample-report.html) for the full
 layout. It uses made-up data.

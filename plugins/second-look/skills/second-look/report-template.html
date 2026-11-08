@@ -278,7 +278,6 @@ section > details + details, .part > details + details, #trends > details + deta
 .part > details + details { margin-top: -20px; }
 /* folds inside a card: a row between hairlines */
 details.nested { border-block: 1px solid var(--line); }
-#scope-details > details.nested:last-child { border-bottom: 0; }
 details.nested > summary { padding: 10px 0; gap: 8px; font-size: 14px; line-height: 20px; font-weight: 500; }
 details.nested > summary:hover { color: var(--accent); }
 details.nested > .body { padding: 4px 0 16px 24px; }
@@ -383,7 +382,10 @@ button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--sur
 .seg-out { background: repeating-linear-gradient(135deg, transparent 0 4px, rgb(161 161 161 / .22) 4px 6px); border: 1px dashed var(--faint); box-sizing: border-box; }
 .tl-axis { font: 12px var(--mono); color: var(--faint); padding-top: 6px; }
 .tl-axis > span:nth-child(2) { display: flex; justify-content: space-between; }
-.tl-group { margin: 18px 0 2px; }
+.export-action { margin-top: 4px; }
+.export-action summary { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); cursor: pointer; }
+.export-action summary:hover { text-decoration: underline; }
+.export-action p { margin: 6px 0 0; }
 .tl-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); margin-top: 10px; }
 .tl-legend i { display: inline-block; width: 22px; height: 10px; border-radius: 3px; vertical-align: -1px; margin-right: 6px; }
 /* scripts off: prerendered charts show every group in turn; with nothing drawn, one line says so */
@@ -626,7 +628,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   <div class="last-groups">
     <div class="last-group">
       <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Keep doing these</h4>
-      <details class="last-fix" open><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Confirm the plan before editing</span><span class="fix-result">Too soon to tell</span></span></summary>
+      <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Confirm the plan before editing</span><span class="fix-result">Too soon to tell</span></span></summary>
         <p>You’re correcting the AI about as often as before, at 1.2 per 10 messages. The fix is only 2 weeks old.</p></details>
       <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Send research comparisons to a <span class="term" tabindex="0" aria-describedby="def-helper-last">helper agent<span class="term-card" role="tooltip" id="def-helper-last">A helper agent works on the side and brings back only the result, so your main session stays short.</span></span></span><span class="fix-result">Use rose from 11% to 18%</span></span></summary>
         <p>Sessions crowded with lookups stayed about the same.</p></details>
@@ -988,19 +990,8 @@ Then tell me in plain words what changed before you save it.</pre></div>
     <h3 id="coverage-title">Data coverage</h3>
     <p>One local review can read Codex, Claude Code, Cursor and Antigravity sessions on this computer. To include sessions from web apps in a local review, add an export.</p>
       <div class="tl" id="tl-sources"></div>
-      <p class="eyebrow tl-group">Usage</p>
-      <div class="tl" id="tl-usage"></div>
       <div class="tl-axis" id="tl-axis"></div>
       <div class="tl-legend"><span><i class="seg-data"></i>Data</span><span><i style="background:var(--seg-track)"></i>No sessions</span><span><i class="seg-out"></i>Outside what second look can see</span></div>
-    <details class="nested">
-      <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>How to add or update an export</span></summary>
-      <ul>
-        <li><strong>claude.ai</strong> — Settings → Privacy → Export data.</li>
-        <li><strong>ChatGPT</strong> — Settings → Data controls → Export data.</li>
-        <li><strong>Gemini</strong> — In Google Takeout, select My Activity, filter to Gemini Apps and choose JSON.</li>
-      </ul>
-      <p>Download the export, then attach it in the app where you run second look and ask it to add the export. Keep the file private.</p>
-    </details>
   </section>
 </div>
 </main>
@@ -1191,10 +1182,21 @@ stackTables();
     const segs = (on, out) => { const parts = []; if (out > 0) parts.push(`<i class="seg-out" style="left:0;width:${out / WEEKS * 100}%"></i>`);
       let a = null; for (let w = 0; w <= WEEKS; w++) { const has = on.has(w) && w >= out; if (has && a == null) a = w; if (!has && a != null) { parts.push(`<i class="seg-data" style="left:${a / WEEKS * 100}%;width:${(w - a) / WEEKS * 100}%"></i>`); a = null; } }
       return parts.join(""); };
-    const row = (label, track, status) => `<div class="tl-row"><span class="tl-name">${label}</span><div class="track">${track}</div><span class="tl-status">${status}</span></div>`;
+    const row = (label, track, status) => `<div class="tl-row"><span class="tl-name">${label}</span><div class="track">${track}</div><div class="tl-status">${status}</div></div>`;
     const status = (src, on) => {
       const label = name(SOURCES, src.id), first = on.size ? Math.min(...on) : null, last = on.size ? Math.max(...on) : null;
-      if (src.state === "missing") return scopeCard("Not added", `${label}: add your export to see it here`, `second look reads ${label} from a data export, so your full history can join every trend.`, EXPORT_STEPS[src.id] || [], "end");
+      const steps = EXPORT_STEPS[src.id];
+      if (steps && (src.state === "missing" || src.state === "export")) {
+        const added = src.state === "export";
+        const range = added ? `Through ${dayLabel(src.to)}` : "Export needed";
+        const action = added ? "Replace export" : "Add export";
+        return `<span>${range}</span><details class="export-action">
+          <summary aria-label="${action} for ${label}"><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>${action}</summary>
+          <p>${steps[0]}</p>
+          <p>Download the file, then open second look in your review app. ${steps[1]} You can also attach the file there.</p>
+        </details>`;
+      }
+      if (src.state === "missing") return "Export needed";
       if (src.state === "not_found") return scopeCard("Not found", `${label} isn't on this computer`, `Nothing to do if you don't use it.`, [], "end");
       if (src.state === "not_readable") return scopeCard("Not readable here", "Run second look on your computer", `${label} keeps its history on your computer, which a claude.ai run can't open.`, [], "end");
       if (src.state === "export") return scopeCard(`Export, ${dayLabel(src.to)}`, `${label}: from your export`, `Covers sessions up to ${dayLabel(src.to)}. Add a fresh export to see later ones.`, EXPORT_STEPS[src.id] || [], "end");
@@ -1208,15 +1210,6 @@ stackTables();
       return row(name(SOURCES, src.id), whole ? `<i class="seg-out" style="left:0;width:100%"></i>` : segs(on, src.cut ? Math.max(0, idxOf(src.cut)) : 0), status(src, on));
     });
     document.getElementById("tl-sources").innerHTML = srcRows.join("");
-    const usageRows = SCOPE.sources.filter(s => METERED.has(s.id) && s.state === "logs").map(src => {
-      const on = activeWeeks(src.id, "metered"), out = cutIdx(src.id, true) || 0, label = name(SOURCES, src.id);
-      const st = !on.size ? "No sessions" : usageCut(src.id) != null
-        ? scopeCard(`From ${mon(weeks[out])}`, `${label}: usage starts ${mon(weeks[out])}`, "Earlier weeks were saved without usage data.", ["This moves back as history builds. Nothing to do."], "end")
-        : src.cut ? cutCard(src, `Since ${dayLabel(src.cut)}`, "end") : (Math.min(...on) === 0 ? "Full year" : `Since ${mon(weeks[Math.min(...on)])}`);
-      return row(label, segs(on, out), st);
-    });
-    usageRows.push(row("Other apps", `<i class="seg-out" style="left:0;width:100%"></i>`, scopeCard("Not recorded", "Other apps don't record usage", "Usage covers Claude Code and Codex only.", [], "end")));
-    document.getElementById("tl-usage").innerHTML = usageRows.join("");
     const q = [0, 13, 26, 39, WEEKS - 1].map(i => weeks[i].toLocaleDateString("en-US", {month: "short", year: i === 0 || i === WEEKS - 1 ? "numeric" : undefined}));
     document.getElementById("tl-axis").innerHTML = `<span></span><span>${q.map(t => `<span>${t}</span>`).join("")}</span><span></span>`;
 
