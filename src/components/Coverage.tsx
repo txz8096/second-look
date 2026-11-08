@@ -4,7 +4,7 @@ const INSTALLER_SETUP = "None. The installer links the skill in";
 
 const columns = ["What’s read", "Setup needed", "How far back"];
 
-const tools = [
+const apps = [
   {
     name: "Claude Code",
     reads: "Session logs in ~/.claude/projects, your skills and CLAUDE.md",
@@ -27,7 +27,7 @@ const tools = [
   {
     name: "Antigravity",
     reads: "Agent transcripts in ~/.gemini/antigravity-cli, plus ~/.gemini/GEMINI.md",
-    setup: "None. Reviews start from one of the tools above",
+    setup: "None. Reviews start from one of the apps above",
     history: "Whatever the CLI keeps on disk. Support is new, and app chats may be missing",
   },
   {
@@ -57,7 +57,7 @@ export function Coverage() {
       <Container className="flex flex-col gap-12 py-20 lg:py-28">
         <div className="flex max-w-[760px] flex-col gap-5">
           <Kicker>Coverage</Kicker>
-          <SectionHeading>Supported AI tools</SectionHeading>
+          <SectionHeading>Supported AI apps</SectionHeading>
           <p className="font-body text-[17px] leading-[1.55] text-text-2">
             Start a review from Claude Code, Codex or Cursor, and one run covers every source below that’s on this
             computer.
@@ -71,7 +71,7 @@ export function Coverage() {
                 scope="col"
                 className="w-[160px] pr-8 pb-3.5 font-mono text-xs leading-normal font-normal tracking-[1px] text-text-3 uppercase"
               >
-                Tool
+                App
               </th>
               {columns.map((col, i) => (
                 <th
@@ -87,7 +87,7 @@ export function Coverage() {
             </tr>
           </thead>
           <tbody>
-            {tools.map((t) => (
+            {apps.map((t) => (
               <tr key={t.name} className="border-b border-rule max-md:flex max-md:flex-col max-md:gap-3 max-md:py-5">
                 <th
                   scope="row"

@@ -13,7 +13,7 @@ FONT_LINK = "family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:w
 REQUIRED_IDS = ["overview", "side", "part-1", "part-2", "part-3", "trends", "report-issue"]
 SECTION_ORDER = ["overview", "part-2", "part-3", "part-1"]
 REQUIRED_TEXT = [
-    "How you brief AI and set up your tools",
+    "How you brief AI and set up your apps",
     "Keep your skills current",
     "How your habits are changing",
     "Report an issue",
@@ -43,7 +43,7 @@ FORBIDDEN = {
     'id="toc"': "the floating contents menu was replaced by the sidebar",
     "Compare the fixes": "merged into the plan; each fix is its Try block plus one plan row",
     "review will check</span>": "the separate next-review fold was merged into the plan rows",
-    'class="diff"': "skill fixes are prompts they can paste into their AI tool, not diffs",
+    'class="diff"': "skill fixes are prompts they can paste into their AI app, not diffs",
     "Geist": "old font",
     '"Inter"': "old font",
 }
@@ -104,7 +104,7 @@ def cube_problems(cube, end):
     keys = [(r["week"], r["source"], r["category"]) for r in cube]
     repeated = len(keys) - len(set(keys))
     if repeated:
-        problems.append(f"CUBE repeats {repeated} rows for the same week, tool and kind of work, which double-counts them; a week and tool in the cube replaces the same one in history.json")
+        problems.append(f"CUBE repeats {repeated} rows for the same week, app and kind of work, which double-counts them; a week and app in the cube replaces the same one in history.json")
     if not end:
         return problems
     end -= dt.timedelta(days=end.weekday())

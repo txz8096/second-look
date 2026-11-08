@@ -32,7 +32,7 @@ command -v python3 >/dev/null || { echo "second look needs python3. Install it, 
 # Claude Code's current history setting, in days.
 current_retention="$(python3 -c 'import json,os,sys; p=sys.argv[1]; print(json.load(open(p)).get("cleanupPeriodDays", 30) if os.path.exists(p) else 30)' "$SETTINGS" 2>/dev/null || echo 30)"
 
-# Prints which tools and exports are on this computer, and what an install would change.
+# Prints which apps and exports are on this computer, and what an install would change.
 report() {
   python3 - "$HOME" "$current_retention" <<'PY'
 import datetime as dt, glob, json, os, sys
@@ -48,7 +48,7 @@ def sessions(pattern):
 cursor_db = [p for p in (
     "Library/Application Support/Cursor/User/globalStorage/state.vscdb",
     ".config/Cursor/User/globalStorage/state.vscdb") if os.path.exists(os.path.join(home, p))]
-tools = [
+apps = [
     ("Claude Code", os.path.isdir(os.path.join(home, ".claude")), "~/.claude/projects", lambda: sessions(".claude/projects/*/*.jsonl")),
     ("Codex", os.path.isdir(os.path.join(home, ".codex")), "~/.codex/sessions", lambda: sessions(".codex/sessions/**/*.jsonl")),
     ("Cursor", os.path.isdir(os.path.join(home, ".cursor")) or bool(cursor_db), "Cursor's local database",
@@ -64,7 +64,7 @@ exports = [(name, os.path.join(home, ".second-look/exports", rel)) for name, rel
 
 print("Found on this computer (second look reads these when you ask for a review):")
 found = []
-for name, present, where, detail in tools:
+for name, present, where, detail in apps:
     if present:
         found.append(name)
         print(f"  {name:<18}{where}: {detail()}")
@@ -116,7 +116,7 @@ fi
 report
 echo
 
-# One shared copy, linked into each tool that's installed.
+# One shared copy, linked into each app that's installed.
 mkdir -p "$(dirname "$SHARED")"
 rm -rf "$SHARED"
 cp -R "$src" "$SHARED"

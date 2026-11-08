@@ -5,15 +5,15 @@ type Faq = { q: string; a: string; table?: { head: string[]; rows: string[][] } 
 
 const faqs: Faq[] = [
   {
-    q: "Do I need to install it in every tool?",
-    a: "No. The installer puts one copy on your computer and links it into Claude Code, Codex and Cursor, whichever you have. A review runs in the tool where you start it, and it reads every tool’s files from there.",
+    q: "Do I need to install it in every app?",
+    a: "No. The installer puts one copy on your computer and links it into Claude Code, Codex and Cursor, whichever you have. A review runs in the app where you start it, and it reads every app’s files from there.",
   },
   {
     q: "Which AI apps does it support?",
-    a: "Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is read directly but can’t start a review, so start one from another tool on the same computer. claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they count up to the day you export. Gemini’s export has no conversation boundaries, so its sessions are grouped by time and its numbers are estimates. Antigravity support is new and built on an undocumented file format, so a release that changes it can hide your sessions until second look is updated.",
+    a: "Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is read directly but can’t start a review, so start one from another app on the same computer. claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they count up to the day you export. Gemini’s export has no conversation boundaries, so its sessions are grouped by time and its numbers are estimates. Antigravity support is new and built on an undocumented file format, so a release that changes it can hide your sessions until second look is updated.",
   },
   {
-    q: "Does one report cover all my AI tools?",
+    q: "Does one report cover all my AI apps?",
     a: "Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor on the computer where you use them. One run reads their logs and Antigravity’s, plus claude.ai, ChatGPT and Gemini if you add their data exports. Started from claude.ai in a browser or from a cloud session, it can’t see those logs, so it covers only your claude.ai chats.",
   },
   {
@@ -55,9 +55,9 @@ const faqs: Faq[] = [
           "Antigravity",
           "No",
           "A notification when a review is due; start it from Claude Code, Codex or Cursor. Any scheduled review includes your Antigravity sessions",
-          "Computer on, and one of those tools installed",
+          "Computer on, and one of those apps installed",
         ],
-        ["claude.ai", "Yes, claude.ai only", "A claude.ai scheduled task. It can’t see your coding tools", "Chat search on"],
+        ["claude.ai", "Yes, claude.ai only", "A claude.ai scheduled task. It can’t see your coding apps", "Chat search on"],
         ["ChatGPT", "No", "Reviews don’t run here. Its history comes in through the data export", "A conversations.json export"],
         [
           "Gemini (web app)",
@@ -70,11 +70,11 @@ const faqs: Faq[] = [
   },
   {
     q: "How far back does the yearly view go?",
-    a: "As far as your logs do. Claude Code keeps 30 days by default, which is why the installer offers to keep a year. claude.ai, ChatGPT and Gemini count up to the day you export. Each run saves weekly totals, so weeks your tools later delete stay in the trend. The sample report on this page uses made-up data.",
+    a: "As far as your logs do. Claude Code keeps 30 days by default, which is why the installer offers to keep a year. claude.ai, ChatGPT and Gemini count up to the day you export. Each run saves weekly totals, so weeks your apps later delete stay in the trend. The sample report on this page uses made-up data.",
   },
   {
     q: "Does it show where my token usage goes?",
-    a: "For Claude Code and Codex, the only tools that log tokens. The charts track how much of your usage came from very long sessions, where every request re-reads a long history. The skills check names what loads into every session before you type, like skills you haven’t run in 60 days, and how much you’d save by having them run only when you ask. Numbers compare you with your own typical session, never with other people. A full breakdown appears only if you keep hitting usage limits.",
+    a: "For Claude Code and Codex, the only apps that log tokens. The charts track how much of your usage came from very long sessions, where every request re-reads a long history. The skills check names what loads into every session before you type, like skills you haven’t run in 60 days, and how much you’d save by having them run only when you ask. Numbers compare you with your own typical session, never with other people. A full breakdown appears only if you keep hitting usage limits.",
   },
   {
     q: "How accurate are the findings?",

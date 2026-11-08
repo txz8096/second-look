@@ -69,10 +69,10 @@ fully rounded chips.
 An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs (Nov 6, 2026). Scripts off, every page shows in turn and the links still work.
 
 1. App bar (64px, stays on screen): the sidebar toggle and logo on the left; the report menu (`#report-menu`, a `details` that works with scripts off) the Feedback link (`#report-issue`, to https://github.com/txz8096/second-look/issues/new) and the light and dark switch (`#theme-btn`, hidden with scripts off) on the right. The menu shows "Latest report" or "Earlier report" with this report's date, and opens a scrolling list of every saved report, newest first, with the latest marked. `scripts/report_menu.py` writes the list between the `report-menu` comments, using relative links, and switching reports stays on the same page. With one report, or on claude.ai, it's a plain label. Phones show only the date, and at 400px and narrower the year drops too, so the bar fits. The sample report's earlier dates are plain text, since it has no other reports to open.
-2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Briefs & setup, Skills, Habits & usage, with the script's counts of fixes and of skills to fix. At the bottom, on every page, a note (`#side-about`) always shows the method, and a folded "Guidance and references" list sits under it. The template's note also says it's a sample report. Both print after the report.
+2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Briefs & setup, Skills, Habits & usage, with the script's counts of fixes and of skills to fix. Settings contains Review schedule and Data coverage. The latter holds the source timeline and export instructions. Habits & usage links to the timeline. The sample controls update the preview summary. Generated reports direct users to the app that owns the schedule. At the bottom, on every page, a note (`#side-about`) always shows the method, and a folded "Guidance and references" list sits under it. The template's note also says it's a sample report. Both print after the report.
 3. Overview (`#overview`): "Your latest review" as the `h1`, the summary paragraph (20px, plain words, no numbers), "Did the
    fixes from your last review work?" (`#last-cycle`, one card per decision, one folded row per fix; only after a review with logged fixes), then "Explore your report", one row per page.
-4. How you brief AI and set up your tools (`#part-2`): headline linking to the plan, pattern cards
+4. How you brief AI and set up your apps (`#part-2`): headline linking to the plan, pattern cards
    (`article.icard`), then "Your plan until <date>" (`#plan`): one numbered row per fix with
    its name, time, what it saves, and what the next review checks, one line each from 681px with
    each value under its header, then a line linking the other skill fixes and the repeats to automate.
@@ -101,12 +101,12 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   come first, biggest slip first (measured in noise floors).
 - The open group starts with one sentence of what changed, comparing the last 4 weeks with
   the 4 before, whatever the time filter. No label, no values. Changes under the noise floor
-  (see SKILL.md "Trend metrics") read "about the same" and never sort first. "How each tool's use is changing" uses the same two windows.
+  (see SKILL.md "Trend metrics") read "about the same" and never sort first. "How each app's use is changing" uses the same two windows.
 - Each chart is a card: title (with its card), definition line, the plot, then one clause for the
   direction the line moved ("Up: you typed more rules by hand."). It says what the measure did,
   never why. With the time filter on 4 weeks the earlier point is off the chart, so it reads "Up
   from the 4 weeks before: …". A flat chart has none. A chart with no line has only its reason.
-- Time, Tool and Work are always on show: Time and the session count on the first row, Tool and Work on the next. The first question card with data opens first.
+- Time, App and Work are always on show: Time, the session count and the View data coverage link on the first row, App and Work on the next. The first question card with data opens first.
 - The time filter opens on the range the data covers: 3 months, 6 months or 12 months.
 - Every chart fills its card: the script sets the viewBox from the card's width and redraws when the page's width changes, so text and height stay the same.
 - Each group opens by answering its question in plain words (`say` and `opens` in `GROUPS`), then names at most two changes from `READS` and says "The rest held steady." when that's true. It compares the last 4 weeks with the 4 before, and says "lately" for that. Metric names stay on the charts.
@@ -128,7 +128,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   latest, and tooltips name any of them. Dashed lines and hatching mean only
   one thing: data second look can't see.
 - Coverage is said once under the group summary ("These charts count Claude Code and Codex
-  only.", or "Output checking counts all your tools. The others count only Claude Code and Codex."), in muted text, never yellow.
+  only.", or "Output checking counts all your apps. The others count only Claude Code and Codex."), in muted text, never yellow.
 - "Am I automating repeat work?" ends with "What you could automate next" (`#automate-next`):
   one row per repeated request, most repeated first, with the request in quotes, the count in
   plain text ("6 times in 4 weeks") and the fix as one line to paste. The script moves the block into
@@ -146,8 +146,8 @@ and summary row (too much to read before the first chart).
 
 ## Pattern card
 
-A number in a pink circle, matching the fix's row in the plan; title; the tools as plain muted text and one how-sure chip; What happens, Evidence and Why it matters as labelled rows; their own prompt, when
-there is one; an optional fold ("Which tools have which rules"); then the "Try this" block
+A number in a pink circle, matching the fix's row in the plan; title; the apps as plain muted text and one how-sure chip; What happens, Evidence and Why it matters as labelled rows; their own prompt, when
+there is one; an optional fold ("Which apps have which rules"); then the "Try this" block
 in a pink panel: "Try this: <fix name>", one pink line saying what it saves (`.try-saves`) with its working in a muted line under it (`.saves-how`), the action in plain steps, a paste-ready block with
 Copy in its corner. Folds inside cards all look the same: a row between hairlines with a chevron, pink on hover.
 
@@ -179,8 +179,8 @@ Use these definitions word for word:
 |---|---|
 | Briefed starts | Your first message gives at least two of three things: the goal, the background, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.” Sessions that open on review comments aren’t counted. |
 | Corrections | Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly. |
-| Restarts | A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track. |
-| Rules retyped per week | A rule typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in the saved instructions of every tool you use. |
+| Restarts | A new session that opens with mostly the same request as one from the last two days, in the same app. It usually means the first try went off track. |
+| Rules retyped per week | A rule typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in the saved instructions of every app you use. |
 | Long-session share | Share of your usage from very long sessions, about a novel’s worth of text or more. Each message there makes the AI re-read the whole session first, so they use up your limit fastest. Starting fresh between tasks lowers it. Claude Code and Codex only. |
 | Session | One conversation with an AI, from your first message until you start a new one. |
 | Model | The version of the AI you’re talking to. Stronger ones use up your limit faster. |
@@ -207,9 +207,13 @@ worked" · Expand all / Collapse all · "sample data" chips · bullet dots in ch
 lines between cards inside a part (dividers only between major sections) · "Review N" line
 above the summary · the at-a-glance table and the "Start here" line (the summary and plan do that job) · thesis and "Three moves" summary · the "More metrics"
 dropdown · the value and change line in chart headers · "Compare the fixes" and the separate
-"What the <date> review will check" fold (both live in the plan rows) · tool
+"What the <date> review will check" fold (both live in the plan rows) · app
 pills · uppercase labels · the "What your charts say" label · group-tile
 blurbs · the header tagline · impact pills in "Skills to fix" · how-sure chips in the plan · "Try next" (a feature worth trying is a fix) · section taglines that restate a heading · a "How sure" column whose rows all match ·
 pink side stripes on panels · filled table headers · Keep, Revise and Drop pills (a bare "Keep" didn't say what to keep; group headers do) · diffs in skill fixes · "Start with the X
 chart" · "Higher: … Lower: …" under charts · the word "cycle" · "What each trend covers" (now
-inside "How these are measured") · the "Habits over the last year" heading.
+inside Settings → Data coverage) · the "Habits over the last year" heading.
+
+Use dividers between expandable rows and list or table rows. Omit the divider after the final row. Keep the enclosing border when the list sits inside a bordered container.
+
+On Overview, keep “What you use AI for”. It stacks weekly session counts by kind of work for the last 13 complete weeks using the report cube. Keep its link to Data coverage in Settings.

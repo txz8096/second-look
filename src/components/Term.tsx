@@ -5,7 +5,7 @@ import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 // Same definitions the report shows on its habit terms.
 const definitions = {
   sessions:
-    "Conversations you had with an AI tool this cycle, across every tool second look read. Shown for context: the count alone says nothing about how well they went.",
+    "Conversations you had with an AI app this cycle, across every app second look read. Shown for context: the count alone says nothing about how well they went.",
   briefedStarts:
     "Your first message gives at least two of three things: the goal, the context, and what done looks like.",
   corrections:
@@ -13,11 +13,11 @@ const definitions = {
   outputChecking:
     "In build and research sessions, the share where you asked for sources, edge cases or a critique before accepting the result.",
   restarts:
-    "A new session that opens with mostly the same request as one from the last two days, in the same tool. It usually means the first try went off track.",
+    "A new session that opens with mostly the same request as one from the last two days, in the same app. It usually means the first try went off track.",
   rulesRetyped:
     "A standing preference typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in your CLAUDE.md, AGENTS.md or Cursor rules.",
   longSessionShare:
-    "Share of your usage from sessions that ran past 150k tokens. Every request in those re-reads the whole history first, so they use up your allowance fastest. Counts Claude Code and Codex only, since other tools don't log tokens. Running /clear or starting fresh between tasks lowers it.",
+    "Share of your usage from sessions that ran past 150k tokens. Every request in those re-reads the whole history first, so they use up your allowance fastest. Counts Claude Code and Codex only, since other apps don't log tokens. Running /clear or starting fresh between tasks lowers it.",
 };
 
 const CARD_MAX_WIDTH = 280;

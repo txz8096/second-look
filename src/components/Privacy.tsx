@@ -83,7 +83,7 @@ export function Privacy() {
 
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
           <p className="flex-1 font-body text-sm leading-[1.55] text-text-3">
-            Using AI tools at work? Check your company’s AI policy before you review work sessions. Keeping a year of
+            Using AI apps at work? Check your company’s AI policy before you review work sessions. Keeping a year of
             history also means more of it stays on your disk; the installer asks before changing that.
           </p>
           <a

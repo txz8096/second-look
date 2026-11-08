@@ -12,7 +12,7 @@ type Behavior = {
 
 const behaviors: Behavior[] = [
   {
-    label: "How you brief AI and set up your tools",
+    label: "How you brief AI and set up your apps",
     question: "Did your last fixes work, and did your first message give the goal, audience, constraints and what done looks like?",
     example: [
       { tag: "WHAT HAPPENS", text: "Your prototype requests name the feature but leave out the user." },
