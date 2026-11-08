@@ -1,33 +1,33 @@
-import { Container, Kicker, SectionHeading } from "./ui";
+import { ArrowRight } from "lucide-react";
+import { links } from "@/lib/site";
+import { Container, SectionHeading } from "./ui";
 
 const benefits = [
-  { title: "Less overhead for tasks", body: "Cut the setup and long-session overhead around each task, so work moves faster and your usage goes further." },
-  { title: "Better output, fewer errors", body: "Find the habits behind rework, so first results need less fixing." },
-  { title: "More reliable code", body: "Ask for code with a clear scope and a way to check it." },
-  { title: "Keep your own judgement", body: "Depend less on AI for the thinking." },
-  { title: "Deeper research", body: "Get more thorough research and sharper reasoning from each session." },
-  { title: "Skills that transfer", body: "Build skills that carry over to new apps and models." },
-  { title: "Bring apps together", body: "Get more from several AI apps by matching each task to the right one." },
-  { title: "Less repeated setup", body: "Stop retyping context. Move it into memory and skills." },
+  { title: "I’ve explained this before.", body: "You repeat the same instructions or corrections whenever a task comes up." },
+  { title: "What should I hand off?", body: "You’re unsure what AI should do and what you need to check." },
+  { title: "Where did all that usage go?", body: "Your chats keep growing as you move from one task to the next." },
+  { title: "Are my skills still current?", body: "You haven’t checked their instructions or updates lately." },
 ];
 
 export function Opportunities() {
   return (
     <section id="opportunities" className="border-t border-rule bg-paper">
-      <Container className="flex flex-col gap-16 py-20 lg:py-28">
-        <div className="flex max-w-[760px] flex-col gap-5">
-          <Kicker>The opportunities</Kicker>
-          <SectionHeading>Where a closer look pays off.</SectionHeading>
+      <Container className="grid gap-10 py-16 lg:grid-cols-[440px_1fr] lg:gap-20">
+        <div className="flex flex-col items-start gap-6">
+          <SectionHeading size="compact">Spend less time on the same AI problems</SectionHeading>
+          <p className="font-body text-lg leading-[1.55] text-text-2">Use AI for recurring work? See if any of these sound familiar.</p>
+          <a href={links.sampleReport} className="inline-flex min-h-11 items-center gap-2 font-body text-base text-accent underline-offset-4 hover:underline">
+            See a sample report <ArrowRight size={18} aria-hidden="true" />
+          </a>
         </div>
-        <ol className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-y-16">
-          {benefits.map((b, i) => (
-            <li key={b.title} className="flex flex-col gap-3.5 border-t-2 border-accent pt-6">
-              <span className="font-mono text-[13px] text-text-3">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="font-display text-xl leading-[1.2] font-bold text-ink">{b.title}</h3>
-              <p className="font-body text-sm leading-[1.55] text-text-2">{b.body}</p>
+        <ul className="min-w-0 border-t border-rule">
+          {benefits.map((benefit) => (
+            <li key={benefit.title} className="flex flex-col gap-2 border-b border-rule py-5 last:border-b-0">
+              <h3 className="font-display text-[26px] leading-[1.2] font-semibold tracking-[-0.5px] text-ink">{benefit.title}</h3>
+              <p className="font-body text-lg leading-normal text-text-2">{benefit.body}</p>
             </li>
           ))}
-        </ol>
+        </ul>
       </Container>
     </section>
   );

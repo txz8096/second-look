@@ -1,128 +1,27 @@
-"use client";
+import { Container, SectionHeading } from "./ui";
 
-import { Minus, Plus } from "lucide-react";
-import { useState } from "react";
-import { Container, Kicker, SectionHeading } from "./ui";
-
-type Behavior = {
-  label: string;
-  question: string;
-  example?: { tag: string; text: string }[];
-};
-
-const behaviors: Behavior[] = [
-  {
-    label: "How you brief AI and set up your apps",
-    question: "Did your last fixes work, and did your first message give the goal, audience, constraints and what done looks like?",
-    example: [
-      { tag: "WHAT HAPPENS", text: "Your prototype requests name the feature but leave out the user." },
-      { tag: "EVIDENCE", text: "In three sessions, that cost several turns of clarifying." },
-      { tag: "TRY THIS", text: "Add who it’s for and what done means to the first message." },
-    ],
-  },
-  {
-    label: "Keep your skills current",
-    question: "Which skills or configs are stale, broken, duplicated, or loading into every session unused?",
-  },
-  {
-    label: "How your habits are changing",
-    question: "Are your habits improving, and where did your usage go?",
-  },
+const behaviors = [
+  { emoji: "📝", label: "Your briefs", description: "Where clearer context could save a restart." },
+  { emoji: "⚙️", label: "Your setup", description: "Check system instructions and memory for gaps." },
+  { emoji: "🧰", label: "Your skills", description: "Instructions and updates worth checking." },
+  { emoji: "🌱", label: "Your habits", description: "What changed, and what to try next." },
 ];
 
-function SmallLabel({ children }: { children: string }) {
-  return <p className="font-mono text-xs tracking-[0.8px] text-accent">{children}</p>;
-}
-
 export function Approach() {
-  const [open, setOpen] = useState(0);
-
   return (
-    <section id="approach" className="border-t border-rule bg-paper">
-      <Container className="flex flex-col gap-14 py-20 lg:flex-row lg:gap-24 lg:py-28">
-        <div className="flex flex-col gap-6 lg:w-[440px] lg:shrink-0">
-          <Kicker>Our approach</Kicker>
-          <SectionHeading>How you work with AI shapes what you get back.</SectionHeading>
-          <p className="font-body text-[17px] leading-[1.55] text-text-2">
-            It also reads the context you give, your skills and config, and how your habits change. Each
-            finding shows its evidence and one small change to try.
-          </p>
-          <p className="font-body text-[15px] leading-[1.55] text-text-3">
-            Sources it can’t open are marked “not checked.”
-          </p>
-        </div>
-
-        <div className="w-full border-t border-ink">
-          {behaviors.map((b, i) => {
-            const isOpen = open === i;
-            const panelId = `behavior-panel-${i}`;
-            return (
-              <div key={b.label} className="flex flex-col gap-5 border-b border-rule py-7">
-                <h3>
-                  <button
-                    type="button"
-                    aria-expanded={isOpen}
-                    aria-controls={panelId}
-                    onClick={() => setOpen(isOpen ? -1 : i)}
-                    className="group flex w-full items-center gap-6 text-left"
-                  >
-                    <span className={`w-5 shrink-0 font-mono text-[13px] ${isOpen ? "text-accent" : "text-text-3"}`}>
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      className={`flex-1 font-display text-[22px] font-bold tracking-[-0.6px] transition-colors md:text-[28px] ${
-                        isOpen ? "text-ink" : "text-text-2 group-hover:text-ink"
-                      }`}
-                    >
-                      {b.label}
-                    </span>
-                    {isOpen ? (
-                      <Minus size={22} className="shrink-0 text-accent" aria-hidden="true" />
-                    ) : (
-                      <Plus size={22} className="shrink-0 text-text-3" aria-hidden="true" />
-                    )}
-                  </button>
-                </h3>
-
-                <div id={panelId} className="pl-11">
-                  {isOpen ? (
-                    <div className="flex flex-col gap-6">
-                      <div className="flex flex-col gap-2.5">
-                        <SmallLabel>WHAT THE SKILL LOOKS FOR</SmallLabel>
-                        <p className="font-body text-lg leading-normal text-ink md:text-xl">{b.question}</p>
-                      </div>
-                      {b.example && (
-                        <div className="flex flex-col gap-3.5 border-t border-rule pt-5">
-                          <SmallLabel>WHAT YOU GET BACK</SmallLabel>
-                          <dl className="flex flex-col gap-3.5">
-                            {b.example.map((row) => (
-                              <div
-                                key={row.tag}
-                                className="flex flex-col gap-1 border-l-2 border-accent py-0.5 pl-3.5 sm:flex-row sm:gap-5"
-                              >
-                                <dt className="font-mono text-xs leading-[1.9] tracking-[0.8px] text-accent sm:w-[104px] sm:shrink-0">
-                                  {row.tag}
-                                </dt>
-                                <dd className="font-display text-[17px] leading-[1.35] font-bold tracking-[-0.3px] text-ink">
-                                  {row.text}
-                                </dd>
-                              </div>
-                            ))}
-                          </dl>
-                          <p className="font-body text-[15px] leading-[1.55] text-text-3">
-                            Generic advice like “write clearer prompts” doesn’t make the cut.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <p className="font-body text-[15px] leading-[1.55] text-text-3">{b.question}</p>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+    <section id="approach" className="border-t border-rule bg-surface">
+      <Container className="flex flex-col gap-8 py-16">
+        <SectionHeading size="compact">A review you can act on</SectionHeading>
+        <ul className="grid gap-6 sm:grid-cols-2 sm:gap-10 lg:grid-cols-4">
+          {behaviors.map((behavior) => (
+            <li key={behavior.label} className="flex flex-col gap-3 border-b border-rule pb-6 last:border-b-0 last:pb-0 sm:border-r sm:border-b-0 sm:pr-6 sm:pb-0 sm:last:border-r-0">
+              <h3 className="flex items-center gap-2.5 font-display text-2xl leading-tight font-semibold text-ink">
+                <span aria-hidden="true">{behavior.emoji}</span>{behavior.label}
+              </h3>
+              <p className="font-body text-lg leading-[1.55] text-text-2">{behavior.description}</p>
+            </li>
+          ))}
+        </ul>
       </Container>
     </section>
   );

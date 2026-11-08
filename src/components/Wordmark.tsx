@@ -6,7 +6,7 @@ export function Wordmark({ className = "h-8 w-auto" }: { className?: string }) {
       viewBox={WORDMARK_VIEWBOX}
       className={className}
       role="img"
-      aria-label="second look"
+      aria-label="Second Look"
     >
       <path d={WORDMARK_LETTERS} className="fill-ink" />
       <path d={WORDMARK_DOUBLE_RULE} className="fill-accent" />

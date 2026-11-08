@@ -1,163 +1,47 @@
-import { CornerDownRight } from "lucide-react";
-import type { CSSProperties } from "react";
-import { HERO_PLOT, SPARKLINES } from "@/lib/paths";
+import Image from "next/image";
 import { links } from "@/lib/site";
 import { GithubIcon } from "./Icons";
-import { Sparkline } from "./Sparkline";
-import { Term } from "./Term";
-import { Container, PrimaryButton, SecondaryButton } from "./ui";
-
-// Axis labels sit in HTML over the plot so they keep their size when the SVG scales down on phones.
-// Positions are in viewBox units: y is the gridline each label centers on, x is the label's left edge.
-const PLOT_WIDTH = 492;
-const PLOT_HEIGHT = 150;
-
-// Entrance timing in ms: the text staggers in, the card follows, then the plot draws and the sparklines trail it.
-const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties;
-const CARD_IN = 240;
-const PLOT_IN = CARD_IN + 300;
-
-const yLabels = [
-  { label: "0", y: 144 },
-  { label: "1", y: 84 },
-  { label: "2", y: 24 },
-];
-
-const xLabels = [
-  { label: "Jan", x: 104.4 },
-  { label: "Apr", x: 219.1 },
-  { label: "Jul", x: 333.8 },
-  { label: "Oct", x: 448.5 },
-];
-
-const signals = [
-  { label: "Briefed starts", term: "briefedStarts", value: "52%", delta: "About the same", d: SPARKLINES.briefedStarts },
-  { label: "Output checking", term: "outputChecking", value: "34%", delta: "−11 pts", d: SPARKLINES.outputChecking },
-  { label: "Restarts", term: "restarts", value: "15%", delta: "+9 pts", d: SPARKLINES.restarts },
-] as const;
-
-function CorrectionsPlot() {
-  return (
-    <div>
-      <div className="relative">
-        <svg
-          viewBox={`0 0 ${PLOT_WIDTH} ${PLOT_HEIGHT}`}
-          className="block h-auto w-full"
-          role="img"
-          aria-label="Corrections per 10 messages by week over the last 12 months, falling from about 1.9 to 1.2"
-        >
-          <path d={HERO_PLOT.gridlines} fill="none" strokeWidth={1} className="stroke-rule" vectorEffect="non-scaling-stroke" />
-          <g className="wipe-in" style={delay(PLOT_IN)}>
-            <path
-              d={HERO_PLOT.eachWeek}
-              fill="none"
-              strokeWidth={1.75}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="stroke-accent"
-              vectorEffect="non-scaling-stroke"
-            />
-          </g>
-        </svg>
-        <div className="font-mono text-xs text-text-3" aria-hidden="true">
-          {yLabels.map((t) => (
-            <span
-              key={t.label}
-              className="absolute left-0 -translate-y-1/2 leading-none"
-              style={{ top: `${(t.y / PLOT_HEIGHT) * 100}%` }}
-            >
-              {t.label}
-            </span>
-          ))}
-        </div>
-      </div>
-      <div className="relative mt-1.5 h-4 font-mono text-xs text-text-3" aria-hidden="true">
-        {xLabels.map((t) => (
-          <span key={t.label} className="absolute top-0" style={{ left: `${(t.x / PLOT_WIDTH) * 100}%` }}>
-            {t.label}
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function AnnotatedTrace() {
-  return (
-    <figure
-      style={delay(CARD_IN)}
-      className="rise-in w-full rounded-[10px] bg-surface shadow-[0_12px_20px_#1a1a1814] outline outline-1 -outline-offset-1 outline-rule lg:w-[540px] lg:shrink-0">
-      <div className="border-b border-rule px-6 py-4">
-        <p className="font-mono text-xs text-text-3">Last 12 months · 1,330 sessions</p>
-      </div>
-      <div className="flex flex-col gap-5 p-6">
-        <div className="flex flex-col gap-3.5">
-          <div className="flex items-end justify-between gap-4">
-            <div className="flex flex-col gap-1">
-              <p className="font-body text-base text-ink">Corrections per 10 messages</p>
-              <p className="font-body text-xs leading-[1.45] text-text-3">
-                How often you redirect or fix the AI. Lower means it understood you sooner.
-              </p>
-            </div>
-            <div className="flex shrink-0 flex-col items-end gap-0.5">
-              <p className="font-display text-[30px] leading-none font-medium text-ink">1.2</p>
-              <p className="font-mono text-xs text-text-2">Down from about 1.9</p>
-            </div>
-          </div>
-          <CorrectionsPlot />
-        </div>
-
-        {/* Subgrid rows keep the values and sparklines level when a label wraps on phones. */}
-        <div className="grid grid-cols-3 gap-x-4 border-t border-rule pt-[18px] sm:gap-x-6">
-          {signals.map((s, i) => (
-            <div key={s.label} className="row-span-3 grid grid-rows-subgrid gap-2">
-              <p className="self-end font-mono text-xs text-text-3">
-                <Term name={s.term}>{s.label}</Term>
-              </p>
-              <p className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
-                <span className="font-display text-[22px] leading-none font-medium text-ink">{s.value}</span>
-                <span className="font-mono text-xs whitespace-nowrap text-text-2">{s.delta}</span>
-              </p>
-              <Sparkline d={s.d} delay={PLOT_IN + 400 + i * 80} />
-            </div>
-          ))}
-        </div>
-
-        <figcaption className="flex gap-3 rounded-lg bg-accent-tint px-4 py-3.5">
-          <CornerDownRight size={16} className="mt-[3px] shrink-0 text-accent" aria-hidden="true" />
-          <p className="font-body text-sm leading-[1.55] text-ink">
-            In the last 4 weeks, <Term name="outputChecking">output checks</Term> fell from 45% to 34% and{" "}
-            <Term name="restarts">restarts</Term> rose from 6% to 15%.
-          </p>
-        </figcaption>
-      </div>
-    </figure>
-  );
-}
+import { Container, Kicker, PrimaryButton, SecondaryButton } from "./ui";
 
 export function Hero() {
   return (
     <section id="top" className="bg-paper">
-      <Container className="flex flex-col items-center gap-16 pt-16 pb-20 lg:flex-row lg:gap-20 lg:pt-24 lg:pb-28">
-        <div className="flex w-full flex-col gap-7">
-          <p className="rise-in font-mono text-[13px] tracking-[1.2px] text-accent">OPEN-SOURCE REFLECTION SKILL</p>
-          <h1 style={delay(60)} className="rise-in font-display text-[44px] leading-[1.02] font-bold tracking-[-1.1px] text-ink md:text-[64px] md:tracking-[-1.6px]">
-            Learn from how you work with AI.
-          </h1>
-          <p style={delay(120)} className="rise-in font-body text-lg leading-[1.55] text-text-2 md:text-xl">
-            Models change, and the way you work drifts out of step. second look reads your sessions across
-            Claude Code, Codex, Cursor, ChatGPT and more, finds the leaks in how you brief AI, manage context and use skills,
-            and gives you a few fixes to try. Each one cites the sessions it came from.
-          </p>
-          <div style={delay(180)} className="rise-in flex flex-wrap items-center gap-3 pt-3">
-            <PrimaryButton href="#sample-report">See a sample report</PrimaryButton>
-            <SecondaryButton href={links.github}>
-              <GithubIcon size={18} />
-              Get the skill
-            </SecondaryButton>
+      <Container className="flex flex-col gap-10 py-16">
+        <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,680fr)_minmax(0,456fr)] lg:gap-16">
+          <div className="flex flex-col gap-5">
+            <Kicker>Open-source reflection skill</Kicker>
+            <h1 className="font-display text-[44px] leading-[1.04] font-bold tracking-[-1.6px] text-ink md:text-[56px]">
+              Performance<br />review for how<br />you work with AI.
+            </h1>
+          </div>
+          <div className="flex min-w-0 flex-col gap-6">
+            <p className="font-body text-xl leading-[1.55] text-text-2">
+              Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try.
+            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <PrimaryButton href={links.sampleReport}>See a sample report</PrimaryButton>
+              <SecondaryButton href={links.github} className="border-rule">
+                <GithubIcon size={18} />
+                Get the skill
+              </SecondaryButton>
+            </div>
           </div>
         </div>
-        <AnnotatedTrace />
+        <figure className="flex flex-col gap-3">
+          <a href={links.sampleReport} className="block aspect-[15/7] overflow-hidden rounded-xl border border-rule" aria-label="Open the sample Second Look report">
+            <Image
+              src={links.reportPreview}
+              alt="A sample Second Look review with a session-usage chart"
+              width={1440}
+              height={1000}
+              loading="eager"
+              fetchPriority="high"
+              unoptimized
+              className="block h-auto w-full"
+            />
+          </a>
+          <figcaption className="font-body text-sm leading-normal text-text-3">From the sample report · Made-up sessions</figcaption>
+        </figure>
       </Container>
     </section>
   );

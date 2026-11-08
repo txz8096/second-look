@@ -13,7 +13,7 @@ const plexMono = IBM_Plex_Mono({
   weight: "400",
 });
 
-const title = "second look";
+const title = "Second Look";
 const description =
   "Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current.";
 

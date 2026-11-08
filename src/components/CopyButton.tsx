@@ -24,9 +24,9 @@ export function CopyButton({ text, label, compact = false }: { text: string; lab
         type="button"
         onClick={copy}
         aria-label={copied ? "Copied" : label}
-        className="relative shrink-0 rounded p-0.5 text-text-3 transition-colors after:absolute after:-inset-3 hover:text-ink focus-visible:outline-2 focus-visible:outline-accent"
+        className="-m-3 inline-flex size-11 shrink-0 items-center justify-center rounded text-text-3 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-accent"
       >
-        <Icon key={String(copied)} size={14} className={copied ? "icon-in" : undefined} aria-hidden="true" />
+        <Icon key={String(copied)} size={18} className={copied ? "icon-in" : undefined} aria-hidden="true" />
       </button>
     );
   }
