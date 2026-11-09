@@ -42,7 +42,9 @@ Then ask for **“a second look”** and answer four short setup questions. Revi
 <a id="supported-tools"></a>
 <a id="supported-apps"></a>
 
-### Compatibility
+<a id="compatibility"></a>
+
+### Coverage
 
 | Source | How second look reads it |
 |---|---|
@@ -56,6 +58,30 @@ Then ask for **“a second look”** and answer four short setup questions. Revi
 - **Codex** reads the history in `~/.codex/sessions`.
 - **Cursor** reads the history in its local chat database.
 - **Antigravity** reads transcripts in `~/.gemini/antigravity-cli` and standing instructions in `~/.gemini/GEMINI.md`. Coverage depends on what the CLI keeps on disk, and app chats may be missing.
+
+</details>
+
+#### Add your claude.ai, ChatGPT and Gemini history
+
+<details>
+<summary>Add optional browser exports</summary>
+
+You can add browser history any time, including after your first local review.
+
+| App | Get your export | Then tell your assistant |
+|---|---|---|
+| claude.ai | Settings > Privacy > Export data | "add my claude.ai export" |
+| ChatGPT | Settings > Data controls > Export data | "add my ChatGPT export" |
+| Gemini | takeout.google.com > My Activity, filtered to Gemini Apps, format JSON | "add my Gemini export" |
+
+Each app sends you a zip, usually within a day. Download it, and your assistant finds it in
+Downloads or Desktop, checks which app it came from, and files it. You can also drag the zip
+into the chat. For Gemini, pick "My Activity" rather than "Gemini", which exports your Gems
+only. It includes chats saved while Gemini Apps Activity was on.
+
+To file one by hand instead, put `conversations.json` in `~/.second-look/exports/claude/` or
+`~/.second-look/exports/chatgpt/`, and Gemini's `MyActivity.json` in
+`~/.second-look/exports/gemini/`.
 
 </details>
 
@@ -101,6 +127,14 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
 
 </details>
 
+## Run it
+
+Ask for "a second look" any time, or type `/second-look` in Claude Code. You can
+narrow the review by asking for "just my Cursor sessions" or "since Oct 1".
+
+After your first report, you can opt into a review every two weeks or choose
+another cadence. [Scheduling options](#faq) depend on where you run the skill.
+
 ## Privacy
 
 - **Local collection with zero network requests.** The Python scripts read logs and exports on your computer and local reviews save reports in `~/.second-look/`. Your assistant processes the review through your model provider under your existing account settings.
@@ -121,38 +155,6 @@ python3 ~/.agents/skills/second-look/scripts/collect.py --days 14
 You can limit a review to an app, project, or date range. Using AI apps at work? Check your company's AI policy before reviewing work sessions.
 
 </details>
-
-## Add your claude.ai, ChatGPT and Gemini history
-
-<details>
-<summary>Add optional browser exports</summary>
-
-You can add browser history any time, including after your first local review.
-
-| App | Get your export | Then tell your assistant |
-|---|---|---|
-| claude.ai | Settings > Privacy > Export data | "add my claude.ai export" |
-| ChatGPT | Settings > Data controls > Export data | "add my ChatGPT export" |
-| Gemini | takeout.google.com > My Activity, filtered to Gemini Apps, format JSON | "add my Gemini export" |
-
-Each app sends you a zip, usually within a day. Download it, and your assistant finds it in
-Downloads or Desktop, checks which app it came from, and files it. You can also drag the zip
-into the chat. For Gemini, pick "My Activity" rather than "Gemini", which exports your Gems
-only. It includes chats saved while Gemini Apps Activity was on.
-
-To file one by hand instead, put `conversations.json` in `~/.second-look/exports/claude/` or
-`~/.second-look/exports/chatgpt/`, and Gemini's `MyActivity.json` in
-`~/.second-look/exports/gemini/`.
-
-</details>
-
-## Run it
-
-Ask for "a second look" any time, or type `/second-look` in Claude Code. You can
-narrow the review by asking for "just my Cursor sessions" or "since Oct 1".
-
-After your first report, you can opt into a review every two weeks or choose
-another cadence. [Scheduling options](#faq) depend on where you run the skill.
 
 ## FAQ
 
