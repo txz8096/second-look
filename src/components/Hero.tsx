@@ -12,7 +12,7 @@ export function Hero() {
           <div className="flex flex-col gap-5">
             <Kicker>Open-source reflection skill</Kicker>
             <h1 className="font-display text-[44px] leading-[1.04] font-bold tracking-[-1.6px] text-ink md:text-[56px]">
-              Performance<br />review for how<br />you work with AI.
+              Performance review for your AI workflow.
             </h1>
           </div>
           <div className="flex min-w-0 flex-col gap-6">

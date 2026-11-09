@@ -1,6 +1,6 @@
 # Second Look
 
-**A free, open-source performance review tool for AI coding workflows.**
+**Performance review for your AI workflow.**
 
 Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current.
 
