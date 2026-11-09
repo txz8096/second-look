@@ -8,14 +8,16 @@ export function Hero() {
   return (
     <section id="top" className="bg-paper">
       <Container className="flex flex-col gap-10 py-16">
-        <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,680fr)_minmax(0,456fr)] lg:gap-16">
+        <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,680fr)_minmax(0,456fr)] lg:items-start lg:gap-16">
           <div className="flex flex-col gap-5">
             <Kicker>Open-source reflection skill</Kicker>
             <h1 className="font-display text-[44px] leading-[1.04] font-bold tracking-[-1.6px] text-ink md:text-[56px]">
-              Performance review for your AI workflow.
+              Performance review{" "}
+              <br className="hidden lg:block" />
+              for your AI workflow.
             </h1>
           </div>
-          <div className="flex min-w-0 flex-col gap-6">
+          <div className="flex min-w-0 flex-col gap-6 lg:pt-10">
             <p className="font-body text-xl leading-[1.55] text-text-2">
               Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try.
             </p>
