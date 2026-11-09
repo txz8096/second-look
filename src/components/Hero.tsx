@@ -1,4 +1,3 @@
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { links } from "@/lib/site";
 import { GithubIcon } from "./Icons";
@@ -14,7 +13,7 @@ export function Hero() {
             <h1 className="font-display text-[44px] leading-[1.04] font-bold tracking-[-1.6px] text-ink md:text-[56px]">
               Performance review{" "}
               <br className="hidden lg:block" />
-              for your AI workflow.
+              for your AI workflow
             </h1>
           </div>
           <div className="flex min-w-0 flex-col gap-6 lg:pt-10">
@@ -22,13 +21,8 @@ export function Hero() {
               Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try.
             </p>
             <div className="flex flex-wrap items-center gap-3">
-              <PrimaryButton href={links.sampleReport} className="group">
+              <PrimaryButton href={links.sampleReport}>
                 See a sample report
-                <ArrowRight
-                  size={18}
-                  aria-hidden="true"
-                  className="motion-safe:transition-transform motion-safe:duration-150 motion-safe:group-hover:translate-x-0.5"
-                />
               </PrimaryButton>
               <SecondaryButton href={links.github} className="border-rule">
                 <GithubIcon size={18} />
