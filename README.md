@@ -1,4 +1,4 @@
-# second look
+# Second Look
 
 **A free, open-source performance review tool for AI coding workflows.**
 
@@ -6,7 +6,7 @@ Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, cla
 
 [Website](https://txz8096.github.io/second-look/) ·
 [Sample report](https://txz8096.github.io/second-look/sample-report.html) ·
-[Installation](#installation) · [Privacy](#privacy)
+[Quick start](#quick-start) · [Privacy](#privacy)
 
 <a id="what-you-get"></a>
 <a id="what-a-review-shows-you"></a>
@@ -25,65 +25,17 @@ Each finding points to evidence from your sessions and gives you a change to try
 <a id="try-your-first-review"></a>
 <a id="try-second-look"></a>
 
-<a id="quick-start"></a>
+<a id="installation"></a>
 <a id="install"></a>
 <a id="installer-reference"></a>
 
-## Installation
+## Quick start
 
 ### Claude Code, Codex, and Cursor
 
 Open Claude Code, Codex, or Cursor and paste this prompt.
 
 > Install second look from [github.com/txz8096/second-look](https://github.com/txz8096/second-look)
-
-Then ask for **“a second look”** and answer four short setup questions. Reviews use your existing AI quota.
-
-<a id="supported-tools"></a>
-<a id="supported-apps"></a>
-
-<a id="compatibility"></a>
-
-### Coverage
-
-| Source | How second look reads it |
-|---|---|
-| **CLI and IDE** | Scans local logs from Claude Code, Codex, Cursor, and Antigravity. Start the review from Claude Code, Codex, or Cursor. |
-| **Web apps** | Add JSON exports from claude.ai, ChatGPT, and Gemini to a local review. [Add browser history](#add-your-claudeai-chatgpt-and-gemini-history). |
-
-<details>
-<summary>Local log paths and history limits</summary>
-
-- **Claude Code** reads `~/.claude/projects`. History defaults to 30 days and can be extended with `cleanupPeriodDays` in `~/.claude/settings.json`.
-- **Codex** reads the history in `~/.codex/sessions`.
-- **Cursor** reads the history in its local chat database.
-- **Antigravity** reads transcripts in `~/.gemini/antigravity-cli` and standing instructions in `~/.gemini/GEMINI.md`. Coverage depends on what the CLI keeps on disk, and app chats may be missing.
-
-</details>
-
-#### Add your claude.ai, ChatGPT and Gemini history
-
-<details>
-<summary>Add optional browser exports</summary>
-
-You can add browser history any time, including after your first local review.
-
-| App | Get your export | Then tell your assistant |
-|---|---|---|
-| claude.ai | Settings > Privacy > Export data | "add my claude.ai export" |
-| ChatGPT | Settings > Data controls > Export data | "add my ChatGPT export" |
-| Gemini | takeout.google.com > My Activity, filtered to Gemini Apps, format JSON | "add my Gemini export" |
-
-Each app sends you a zip, usually within a day. Download it, and your assistant finds it in
-Downloads or Desktop, checks which app it came from, and files it. You can also drag the zip
-into the chat. For Gemini, pick "My Activity" rather than "Gemini", which exports your Gems
-only. It includes chats saved while Gemini Apps Activity was on.
-
-To file one by hand instead, put `conversations.json` in `~/.second-look/exports/claude/` or
-`~/.second-look/exports/chatgpt/`, and Gemini's `MyActivity.json` in
-`~/.second-look/exports/gemini/`.
-
-</details>
 
 <a id="claudeai"></a>
 
@@ -95,8 +47,19 @@ To file one by hand instead, put `conversations.json` in `~/.second-look/exports
 3. Turn on chat search and memory so second look can read past chats and remember your
    profile.
 
-Run a review in claude.ai by asking for "a second look." It covers your claude.ai
-chats. To include ChatGPT or Gemini history, add an export to a local review.
+A review started in claude.ai covers your claude.ai chats. To include ChatGPT or
+Gemini history, [add browser history](#add-your-claudeai-chatgpt-and-gemini-history) to a local review.
+
+<a id="run-it"></a>
+
+### Run your first review
+
+Ask for **“a second look”** or type `/second-look` in Claude Code. The first
+review starts with four short setup questions. You can narrow the scope by
+asking for “just my Cursor sessions” or “since Oct 1.” Reviews use your existing AI quota.
+
+After your first report, you can opt into a review every two weeks or choose
+another cadence. [Scheduling options](#faq) depend on where you run the skill.
 
 <a id="for-ai-assistants"></a>
 
@@ -127,13 +90,51 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
 
 </details>
 
-## Run it
+<a id="supported-tools"></a>
+<a id="supported-apps"></a>
 
-Ask for "a second look" any time, or type `/second-look` in Claude Code. You can
-narrow the review by asking for "just my Cursor sessions" or "since Oct 1".
+<a id="compatibility"></a>
 
-After your first report, you can opt into a review every two weeks or choose
-another cadence. [Scheduling options](#faq) depend on where you run the skill.
+## Coverage
+
+| Source | How second look reads it |
+|---|---|
+| **CLI and IDE** | Scans local logs from Claude Code, Codex, Cursor, and Antigravity. Start the review from Claude Code, Codex, or Cursor. |
+| **Web apps** | Add JSON exports from claude.ai, ChatGPT, and Gemini to a local review. [Add browser history](#add-your-claudeai-chatgpt-and-gemini-history). |
+
+<details>
+<summary>Local log paths and history limits</summary>
+
+- **Claude Code** reads `~/.claude/projects`. History defaults to 30 days and can be extended with `cleanupPeriodDays` in `~/.claude/settings.json`.
+- **Codex** reads the history in `~/.codex/sessions`.
+- **Cursor** reads the history in its local chat database.
+- **Antigravity** reads transcripts in `~/.gemini/antigravity-cli` and standing instructions in `~/.gemini/GEMINI.md`. Coverage depends on what the CLI keeps on disk, and app chats may be missing.
+
+</details>
+
+### Add your claude.ai, ChatGPT and Gemini history
+
+<details>
+<summary>Add optional browser exports</summary>
+
+You can add browser history any time, including after your first local review.
+
+| App | Get your export | Then tell your assistant |
+|---|---|---|
+| claude.ai | Settings > Privacy > Export data | "add my claude.ai export" |
+| ChatGPT | Settings > Data controls > Export data | "add my ChatGPT export" |
+| Gemini | takeout.google.com > My Activity, filtered to Gemini Apps, format JSON | "add my Gemini export" |
+
+Each app sends you a zip, usually within a day. Download it, and your assistant finds it in
+Downloads or Desktop, checks which app it came from, and files it. You can also drag the zip
+into the chat. For Gemini, pick "My Activity" rather than "Gemini", which exports your Gems
+only. It includes chats saved while Gemini Apps Activity was on.
+
+To file one by hand instead, put `conversations.json` in `~/.second-look/exports/claude/` or
+`~/.second-look/exports/chatgpt/`, and Gemini's `MyActivity.json` in
+`~/.second-look/exports/gemini/`.
+
+</details>
 
 ## Privacy
 
