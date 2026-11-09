@@ -1,80 +1,60 @@
 # second look
 
-**A performance review for how you work with AI.**
+**A free, open-source performance review tool for AI coding workflows.**
 
-second look is a free, open-source skill for people who use AI to build things. It
-reviews your past sessions, shows where your workflow could improve, and gives you
-specific changes to try. The next review checks how those changes held up.
+Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current.
 
-[See a sample report](https://txz8096.github.io/second-look/sample-report.html) ·
-[Check supported apps](#supported-apps) ·
-[Privacy](#privacy)
-
-<a id="try-your-first-review"></a>
-
-## Try second look
-
-Open Claude Code, Codex or Cursor on the computer where you use it and paste this prompt.
-
-```text
-Install second look from github.com/txz8096/second-look.
-```
-
-Once it's installed, ask for **"a second look."** Answer four short questions to
-get your first report. second look reads the session history your supported
-coding tools already save.
-
-**Free and open source.** Reviews use your existing AI quota.
-
-**Only use AI in the browser?** [Set up second look in claude.ai](#claudeai).
+[Website](https://txz8096.github.io/second-look/) ·
+[Sample report](https://txz8096.github.io/second-look/sample-report.html) ·
+[Quick start](#quick-start) · [Privacy](#privacy)
 
 <a id="what-you-get"></a>
+<a id="what-a-review-shows-you"></a>
 
-## What a review shows you
+## What it fixes
 
-In the sample report, 14 of 72 Claude Code and Codex sessions were very long and
-accounted for 61% of usage over four weeks. Some continued into a new project
-after the previous task was done. The suggested fix is to open a fresh chat
-when you switch projects.
+- **Context bloat and token waste.** When you switch tasks in the same chat, later requests keep processing the earlier history and can burn through your quota. The sample report uses fictional sessions to show how that adds up. **14 of 72 Claude Code and Codex sessions accounted for 61% of their estimated usage over four weeks.**
+- **Stale rules and duplicate skills.** Review standing instructions in files like `CLAUDE.md`, `AGENTS.md`, and `.cursor/rules` for outdated guidance. Find broken skills and tools that do the same job.
+- **Workflow drift.** See how your habits change over time, from how you brief your assistant to how often you check its work. When you keep repeating a manual step, the review can suggest turning it into a skill or hook.
 
-- **How you brief AI and set up your apps.** See where a missing detail slowed you down,
-  where a standing rule could help, or when to start a fresh session.
-- **Keep your skills current.** Find stale instructions, broken or duplicate skills,
-  and updates you may have missed.
-- **How your habits are changing.** See how often you check the work, where you might
-  turn a recurring task into a skill, hook or scheduled task, and how those habits
-  change over time.
+<a id="try-your-first-review"></a>
+<a id="try-second-look"></a>
 
-Each finding shows evidence from your sessions and gives you a fix to try.
-The [sample report](https://txz8096.github.io/second-look/sample-report.html) uses made-up sessions.
+## Quick start
+
+Open Claude Code, Codex, or Cursor and paste this prompt.
+
+> Install second look from [github.com/txz8096/second-look](https://github.com/txz8096/second-look)
+
+Then ask for **“a second look”** and answer four short setup questions. Reviews use your existing AI quota.
 
 <a id="supported-tools"></a>
+<a id="supported-apps"></a>
 
-## Supported apps
+### Compatibility
 
-Start a review from Claude Code, Codex or Cursor, and one run covers every source below
-that's on that computer.
+| Source | How second look reads it |
+|---|---|
+| **CLI and IDE** | Scans local logs from Claude Code, Codex, Cursor, and Antigravity. Start the review from Claude Code, Codex, or Cursor. |
+| **Web apps** | Add JSON exports from claude.ai, ChatGPT, and Gemini to a local review. [Add browser history](#add-your-claudeai-chatgpt-and-gemini-history). |
 
-| App | What's read | Setup needed | How far back |
-|---|---|---|---|
-| **Claude Code** | Session logs in `~/.claude/projects`, your skills and `CLAUDE.md` | None. The installer links the skill in | Last 30 days only, unless you raise `cleanupPeriodDays` in `~/.claude/settings.json` |
-| **Codex** | Session logs in `~/.codex/sessions`, your skills and `AGENTS.md` | None. The installer links the skill in | Full history |
-| **Cursor** | Chats in Cursor's local database, plus `.cursor/rules` | None. The installer links the skill in | Full history |
-| **Antigravity** | Agent transcripts in `~/.gemini/antigravity-cli`, plus `~/.gemini/GEMINI.md` | None. Reviews start from one of the apps above | Whatever the CLI keeps on disk. Support is new, and app chats may be missing |
-| **claude.ai** | `conversations.json` from your data export | Optional. [Add your export](#add-your-claudeai-chatgpt-and-gemini-history) | Up to your export date |
-| **ChatGPT** | `conversations.json` from your data export | Optional. [Add your export](#add-your-claudeai-chatgpt-and-gemini-history) | Up to your export date |
-| **Gemini** | `MyActivity.json` from a Google Takeout export of your Gemini Apps activity | Optional. [Add your export](#add-your-claudeai-chatgpt-and-gemini-history) | Chats saved with Gemini Apps Activity on, up to your export date |
+For a browser-only review of claude.ai chats, [set up second look in claude.ai](#claudeai).
+
+<details>
+<summary>Local log paths and history limits</summary>
+
+- **Claude Code** reads `~/.claude/projects`. History defaults to 30 days and can be extended with `cleanupPeriodDays` in `~/.claude/settings.json`.
+- **Codex** reads the history in `~/.codex/sessions`.
+- **Cursor** reads the history in its local chat database.
+- **Antigravity** reads transcripts in `~/.gemini/antigravity-cli` and standing instructions in `~/.gemini/GEMINI.md`. Coverage depends on what the CLI keeps on disk, and app chats may be missing.
+
+</details>
 
 ## Privacy
 
-For local reviews, second look reads session logs, skill files and configuration
-on your computer and saves the report in `~/.second-look/`. second look has no
-server or account. Your assistant sends what it reads to your model provider
-under your existing account settings.
-
-You can limit a review to an app, project or date range. Pattern-based redaction
-removes common secrets before quoting sessions, so read the report before
-sharing it.
+- **Local collection with zero network requests.** The Python scripts read logs and exports on your computer and local reviews save reports in `~/.second-look/`. Your assistant processes the review through your model provider under your existing account settings.
+- **Automatic redaction.** Pattern matching removes common secrets such as API keys, tokens, and passwords before quoting sessions. Read the report before sharing it.
+- **No extra account or infrastructure.** second look uses the assistant you already have and has no server of its own.
 
 <details>
 <summary>Inspect what the collector reads</summary>
@@ -87,7 +67,7 @@ use Python's standard library and make no network calls.
 python3 ~/.agents/skills/second-look/scripts/collect.py --days 14
 ```
 
-Using AI apps at work? Check your company's AI policy before reviewing work sessions.
+You can limit a review to an app, project, or date range. Using AI apps at work? Check your company's AI policy before reviewing work sessions.
 
 </details>
 
@@ -130,8 +110,8 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
 <summary>Browser setup in claude.ai</summary>
 
 1. Download [`second-look.zip`](https://github.com/txz8096/second-look/releases/latest/download/second-look.zip).
-2. In claude.ai, go to Settings > Capabilities, turn on code execution, and upload the zip
-   under Skills.
+2. In claude.ai, turn on code execution. Open **Customize → Skills**, click **+**,
+   choose **Create skill → Upload a skill**, and upload the ZIP.
 3. Turn on chat search and memory so second look can read past chats and remember your
    profile.
 
@@ -231,7 +211,7 @@ Read a report before you share it.
 <details>
 <summary><b>What do I need to run it on claude.ai?</b></summary>
 
-Turn on chat search, code execution and memory in Settings, and upload `second-look.zip`.
+Turn on chat search, code execution and memory, then [upload `second-look.zip`](#claudeai).
 Without chat search or a `conversations.json` export, habit numbers show as "Not measured"
 instead of a guess.
 </details>
