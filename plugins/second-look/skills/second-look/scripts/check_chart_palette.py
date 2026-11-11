@@ -20,11 +20,11 @@ def problems(source):
     issues = []
     colors = dict(re.findall(r"--chart-([\w-]+):\s*(#[\da-fA-F]{6})\s*;", source))
     categories = re.search(r"const CHART_CATEGORIES = \{(.*?)\};", source, re.S)
-    groups = re.search(r"const CHART_GROUPS = \{(.*?)\};", source, re.S)
-    if not categories or not groups or not {"black", "white"} <= colors.keys():
-        return ["Missing the chart palette or stable category/group mappings"]
+    if not categories or not {"black", "white", "pink"} <= colors.keys():
+        return ["Missing the chart palette or stable stacked-category mapping"]
     white_names = {"orange", "blue", "blue-deep", "pink-deep"}
-    fills = re.findall(r':\s*"([\w-]+)"', categories.group(1) + groups.group(1))
+    fills = set(colors) - {"black", "white"}
+    fills.update(re.findall(r':\s*"([\w-]+)"', categories.group(1)))
     for name in set(fills):
         if name not in colors:
             issues.append(f"Undefined chart color: {name}")

@@ -30,6 +30,12 @@ These must match everywhere they appear:
 - Privacy claims
 - Sample data that appears on more than one surface
 
+## Data visualization design practice
+
+Use as few colors as the information needs, within one chart and across a group of charts. Directly labeled bars in separate rows and independently labeled single-series charts generally use one color. In second look, prioritize pink for these charts; reuse the existing pink chart token. Use additional hues when they help readers distinguish overlapping or stacked categories, with a clear legend or direct series labels. Keep categorical assignments stable where colors carry that meaning. Do not add outlines, hatch patterns or line underlays to separate chart colors.
+
+Show one existing canvas preview for a proposed visual change, then apply it to all matching screens after Melissa approves. The pink-first direction is approved and applied across the launched canvas page. The report source uses the same pink-first rule; keep the canvas, template, design guidance and release zip in step when changing it.
+
 <!-- BEGIN:nextjs-agent-rules -->
 
 ## This is NOT the Next.js you know

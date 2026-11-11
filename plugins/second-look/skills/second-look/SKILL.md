@@ -566,7 +566,7 @@ go in the sidebar's "Guidance and references" list.
 
 **How your habits are changing** (`#part-1`). The id stays `#part-1`. No headline; the summary already tells the story. Fill the scope line from `SCOPE` and keep the filters’ link to Data coverage in Settings.
 
-- **Chart accessibility.** Keep the template’s chart palette, stable category mappings and “View chart data” tables. Use solid fills and the original chart geometry: no added outlines, hatch patterns or line underlays. The tables provide the same information without relying on color; do not remove them or fade essential marks. Missing chart values stay missing. Run `scripts/check_chart_palette.py` before publishing; inspect both themes and phone layouts.
+- **Chart accessibility.** Use as few chart colors as needed: pink for independent single-series charts and separately labeled bars; additional hues only to distinguish overlapping or stacked categories, with clear legends or direct labels. Keep the template’s stable stacked-category mappings and “View chart data” tables. Use solid fills and the original chart geometry: no added outlines, hatch patterns or line underlays. The tables provide the same information without relying on color; do not remove them or fade essential marks. Missing chart values stay missing. Run `scripts/check_chart_palette.py` before publishing; inspect both themes and phone layouts.
 - **Habits over time** (`#trends`), filled from the cube. Its charts sit in five
   groups, one tab per question (`GROUPS` in the template script): explaining what you want,
   checking the work, handing off the right work, automating repeat work, and where usage goes.

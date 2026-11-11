@@ -22,7 +22,7 @@
   --chart-blue: #0073e6; --chart-blue-deep: #054fb9; --chart-green: #5ba300;
   --chart-lime: #89ce00; --chart-pink: #e6308a; --chart-pink-deep: #b51963;
   --chart-black: #000000; --chart-white: #ffffff;
-  --series: var(--chart-blue); --grid: rgb(255 255 255 / .1); --cursor: rgb(255 255 255 / .2); --seg-track: #262626; --seg-on: #0A0A0A;
+  --series: var(--chart-pink); --grid: rgb(255 255 255 / .1); --cursor: rgb(255 255 255 / .2); --seg-track: #262626; --seg-on: #0A0A0A;
   --display: "Familjen Grotesk", ui-sans-serif, system-ui, sans-serif; --sans: var(--display);
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --r-4: 4px; --r-6: 6px; --r-8: 8px; --r-10: 10px; --r-14: 14px; --r-pill: 9999px;
@@ -37,7 +37,7 @@
   --accent-soft: rgb(176 42 85 / .07); --accent-soft-2: rgb(176 42 85 / .28);
   --p1: #C81E2B;
   --code-bg: #F5F5F5; --term-code: rgb(255 255 255 / .16); --drawer-shadow: rgb(0 0 0 / .14);
-  --series: var(--chart-blue); --grid: rgb(0 0 0 / .1); --cursor: rgb(0 0 0 / .2); --seg-track: #E5E5E5; --seg-on: #FFFFFF;
+  --series: var(--chart-pink); --grid: rgb(0 0 0 / .1); --cursor: rgb(0 0 0 / .2); --seg-track: #E5E5E5; --seg-on: #FFFFFF;
   color-scheme: light;
 }
 html, body { background: var(--bg); }
@@ -380,7 +380,7 @@ button.more-charts { display: none; }
   padding: 4px 0; border: 0; border-radius: 0; background: none; text-align: left; font-size: 13px; font-weight: 400; }
 button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--surface-2), 6px 0 0 var(--surface-2); }
 .btrack { position: relative; height: 6px; border-radius: var(--r-pill); background: var(--surface-2); }
-.btrack span { position: absolute; inset: 0 auto 0 0; border-radius: var(--r-pill); background: var(--chart-fill, var(--series)); }
+.btrack span { position: absolute; inset: 0 auto 0 0; border-radius: var(--r-pill); background: var(--series); }
 .bval { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; }
 .bval b { color: var(--muted); font-weight: 400; font-size: 13px; }
 .brow.on .bname { color: var(--accent); font-weight: 600; }
@@ -395,7 +395,7 @@ button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--sur
 .tl-status { font-size: 13px; color: var(--muted); text-align: right; }
 .track { position: relative; height: 12px; border-radius: 3px; background: var(--seg-track); }
 .track i { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
-.seg-data { background: var(--chart-blue); }
+.seg-data { background: var(--series); }
 .seg-out { background: repeating-linear-gradient(135deg, transparent 0 4px, rgb(161 161 161 / .22) 4px 6px); border: 1px dashed var(--faint); box-sizing: border-box; }
 .tl-axis { font: 12px var(--mono); color: var(--faint); padding-top: 6px; }
 .tl-axis > span:nth-child(2) { display: flex; justify-content: space-between; }
@@ -1078,7 +1078,6 @@ stackTables();
     prototyping: "orange", creating: "orange-bright", research: "blue-light",
     brainstorming: "blue", career: "green", consultation: "blue-deep", other: "lime"
   };
-  const CHART_GROUPS = {"g-clear": "blue", "g-check": "green", "g-delegate": "orange", "g-automate": "pink", "g-usage": "pink-deep"};
   const chartPaint = color => `--chart-fill:var(--chart-${color})`;
   const categoryPaint = id => chartPaint(CHART_CATEGORIES[id] || CHART_CATEGORIES.other);
   function chartData(title, headers, values) {
@@ -1437,7 +1436,7 @@ stackTables();
       card.insertAdjacentHTML("beforeend", `<p class="gapnote">${total ? "Too few helper agent runs in this view to show a split" : "No helper agent runs in this view"}</p>`);
       return card;
     }
-    const plain = (n, pick) => `<div class="brow" style="${chartPaint(({Research: "blue-light", Checks: "green", Building: "orange"})[pick])}"><span class="bname">${pick}</span><span class="btrack"><span style="width:${(n / total * 100).toFixed(1)}%"></span></span><span class="bval"><b>${n / total > 0 && n / total < 0.005 ? "&lt;1%" : pct(n / total)}</b></span></div>`;
+    const plain = (n, pick) => `<div class="brow"><span class="bname">${pick}</span><span class="btrack"><span style="width:${(n / total * 100).toFixed(1)}%"></span></span><span class="bval"><b>${n / total > 0 && n / total < 0.005 ? "&lt;1%" : pct(n / total)}</b></span></div>`;
     card.insertAdjacentHTML("beforeend", `<div class="chart-plot bars">${kinds.map(([label, n]) => plain(n, label)).join("")}</div><p class="grp-read">${total.toLocaleString()} helper agent runs. Types are estimated from each request.</p>`);
     card.appendChild(chartData("What you handed off", ["Type", "Runs", "Share"], kinds.map(([label, n]) => [label, n, pct(n / total)])));
     return card;
@@ -1611,7 +1610,6 @@ stackTables();
     const dlt = enoughNow && enoughThen ? deltaText(m, cmpA, lastA) : null;
     const noCmp = dlt ? null : lastA == null ? "few_now" : first > WEEKS - 8 ? "young" : !enoughNow ? "few_now" : "few_then";
     const card = document.createElement("div"); card.className = "chart"; card.dataset.id = m.id;
-    card.style.setProperty("--series", `var(--chart-${CHART_GROUPS[m.el] || "blue"})`);
     const title = m.card ? `<span class="term" tabindex="0" aria-describedby="def-chart-${m.id}">${m.title}<span class="term-card" role="tooltip" id="def-chart-${m.id}">${m.card}</span></span>` : m.title;
     card.innerHTML = `<div class="chart-head"><h3>${title}</h3></div><p class="def">${m.def}</p>`;
     const firstData = raw.findIndex(v => v != null);
@@ -1763,8 +1761,6 @@ stackTables();
       const on = isOn(item.id), row = document.createElement("button");
       row.type = "button"; row.className = "brow" + (on ? " on" : picking ? " dim" : ""); row.setAttribute("aria-pressed", String(on));
       row.dataset.id = item.id;
-      const sourceColor = ["blue", "orange", "green", "pink", "blue-deep", "lime", "pink-deep"][Math.max(0, SOURCES.findIndex(([id]) => id === item.id))];
-      row.style.cssText = el.id === "cat-bars" ? categoryPaint(item.id) : chartPaint(sourceColor);
       // the click redraws these rows, so focus moves to the new row
       row.addEventListener("click", () => { onClick(item.id); el.querySelector(`[data-id="${item.id}"]`)?.focus({preventScroll: true}); });
       const r = prev == null ? null : Math.round((share - prev) * 100);

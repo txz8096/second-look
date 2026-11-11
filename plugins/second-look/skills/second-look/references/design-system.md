@@ -10,7 +10,7 @@ append overrides at the end.
 
 ## Tokens
 
-The values below are the dark theme, which is the default. The app bar's switch sets `data-mode="light"` on `<html>`, and `:root[data-mode="light"]` in the template overrides the tokens with shadcn's light neutrals and a darker pink for text (`--accent` `#B02A55`, `--series` `#0073e6`). `--accent-fill` stays Proof Pink in both, for the logo's underline. Components use tokens only, so a new color goes in both blocks. The choice is saved in `localStorage` as `second-look-theme`.
+The values below are the dark theme, which is the default. The app bar's switch sets `data-mode="light"` on `<html>`, and `:root[data-mode="light"]` in the template overrides the tokens with shadcn's light neutrals and a darker pink for text (`--accent` `#B02A55`, `--series` `#e6308a`). `--accent-fill` stays Proof Pink in both, for the logo's underline. Components use tokens only, so a new color goes in both blocks. The choice is saved in `localStorage` as `second-look-theme`.
 
 | Token | Value | Use |
 |---|---|---|
@@ -28,7 +28,7 @@ The values below are the dark theme, which is the default. The app bar's switch 
 
 The neutrals are shadcn/ui's dark theme, written as plain CSS: the report stays one file, so it uses the look and none of the React components. The one status colour (`--p1`) marks states, such as a broken skill. Never use it to grade the user's habits:
 changes in their numbers are plain text, and "best" cells are pink, never green or red.
-Pink marks the things to act on: "Try this" panels, the plan, the fix-review group headers, the chosen tile and action counts. Chart colors come from the categorical palette below.
+Pink marks the things to act on: "Try this" panels, the plan, the fix-review group headers, the chosen tile and action counts. Independent chart series and labeled bar rows use pink; stacked categories use the palette below.
 
 **The signature.** Neutral cards with hairline borders hold the findings, charts, panels and tables; headers are never filled. The fix in each pattern is a pink panel with a pink hairline, the same as the plan. No side stripes on panels.
 
@@ -220,11 +220,11 @@ On Overview, keep “What you use AI for”. It stacks weekly session counts by 
 
 ## Chart palette and data access
 
-Use the template's nine `--chart-*` colors: orange `#c44601`, bright orange `#f57600`, light blue `#8babf1`, blue `#0073e6`, deep blue `#054fb9`, green `#5ba300`, lime `#89ce00`, pink `#e6308a` and deep pink `#b51963`. These are chart fills, not status grades or replacement brand colors.
+Use as few colors as the information needs, within one chart and across a chart group. Labeled bars in separate rows, such as “What you used AI for,” and independently labeled single-series charts use pink first (`--chart-pink`, `#e6308a`). The shared `--series` token is pink in both themes. Habit trends, category/app share bars, helper-agent breakdowns and coverage marks all use it. Row labels, chart titles and values identify what each mark represents; no category legend is needed for these independent marks.
 
-Work categories keep their color by category id: prototyping orange, creating bright orange, research light blue, brainstorming blue, career green, consultation deep blue, and other lime. Filtering or missing categories never shifts those assignments. Use solid fills with the original chart shapes and spacing. Do not add outlines, hatch patterns, shadows or line underlays to the marks.
+Use more hues only when overlapping or stacked categories need differentiation, with clear legends or direct series labels. Overview's stacked activity chart keeps its stable category mapping: prototyping orange, creating bright orange, research light blue, brainstorming blue, career green, consultation deep blue, and other lime. Filtering or missing categories never shifts those assignments, and its legend uses the same mapping.
 
-Trend groups use blue (clarity), green (checking), orange (delegation), pink (automation), and deep pink (usage). Share bars retain explicit row labels and values. Coverage uses blue for data and retains the existing unavailable-history treatment.
+The available `--chart-*` palette is orange `#c44601`, bright orange `#f57600`, light blue `#8babf1`, blue `#0073e6`, deep blue `#054fb9`, green `#5ba300`, lime `#89ce00`, pink `#e6308a` and deep pink `#b51963`. Use only the colors that serve a differentiation purpose. They are chart fills, not status grades or replacement brand colors. Use solid fills with the original chart shapes and spacing. Do not add outlines, hatch patterns, shadows or line underlays to the marks. Coverage retains its neutral unavailable-history treatment and a matching pink Data legend.
 
 Every stacked activity chart and trend card includes a native **View chart data** disclosure with the actual values. Its table has a caption, row and column headers, keyboard access and its own horizontal scroll area. Missing data remains missing; do not turn it into zero. `scripts/prerender.py` preserves these tables and the activity chart in script-blocked reports.
 
