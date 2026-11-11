@@ -18,7 +18,11 @@
   /* status: states only (a skill is broken, a fix was kept), never a grade of the person */
   --p1: #FF6568;
   --code-bg: #0A0A0A; --term-code: rgb(0 0 0 / .08); --drawer-shadow: rgb(0 0 0 / .4);
-  --series: #F2A7B8; --grid: rgb(255 255 255 / .1); --cursor: rgb(255 255 255 / .2); --seg-track: #262626; --seg-on: #0A0A0A;
+  --chart-orange: #c44601; --chart-orange-bright: #f57600; --chart-blue-light: #8babf1;
+  --chart-blue: #0073e6; --chart-blue-deep: #054fb9; --chart-green: #5ba300;
+  --chart-lime: #89ce00; --chart-pink: #e6308a; --chart-pink-deep: #b51963;
+  --chart-black: #000000; --chart-white: #ffffff;
+  --series: var(--chart-blue); --grid: rgb(255 255 255 / .1); --cursor: rgb(255 255 255 / .2); --seg-track: #262626; --seg-on: #0A0A0A;
   --display: "Familjen Grotesk", ui-sans-serif, system-ui, sans-serif; --sans: var(--display);
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --r-4: 4px; --r-6: 6px; --r-8: 8px; --r-10: 10px; --r-14: 14px; --r-pill: 9999px;
@@ -33,7 +37,7 @@
   --accent-soft: rgb(176 42 85 / .07); --accent-soft-2: rgb(176 42 85 / .28);
   --p1: #C81E2B;
   --code-bg: #F5F5F5; --term-code: rgb(255 255 255 / .16); --drawer-shadow: rgb(0 0 0 / .14);
-  --series: #D1416B; --grid: rgb(0 0 0 / .1); --cursor: rgb(0 0 0 / .2); --seg-track: #E5E5E5; --seg-on: #FFFFFF;
+  --series: var(--chart-blue); --grid: rgb(0 0 0 / .1); --cursor: rgb(0 0 0 / .2); --seg-track: #E5E5E5; --seg-on: #FFFFFF;
   color-scheme: light;
 }
 html, body { background: var(--bg); }
@@ -177,6 +181,15 @@ section { display: grid; gap: 14px; }
 .work-mix-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 12px 0; color: var(--muted); font-size: 13px; }
 .work-mix-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .work-mix-legend i { width: 10px; height: 10px; border-radius: 2px; }
+.chart-mark { background-color: var(--chart-fill); }
+.chart-data { grid-row: 6; min-width: 0; margin-top: 12px; }
+.chart-data > summary { display: list-item; list-style: disclosure-closed; width: fit-content; min-height: 32px; padding: 4px 0; color: var(--muted); font-size: 14px; }
+.chart-data[open] > summary { list-style: disclosure-open; }
+.chart-data > summary:focus-visible, .chart-data .tbl:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+.chart-data .tbl { margin-top: 8px; }
+.chart-data caption { padding: 12px 16px; text-align: left; font-weight: 600; }
+.chart-data th { font-weight: 500; }
+.work-mix .chart-data { grid-row: auto; }
 .work-mix-scroll { overflow-x: auto; }
 .work-mix-bars { display: grid; grid-template-columns: repeat(13, minmax(34px, 1fr)); gap: 4px; }
 .work-mix-week { display: grid; grid-template-rows: 160px auto; gap: 6px; text-align: center; color: var(--muted); font-size: 11px; }
@@ -335,6 +348,7 @@ button.grp-tile[aria-pressed="true"], button.grp-tile[aria-pressed="true"]:hover
 .chart > .gapnote { grid-row: 3; margin-top: 4px; }
 .chart > .chart-plot, .chart > .scope-out { grid-row: 4; margin-top: 10px; }
 .chart > .grp-read { grid-row: 5; margin-top: 8px; }
+.chart:has(> .chart-data) { grid-row: span 6; }
 .chart-head h3 { font-size: 16px; line-height: 1.3; }
 .chart-plot { position: relative; }
 button.more-charts { display: none; }
@@ -366,12 +380,12 @@ button.more-charts { display: none; }
   padding: 4px 0; border: 0; border-radius: 0; background: none; text-align: left; font-size: 13px; font-weight: 400; }
 button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--surface-2), 6px 0 0 var(--surface-2); }
 .btrack { position: relative; height: 6px; border-radius: var(--r-pill); background: var(--surface-2); }
-.btrack span { position: absolute; inset: 0 auto 0 0; border-radius: var(--r-pill); background: var(--series); }
+.btrack span { position: absolute; inset: 0 auto 0 0; border-radius: var(--r-pill); background: var(--chart-fill, var(--series)); }
 .bval { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); font-size: 13px; }
 .bval b { color: var(--muted); font-weight: 400; font-size: 13px; }
 .brow.on .bname { color: var(--accent); font-weight: 600; }
 .brow.dim .bname, .brow.dim .bval, .brow.dim .bval b { color: var(--muted); }
-.brow.dim .btrack span { opacity: .45; }
+.brow.dim .btrack span { opacity: 1; }
 .insight { font-size: 14px; line-height: 20px; }
 /* data scope timeline */
 .tl-row, .tl-axis { display: grid; grid-template-columns: 112px minmax(0, 1fr) 190px; gap: 16px; }
@@ -381,7 +395,7 @@ button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--sur
 .tl-status { font-size: 13px; color: var(--muted); text-align: right; }
 .track { position: relative; height: 12px; border-radius: 3px; background: var(--seg-track); }
 .track i { position: absolute; top: 0; bottom: 0; border-radius: 3px; }
-.seg-data { background: var(--accent); }
+.seg-data { background: var(--chart-blue); }
 .seg-out { background: repeating-linear-gradient(135deg, transparent 0 4px, rgb(161 161 161 / .22) 4px 6px); border: 1px dashed var(--faint); box-sizing: border-box; }
 .tl-axis { font: 12px var(--mono); color: var(--faint); padding-top: 6px; }
 .tl-axis > span:nth-child(2) { display: flex; justify-content: space-between; }
@@ -1059,15 +1073,29 @@ stackTables();
   // history saved before "briefable" existed counts every session
   const rows = CUBE.map(r => ({...r, briefable: r.briefable ?? r.sessions, w: idxOf(r.week), s: r.source, c: r.category})).filter(r => r.w >= 0 && r.w < WEEKS);
 
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const CHART_CATEGORIES = {
+    prototyping: "orange", creating: "orange-bright", research: "blue-light",
+    brainstorming: "blue", career: "green", consultation: "blue-deep", other: "lime"
+  };
+  const CHART_GROUPS = {"g-clear": "blue", "g-check": "green", "g-delegate": "orange", "g-automate": "pink", "g-usage": "pink-deep"};
+  const chartPaint = color => `--chart-fill:var(--chart-${color})`;
+  const categoryPaint = id => chartPaint(CHART_CATEGORIES[id] || CHART_CATEGORIES.other);
+  function chartData(title, headers, values) {
+    const details = document.createElement("details"); details.className = "chart-data";
+    details.innerHTML = `<summary>View chart data</summary><div class="tbl" tabindex="0" role="region" aria-label="${esc(title)} data"><table><caption>${esc(title)}</caption><thead><tr>${headers.map(h => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${values.map(row => `<tr>${row.map((cell, i) => i ? `<td>${esc(cell)}</td>` : `<th scope="row">${esc(cell)}</th>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    return details;
+  }
+
   const workMix = document.getElementById("work-mix");
   if (workMix) {
-    const colors = ["#CA6386", "#5D9BDF", "#54A88C", "#A98CD8", "#C89950", "#8B9CAA", "#A1A1A1"];
-    const counts = weeks.slice(-13).map(() => Array(colors.length).fill(0));
+    const categories = [...CATS.map(([id]) => id), "other"];
+    const counts = weeks.slice(-13).map(() => Array(categories.length).fill(0));
     for (const row of rows) {
       const week = counts[row.w - (WEEKS - counts.length)];
       if (!week) continue;
       const category = CATS.findIndex(([id]) => id === row.c);
-      week[category < 0 ? colors.length - 1 : category] += row.sessions;
+      week[category < 0 ? categories.length - 1 : category] += row.sessions;
     }
     const labels = [...CATS.map(([, label]) => label), "Other"];
     const max = Math.max(...counts.map(week => week.reduce((a, b) => a + b, 0)));
@@ -1076,21 +1104,22 @@ stackTables();
       workMix.textContent = "No sessions recorded in this period.";
     } else {
       const legend = labels.map((label, i) => counts.some(week => week[i])
-        ? `<span><i style="background:${colors[i]}"></i>${label}</span>` : "").join("");
+        ? `<span><i class="chart-mark" style="${categoryPaint(categories[i])}" aria-hidden="true"></i>${esc(label)}</span>` : "").join("");
       const bars = counts.map((week, i) => {
         const day = date.format(weeks[WEEKS - counts.length + i]);
         const total = week.reduce((a, b) => a + b, 0);
         const detail = week.flatMap((n, j) => n ? [`${labels[j]} ${n}`] : []).join(", ");
         const summary = `Week of ${day} · ${total} sessions${detail ? " · " + detail : ""}`;
         const stack = week.map((n, j) => n
-          ? `<span style="height:${100 * n / max}%;background:${colors[j]}"></span>` : "").join("");
+          ? `<span class="chart-mark" style="height:${100 * n / max}%;${categoryPaint(categories[j])}"></span>` : "").join("");
         return `<div class="work-mix-week" role="img" aria-label="${summary}" title="${summary}" tabindex="0"><div class="work-mix-stack" aria-hidden="true">${stack}</div><span aria-hidden="true">${day}</span></div>`;
       }).join("");
       workMix.innerHTML = `<div class="work-mix-legend">${legend}</div><div class="work-mix-scroll"><div class="work-mix-bars">${bars}</div></div>`;
+      const active = categories.map((id, i) => i).filter(i => counts.some(week => week[i]));
+      workMix.appendChild(chartData("Sessions per week by kind of work", ["Week", ...active.map(i => labels[i]), "Total"], counts.map((week, i) => [date.format(weeks[WEEKS - counts.length + i]), ...active.map(j => week[j]), week.reduce((a, b) => a + b, 0)])));
     }
   }
   const milestones = MILESTONES.map(m => ({i: idxOf(m.week), label: m.label})).filter(m => m.i >= 0 && m.i < WEEKS);
-  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   // long names stay whole in the tooltip; on the chart they stop here so they can't run off it
   const MS_MAX = 28, msShort = s => s.length > MS_MAX ? s.slice(0, MS_MAX - 1).trimEnd() + "…" : s;
 
@@ -1408,8 +1437,9 @@ stackTables();
       card.insertAdjacentHTML("beforeend", `<p class="gapnote">${total ? "Too few helper agent runs in this view to show a split" : "No helper agent runs in this view"}</p>`);
       return card;
     }
-    const plain = (n, pick) => `<div class="brow"><span class="bname">${pick}</span><span class="btrack"><span style="width:${(n / total * 100).toFixed(1)}%"></span></span><span class="bval"><b>${n / total > 0 && n / total < 0.005 ? "&lt;1%" : pct(n / total)}</b></span></div>`;
+    const plain = (n, pick) => `<div class="brow" style="${chartPaint(({Research: "blue-light", Checks: "green", Building: "orange"})[pick])}"><span class="bname">${pick}</span><span class="btrack"><span style="width:${(n / total * 100).toFixed(1)}%"></span></span><span class="bval"><b>${n / total > 0 && n / total < 0.005 ? "&lt;1%" : pct(n / total)}</b></span></div>`;
     card.insertAdjacentHTML("beforeend", `<div class="chart-plot bars">${kinds.map(([label, n]) => plain(n, label)).join("")}</div><p class="grp-read">${total.toLocaleString()} helper agent runs. Types are estimated from each request.</p>`);
+    card.appendChild(chartData("What you handed off", ["Type", "Runs", "Share"], kinds.map(([label, n]) => [label, n, pct(n / total)])));
     return card;
   }
   // the group's charts, in reading order. An odd count leads with a full-width chart, so the grid has no hole.
@@ -1581,6 +1611,7 @@ stackTables();
     const dlt = enoughNow && enoughThen ? deltaText(m, cmpA, lastA) : null;
     const noCmp = dlt ? null : lastA == null ? "few_now" : first > WEEKS - 8 ? "young" : !enoughNow ? "few_now" : "few_then";
     const card = document.createElement("div"); card.className = "chart"; card.dataset.id = m.id;
+    card.style.setProperty("--series", `var(--chart-${CHART_GROUPS[m.el] || "blue"})`);
     const title = m.card ? `<span class="term" tabindex="0" aria-describedby="def-chart-${m.id}">${m.title}<span class="term-card" role="tooltip" id="def-chart-${m.id}">${m.card}</span></span>` : m.title;
     card.innerHTML = `<div class="chart-head"><h3>${title}</h3></div><p class="def">${m.def}</p>`;
     const firstData = raw.findIndex(v => v != null);
@@ -1718,6 +1749,7 @@ stackTables();
       plot.appendChild(lab);
     }
     card.appendChild(plot); card.appendChild(tip);
+    card.appendChild(chartData(m.title + " by week", ["Week", "Value", "Sessions"], idx.map((wi, k) => [mon(weeks[wi]), raw[k] == null ? gapText(wi, sessionsIn[k]) : m.fmt(raw[k]), sessionsIn[k]])));
     document.getElementById(m.el).appendChild(card);
     return opts.wide !== undefined ? card : {m, cmpA, lastA, dlt, noCmp, leftOut};
   }
@@ -1731,6 +1763,8 @@ stackTables();
       const on = isOn(item.id), row = document.createElement("button");
       row.type = "button"; row.className = "brow" + (on ? " on" : picking ? " dim" : ""); row.setAttribute("aria-pressed", String(on));
       row.dataset.id = item.id;
+      const sourceColor = ["blue", "orange", "green", "pink", "blue-deep", "lime", "pink-deep"][Math.max(0, SOURCES.findIndex(([id]) => id === item.id))];
+      row.style.cssText = el.id === "cat-bars" ? categoryPaint(item.id) : chartPaint(sourceColor);
       // the click redraws these rows, so focus moves to the new row
       row.addEventListener("click", () => { onClick(item.id); el.querySelector(`[data-id="${item.id}"]`)?.focus({preventScroll: true}); });
       const r = prev == null ? null : Math.round((share - prev) * 100);

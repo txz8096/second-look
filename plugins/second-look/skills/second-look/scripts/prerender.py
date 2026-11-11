@@ -12,6 +12,7 @@ scripts run. When the browser runs but the report's own script draws nothing, it
 exits 1, because the charts won't draw in any browser.
 """
 import os, re, shutil, subprocess, sys, tempfile
+from html.parser import HTMLParser
 
 MAC_APPS = [
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
@@ -38,6 +39,41 @@ def find_browser():
         if path:
             return path
     return None
+
+
+
+def element_by_id(source, element_id):
+    class Finder(HTMLParser):
+        def __init__(self):
+            super().__init__()
+            self.offsets = [0]
+            for line in source.splitlines(keepends=True):
+                self.offsets.append(self.offsets[-1] + len(line))
+            self.start = self.end = None
+            self.depth = 0
+
+        def absolute_position(self):
+            line, column = self.getpos()
+            return self.offsets[line - 1] + column
+
+        def handle_starttag(self, tag, attrs):
+            if tag != "div":
+                return
+            if self.start is None and dict(attrs).get("id") == element_id:
+                self.start = self.absolute_position()
+                self.depth = 1
+            elif self.depth:
+                self.depth += 1
+
+        def handle_endtag(self, tag):
+            if tag == "div" and self.depth:
+                self.depth -= 1
+                if not self.depth:
+                    self.end = self.absolute_position() + len("</div>")
+
+    finder = Finder()
+    finder.feed(source)
+    return (finder.start, finder.end) if finder.start is not None and finder.end is not None else None
 
 
 def main():
@@ -72,6 +108,10 @@ def main():
     static = LEAD_PLOT.sub(lambda m: m.group(1) + ' tabindex="0"', static)
     # outside the charts, the script's phone tables, so they stack with scripts off too
     outside = lambda text: TABLE.findall(SECTION.sub("", text))
+    activity = element_by_id(run.stdout, "work-mix")
+    original_activity = element_by_id(html, "work-mix")
+    if activity and original_activity:
+        html = html[:original_activity[0]] + run.stdout[activity[0]:activity[1]] + html[original_activity[1]:]
     written, stacked = outside(html), outside(run.stdout)
     if len(written) == len(stacked):
         it = iter(stacked)
