@@ -1071,7 +1071,7 @@ Then tell me in plain words what changed before you save it.</pre></div>
   <h2>Settings</h2>
   <section class="icard" id="review-schedule" aria-labelledby="schedule-settings-title">
     <h3 id="schedule-settings-title">Review schedule</h3>
-    <p id="sample-schedule-summary" aria-live="polite">Sample schedule · Next review Nov 8 · Runs in Codex</p>
+    <p id="sample-schedule-summary" aria-live="polite">Next review Nov 8</p>
     <div class="schedule-fields">
       <label>Frequency
         <select id="sample-frequency">
@@ -1088,7 +1088,6 @@ Then tell me in plain words what changed before you save it.</pre></div>
         </select>
       </label>
     </div>
-    <p>Try the controls here. To change a real schedule, ask Second Look in the app that runs it. When switching apps, stop the old task before starting the new one.</p>
   </section>
   <section class="icard" id="scope-details" aria-labelledby="coverage-title">
     <h3 id="coverage-title">Data coverage</h3>
@@ -2221,11 +2220,10 @@ document.addEventListener("focusin", e => { if (e.target.closest(".tbl")) e.targ
     runner.disabled = days === 0;
     const next = dateFormat.format(new Date(Date.UTC(2026, 9, 25 + days)));
     summary.textContent = days
-      ? `Sample schedule · Next review ${next} · Runs in ${runner.value}`
-      : "Sample schedule · Recurring reviews off";
+      ? `Next review ${next}`
+      : "Recurring reviews off";
   };
   frequency.addEventListener("change", update);
-  runner.addEventListener("change", update);
   update();
 })();
 
