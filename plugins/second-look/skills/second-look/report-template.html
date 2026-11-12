@@ -76,12 +76,11 @@ button.theme-btn:hover { border: 0; background: var(--surface-2); color: var(--f
 .theme-btn .moon, :root[data-mode="light"] .theme-btn .sun { display: none; }
 :root[data-mode="light"] .theme-btn .moon { display: block; }
 .shell { display: grid; grid-template-columns: 256px minmax(0, 1fr); min-height: calc(100dvh - 64px); }
-.side { position: sticky; top: 64px; display: flex; flex-direction: column; gap: 32px; box-sizing: border-box; height: calc(100dvh - 64px); overflow-y: auto; padding: 20px; background: var(--surface); border-right: 1px solid var(--line); }
+.side { position: relative; display: flex; align-self: stretch; flex-direction: column; gap: 32px; box-sizing: border-box; min-height: calc(100dvh - 64px); overflow-y: auto; padding: 20px; background: var(--surface); border-right: 1px solid var(--line); }
 .side-nav { display: grid; gap: 4px; }
 .side-nav a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; box-sizing: border-box; padding: 8px 12px; border-radius: var(--r-8); color: var(--muted); font-size: 14px; line-height: 20px; font-weight: 500; text-decoration: none; }
 .side-nav a:hover { color: var(--fg); }
 .side-nav a.on, .side-nav a.on:hover { background: var(--accent-soft); color: var(--accent); }
-.nav-count { font: 400 13px/20px var(--mono); font-variant-numeric: tabular-nums; }
 #settings .icard { margin-bottom: 16px; }
 .schedule-fields { display: flex; flex-wrap: wrap; gap: 16px; margin: 16px 0; }
 .schedule-fields label { display: grid; flex: 1 1 12rem; min-width: 0; gap: 4px; font-weight: 600; }
@@ -472,7 +471,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 /* on paper the sidebar's note prints after the report, opened by the beforeprint script */
 @media print {
   .shell { display: flex; flex-direction: column; }
-  .side, .side-closed .side { position: static; order: 1; display: block; width: auto; height: auto; overflow: visible; visibility: visible; transform: none; padding: 0 48px 32px; background: none; border: 0; box-shadow: none; }
+  .side, .side-closed .side { position: static; order: 1; display: block; width: auto; height: auto; min-height: 0; overflow: visible; visibility: visible; transform: none; padding: 0 48px 32px; background: none; border: 0; box-shadow: none; }
   .side-nav { display: none; }
 }
 
@@ -600,8 +599,8 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 <aside class="side" id="side">
   <nav class="side-nav" aria-label="Report pages">
     <a href="#overview" data-page="overview">Overview</a>
-    <a href="#part-2" data-page="part-2">Briefs &amp; setup<span class="nav-count" id="count-fixes">5</span></a>
-    <a href="#part-3" data-page="part-3">Skills<span class="nav-count" id="count-skills">5</span></a>
+    <a href="#part-2" data-page="part-2">Briefs &amp; setup</a>
+    <a href="#part-3" data-page="part-3">Skills</a>
     <a href="#part-1" data-page="part-1">Habits &amp; usage</a>
     <a href="#settings" data-page="settings">Settings</a>
   </nav>
@@ -2014,9 +2013,6 @@ function goTo(id, scroll = true) {
 }
 (function () {
   document.body.classList.add("paged");
-  const count = (id, n) => { const el = document.getElementById(id); if (el) el.textContent = n || ""; };
-  count("count-fixes", document.querySelectorAll("#part-2 article.icard").length);
-  count("count-skills", document.querySelectorAll("#fix-first tbody tr").length);
   const narrow = () => matchMedia("(max-width: 900px)").matches, btn = document.getElementById("menu-btn"), side = document.getElementById("side");
   btn.setAttribute("aria-expanded", String(!narrow()));
   btn.addEventListener("click", e => {
