@@ -76,8 +76,8 @@ button.theme-btn:hover { border: 0; background: var(--surface-2); color: var(--f
 .theme-btn .moon, :root[data-mode="light"] .theme-btn .sun { display: none; }
 :root[data-mode="light"] .theme-btn .moon { display: block; }
 .shell { display: grid; grid-template-columns: 256px minmax(0, 1fr); min-height: calc(100dvh - 64px); }
-.side { position: relative; display: flex; align-self: stretch; flex-direction: column; gap: 32px; box-sizing: border-box; min-height: calc(100dvh - 64px); overflow-y: auto; padding: 20px; background: var(--surface); border-right: 1px solid var(--line); }
-.side-nav { display: grid; gap: 4px; }
+.side { position: sticky; top: 64px; height: calc(100dvh - 64px); min-height: 0; display: flex; align-self: start; flex-direction: column; gap: 32px; box-sizing: border-box; overflow: hidden; padding: 20px; background: var(--surface); border-right: 1px solid var(--line); }
+.side-nav { display: grid; flex-shrink: 1; min-height: 44px; overflow-y: auto; gap: 4px; }
 .side-nav a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; box-sizing: border-box; padding: 8px 12px; border-radius: var(--r-8); color: var(--muted); font-size: 14px; line-height: 20px; font-weight: 500; text-decoration: none; }
 .side-nav a:hover { color: var(--fg); }
 .side-nav a.on, .side-nav a.on:hover { background: var(--accent-soft); color: var(--accent); }
@@ -103,15 +103,21 @@ button.theme-btn:hover { border: 0; background: var(--surface-2); color: var(--f
   .schedule-fields option:is(:hover, :focus-visible) { background: var(--accent-soft); }
 }
 @media print { #review-schedule { display: none !important; } }
-.side-about { display: grid; gap: 4px; margin-top: auto; padding: 16px 12px 0; border-top: 1px solid var(--line); font-size: 13px; line-height: 20px; color: var(--muted); }
+.side-about { display: grid; flex-shrink: 0; gap: 4px; margin-top: auto; padding: 16px 12px 0; border-top: 1px solid var(--line); font-size: 13px; line-height: 20px; color: var(--muted); }
 .side-about details.nested { border-block: 0; }
 .side-about details.nested > summary { align-items: center; color: var(--muted); }
 .side-about details.nested > summary:hover { color: var(--fg); }
 .side-about details.nested .chev { margin-top: 0; }
-.side-about ul { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.side-about ul { display: grid; max-height: max(48px, min(30dvh, calc(100dvh - 540px))); overflow-y: auto; gap: 4px; margin: 0; padding: 0; list-style: none; }
 .side-about-link { display: flex; align-items: center; gap: 8px; width: fit-content; padding: 8px 0; text-decoration: none; }
 .side-about-link:hover { text-decoration: underline; }
 .side-about-link svg { flex: none; }
+@media screen and (max-height: 560px) {
+  .side { gap: 12px; padding: 12px; }
+  .side-about { padding: 12px 0 0; }
+  .side-about > p { max-height: 40px; overflow-y: auto; }
+  .side-about ul { max-height: 48px; }
+}
 .wrap { display: grid; align-content: start; gap: 32px; box-sizing: border-box; width: 100%; max-width: 1184px; min-width: 0; margin: 0 auto; padding: 32px 48px; outline: 0; }
 .page { display: grid; gap: 32px; min-width: 0; }
 .paged .page:not(.on) { display: none; }
@@ -188,10 +194,18 @@ section { display: grid; gap: 14px; }
 .chart-data .tbl { margin-top: 8px; }
 .chart-data caption { padding: 12px 16px; text-align: left; font-weight: 600; }
 .chart-data th { font-weight: 500; }
-.work-mix .chart-data { grid-row: auto; }
+.chart-values { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.work-mix-tooltip { position: fixed; z-index: 70; display: grid; gap: 8px; width: 280px; max-width: calc(100vw - 24px); max-height: calc(100dvh - 88px); overflow: auto; box-sizing: border-box; padding: 12px; background: var(--surface); color: var(--fg); border: 1px solid var(--line-strong); border-radius: var(--r-8); box-shadow: 0 4px 12px var(--drawer-shadow); font: 14px/20px var(--sans); text-align: left; }
+.work-mix-tooltip[hidden] { display: none; }
+.work-mix-tooltip strong, .work-mix-tooltip .muted { display: block; }
+.work-mix-tooltip dl { margin: 0; }
+.work-mix-tooltip dl div { display: flex; align-items: center; gap: 12px; padding: 6px 0; }
+.work-mix-tooltip dl div + div { border-top: 1px solid var(--line); }
+.work-mix-tooltip dt { flex: 1; }
+.work-mix-tooltip dd { min-width: 24px; margin: 0; font-weight: 500; font-variant-numeric: tabular-nums; }
 .work-mix-scroll { overflow-x: auto; }
 .work-mix-bars { display: grid; grid-template-columns: repeat(13, minmax(34px, 1fr)); gap: 4px; }
-.work-mix-week { display: grid; grid-template-rows: 160px auto; gap: 6px; text-align: center; color: var(--muted); font-size: 11px; }
+.work-mix-week, .work-mix-week:hover, .work-mix-week:active { display: grid; min-width: 0; height: auto; padding: 0; border: 0; border-radius: 0; background: none; transform: none; font-family: inherit; font-weight: 400; line-height: 1.55; grid-template-rows: 160px auto; gap: 6px; text-align: center; color: var(--muted); font-size: 11px; }
 .work-mix-stack { display: flex; flex-direction: column-reverse; align-items: stretch; width: 65%; margin-inline: auto; }
 .work-mix-week:hover .work-mix-stack { background: var(--surface-2); }
 #last-cycle { gap: 12px; }
@@ -473,6 +487,9 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .shell { display: flex; flex-direction: column; }
   .side, .side-closed .side { position: static; order: 1; display: block; width: auto; height: auto; min-height: 0; overflow: visible; visibility: visible; transform: none; padding: 0 48px 32px; background: none; border: 0; box-shadow: none; }
   .side-nav { display: none; }
+  .side-about ul { max-height: none; overflow: visible; }
+  .work-mix-tooltip { display: none; }
+  .chart-values { position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal; }
 }
 
 @media (max-width: 680px) {
@@ -1079,9 +1096,10 @@ stackTables();
   };
   const chartPaint = color => `--chart-fill:var(--chart-${color})`;
   const categoryPaint = id => chartPaint(CHART_CATEGORIES[id] || CHART_CATEGORIES.other);
-  function chartData(title, headers, values) {
-    const details = document.createElement("details"); details.className = "chart-data";
+  function chartData(title, headers, values, disclosed = true) {
+    const details = document.createElement(disclosed ? "details" : "div"); details.className = disclosed ? "chart-data" : "chart-values";
     details.innerHTML = `<summary>View chart data</summary><div class="tbl" tabindex="0" role="region" aria-label="${esc(title)} data"><table><caption>${esc(title)}</caption><thead><tr>${headers.map(h => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${values.map(row => `<tr>${row.map((cell, i) => i ? `<td>${esc(cell)}</td>` : `<th scope="row">${esc(cell)}</th>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    if (!disclosed) { details.querySelector("summary").remove(); details.querySelector(".tbl").removeAttribute("tabindex"); }
     return details;
   }
 
@@ -1110,11 +1128,79 @@ stackTables();
         const summary = `Week of ${day} · ${total} sessions${detail ? " · " + detail : ""}`;
         const stack = week.map((n, j) => n
           ? `<span class="chart-mark" style="height:${100 * n / max}%;${categoryPaint(categories[j])}"></span>` : "").join("");
-        return `<div class="work-mix-week" role="img" aria-label="${summary}" title="${summary}" tabindex="0"><div class="work-mix-stack" aria-hidden="true">${stack}</div><span aria-hidden="true">${day}</span></div>`;
+        return `<button type="button" class="work-mix-week" data-week="${i}" aria-label="${summary}" aria-describedby="work-mix-tooltip"><span class="work-mix-stack" aria-hidden="true">${stack}</span><span aria-hidden="true">${day}</span></button>`;
       }).join("");
       workMix.innerHTML = `<div class="work-mix-legend">${legend}</div><div class="work-mix-scroll"><div class="work-mix-bars">${bars}</div></div>`;
       const active = categories.map((id, i) => i).filter(i => counts.some(week => week[i]));
-      workMix.appendChild(chartData("Sessions per week by kind of work", ["Week", ...active.map(i => labels[i]), "Total"], counts.map((week, i) => [date.format(weeks[WEEKS - counts.length + i]), ...active.map(j => week[j]), week.reduce((a, b) => a + b, 0)])));
+      workMix.appendChild(chartData("Sessions per week by kind of work", ["Week", ...active.map(i => labels[i]), "Total"], counts.map((week, i) => [date.format(weeks[WEEKS - counts.length + i]), ...active.map(j => week[j]), week.reduce((a, b) => a + b, 0)]), false));
+      const tooltip = document.createElement("div");
+      tooltip.id = "work-mix-tooltip"; tooltip.className = "work-mix-tooltip";
+      tooltip.setAttribute("role", "tooltip"); tooltip.hidden = true;
+      workMix.appendChild(tooltip);
+      let activeWeek = null, pinned = false, hoverDismissed = false, pointerType = "mouse", closeTimer;
+      const closeTooltip = () => { clearTimeout(closeTimer); tooltip.hidden = true; activeWeek = null; pinned = false; };
+      const placeTooltip = () => {
+        if (!activeWeek) return;
+        tooltip.style.maxHeight = "";
+        const bar = activeWeek.getBoundingClientRect(), box = tooltip.getBoundingClientRect();
+        const right = bar.right + 12 + box.width <= innerWidth - 12, left = bar.left - box.width - 12 >= 12;
+        let x = right ? bar.right + 12 : bar.left - box.width - 12, y = bar.top;
+        if (!right && !left) {
+          const above = bar.top - 88, below = innerHeight - bar.bottom - 24;
+          const useBelow = below >= box.height || below > above;
+          tooltip.style.maxHeight = Math.max(40, useBelow ? below : above) + "px";
+          x = bar.left + (bar.width - box.width) / 2;
+          y = useBelow ? bar.bottom + 12 : bar.top - tooltip.getBoundingClientRect().height - 12;
+        }
+        const height = tooltip.getBoundingClientRect().height;
+        tooltip.style.left = Math.max(12, Math.min(x, innerWidth - box.width - 12)) + "px";
+        tooltip.style.top = Math.max(76, Math.min(y, innerHeight - height - 12)) + "px";
+      };
+      const showTooltip = week => {
+        clearTimeout(closeTimer); activeWeek = week; pinned = false;
+        const i = Number(week.dataset.week), values = counts[i], day = date.format(weeks[WEEKS - counts.length + i]);
+        tooltip.innerHTML = `<div><strong>Week of ${esc(day)}</strong><span class="muted">${values.reduce((a, b) => a + b, 0)} sessions</span></div><dl>${values.map((n, j) => n ? `<div><dt>${esc(labels[j])}</dt><dd>${n}</dd></div>` : "").join("")}</dl>`;
+        tooltip.hidden = false; placeTooltip();
+      };
+      const leaveTooltip = () => {
+        clearTimeout(closeTimer);
+        closeTimer = setTimeout(() => {
+          if (!pinned && document.activeElement !== activeWeek && !tooltip.matches(":hover")) closeTooltip();
+        }, 120);
+      };
+      workMix.querySelectorAll(".work-mix-week").forEach(week => {
+        week.addEventListener("pointerenter", event => { if (event.pointerType === "mouse" && !hoverDismissed) showTooltip(week); });
+        week.addEventListener("pointerleave", leaveTooltip);
+        week.addEventListener("pointerdown", event => { pointerType = event.pointerType; });
+        week.addEventListener("focus", () => { if (pointerType === "mouse") showTooltip(week); });
+        week.addEventListener("blur", leaveTooltip);
+        week.addEventListener("click", event => {
+          if (event.detail === 0 || pointerType !== "mouse") {
+            if (activeWeek === week && pinned) closeTooltip();
+            else { showTooltip(week); pinned = true; }
+          }
+        });
+      });
+      workMix.addEventListener("pointermove", event => {
+        if (!hoverDismissed || !(event.movementX || event.movementY)) return;
+        hoverDismissed = false;
+        const week = event.target.closest(".work-mix-week");
+        if (week) showTooltip(week);
+      });
+      tooltip.addEventListener("pointerenter", () => clearTimeout(closeTimer));
+      tooltip.addEventListener("pointerleave", leaveTooltip);
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") { hoverDismissed = true; closeTooltip(); }
+        if (event.key === "Tab") pointerType = "mouse";
+      });
+      document.addEventListener("pointerdown", event => { if (!workMix.contains(event.target)) closeTooltip(); });
+      addEventListener("scroll", event => {
+        if (!activeWeek || tooltip.contains(event.target)) return;
+        const bar = activeWeek.getBoundingClientRect();
+        if (bar.bottom < 76 || bar.top > innerHeight) closeTooltip();
+        else placeTooltip();
+      }, true);
+      addEventListener("resize", closeTooltip);
     }
   }
   const milestones = MILESTONES.map(m => ({i: idxOf(m.week), label: m.label})).filter(m => m.i >= 0 && m.i < WEEKS);
