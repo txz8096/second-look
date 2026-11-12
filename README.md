@@ -172,7 +172,7 @@ review runs in the app where you start it, and it reads every app's files from t
 Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is
 read directly but can't start a review, so start one from another app on the same computer.
 claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they
-count up to the day you export. Gemini's export has no conversation boundaries, so its
+cover sessions present in the supplied exports. Gemini's export has no conversation boundaries, so its
 sessions are grouped by time and its numbers are estimates. Antigravity support is new and
 built on an undocumented file format, so a release that changes it can hide your sessions
 until second look is updated.
@@ -272,8 +272,8 @@ session logs are.
 <summary><b>How far back does the yearly view go?</b></summary>
 
 As far as your logs do. Claude Code keeps 30 days by default, which is why the installer
-offers to keep a year. claude.ai, ChatGPT and Gemini count up to the day you export. Each run saves
-weekly totals, so weeks your apps later delete stay in the trend.
+offers to keep a year. claude.ai, ChatGPT and Gemini cover sessions present in the supplied exports. Each run saves
+weekly totals with daily breakdowns, so weeks your apps later delete stay in the trend. Custom date ranges use those daily totals; older weekly-only history supports complete weeks.
 </details>
 
 <details>

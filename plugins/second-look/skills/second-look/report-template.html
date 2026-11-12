@@ -157,7 +157,7 @@ button { font: 500 14px/1.2 var(--sans); color: var(--fg); background: var(--sur
   height: 36px; padding: 0 14px; cursor: pointer; transition: background-color .15s, border-color .15s, transform .15s; }
 button:hover { background: var(--surface-2); border-color: var(--line-strong); }
 button:active { transform: scale(0.98); }
-button:focus-visible, summary:focus-visible, select:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+button:focus-visible, summary:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 select { font: 500 14px var(--sans); color: var(--fg); background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-8); height: 36px; padding: 0 10px; }
 
 /* header and summary */
@@ -318,6 +318,21 @@ th.num, td.num { text-align: right; font-variant-numeric: tabular-nums; }
 td .def { display: block; margin-top: 4px; }
 td.best { color: var(--accent); font-weight: 600; }
 
+.briefs-empty { display: none; }
+#part-2[data-findings-state="none"] > :not(.part-head):not(.briefs-empty), #part-2[data-findings-state="none"] .headline { display: none; }
+#part-2[data-findings-state="none"] .briefs-empty { display: grid; gap: 8px; }
+/* Verified skill absence uses the discovery component; unknown access keeps its own copy. */
+.skills-empty { display: none; }
+#part-3[data-skills-state="none"] > :not(.part-head):not(.skills-empty), #part-3[data-skills-state="none"] .headline { display: none; }
+#part-3[data-skills-state="none"] .skills-empty { display: grid; gap: 8px; }
+.skills-empty > section { margin-top: 16px; gap: 12px; }
+.skills-empty > section > h3 { font-size: 16px; font-weight: 500; }
+.skill-benefits { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.skill-benefits h4 { font-size: 14px; font-weight: 500; }
+.skill-resources .dest-t { color: var(--accent); font-size: 14px; }
+.skill-resources .dest-d { font-size: 13px; }
+.skill-resources .dest { padding: 16px 20px; }
+
 /* habits over time */
 .scope-line { font-size: 14px; line-height: 1.6; color: var(--muted); }
 .fix-block { display: grid; gap: 8px; margin-top: 8px; scroll-margin-top: 24px; }
@@ -328,8 +343,24 @@ td.best { color: var(--accent); font-weight: 600; }
 .seg { display: inline-flex; flex-wrap: wrap; align-items: center; min-height: 32px; box-sizing: border-box; padding: 2px; border-radius: var(--r-8); background: var(--seg-track); }
 button.chip { height: 28px; padding: 0 10px; border: 0; border-radius: var(--r-6); background: transparent; color: var(--muted); font-size: 13px; }
 button.chip:hover { background: transparent; color: var(--fg); }
-#f-range .chip[aria-pressed="true"], #f-source .chip[aria-pressed="true"] { background: var(--seg-on); color: var(--fg); font-weight: 500; }
-.f-more { flex-basis: 100%; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
+#f-source .chip[aria-pressed="true"] { background: var(--seg-on); color: var(--fg); font-weight: 500; }
+.time-filter { flex: none; }
+#f-range-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+button#f-range { display: inline-flex; justify-content: space-between; align-items: center; gap: 12px; width: 142px; padding: 0 10px; text-align: left; }
+#f-range-menu { position: fixed; inset: auto; margin: 0; box-sizing: border-box; width: 320px; max-width: calc(100vw - 24px); max-height: calc(100dvh - 24px); overflow: auto; padding: 0; background: var(--surface); color: var(--fg); border: 1px solid var(--line); border-radius: var(--r-8); box-shadow: 0 8px 24px var(--drawer-shadow); }
+#f-presets { display: grid; }
+#f-presets button { display: flex; align-items: center; justify-content: space-between; width: 100%; min-height: 40px; padding: 0 12px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; text-align: left; font-weight: 400; }
+#f-presets button[aria-pressed="true"]::after { content: "✓"; color: var(--accent); }
+.range-custom { display: grid; gap: 12px; padding: 12px; }
+.range-custom h4 { font-size: 14px; }
+.range-dates { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; }
+.range-dates label { display: grid; gap: 6px; color: var(--muted); font-size: 13px; }
+.range-dates input { width: 100%; min-width: 0; box-sizing: border-box; height: 36px; padding: 0 8px; border: 1px solid var(--line); border-radius: var(--r-8); background: var(--bg); color: var(--fg); font: 14px var(--sans); }
+.range-custom > button { justify-self: end; }
+button:disabled { cursor: default; opacity: .5; }
+.filters > .filter-coverage { flex-basis: 100%; }
+.filters > .fsum { margin-left: auto; white-space: nowrap; text-align: right; }
+.filter-empty { margin-top: 12px; }
 .filter-coverage { font-size: 13px; }
 .filter-coverage:hover { color: var(--accent-strong); }
 .fsum { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
@@ -528,7 +559,15 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .tl-status { text-align: left; }
   .tl-status .term[data-align="end"] .term-card { left: 0; right: auto; }
   .tl-axis > span:first-child, .tl-axis > span:last-child { display: none; }
-  .fgroup:has(> #f-range) .flabel { display: none; }
+  .filters > .time-filter { order: 0; flex: 1; min-width: 0; }
+  .time-filter #f-range { flex: 1; min-width: 0; max-width: 142px; }
+  #f-range-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .filters > .fsum { order: 1; }
+  .filters > .app-filter { order: 2; flex-basis: 100%; }
+  .filters > .work-filter, .filters > #f-reset { order: 3; }
+  .filters > .filter-coverage { order: 4; }
+  .range-dates input { min-height: 44px; font-size: 16px; }
+  .skill-benefits { grid-template-columns: 1fr; }
   pre { padding: 40px 12px 12px; }
   select { font-size: 16px; }
   .chart svg text { font-size: 12px; }
@@ -681,7 +720,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 </div>
 
 <!-- BRIEFS AND SETUP (#part-2) -->
-<div class="part page" id="part-2">
+<div class="part page" id="part-2" data-findings-state="available">
   <div class="part-head">
     <h2>How you brief AI and set up your apps</h2>
     <p class="headline">Vague prototype starts take the most time. Syncing your rules is the quickest fix, so it comes first. Five fixes below, all in <a href="#plan" data-jump="plan">your plan until Nov 8</a>.</p>
@@ -805,6 +844,8 @@ Before building, list up to 3 questions you need answered.</pre></div>
     </section>
   </article>
 
+  <div class="briefs-empty"><p>Nothing to fix this time.</p><p class="def">Your trends and usage are still in the report.</p><a href="#part-1">View trends →</a></div>
+
   <section class="plan" id="plan" aria-labelledby="plan-h">
     <h3 id="plan-h">Your plan until Nov 8</h3>
     <div class="plan-cols"><span>Time</span><span>Saves</span><span>Nov 8 review checks</span></div>
@@ -820,7 +861,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
 </div>
 
 <!-- SKILLS (#part-3) -->
-<div class="part page" id="part-3">
+<div class="part page" id="part-3" data-skills-state="available">
   <div class="part-head">
     <h2>Keep your skills current</h2>
     <p class="headline">Three of your seven <span class="term" tabindex="0" aria-describedby="def-skill-part3">skills<span class="term-card" role="tooltip" id="def-skill-part3">A skill is a saved set of steps the AI follows the same way each time.</span></span> give wrong information today.</p>
@@ -894,6 +935,32 @@ Then tell me in plain words what changed before you save it.</pre></div>
       <p class="def">Update these from their source. Edits you make to them get overwritten.</p>
     </div>
   </details>
+  <div class="skills-empty">
+    <p>You haven’t saved any skills yet.</p>
+    <p class="def">A skill is a set of steps you save so the AI does a task the same way each time. Once you have some, second look checks them for stale facts and missed updates.</p>
+    <a href="#part-2">See repeat work you could save as a skill →</a>
+    <section>
+      <h3>Why people use skills</h3>
+      <div class="skill-benefits">
+        <div><h4>Explain it once</h4><p class="def">Save a workflow, a checklist or your house style, and the AI follows it every time without being reminded.</p></div>
+        <div><h4>Light on context</h4><p class="def">Only a skill’s name and description load up front. The full instructions load when a task needs them.</p></div>
+        <div><h4>Reuse across AI apps</h4><p class="def">Use your skills in compatible AI apps. Setup and supported features vary by app.</p></div>
+      </div>
+    </section>
+    <section>
+      <h3>Explore skills</h3>
+      <div class="dests skill-resources">
+        <a class="dest" href="https://www.skills.sh/" target="_blank" rel="noopener noreferrer"><span class="dest-text"><span class="dest-t">skills.sh</span><span class="dest-d">Community directory · Browse skills and installation instructions</span></span><span aria-hidden="true">↗</span></a>
+        <a class="dest" href="https://github.com/anthropics/skills" target="_blank" rel="noopener noreferrer"><span class="dest-text"><span class="dest-t">Anthropic skills</span><span class="dest-d">Anthropic · Browse skills for Claude and learn how to install them</span></span><span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+    <section>
+      <h3>Want to write your own?</h3>
+      <div class="dests skill-resources">
+        <a class="dest" href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices" target="_blank" rel="noopener noreferrer"><span class="dest-text"><span class="dest-t">Skill authoring best practices</span><span class="dest-d">Claude Docs · Naming, descriptions, structure and testing</span></span><span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </div>
 </div>
 
 <!-- HABITS (#part-1), last -->
@@ -908,13 +975,21 @@ Then tell me in plain words what changed before you save it.</pre></div>
   <p class="def static-note">Showing the last 12 months across every app. Open this file in a browser to filter the charts.</p>
 
   <div class="filters" role="group" aria-label="Filter the charts">
-    <div class="fgroup" role="group" aria-label="Time range"><span class="flabel">Time</span><span class="seg" id="f-range"></span></div>
-    <span class="fsum" id="f-sum"></span>
-    <a class="filter-coverage" href="#scope-details">View data coverage</a>
-    <div class="f-more" id="f-more">
-      <div class="fgroup" role="group" aria-label="App"><span class="flabel">App</span><span class="seg" id="f-source"></span></div>
-      <div class="fgroup"><label class="flabel" for="f-cat">Work</label><select id="f-cat"></select></div>
+    <div class="fgroup time-filter"><span class="flabel" id="f-time-label">Time</span><button type="button" id="f-range" popovertarget="f-range-menu" aria-labelledby="f-time-label f-range-value" aria-expanded="false"><span id="f-range-value">12 months</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button></div>
+    <div id="f-range-menu" popover="auto" role="dialog" aria-label="Choose a time range">
+      <div id="f-presets" role="group" aria-label="Preset time ranges"></div>
+      <div class="range-custom">
+        <h4>Custom range</h4>
+        <div class="range-dates"><label>From<input id="f-from" type="date" aria-describedby="f-date-error"></label><label>To<input id="f-to" type="date" aria-describedby="f-date-error"></label></div>
+        <p class="def" id="f-date-error" role="status"></p>
+        <button type="button" id="f-apply" disabled>Apply range</button>
+      </div>
     </div>
+    <div class="fgroup app-filter" role="group" aria-label="App"><span class="flabel">App</span><span class="seg" id="f-source"></span></div>
+    <div class="fgroup work-filter"><label class="flabel" for="f-cat">Work</label><select id="f-cat"></select></div>
+    <button type="button" id="f-reset" disabled>Clear filters</button>
+    <span class="fsum" id="f-sum" role="status" aria-live="polite" aria-atomic="true"></span>
+    <a class="filter-coverage" href="#scope-details">View data coverage</a>
   </div>
 
   <div id="groups"></div>
@@ -1028,7 +1103,10 @@ Then tell me in plain words what changed before you save it.</pre></div>
 <script>
 
 // Copy needs a script, so the buttons stay hidden without one
-document.querySelectorAll('.copy').forEach(btn => { btn.hidden = false; btn.addEventListener('click', e => {
+document.querySelectorAll('.copy').forEach(btn => { btn.hidden = false; });
+document.addEventListener('click', e => {
+  const btn = e.target.closest('button.copy');
+  if (!btn) return;
   e.preventDefault();
   const pre = btn.closest('.field').querySelector('pre');
   const done = () => { btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy', 1500); };
@@ -1036,7 +1114,7 @@ document.querySelectorAll('.copy').forEach(btn => { btn.hidden = false; btn.addE
     const r = document.createRange(); r.selectNodeContents(pre);
     const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected'; setTimeout(() => btn.textContent = 'Copy', 1500);
   });
-}); });
+});
 
 // on phones, each table row reads as a card: every cell gets its column's name
 function stackTables(root = document) {
@@ -1069,9 +1147,9 @@ stackTables();
   // state: logs | export | missing (an export not added) | not_found (app not on this computer) | not_readable (a claude.ai run)
   // cut: the first day second look has for a source whose earlier data was deleted
   const SCOPE = {"retention_days": 30, "sources": [
-    {"id": "claude_ai", "state": "export", "to": "2026-10-19"}, {"id": "claude_code", "state": "logs", "cut": "2026-06-29"},
+    {"id": "claude_ai", "state": "export", "to": "2026-10-19", "latest_session": "2026-10-19"}, {"id": "claude_code", "state": "logs", "cut": "2026-06-29"},
     {"id": "codex", "state": "logs"}, {"id": "cursor", "state": "logs"}, {"id": "antigravity", "state": "not_found"},
-    {"id": "chatgpt", "state": "export", "to": "2026-10-12"}, {"id": "gemini_web", "state": "missing"}]};
+    {"id": "chatgpt", "state": "export", "to": "2026-10-12", "latest_session": "2026-10-12"}, {"id": "gemini_web", "state": "missing"}]};
   // MILESTONES: dated changes the person made, drawn as lines on every chart: [{"week": "YYYY-MM-DD", "label": "..."}], or [] for none
   const MILESTONES = [{"week": "2026-03-09", "label": "First skill"}, {"week": "2026-07-13", "label": "Saved global rules"}, {"week": "2026-09-28", "label": "Streak redesign starts"}];
 
@@ -1266,14 +1344,28 @@ stackTables();
         retyped: rr(sessions * retype), skilled: rr(sessions * skill), ...agentChecks(src, c, sessions, i), ...automation(src, sessions, i), ...usage(src, sessions, i)});
     });
   });
-  return rows;
+  // Illustrative days preserve the sample’s weekly totals and source cutoff dates.
+  return rows.map(row => {
+    const sourceTo = row.source === "claude_ai" ? "2026-10-19" : row.source === "chatgpt" ? "2026-10-12" : null;
+    const span = sourceTo ? Math.min(7, Math.max(1, Math.round((new Date(sourceTo + "T00:00:00") - new Date(row.week + "T00:00:00")) / 864e5) + 1)) : 7;
+    const count = Math.min(span, row.sessions), days = [];
+    let allocated = 0;
+    for (let i = 0; i < count; i++) {
+      const n = Math.floor((i + 1) * row.sessions / count) - allocated;
+      const date = new Date(row.week + "T00:00:00"); date.setDate(date.getDate() + i);
+      const day = {date: [date.getFullYear(), String(date.getMonth() + 1).padStart(2, "0"), String(date.getDate()).padStart(2, "0")].join("-")};
+      Object.entries(row).forEach(([key, value]) => { if (typeof value === "number") day[key] = Math.floor((allocated + n) * value / row.sessions) - Math.floor(allocated * value / row.sessions); });
+      allocated += n; days.push(day);
+    }
+    return {...row, days};
+  });
   }
 
   const METERED = new Set(["claude_code", "codex"]);
   const EXPORT_STEPS = {
-    claude_ai: ["Settings → Privacy → Export data. It arrives by email, usually within a day.", "Then say <code>add my claude.ai export</code>."],
-    chatgpt: ["Settings → Data controls → Export data. It arrives by email, usually within a day.", "Then say <code>add my ChatGPT export</code>."],
-    gemini_web: ["takeout.google.com → My Activity, filtered to Gemini Apps, format JSON.", "Then say <code>add my Gemini export</code>."],
+    claude_ai: ["Settings → Privacy → Export data. Request the export on the web or desktop app, then download it from the email."],
+    chatgpt: ["Settings → Data controls → Export data. Confirm the export, then download it when it is ready. Availability depends on your account or workspace."],
+    gemini_web: ["takeout.google.com → My Activity → Gemini Apps.", "Deselect all, then check My Activity. In All activity data included, deselect all and check Gemini Apps.", "In Multiple formats, set Activity records to JSON. Select Next step, then Create export. Google emails you a download link.", "Your export contains MyActivity.json. The separate Gemini checkbox exports Gems only."],
   };
   const dayLabel = iso => new Date(iso + "T00:00:00").toLocaleDateString("en-US", {month: "short", day: "numeric"});
   const scopeCard = (label, title, body, steps = [], align = "") =>
@@ -1297,20 +1389,24 @@ stackTables();
     const status = (src, on) => {
       const label = name(SOURCES, src.id), first = on.size ? Math.min(...on) : null, last = on.size ? Math.max(...on) : null;
       const steps = EXPORT_STEPS[src.id];
+      const dailyDates = rows.filter(r => r.s === src.id).flatMap(r => r.days || []).map(d => d.date).filter(d => d <= reportTo);
+      const latest = src.latest_session && src.latest_session <= reportTo ? src.latest_session : dailyDates.sort().at(-1);
       if (steps && (src.state === "missing" || src.state === "export")) {
         const added = src.state === "export";
-        const range = added ? `Through ${dayLabel(src.to)}` : "Export needed";
+        const range = added ? latest ? `Latest included session: ${dayLabel(latest)}` : "Export included · latest session unknown" : "Export needed";
         const action = added ? "Replace export" : "Add export";
         return `<span>${range}</span><details class="export-action">
           <summary aria-label="${action} for ${label}"><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>${action}</summary>
-          <p>${steps[0]}</p>
-          <p>Download the file, then open second look in your review app. ${steps[1]} You can also attach the file there.</p>
+          ${steps.map(step => `<p>${step}</p>`).join("")}
+          <p>Download the file, then return to your assistant and attach the export. A new review creates a separate report; this saved report stays as it is.</p>
+          <div class="field"><button type="button" class="copy" aria-live="polite">Copy</button><pre>Add my ${label} export to my second look history, then create a new report. Confirm the sources and dates included.</pre></div>
         </details>`;
       }
       if (src.state === "missing") return "Export needed";
       if (src.state === "not_found") return scopeCard("Not found", `${label} isn't on this computer`, `Nothing to do if you don't use it.`, [], "end");
       if (src.state === "not_readable") return scopeCard("Not readable here", "Run second look on your computer", `${label} keeps its history on your computer, which a claude.ai run can't open.`, [], "end");
       if (src.state === "export") return scopeCard(`Export, ${dayLabel(src.to)}`, `${label}: from your export`, `Covers sessions up to ${dayLabel(src.to)}. Add a fresh export to see later ones.`, EXPORT_STEPS[src.id] || [], "end");
+      if (latest && !src.cut) return `Latest included session: ${dayLabel(latest)}`;
       if (src.cut) return cutCard(src, `Since ${dayLabel(src.cut)}`, "end");
       if (first == null) return "No sessions";
       if (last < WEEKS - 3) return `No sessions since ${mon(weeks[last])}`;
@@ -1474,6 +1570,8 @@ stackTables();
     // why part of the group has no comparison: too little history, or too few sessions in one of the two windows
     const only = !said.length && [young, fewNow, fewThen].filter(a => a.length).length === 1;
     const also = t => { lead += (lead ? " " : "") + t; };
+    if (!none && noCmp("coverage").length) also("Source coverage changed between periods, so those results are not compared.");
+    if (!none && noCmp("custom").length) also("Comparisons need at least eight complete weeks in the custom range.");
     if (!none && young.length) also(only ? "A trend needs 8 weeks of data, and there isn’t that much here yet." : "Some of this needs more weeks of data.");
     if (!none && fewNow.length) also(only ? "Too few sessions in the last 4 weeks to compare." : "Some of this has too few recent sessions to compare.");
     if (!none && fewThen.length) also(only ? "Too few sessions in the 4 weeks before to compare." : "Some of this has too few earlier sessions to compare.");
@@ -1490,7 +1588,7 @@ stackTables();
   }
   // what helper agents were asked to do, beside the lookups a helper could have taken. Types come from each request's wording
   function handoffKinds(i0) {
-    const inView = rows.filter(r => r.w >= i0 && srcOk(r) && catOk(r));
+    const inView = selectedRows().filter(r => r.w >= i0 && r.w < viewEnd && srcOk(r) && catOk(r));
     const runs = key => inView.reduce((a, r) => a + (r[key] || 0), 0);
     const kinds = [["Research", runs("delegated_research")], ["Checks", runs("delegated_check")], ["Building", runs("delegated_build")]];
     return {kinds, total: kinds.reduce((a, [, n]) => a + n, 0), building: kinds[2][1]};
@@ -1560,7 +1658,7 @@ stackTables();
   // charts drawn at build time: drop their filter controls, then redraw live
   const trendsEl = document.getElementById("trends"), filtersEl = trendsEl.querySelector(".filters");
   if (trendsEl.hasAttribute("data-static")) {
-    trendsEl.querySelectorAll("#f-range .chip, #f-source .chip, #f-cat option").forEach(n => n.remove());
+    trendsEl.querySelectorAll("#f-presets button, #f-source .chip, #f-cat option").forEach(n => n.remove());
     trendsEl.removeAttribute("data-static");
   }
   // scripts run: show the filters and tiles, hide the no-script notes
@@ -1570,14 +1668,71 @@ stackTables();
   // open on the range the data covers, so a few months of data isn't squeezed into the end of a year
   const dataWeeks = rows.some(r => r.sessions > 0) ? WEEKS - Math.min(...rows.filter(r => r.sessions > 0).map(r => r.w)) : WEEKS;
   const DEFAULT_RANGE = (RANGES.find(([n]) => n >= 13 && n >= dataWeeks) || [WEEKS])[0];
-  const state = {range: DEFAULT_RANGE, sources: new Set(), cat: "all", picked: null, allCharts: new Set()};
+  let viewEnd = WEEKS, viewStart = WEEKS - DEFAULT_RANGE;
+  const state = {custom: null, range: DEFAULT_RANGE, sources: new Set(), cat: "all", picked: null, allCharts: new Set()};
   const staticNote = trendsEl.querySelector(".static-note");
   if (staticNote) staticNote.textContent = `Showing the last ${RANGES.find(([n]) => n === DEFAULT_RANGE)[1]} across every app. Open this file in a browser to filter the charts.`;
   trendsEl.toggleAttribute("data-nodata", !rows.length);
   const rangeEl = document.getElementById("f-range"), srcEl = document.getElementById("f-source"), catEl = document.getElementById("f-cat");
+  const menu = document.getElementById("f-range-menu"), fromEl = document.getElementById("f-from"), toEl = document.getElementById("f-to"), applyEl = document.getElementById("f-apply");
+  const isoDay = d => [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
+  const reportTo = [SCOPE.through || isoDay(sunOf(end)), isoDay(sunOf(end))].sort()[0];
+  const rangeLabel = () => {
+    if (!state.custom) return RANGES.find(([n]) => n === state.range)[1];
+    const {from, to} = state.custom;
+    if (from === to) return dayLabel(from);
+    if (from.slice(0, 7) === to.slice(0, 7)) return `${dayLabel(from)}–${Number(to.slice(8))}`;
+    const year = from.slice(0, 4) !== to.slice(0, 4);
+    return `${dayLabel(from)}${year ? ", " + from.slice(0, 4) : ""} – ${dayLabel(to)}${year ? ", " + to.slice(0, 4) : ""}`;
+  };
+  const closeRange = () => { menu.hidePopover(); rangeEl.focus({preventScroll: true}); };
+  const placeRange = () => {
+    const r = rangeEl.getBoundingClientRect(), w = menu.offsetWidth, h = menu.offsetHeight;
+    menu.style.left = Math.max(12, Math.min(r.left, innerWidth - w - 12)) + "px";
+    menu.style.top = Math.max(12, Math.min(r.bottom + 8, innerHeight - h - 12)) + "px";
+  };
+  fromEl.min = toEl.min = isoDay(weeks[0]); fromEl.max = toEl.max = reportTo;
+  const legacyBoundary = (from, to) => rows.some(r => !Array.isArray(r.days) && r.sessions > 0 &&
+    r.week <= to && isoDay(sunOf(weeks[r.w])) >= from && (r.week < from || isoDay(sunOf(weeks[r.w])) > to));
+  const validateDates = () => {
+    const from = fromEl.value, to = toEl.value;
+    const message = !from && !to ? "" : !from || !to ? "Choose both dates." : from > to ? "From must be on or before To."
+      : from < fromEl.min || to > reportTo ? "Choose dates within this saved report’s range."
+      : legacyBoundary(from, to) ? "Older history has weekly totals only. Include complete Monday–Sunday weeks, or run a new review with the original logs." : "";
+    applyEl.disabled = !from || !to || !!message; document.getElementById("f-date-error").textContent = message;
+    return !applyEl.disabled;
+  };
+  menu.addEventListener("beforetoggle", e => {
+    if (e.newState === "open") {
+      fromEl.value = state.custom?.from || ""; toEl.value = state.custom?.to || ""; validateDates();
+      requestAnimationFrame(placeRange);
+    }
+    rangeEl.setAttribute("aria-expanded", String(e.newState === "open"));
+  });
+  addEventListener("resize", () => { if (menu.matches(":popover-open")) placeRange(); });
+  addEventListener("scroll", () => { if (menu.matches(":popover-open")) placeRange(); }, true);
+  [fromEl, toEl].forEach(el => el.addEventListener("input", validateDates));
   RANGES.forEach(([n, label]) => {
-    const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = label; b.dataset.n = n;
-    b.addEventListener("click", () => { state.range = n; render(); }); rangeEl.appendChild(b);
+    const b = document.createElement("button"); b.type = "button"; b.textContent = label; b.dataset.n = n;
+    b.addEventListener("click", () => { state.custom = null; state.range = n; render(); closeRange(); });
+    document.getElementById("f-presets").appendChild(b);
+  });
+  applyEl.addEventListener("click", () => {
+    if (!validateDates()) return;
+    state.custom = {from: fromEl.value, to: toEl.value};
+    viewStart = Math.max(0, idxOf(state.custom.from)); viewEnd = Math.min(WEEKS, idxOf(state.custom.to) + 1);
+    state.range = viewEnd - viewStart; render(); closeRange();
+  });
+  const resetFilters = () => { state.sources.clear(); state.cat = "all"; state.custom = null; state.range = DEFAULT_RANGE; render(); rangeEl.focus({preventScroll: true}); };
+  document.getElementById("f-reset").addEventListener("click", resetFilters);
+  const selectedRows = () => !state.custom ? rows : rows.flatMap(r => {
+    const {from, to} = state.custom;
+    if (r.week > to || isoDay(sunOf(weeks[r.w])) < from) return [];
+    if (r.week >= from && isoDay(sunOf(weeks[r.w])) <= to) return [r];
+    const days = (r.days || []).filter(d => d.date >= from && d.date <= to);
+    if (!days.length) return [];
+    const selected = {...r}; KEYS.forEach(k => selected[k] = days.reduce((n, d) => n + (d[k] || 0), 0));
+    return [selected];
   });
   const present = SOURCES.filter(([id]) => rows.some(r => r.s === id && r.sessions > 0));
   const toggleSource = id => {
@@ -1598,7 +1753,7 @@ stackTables();
   const catOk = r => state.cat === "all" || r.c === state.cat;
   const sumRows = (list, keys) => { const t = {}; keys.forEach(k => t[k] = 0); list.forEach(r => keys.forEach(k => t[k] += r[k] || 0)); return t; };
   const KEYS = ["sessions", "prompts", "briefable", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "delegated_research", "delegated_check", "delegated_build", "read_heavy", "metered", "usage", "long_usage", "start_tokens", "logged", "unattended", "setups", "parallel", "repeats"];
-  const weekTotals = filter => { const t = weeks.map(() => { const o = {}; KEYS.forEach(k => o[k] = 0); return o; }); rows.filter(filter).forEach(r => KEYS.forEach(k => t[r.w][k] += r[k] || 0)); return t; };
+  const weekTotals = filter => { const t = weeks.map(() => { const o = {}; KEYS.forEach(k => o[k] = 0); return o; }); selectedRows().filter(filter).forEach(r => KEYS.forEach(k => t[r.w][k] += r[k] || 0)); return t; };
   const seen = (m, t) => t[m.logs ? "logged" : "sessions"] > 0; // counts only mean something in weeks with sessions
   const value = (m, t) => m.den ? (t[m.den] ? t[m.num] / t[m.den] : null) : (seen(m, t) ? t[m.num] : null);
   // a rate needs this many sessions under it before it shows; usage and messages are big numbers and skip the floor
@@ -1610,7 +1765,7 @@ stackTables();
   // the first week this metric has anything to count
   const firstWeek = (m, totals) => totals.findIndex(t => m.den ? t[m.den] > 0 : seen(m, t));
   const windowVal = (m, totals, a, b) => { // ratio of sums for rates, mean over weeks since the metric's data began for counts
-    const slice = totals.slice(Math.max(0, a), b + 1); if (!slice.length) return null;
+    const slice = b < 0 ? [] : totals.slice(Math.max(0, a), b + 1); if (!slice.length) return null;
     const s = sumRows(slice, KEYS);
     if (m.den && !["usage", "prompts"].includes(m.den) && s[m.den] < MIN_DEN) return null;
     // a count of some sessions, like untested changes out of sessions with code changes, has the same floor as a rate over them
@@ -1658,8 +1813,8 @@ stackTables();
   // phone charts draw 12px text, so labels take more room there
   const msRow = () => isPhone() ? 14 : 12;
   function msLayout(i0, W, nameAll) {
-    const n = WEEKS - i0, at = i => L + (W - L - R) * (n === 1 ? 0.5 : (i - i0) / (n - 1)), perChar = isPhone() ? 7.6 : 6.4;
-    const list = milestones.filter(ms => ms.i >= i0), named = nameAll ? list : list.slice(-1);
+    const n = viewEnd - i0, at = i => L + (W - L - R) * (n === 1 ? 0.5 : (i - i0) / (n - 1)), perChar = isPhone() ? 7.6 : 6.4;
+    const list = milestones.filter(ms => ms.i >= i0 && ms.i < viewEnd), named = nameAll ? list : list.slice(-1);
     const rowsEnd = [], out = [];
     list.forEach(ms => {
       if (!named.includes(ms)) { out.push({...ms, at: at(ms.i), row: null}); return; }
@@ -1675,19 +1830,23 @@ stackTables();
 
     function chart(m, totals, i0, opts = {}) {
     const W = chartW(opts.wide), H = opts.wide ? 190 : 150;
-    const idx = []; for (let i = i0; i < WEEKS; i++) idx.push(i);
+    const idx = []; for (let i = i0; i < viewEnd; i++) idx.push(i);
     // a week with no sessions stays a gap; otherwise the point is the running value up to that week
     const raw = idx.map(i => value(m, totals[i]) == null ? null : windowVal(m, totals, i - ROLL + 1, i));
     const sessionsIn = idx.map(i => totals.slice(Math.max(0, i - ROLL + 1), i + 1).reduce((a, t) => a + t.sessions, 0));
     const vals = raw.filter(v => v != null);
-    const lastA = windowVal(m, totals, WEEKS - 4, WEEKS - 1);
+    const lastA = windowVal(m, totals, viewEnd - 4, viewEnd - 1);
     // a comparison needs 8 weeks since this metric's data began
     const first = firstWeek(m, totals);
-    const cmpA = first <= WEEKS - 8 ? windowVal(m, totals, WEEKS - 8, WEEKS - 5) : null;
-    const sample = sampleOf(m), sampleIn = (a, b) => sample ? sumRows(totals.slice(a, b + 1), [sample])[sample] : Infinity;
-    const enoughNow = sampleIn(WEEKS - 4, WEEKS - 1) >= MIN_CHANGE, enoughThen = sampleIn(WEEKS - 8, WEEKS - 5) >= MIN_CHANGE;
+    const customComparable = !state.custom || (viewEnd - viewStart >= 8 && state.custom.from === isoDay(weeks[viewStart]) && state.custom.to === isoDay(sunOf(weeks[viewEnd - 1])));
+    const sourceSet = (a, b) => [...new Set(selectedRows().filter(r => srcOk(r) && catOk(r) && r.w >= Math.max(0, a) && r.w <= b &&
+      (!(m.logs || m.den === "usage" || m.den === "metered") || METERED.has(r.s)) && (m.den ? r[m.den] > 0 : r.sessions > 0)).map(r => r.s))].sort().join(",");
+    const sameScope = sourceSet(viewEnd - 4, viewEnd - 1) === sourceSet(viewEnd - 8, viewEnd - 5);
+    const cmpA = sameScope && customComparable && first >= 0 && first <= viewEnd - 8 ? windowVal(m, totals, viewEnd - 8, viewEnd - 5) : null;
+    const sample = sampleOf(m), sampleIn = (a, b) => sample ? sumRows(totals.slice(Math.max(0, a), Math.max(0, b + 1)), [sample])[sample] : Infinity;
+    const enoughNow = sampleIn(viewEnd - 4, viewEnd - 1) >= MIN_CHANGE, enoughThen = sampleIn(viewEnd - 8, viewEnd - 5) >= MIN_CHANGE;
     const dlt = enoughNow && enoughThen ? deltaText(m, cmpA, lastA) : null;
-    const noCmp = dlt ? null : lastA == null ? "few_now" : first > WEEKS - 8 ? "young" : !enoughNow ? "few_now" : "few_then";
+    const noCmp = dlt ? null : lastA == null ? "few_now" : !customComparable ? "custom" : !sameScope ? "coverage" : first > viewEnd - 8 ? "young" : !enoughNow ? "few_now" : "few_then";
     const card = document.createElement("div"); card.className = "chart"; card.dataset.id = m.id;
     const title = m.card ? `<span class="term" tabindex="0" aria-describedby="def-chart-${m.id}">${m.title}<span class="term-card" role="tooltip" id="def-chart-${m.id}">${m.card}</span></span>` : m.title;
     card.innerHTML = `<div class="chart-head"><h3>${title}</h3></div><p class="def">${m.def}</p>`;
@@ -1696,11 +1855,11 @@ stackTables();
     const chosen = (state.sources.size ? [...state.sources] : SOURCES.map(([id]) => id));
     // usage and agent-side metrics come only from Claude Code and Codex
     const logged = m.logs || usageMetric;
-    const inWindow = id => rows.some(r => r.s === id && r.w >= i0 && catOk(r) && r.sessions > 0);
+    const inWindow = id => selectedRows().some(r => r.s === id && r.w >= i0 && r.w < viewEnd && catOk(r) && r.sessions > 0);
     const unmeasured = logged && !chosen.some(id => METERED.has(id) && inWindow(id));
     const anySessions = idx.some(i => totals[i].sessions > 0);
     // the chosen apps do log this, but none of their sessions is this kind of work
-    const workCut = unmeasured && chosen.some(id => METERED.has(id) && rows.some(r => r.s === id && r.w >= i0 && r.sessions > 0));
+    const workCut = unmeasured && chosen.some(id => METERED.has(id) && selectedRows().some(r => r.s === id && r.w >= i0 && r.w < viewEnd && r.sessions > 0));
     if (unmeasured && !workCut && anySessions) {
       const canPick = [...METERED].some(id => !chosen.includes(id) && inWindow(id));
       const box = document.createElement("div"); box.className = "scope-out";
@@ -1729,14 +1888,14 @@ stackTables();
     }
     // a share tops out at 100%, so its axis never rounds up past it
     // the two marked numbers are the table's windows, so they show even when that one week has no point on the line
-    const kThen = WEEKS - 5 - i0, kNow = WEEKS - 1 - i0, vThen = kThen >= 0 ? cmpA : null, vNow = lastA;
+    const kThen = viewEnd - 5 - i0, kNow = viewEnd - 1 - i0, vThen = kThen >= 0 ? cmpA : null, vNow = lastA;
     const ymax = Math.min(niceMax(Math.max(...vals, vThen ?? 0, vNow ?? 0, m.den ? 0.05 : 1) * 1.08, m.fmt === count ? [1, 2, 4, 8, 10] : undefined), m.fmt === pct ? 1 : Infinity);
     const xOf = k => L + (W - L - R) * (idx.length === 1 ? 0.5 : k / (idx.length - 1));
     const ms = msLayout(i0, W, !!opts.nameAll), MS_ROW = msRow(), msRows = opts.rows ?? ms.rows;
     const T = 12 + msRows * MS_ROW, Hh = H + msRows * MS_ROW;
     const x = xOf, y = v => T + (Hh - T - B) * (1 - v / ymax);
     const svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", `0 0 ${W} ${Hh}`); svg.setAttribute("role", "img");
-    svg.setAttribute("aria-label", `${m.title}, ${lastA == null ? "no data" : m.fmt(lastA)} over the last 4 weeks`);
+    svg.setAttribute("aria-label", `${m.title}, ${lastA == null ? "no data" : m.fmt(lastA)} ${state.custom ? "in the selected range" : "over the last 4 weeks"}`);
     const add = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; };
     [0, 0.5, 1].forEach(f => { const v = ymax * f; add("line", {x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "var(--grid)", "stroke-width": 1}); add("text", {x: L - 6, y: y(v) + 3, "text-anchor": "end"}).textContent = v === 0 && m.fmt !== pct ? "0" : m.fmt(v); });
     idx.forEach((wi, k) => {
@@ -1852,12 +2011,16 @@ stackTables();
     // back out of the group while the groups redraw
     groupsEl.before(filtersEl);
     renderScope();
-    const i0 = WEEKS - state.range;
-    rangeEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(+b.dataset.n === state.range)));
+    if (!state.custom) { viewEnd = WEEKS; viewStart = WEEKS - state.range; }
+    const i0 = viewStart, filteredRows = selectedRows();
+    document.getElementById("f-range-value").textContent = rangeLabel();
+    rangeEl.title = state.custom ? `${state.custom.from} to ${state.custom.to}` : rangeLabel();
+    document.getElementById("f-presets").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(!state.custom && +b.dataset.n === state.range)));
+    document.getElementById("f-reset").disabled = !state.custom && state.range === DEFAULT_RANGE && !state.sources.size && state.cat === "all";
     srcEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === "all" ? !state.sources.size : state.sources.has(b.dataset.id))));
     catEl.value = state.cat;
     const totals = weekTotals(r => srcOk(r) && catOk(r));
-    const inRange = rows.filter(r => r.w >= i0 && srcOk(r) && catOk(r));
+    const inRange = filteredRows.filter(r => r.w >= i0 && srcOk(r) && catOk(r));
     const nIn = inRange.reduce((a, r) => a + r.sessions, 0);
     document.getElementById("f-sum").textContent = nIn.toLocaleString() + (nIn === 1 ? " session" : " sessions");
 
@@ -1889,23 +2052,23 @@ stackTables();
     const pick = shown.find(g => g.id === state.picked) || shown[0];
     showGroup(pick.id);
     if (!nIn && rows.length) {
-      document.getElementById("grp-" + pick.id).insertAdjacentHTML("beforeend", `<button type="button" id="f-clear">Clear filters</button>`);
-      document.getElementById("f-clear").addEventListener("click", () => { state.sources.clear(); state.cat = "all"; state.range = DEFAULT_RANGE; render(); rangeEl.querySelector("[aria-pressed='true']").focus({preventScroll: true}); });
+      document.getElementById("grp-" + pick.id).insertAdjacentHTML("beforeend", `<div class="filter-empty"><p>No included sessions match these filters.</p><p class="def">${rows.reduce((n, r) => n + r.sessions, 0).toLocaleString()} sessions are available outside this selection.</p><button type="button" id="f-clear">Clear filters</button></div>`);
+      document.getElementById("f-clear").addEventListener("click", resetFilters);
     }
 
     const sun = i => sunOf(weeks[i]);
-    const windows = `${mon(weeks[WEEKS - 4])} – ${mon(sun(WEEKS - 1))} vs ${mon(weeks[WEEKS - 8])} – ${mon(sun(WEEKS - 5))}`;
+    const windows = viewEnd < 8 ? "Not enough complete weeks to compare" : `${mon(weeks[viewEnd - 4])} – ${mon(sun(viewEnd - 1))} vs ${mon(weeks[viewEnd - 8])} – ${mon(sun(viewEnd - 5))}`;
     document.getElementById("prod-meta").textContent = windows;
 
     // what you used AI for: respects time + source, not the work filter (so you can compare kinds)
-    const prevRows = state.range === 4 ? rows.filter(r => r.w >= i0 - state.range && r.w < i0 && srcOk(r)) : null;
-    const catRows = rows.filter(r => r.w >= i0 && srcOk(r));
+    const prevRows = !state.custom && state.range === 4 ? rows.filter(r => r.w >= i0 - state.range && r.w < i0 && srcOk(r)) : null;
+    const catRows = filteredRows.filter(r => r.w >= i0 && srcOk(r));
     const catTotal = catRows.reduce((a, r) => a + r.sessions, 0);
     const prevCat = prevRows && {total: prevRows.reduce((a, r) => a + r.sessions, 0)};
     if (prevCat) CATS.forEach(([c]) => prevCat[c] = prevRows.filter(r => r.c === c).reduce((a, r) => a + r.sessions, 0));
     bars(document.getElementById("cat-bars"), CATS.map(([id, label]) => ({id, label, n: catRows.filter(r => r.c === id).reduce((a, r) => a + r.sessions, 0)})).filter(x => x.n),
       catTotal, prevCat, id => { state.cat = state.cat === id ? "all" : id; render(); }, id => state.cat === id);
-    const srcRows = rows.filter(r => r.w >= i0 && catOk(r));
+    const srcRows = filteredRows.filter(r => r.w >= i0 && catOk(r));
     const srcTotal = srcRows.reduce((a, r) => a + r.sessions, 0);
     bars(document.getElementById("src-bars"), SOURCES.map(([id, label]) => ({id, label, n: srcRows.filter(r => r.s === id).reduce((a, r) => a + r.sessions, 0)})).filter(x => x.n), srcTotal, null, toggleSource, id => state.sources.has(id));
 
@@ -1928,16 +2091,16 @@ stackTables();
     const ptb = document.querySelector("#prod-table tbody"); ptb.innerHTML = "";
     const habit = t => ({briefed: t.briefable ? t.briefed / t.briefable : null, corr: t.prompts ? t.corrections / t.prompts : null,
       checked: t.build ? t.checked / t.build : null, restarts: t.sessions ? t.restarts / t.sessions : null});
-    const prodStats = [], inNow = w => w >= WEEKS - 4, inThen = w => w >= WEEKS - 8 && w < WEEKS - 4;
+    const prodStats = [], inNow = w => w >= viewEnd - 4, inThen = w => w >= viewEnd - 8 && w < viewEnd - 4;
     SOURCES.forEach(([src, label]) => {
-      const mine = rows.filter(r => r.s === src && r.sessions > 0);
+      const mine = filteredRows.filter(r => r.s === src && r.sessions > 0);
       if (!mine.length) return;
       const firstW = Math.min(...mine.map(r => r.w));
       const nIn = ws => mine.filter(r => ws(r.w)).reduce((a, r) => a + r.sessions, 0);
       const nowN = nIn(inNow), thenN = nIn(inThen);
       if (!nowN && !thenN) return;
       const enoughNow = nowN >= 10;
-      const comparable = firstW <= WEEKS - 8 && enoughNow && thenN >= 10;
+      const comparable = firstW <= viewEnd - 8 && enoughNow && thenN >= 10 && (!state.custom || (viewEnd - viewStart >= 8 && state.custom.from === isoDay(weeks[viewStart]) && state.custom.to === isoDay(sunOf(weeks[viewEnd - 1]))));
       const mixOf = ws => { const sel = mine.filter(r => ws(r.w)), n = sel.reduce((a, r) => a + r.sessions, 0); const m = {}; CATS.forEach(([c]) => m[c] = n ? sel.filter(r => r.c === c).reduce((a, r) => a + r.sessions, 0) / n : 0); return m; };
       const mixNow = mixOf(inNow), mixThen = mixOf(inThen);
       const hab = ws => sumRows(mine.filter(r => ws(r.w) && catOk(r)), KEYS);
@@ -1953,7 +2116,7 @@ stackTables();
         return `<td class="num">${f(v)} <span class="muted">(${d > 0 ? "+" : d < 0 ? "−" : ""}${Math.abs(d)})</span></td>`;
       };
       const tr = document.createElement("tr");
-      const note = !enoughNow ? `Only ${nowN} ${nowN === 1 ? "session" : "sessions"} in the last 4 weeks` : firstW > WEEKS - 8 ? `Data since ${mon(weeks[firstW])}; too new to compare` : !comparable ? `Too few sessions in the 4 weeks before to compare` : "";
+      const note = !enoughNow ? `Only ${nowN} ${nowN === 1 ? "session" : "sessions"} in the last 4 weeks` : firstW > viewEnd - 8 ? `Data since ${mon(weeks[firstW])}; too new to compare` : !comparable ? `Too few sessions in the 4 weeks before to compare` : "";
       tr.innerHTML = `<td>${label}${note ? `<span class="def">${note}</span>` : ""}</td><td class="num">${nowN}</td><td>${enoughNow ? uses : "—"}</td>` +
         hc("briefed", pct, "briefable") + hc("corr", per10) + hc("checked", pct, "build") + hc("restarts", pct);
       ptb.appendChild(tr);
@@ -1968,10 +2131,10 @@ stackTables();
     const ins = document.getElementById("cat-insight");
     const weakBrief = eligible.filter(p => p.briefed != null).sort((a, b) => a.briefed - b.briefed)[0];
     const weakCheck = eligible.filter(p => p.checked != null).sort((a, b) => a.checked - b.checked)[0];
-    const span = RANGES.find(r => r[0] === state.range)[1], low = p => p.label.toLowerCase();
-    document.getElementById("cat-meta").textContent = `Last ${span}`;
+    const span = rangeLabel(), low = p => p.label.toLowerCase();
+    document.getElementById("cat-meta").textContent = state.custom ? span : `Last ${span}`;
     ins.textContent = eligible.length < 2 || !weakBrief ? ""
-      : `Over the last ${span}, you ` + (weakCheck && weakCheck.c === weakBrief.c ? `brief and check least in ${low(weakBrief)} (${pct(weakBrief.briefed)}, ${pct(weakCheck.checked)}).`
+      : (state.custom ? `From ${span}, you ` : `Over the last ${span}, you `) + (weakCheck && weakCheck.c === weakBrief.c ? `brief and check least in ${low(weakBrief)} (${pct(weakBrief.briefed)}, ${pct(weakCheck.checked)}).`
       : weakCheck ? `brief least in ${low(weakBrief)} (${pct(weakBrief.briefed)}) and check least in ${low(weakCheck)} (${pct(weakCheck.checked)}).`
       : `brief least in ${low(weakBrief)} (${pct(weakBrief.briefed)}).`);
     stackTables(trendsEl);

@@ -105,6 +105,24 @@ def cube_problems(cube, end):
     repeated = len(keys) - len(set(keys))
     if repeated:
         problems.append(f"CUBE repeats {repeated} rows for the same week, app and kind of work, which double-counts them; a week and app in the cube replaces the same one in history.json")
+    for row in cube:
+        if "days" not in row:
+            continue
+        days = row["days"]
+        week = to_date(row["week"])
+        if not isinstance(days, list) or not week:
+            problems.append("CUBE daily totals must be a list within a valid week")
+            continue
+        dates = [to_date(str(day.get("date", ""))) if isinstance(day, dict) else None for day in days]
+        if any(day is None or not week <= day <= week + dt.timedelta(days=6) for day in dates) or len(dates) != len(set(dates)):
+            problems.append("CUBE daily dates must be unique and fall within their parent week")
+            continue
+        for key, value in row.items():
+            if not isinstance(value, (int, float)):
+                continue
+            values = [day.get(key, 0) for day in days]
+            if any(not isinstance(v, (int, float)) or v < 0 for v in values) or abs(sum(values) - value) > 1e-6:
+                problems.append(f"CUBE daily {key} totals do not match their weekly total")
     if not end:
         return problems
     end -= dt.timedelta(days=end.weekday())
@@ -229,7 +247,8 @@ def main():
     for i in REQUIRED_IDS:
         if f'id="{i}"' not in html:
             problems.append(f'missing section id="{i}"')
-    if 'id="plan"' not in html:
+    no_findings = bool(re.search(r'<div[^>]*id="part-2"[^>]*data-findings-state="none"', html))
+    if 'id="plan"' not in html and not no_findings:
         problems.append('missing the plan (section id="plan") at the end of part 2')
     tries, saves = html.count('<section class="try"'), html.count('class="try-saves"')
     if tries != saves:

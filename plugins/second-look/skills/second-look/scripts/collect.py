@@ -740,6 +740,8 @@ def data_scope(home, aggs, export_paths):
         row = {"id": sid, "state": "logs" if present else "not_found"}
         if sid == "claude_code" and present and at_edge:
             row["cut"] = oldest.date().isoformat()
+        if cov.get(sid):
+            row["latest_session"] = cov[sid]["last"]
         sources.append(row)
     for sid, path in (("claude_ai", export_paths.get("claude")), ("chatgpt", export_paths.get("chatgpt")),
                       ("gemini_web", export_paths.get("gemini"))):
@@ -747,10 +749,11 @@ def data_scope(home, aggs, export_paths):
         if path and os.path.exists(path):
             c = cov.get(sid)
             sources.append({"id": sid, "state": "export",
-                            "to": (c or {}).get("last") or dt.date.fromtimestamp(os.path.getmtime(path)).isoformat()})
+                            "to": (c or {}).get("last") or dt.date.fromtimestamp(os.path.getmtime(path)).isoformat(),
+                            "latest_session": (c or {}).get("last")})
         else:
             sources.append({"id": sid, "state": "missing"})
-    return {"retention_days": retention, "oldest_claude_log": oldest.date().isoformat() if oldest else None,
+    return {"through": now.date().isoformat(), "retention_days": retention, "oldest_claude_log": oldest.date().isoformat() if oldest else None,
             "at_retention_edge": at_edge, "sources": sources}
 
 
@@ -910,14 +913,14 @@ def _usage_fields(m):
 
 
 def session_cube(sessions):
-    """Additive weekly rows by source and kind of work, so the report can filter and recompute."""
+    """Additive weekly rows with daily totals for exact custom-date filtering."""
     keys = ("sessions", "prompts", "briefable", "briefed", "corrections", "refinements", "build", "checked",
             "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "delegated_research",
             "delegated_check", "delegated_build", "read_heavy",
             "metered", "usage", "long_usage", "start_tokens", "logged", "unattended", "setups", "parallel", "repeats")
-    cube = collections.defaultdict(lambda: dict.fromkeys(keys, 0))
+    daily = collections.defaultdict(lambda: dict.fromkeys(keys, 0))
     for r in sessions:
-        row = cube[(week_of(r["start"]), r["source"], r["category"])]
+        row = daily[(r["start"].astimezone().date().isoformat(), r["source"], r["category"])]
         row["sessions"] += 1
         row["prompts"] += r["prompts"]
         row["briefable"] += r["briefable"]
@@ -947,6 +950,14 @@ def session_cube(sessions):
             row["usage"] += round(r["usage"])
             row["long_usage"] += round(r["usage"]) if r["long"] else 0
             row["start_tokens"] += r["start_tokens"]
+    cube = collections.defaultdict(lambda: {**dict.fromkeys(keys, 0), "days": []})
+    for (day, source, category), values in sorted(daily.items()):
+        date = dt.date.fromisoformat(day)
+        week = (date - dt.timedelta(days=date.weekday())).isoformat()
+        row = cube[(week, source, category)]
+        for key in keys:
+            row[key] += values[key]
+        row["days"].append({"date": day, **values})
     return [{"week": w, "source": s, "category": c, **v} for (w, s, c), v in sorted(cube.items())]
 
 
@@ -1163,6 +1174,12 @@ def main():
         "unused_skills_this_window": sorted(s for s in skills if used[s] == 0),
         "context_files": context_files(args.home),
         "coverage": coverage(aggs),
+    }
+    result["preflight"] = {
+        "status": "ready" if any(a.sessions for a in aggs) else "no_session_evidence",
+        "from": since.astimezone().date().isoformat(),
+        "to": dt.datetime.now().astimezone().date().isoformat(),
+        "available_skill_files": len(skills),
     }
     metered, limit_hits = usage_by_session(args.home, since)
     sessions = sessions_of(aggs, metered, scheduled_prompts(args.home))

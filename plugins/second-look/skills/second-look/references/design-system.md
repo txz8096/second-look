@@ -105,7 +105,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   direction the line moved ("Up: you typed more rules by hand."). It says what the measure did,
   never why. With the time filter on 4 weeks the earlier point is off the chart, so it reads "Up
   from the 4 weeks before: …". A flat chart has none. A chart with no line has only its reason.
-- Time, App and Work are always on show: Time, the session count and the View data coverage link on the first row, App and Work on the next. The first question card with data opens first.
+- Time, App and Work are always visible. Time uses a 142px dropdown with 4 weeks, 3 months, 6 months, 12 months and Custom range (From/To). Keep the controls, Clear filters and right-aligned session count in one desktop row where space permits; View data coverage follows underneath. Phones keep Time/count together, then wrap App and Work/Clear with 44px targets. Clear is disabled in the report default selection. Presets apply immediately; custom dates apply together only when valid. Dismissal discards drafts and restores focus. Keep app/work selections when time changes. Use the collector's nested daily totals for partial weeks; legacy weekly-only rows require complete weeks and an explanatory validation message. Never prorate weekly history. The first question card with data opens first.
 - The time filter opens on the range the data covers: 3 months, 6 months or 12 months.
 - Every chart fills its card: the script sets the viewBox from the card's width and redraws when the page's width changes, so text and height stay the same.
 - Each group opens by answering its question in plain words (`say` and `opens` in `GROUPS`), then names at most two changes from `READS` and says "The rest held steady." when that's true. It compares the last 4 weeks with the 4 before, and says "lately" for that. Metric names stay on the charts.
@@ -228,3 +228,27 @@ The available `--chart-*` palette is orange `#c44601`, bright orange `#f57600`, 
 Overview stacked activity charts show a compact tooltip on hover, keyboard focus or tap: week, total sessions, and directly labeled category counts. Use the existing neutral surface, text, border and radius tokens; no extra category colors are needed in the tooltip. Keep it within the viewport, allow hovering over it, dismiss with Escape or an outside tap, and toggle it with tap or Enter/Space. Overview has no **View chart data** disclosure. Its equivalent table remains visually hidden for screen readers and becomes visible in print. Across all chart types and screens, do not add a persistent **View chart data** link or disclosure by default. Add separate data access only when a clear user need calls for it; keep essential values accessible through direct labels, accessible tooltips or equivalent screen-reader data. All tables have captions and row and column headers; disclosed tables retain keyboard access and their own horizontal scroll area. Missing data remains missing; do not turn it into zero. `scripts/prerender.py` preserves these tables and the activity chart in script-blocked reports.
 
 The colors are not independently certified for every pairing: essential graphical boundaries need 3:1, ordinary text 4.5:1, and category identity must have a non-color cue. Solid fills do not meet every surface or adjacency threshold. Keep the readable data-table alternative: it conveys the same categories, dates and values without requiring the graph or its colors to be distinguished. This does not mean the fills universally reach 3:1. Run `scripts/check_chart_palette.py` and verify the rendered light/dark, narrow and filtered states before changing the palette.
+
+
+## Conditional report states
+
+The default sample keeps its supported summary, activity chart and all three Overview
+destinations after an export update. A new snapshot recomputes them; it omits duplicate import
+confirmation. The skills destination is not replaced with coverage.
+
+Verified absence of saved skills sets `#part-3[data-skills-state="none"]` and uses the built-in
+`.skills-empty` component: explanation, optional relevant repeat-work link, three benefits,
+Explore skills (skills.sh and Anthropic skills), then one optional authoring guide. Resource
+rows reuse `.dests` / `.dest`, have dividers between rows and an enclosing border. The benefit
+reads “Reuse across AI apps”; setup and support vary by app. Delete sample skill results and
+plan links, and replace the scope line with measured facts. Not-included and unreadable skill
+files use their own honest copy, without claiming verified absence.
+
+`#part-2[data-findings-state="none"]` uses `.briefs-empty` for adequate evidence with no
+recommended fix; remove sample cards and plan. Sparse evidence gets a scope-specific limit,
+not a claim that everything is good. No session evidence produces an assistant preflight,
+before a saved findings report. Only offer a skills check when readable saved skill files exist.
+Keep examples separate. Rich permission and parse diagnostics remain deferred pending measured
+collector support. Latest included session dates come from parsed records; a file timestamp
+never establishes source coverage. Filtered-empty states retain the active controls and a
+reset, and do not become report-wide absence claims.

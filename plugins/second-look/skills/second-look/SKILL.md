@@ -56,7 +56,7 @@ message, so quote only what a finding needs.
 |---|---|
 | `profile.md` | Name, what they build, focus areas, where their context file and skills live |
 | `log.md` | One entry per review: snapshot, findings, the fixes they picked and how each will be judged |
-| `history.json` | Weekly habit rows, kept longer than the apps keep their own logs |
+| `history.json` | Weekly habit rows with daily totals, kept longer than the apps keep their own logs |
 | `exports/claude/conversations.json`, `exports/chatgpt/conversations.json`, `exports/gemini/MyActivity.json` | Data exports for the 12-month view |
 | `reports/` | Saved reports, when they aren't published as artifacts |
 | `schedule.json` | Recurring review setting: on or off, days between reviews, how they run, date of the last review, date of the last report they opened |
@@ -292,7 +292,7 @@ and still works on current models.
    `--claude-export ~/.second-look/exports/claude/conversations.json` and
    `--chatgpt-export ~/.second-look/exports/chatgpt/conversations.json` and
    `--gemini-export ~/.second-look/exports/gemini/MyActivity.json` when those files
-   exist. It returns `cube` (weekly rows by source and kind of work), `coverage`,
+   exist. It returns `cube` (weekly rows by source and kind of work, each with additive daily `days` totals), `coverage`,
    `label_samples` and an `automation` block matched across the whole year. Spot-check the
    labels against the samples before trusting a number.
    Merge the cube into `~/.second-look/history.json`, keeping older weeks the apps have
@@ -455,8 +455,8 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
   - `CUBE`: replace `sampleCube()` with the collector's `cube` array, plus the older weeks kept
     in `history.json`, pasted as is. A week and app in the cube replaces the same week and app
     in history, so nothing counts twice. Rows keep the collector's `week`, `source` and `category`
-    keys. Weeks outside the 52 are left out.
-  - `SCOPE`: the collector's `scope` (see "Data scope").
+    keys and nested `days` totals. Never discard the daily totals when merging history. Weeks outside the 52 are left out.
+  - `SCOPE`: the collector's `scope` (see "Data scope"), including `through` and measured `latest_session` dates. Never infer a session date from a file timestamp.
   - `MILESTONES`: dated changes to mark on every chart, like a fix they started from
     `log.md`, as `[{"week": "YYYY-MM-DD", "label": "..."}]`. Labels stay under 25 characters, in
     plain words. Use `[]` when there are none.
@@ -643,11 +643,22 @@ steps to add the data. Write none of this by hand.
   claude.ai `export` only when they uploaded `conversations.json`.
 - Keep "no sessions" apart from "can't see". A app they didn't use yet is an empty track with
   no card. Only data second look can't reach is dashed.
-- **Someone new.** When they have no skills of their own (second look doesn't count) and nothing
-  installed needs fixing, `#part-3` is its heading and one line: "You haven't saved any skills yet. A
-  skill is a saved set of steps the AI follows the same way each time." Delete "Skills to fix", "Worth
-  a look" and both skill tables, and drop their links from the plan. For everyone, write fixes only for
-  apps they use.
+- **Someone new.** Distinguish verified absence, files not included and unreadable files. Set
+  `#part-3` to `data-skills-state="none"` only after successfully checking the applicable skill
+  folders and finding no saved skills. Keep the built-in `.skills-empty` component, replace the
+  scope line with what was actually checked, and remove the sample result sections, skill
+  tables, fixes and their plan links. The component explains skills, links to skills.sh and
+  Anthropic skills for discovery/installation, then offers one optional authoring guide.
+  Preserve its platform-inclusive “Reuse across AI apps” copy. Link repeat work to `#part-2`
+  only when that page contains relevant supported evidence; otherwise omit that link.
+  If files were not included, say “No saved skills were included in this review.” If unreadable,
+  say “This review couldn’t read the saved skills.” Explain how to include them or check access
+  in their assistant; neither state proves absence. Keep available session findings.
+- **No actionable findings.** When adequate evidence reveals nothing worth fixing, set
+  `#part-2` to `data-findings-state="none"`. Keep its heading, verified scope and built-in
+  `.briefs-empty` result. Delete the sample cards, Try blocks, plan and their links elsewhere;
+  do not invent recommendations. If evidence is sparse instead, explain that limit, retain
+  supported observations and charts, and omit weak claims. These are different outcomes.
 - **First review.** Same report, no extra sections. "Following up on your last review" is deleted, and each chart shows whatever
   weeks exist. A first review usually still has earlier data: Claude Code keeps 30 days, Codex
   and Cursor keep everything, so compare with the window before from logs whenever it exists.
@@ -747,3 +758,40 @@ repeat from the log stops appearing after its fix, say so in "Following up on yo
 - Tables for comparisons. Bullets only for list-shaped content.
 
 On Overview, keep “What you use AI for”. It stacks weekly session counts by kind of work for the last 13 complete weeks using the report cube. Keep its link to Data coverage in Settings.
+
+
+## Approved report states and filters
+
+Before generating a findings report, inspect the current-window collector's `preflight` (or
+establish the same facts from available cloud evidence). `no_session_evidence` produces a
+source check in the assistant, not a saved findings report: name the period, what was checked,
+which sources were missing or inaccessible, and how to include useful existing history.
+Use “No session evidence was available for this review” when absence is not established.
+A missing app path or unavailable search never proves no activity elsewhere. Show “Your skills
+can still be checked” and an actionable check only when at least one saved skill file is
+available and readable. Omit both when none exist or none are included. Unreadable files need
+access recovery. Offer the separate labeled sample report only as an optional example;
+never mix its records or findings with the user's data. Do not run the findings report checker
+on a preflight message. Retain older included history when only the recent window is quiet.
+
+Time is a dropdown with 4 weeks, 3 months, 6 months, 12 months and a custom From/To range.
+Keep Time, App, Work, Clear filters and the right-aligned session count in one desktop row when
+space permits; coverage goes underneath. Phones keep Time/count together and wrap the original
+App and Work controls with 44px touch targets. Clear resets the report default date range,
+All apps and All work. Presets apply immediately; custom dates apply together only when valid.
+Escape or outside dismissal abandons draft dates. Both dates are required and From cannot
+follow To; the saved report bounds the available dates. The collector's daily totals make
+partial-week counts exact. Legacy weekly-only history supports complete weeks; the UI explains
+why an unsupported partial-week range cannot apply. Never split or prorate real weekly totals.
+Keep app/work selections when time changes. Counts, charts and share tables use the same
+selection. Filtered-empty copy says no included sessions match, names the verified outside
+count and offers Clear filters. It does not imply missing coverage or no activity elsewhere.
+
+An updated export creates a new report snapshot. Recompute its review summary and activity
+chart from included evidence and retain the standard Briefs & setup, Skills, Habits & usage
+Overview destinations. Omit the duplicate history-update confirmation card. Changed source
+coverage alone does not establish changed habits. Keep a supported current rate when a
+comparison is ineligible, without an Up/Down claim. Unsupported measures and absent fields
+stay unavailable, never 0%; another export with the same fields cannot restore them.
+Permission and partial-parse diagnostics are deferred: use only today's measured source
+statuses, never copy the richer diagnostic mockup's fixture counts into a real report.
