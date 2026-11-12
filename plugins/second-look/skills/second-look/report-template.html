@@ -187,13 +187,6 @@ section { display: grid; gap: 14px; }
 .work-mix-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .work-mix-legend i { width: 10px; height: 10px; border-radius: 2px; }
 .chart-mark { background-color: var(--chart-fill); }
-.chart-data { grid-row: 6; min-width: 0; margin-top: 12px; }
-.chart-data > summary { display: list-item; list-style: disclosure-closed; width: fit-content; min-height: 32px; padding: 4px 0; color: var(--muted); font-size: 14px; }
-.chart-data[open] > summary { list-style: disclosure-open; }
-.chart-data > summary:focus-visible, .chart-data .tbl:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
-.chart-data .tbl { margin-top: 8px; }
-.chart-data caption { padding: 12px 16px; text-align: left; font-weight: 600; }
-.chart-data th { font-weight: 500; }
 .chart-values { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .work-mix-tooltip { position: fixed; z-index: 70; display: grid; gap: 8px; width: 280px; max-width: calc(100vw - 24px); max-height: calc(100dvh - 88px); overflow: auto; box-sizing: border-box; padding: 12px; background: var(--surface); color: var(--fg); border: 1px solid var(--line-strong); border-radius: var(--r-8); box-shadow: 0 4px 12px var(--drawer-shadow); font: 14px/20px var(--sans); text-align: left; }
 .work-mix-tooltip[hidden] { display: none; }
@@ -361,7 +354,6 @@ button.grp-tile[aria-pressed="true"], button.grp-tile[aria-pressed="true"]:hover
 .chart > .gapnote { grid-row: 3; margin-top: 4px; }
 .chart > .chart-plot, .chart > .scope-out { grid-row: 4; margin-top: 10px; }
 .chart > .grp-read { grid-row: 5; margin-top: 8px; }
-.chart:has(> .chart-data) { grid-row: span 6; }
 .chart-head h3 { font-size: 16px; line-height: 1.3; }
 .chart-plot { position: relative; }
 button.more-charts { display: none; }
@@ -490,6 +482,10 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .side-about ul { max-height: none; overflow: visible; }
   .work-mix-tooltip { display: none; }
   .chart-values { position: static; width: auto; height: auto; overflow: visible; clip-path: none; white-space: normal; }
+  .chart:has(> .chart-values) { grid-row: span 6; }
+  .chart > .chart-values { grid-row: 6; }
+  .chart-values caption { padding: 12px 16px; text-align: left; font-weight: 600; }
+  .chart-values th { font-weight: 500; }
 }
 
 @media (max-width: 680px) {
@@ -1096,11 +1092,10 @@ stackTables();
   };
   const chartPaint = color => `--chart-fill:var(--chart-${color})`;
   const categoryPaint = id => chartPaint(CHART_CATEGORIES[id] || CHART_CATEGORIES.other);
-  function chartData(title, headers, values, disclosed = true) {
-    const details = document.createElement(disclosed ? "details" : "div"); details.className = disclosed ? "chart-data" : "chart-values";
-    details.innerHTML = `<summary>View chart data</summary><div class="tbl" tabindex="0" role="region" aria-label="${esc(title)} data"><table><caption>${esc(title)}</caption><thead><tr>${headers.map(h => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${values.map(row => `<tr>${row.map((cell, i) => i ? `<td>${esc(cell)}</td>` : `<th scope="row">${esc(cell)}</th>`).join("")}</tr>`).join("")}</tbody></table></div>`;
-    if (!disclosed) { details.querySelector("summary").remove(); details.querySelector(".tbl").removeAttribute("tabindex"); }
-    return details;
+  function chartData(title, headers, values) {
+    const data = document.createElement("div"); data.className = "chart-values";
+    data.innerHTML = `<div class="tbl" role="region" aria-label="${esc(title)} data"><table><caption>${esc(title)}</caption><thead><tr>${headers.map(h => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${values.map(row => `<tr>${row.map((cell, i) => i ? `<td>${esc(cell)}</td>` : `<th scope="row">${esc(cell)}</th>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    return data;
   }
 
   const workMix = document.getElementById("work-mix");
@@ -1132,7 +1127,7 @@ stackTables();
       }).join("");
       workMix.innerHTML = `<div class="work-mix-legend">${legend}</div><div class="work-mix-scroll"><div class="work-mix-bars">${bars}</div></div>`;
       const active = categories.map((id, i) => i).filter(i => counts.some(week => week[i]));
-      workMix.appendChild(chartData("Sessions per week by kind of work", ["Week", ...active.map(i => labels[i]), "Total"], counts.map((week, i) => [date.format(weeks[WEEKS - counts.length + i]), ...active.map(j => week[j]), week.reduce((a, b) => a + b, 0)]), false));
+      workMix.appendChild(chartData("Sessions per week by kind of work", ["Week", ...active.map(i => labels[i]), "Total"], counts.map((week, i) => [date.format(weeks[WEEKS - counts.length + i]), ...active.map(j => week[j]), week.reduce((a, b) => a + b, 0)])));
       const tooltip = document.createElement("div");
       tooltip.id = "work-mix-tooltip"; tooltip.className = "work-mix-tooltip";
       tooltip.setAttribute("role", "tooltip"); tooltip.hidden = true;

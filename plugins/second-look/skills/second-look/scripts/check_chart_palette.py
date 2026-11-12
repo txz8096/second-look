@@ -33,7 +33,7 @@ def problems(source):
         ratio = contrast(colors[name], ink)
         if ratio < 4.5:
             issues.append(f"{name} and its specified text pairing have {ratio:.2f}:1; need 4.5:1")
-    for required in ('function chartData(', '<summary>View chart data</summary>',
+    for required in ('function chartData(', '.chart-values {',
                      'workMix.appendChild(chartData(', 'card.appendChild(chartData(',
                      'scope="row"', 'scope="col"', '<caption>'):
         if required not in source:
