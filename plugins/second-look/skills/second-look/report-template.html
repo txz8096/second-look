@@ -206,7 +206,6 @@ section { display: grid; gap: 14px; }
 .last-groups { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 12px; align-items: start; }
 .last-group { display: grid; min-width: 0; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-14); }
 .last-group h4 { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px; border-radius: 13px 13px 0 0; background: var(--accent-soft); color: var(--accent); font-size: 14px; font-weight: 600; letter-spacing: 0; line-height: 1.4; }
-.last-group h4 svg { flex: none; width: 16px; height: 16px; }
 .last-fix + .last-fix { border-top: 1px solid var(--line); }
 details.last-fix > summary { grid-template-columns: minmax(0, 1fr) auto; padding: 16px; }
 details.last-fix > summary .chev { grid-column: 2; grid-row: 1; margin-top: 2px; }
@@ -654,18 +653,18 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 </section>
 
 <section id="last-cycle" data-needs-prior aria-labelledby="last-cycle-h">
-  <h3 id="last-cycle-h">Did the fixes from your last review work?</h3>
+  <h3 id="last-cycle-h">Following up on your last review</h3>
   <div class="last-groups">
     <div class="last-group">
-      <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Keep doing these</h4>
-      <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Confirm the plan before editing</span><span class="fix-result">Too soon to tell</span></span></summary>
+      <h4>Keep doing these</h4>
+      <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Confirm the plan before editing</span><span class="fix-result">Too soon to tell, 2 weeks in</span></span></summary>
         <p>You’re correcting the AI about as often as before, at 1.2 per 10 messages. The fix is only 2 weeks old.</p></details>
-      <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Send research comparisons to a <span class="term" tabindex="0" aria-describedby="def-helper-last">helper agent<span class="term-card" role="tooltip" id="def-helper-last">A helper agent works on the side and brings back only the result, so your main session stays short.</span></span></span><span class="fix-result">Use rose from 11% to 18%</span></span></summary>
-        <p>Sessions crowded with lookups stayed about the same.</p></details>
+      <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Send research comparisons to a <span class="term" tabindex="0" aria-describedby="def-helper-last">helper agent<span class="term-card" role="tooltip" id="def-helper-last">A helper agent works on the side and brings back only the result, so your main session stays short.</span></span></span><span class="fix-result">You used it more: 11% to 18%</span></span></summary>
+        <p>You used a helper agent in 18% of Claude Code and Codex sessions, up from 11% at your last review. Sessions crowded with lookups stayed about the same.</p></details>
     </div>
     <div class="last-group">
-      <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>Changed since your last review</h4>
-      <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Brief before big prototype tasks</span><span class="fix-result">Not tried yet, so it’s smaller now</span></span></summary>
+      <h4>Try more</h4>
+      <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Brief before big prototype tasks</span><span class="fix-result">Not tried yet. Now only for long prototypes</span></span></summary>
         <p>It’s only for longer prototype sessions now. It’s fix 2 in your plan.</p></details>
     </div>
   </div>

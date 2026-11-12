@@ -511,11 +511,11 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 
 **App bar and sidebar.** Set the review's date in `.report-date`. Locally, once the report is saved in `~/.second-look/reports/` as `<end-date>.html`, run `python3 scripts/report_menu.py <report.html>`. It fills the menu in every saved report, so they can all reach each other, and shows a plain label when there's only one. On claude.ai, replace everything between the `report-menu` comments with `<p class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25<span class="report-year">, 2026</span></span></p>`, because an artifact has no folder of saved reports. Keep the Feedback link (`#report-issue`, https://github.com/txz8096/second-look/issues/new) and the light and dark switch (`#theme-btn`) as they are. Keep sidebar labels free of counts or badges. On desktop keep the sidebar pinned below the app bar and sized to the viewport, with its method, Guidance and references, and About links at the viewport bottom. Scroll long reference lists inside the sidebar, so the report never has to be scrolled to reach About. On phones it remains a viewport-height drawer with the same pinned footer.
 
-**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then "Did the fixes from your last review work?" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
+**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then "Following up on your last review" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
 
 **How you brief AI and set up your apps** (`#part-2`). A headline with the biggest finding that
-links to the plan. If a much quicker fix goes first, the headline says so. "Did the fixes from your last review work?" (`#last-cycle`) sits on the Overview, only when an
-earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Changed since your last review" (Revise) or "Stopped" (Drop). Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result of five words or so with the number when there is one ("Use rose from 11% to 18%", "Too soon to tell"), and what changed, with its window, in the fold. All fixes start collapsed. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
+links to the plan. If a much quicker fix goes first, the headline says so. "Following up on your last review" (`#last-cycle`) sits on the Overview, only when an
+earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Try more" (Revise) or "You can stop these" (Drop), without heading icons. Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result with the number when there is one ("You used it more: 11% to 18%", "Too soon to tell, 2 weeks in", "Not tried yet. Now only for long prototypes"). Put what changed, with its window, in the fold. Name what a percentage measures and which apps it covers in the result or its expanded explanation. All fixes start collapsed. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
 biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the apps as
 plain text, including every app its evidence names, and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
 matters; when you have one, their own prompt quoted in the card; an optional collapsed "Which apps have which rules". Then the fix in the same
@@ -648,7 +648,7 @@ steps to add the data. Write none of this by hand.
   skill is a saved set of steps the AI follows the same way each time." Delete "Skills to fix", "Worth
   a look" and both skill tables, and drop their links from the plan. For everyone, write fixes only for
   apps they use.
-- **First review.** Same report, no extra sections. "Did the fixes from your last review work?" is deleted, and each chart shows whatever
+- **First review.** Same report, no extra sections. "Following up on your last review" is deleted, and each chart shows whatever
   weeks exist. A first review usually still has earlier data: Claude Code keeps 30 days, Codex
   and Cursor keep everything, so compare with the window before from logs whenever it exists.
 
@@ -735,7 +735,7 @@ Bets: <fix>: track <metric>; keep if <rule>; check <date>   (one line per fix)
 
 The next review reads the open boxes. If a finding shows up in three reviews running, say
 so and suggest a structural fix (a hook, a skill, a template) in place of more advice. When a
-repeat from the log stops appearing after its fix, say so in "Did the fixes from your last review work?".
+repeat from the log stops appearing after its fix, say so in "Following up on your last review".
 
 ## Rules
 
