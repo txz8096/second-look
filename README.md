@@ -2,7 +2,7 @@
 
 **Performance review for your AI workflow.**
 
-Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current.
+Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try.
 
 [Website](https://txz8096.github.io/second-look/) ·
 [Sample report](https://txz8096.github.io/second-look/sample-report.html) ·
@@ -35,7 +35,7 @@ Each finding points to evidence from your sessions and gives you a change to try
 
 Open Claude Code, Codex, or Cursor and paste this prompt.
 
-> Install second look from [github.com/txz8096/second-look](https://github.com/txz8096/second-look)
+> Install Second Look from [github.com/txz8096/second-look](https://github.com/txz8096/second-look)
 
 <a id="claudeai"></a>
 
@@ -44,7 +44,7 @@ Open Claude Code, Codex, or Cursor and paste this prompt.
 1. Download [`second-look.zip`](https://github.com/txz8096/second-look/releases/latest/download/second-look.zip).
 2. In claude.ai, turn on code execution. Open **Customize → Skills**, click **+**,
    choose **Create skill → Upload a skill**, and upload the ZIP.
-3. Turn on chat search and memory so second look can read past chats and remember your
+3. Turn on chat search and memory so Second Look can read past chats and remember your
    profile.
 
 A review started in claude.ai covers your claude.ai chats. To include ChatGPT or
@@ -54,7 +54,7 @@ Gemini history, [add browser history](#add-your-claudeai-chatgpt-and-gemini-hist
 
 ### Run your first review
 
-Ask for **“a second look”** or type `/second-look` in Claude Code. The first
+Ask for **“a Second Look”** or type `/second-look` in Claude Code. The first
 review starts with four short setup questions. You can narrow the scope by
 asking for “just my Cursor sessions” or “since Oct 1.” Reviews use your existing AI quota.
 
@@ -66,7 +66,7 @@ another cadence. [Scheduling options](#faq) depend on where you run the skill.
 <details>
 <summary>Installer instructions for assistants</summary>
 
-If a user asks you to install second look, follow these steps. Don't skip the first two.
+If a user asks you to install Second Look, follow these steps. Don't skip the first two.
 
 1. Run the installer in check mode. It changes nothing.
 
@@ -85,7 +85,7 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
    ```
 
 4. Tell the user what was installed and where, and that they can start a review by asking
-   for "a second look" or typing `/second-look` in Claude Code. Mention that adding their
+   for "a Second Look" or typing `/second-look` in Claude Code. Mention that adding their
    claude.ai, ChatGPT and Gemini exports is optional ([add browser history](#add-your-claudeai-chatgpt-and-gemini-history)).
 
 </details>
@@ -97,7 +97,7 @@ If a user asks you to install second look, follow these steps. Don't skip the fi
 
 ## Coverage
 
-| Source | How second look reads it |
+| Source | How Second Look reads it |
 |---|---|
 | **CLI and IDE** | Scans local logs from Claude Code, Codex, Cursor, and Antigravity. Start the review from Claude Code, Codex, or Cursor. |
 | **Web apps** | Add JSON exports from claude.ai, ChatGPT, and Gemini to a local review. [Add browser history](#add-your-claudeai-chatgpt-and-gemini-history). |
@@ -140,7 +140,7 @@ To file one by hand instead, put `conversations.json` in `~/.second-look/exports
 
 - **Local collection with zero network requests.** The Python scripts read logs and exports on your computer and local reviews save reports in `~/.second-look/`. Your assistant processes the review through your model provider under your existing account settings.
 - **Automatic redaction.** Pattern matching removes common secrets such as API keys, tokens, and passwords before quoting sessions. Read the report before sharing it.
-- **No extra account or infrastructure.** second look uses the assistant you already have and has no server of its own.
+- **No extra account or infrastructure.** Second Look uses the assistant you already have and has no server of its own.
 
 <details>
 <summary>Inspect what the collector reads</summary>
@@ -175,7 +175,7 @@ claude.ai, ChatGPT and Gemini (the web app) are read from data exports you downl
 cover sessions present in the supplied exports. Gemini's export has no conversation boundaries, so its
 sessions are grouped by time and its numbers are estimates. Antigravity support is new and
 built on an undocumented file format, so a release that changes it can hide your sessions
-until second look is updated.
+until Second Look is updated.
 </details>
 
 <details>
@@ -200,7 +200,7 @@ skill and config files for the skills check. Sources it can't open are marked "N
 <summary><b>Where does it run, and is anything uploaded?</b></summary>
 
 It runs on your machine, and reports are saved in `~/.second-look/`. Nothing goes to second
-look, because there's no second look server. The review runs inside your assistant, so what
+look, because there's no Second Look server. The review runs inside your assistant, so what
 it reads goes to your model provider like any other message you send, under your existing
 account settings. See [Privacy](#privacy).
 </details>
@@ -242,7 +242,7 @@ one. Name a narrower scope, like "my Cursor sessions", if that's all you want.
 
 Yes, if you say yes after your first report. In the Claude desktop app or the Codex app, a
 scheduled task runs the full review on your computer. In a terminal, a small daily job runs
-it in the background and tells you when the report is ready. Either way, ask for a second look
+it in the background and tells you when the report is ready. Either way, ask for a Second Look
 to open the finished report. In Cursor you get a reminder to start the review. For Antigravity history,
 set up reviews from Claude Code, Codex or Cursor on the same computer. Every scheduled review includes Antigravity sessions and your exports, and the
 notification tells you when an export is over 90 days old. Each run

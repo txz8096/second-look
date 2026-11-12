@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check a second look report against the second look design system before publishing.
+"""Check a Second Look report against the Second Look design system before publishing.
 
 Usage: python3 check_report.py REPORT.html [--template report-template.html]
 Exit 0 when it passes; prints each problem and exits 1 otherwise.
@@ -67,7 +67,7 @@ SOURCES = {"claude_ai", "claude_code", "codex", "cursor", "antigravity", "chatgp
 LINT = [
     (r"(?<![\w./-])(crucial|robust|seamless|groundbreaking|transformative|vibrant|leverage|synergy|paramount|multifaceted|myriad|delve|tapestry)(?![\w/-]|\.\w)", "a banned word"),
     (r"\bnot just\b", "\"not just\" phrasing; state the point"),
-    (r"\bthe coach\b", "say second look"),
+    (r"\bthe coach\b", "say Second Look"),
     (r"(?<![\w./-])(?:chats?|conversations?)(?![\w/-]|\.\w)", "say session"),
     (r"(?<![\w./-])tokens?(?![\w/-]|\.\w)", "say usage, or describe the size"),
     (r"(?<![\w./-])cycles?(?![\w/-]|\.\w)", 'say "since your last review", or "last 4 weeks" for a 4-week number'),
@@ -241,7 +241,7 @@ def main():
     if FONT_LINK not in html:
         problems.append("missing the Google Fonts link for Familjen Grotesk and IBM Plex Mono")
     if 'class="brand-logo"' not in html:
-        problems.append("missing the second look logo in the header")
+        problems.append("missing the Second Look logo in the header")
     if 'rel="icon"' not in html:
         problems.append("missing the favicon link from the template's <head>")
     for i in REQUIRED_IDS:

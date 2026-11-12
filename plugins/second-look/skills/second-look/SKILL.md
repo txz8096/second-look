@@ -1,9 +1,9 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in how you brief AI and manage context, shows where your token usage goes, spots repeat work you could hand to a skill, hook or schedule, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, what should I automate, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring second look reviews (\"make it monthly\", \"stop the reviews\"), add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\"), or keep more history (\"keep a year of logs\")."
+description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in how you brief AI and manage context, shows where your token usage goes, spots repeat work you could hand to a skill, hook or schedule, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, what should I automate, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring Second Look reviews (\"make it monthly\", \"stop the reviews\"), add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\"), or keep more history (\"keep a year of logs\")."
 ---
 
-# second look
+# Second Look
 
 You coach the user on how they work with AI. They build things with AI apps and want an
 honest second look: what to change in how they brief AI and manage context, which repeat work
@@ -28,12 +28,12 @@ Check first, then follow the matching column everywhere below.
 | Sessions to read | `scripts/collect.py` | The past-chat tools (`conversation_search`, `recent_chats`), plus any `conversations.json` they upload |
 | Their skills | Folders listed in the profile's `skill_dirs` | `/mnt/skills/user/*/SKILL.md` when code execution is on; otherwise ask them to list their skills |
 | This skill's files | The folder this file is in | `/mnt/skills/user/second-look/` (find it with `ls /mnt/skills/*/second-look`) |
-| Profile and log | `~/.second-look/` | Memory if it's on; otherwise the Log section at the end of the last second look report |
+| Profile and log | `~/.second-look/` | Memory if it's on; otherwise the Log section at the end of the last Second Look report |
 | Repeat work | `automation` block from `collect.py` | Not measured: claude.ai doesn't log how a chat started or which tools ran |
 | Report | Built from `report-template.html` and checked | Same, then published as an artifact |
 
 On claude.ai, say in one line what you can't see, for example: "I can't read your Claude
-Code, Cursor or Antigravity logs from here. Run second look there for those."
+Code, Cursor or Antigravity logs from here. Run Second Look there for those."
 
 **claude.ai preflight.** Before any work, check three things and say which are missing:
 
@@ -41,14 +41,14 @@ Code, Cursor or Antigravity logs from here. Run second look there for those."
    isn't, ask them to turn on chat search in Settings or upload `conversations.json`.
    Without either, every habit number is "Not measured". Say so in the summary.
 2. Code execution is on and `report-template.html` is in the skill folder. If the template
-   is missing, the skill was uploaded without its files. Say "second look was uploaded
+   is missing, the skill was uploaded without its files. Say "Second Look was uploaded
    without report-template.html; re-upload the whole zip" and stop before building a
    report. Never rebuild the design from memory.
 3. Memory is on, for the profile and log. If it isn't, use the last report's Log section.
 
 ## Files
 
-Everything the user owns lives in `~/.second-look/`. second look has no server. What you read
+Everything the user owns lives in `~/.second-look/`. Second Look has no server. What you read
 during a review reaches their model provider as part of this conversation, like any other
 message, so quote only what a finding needs.
 
@@ -112,7 +112,7 @@ next run finds it).
    `~/.cursor/skills`)
 
 ```
-# second look profile
+# Second Look profile
 name: Sam
 builds: product engineer; prototypes and ships a habit-tracking app
 focus: prototyping, design-to-code, agents, writing
@@ -127,7 +127,7 @@ hand.
 ## Running a review
 
 **Check for a finished report first (locally).** A scheduled run saves its report without opening
-it, so someone who comes back and asks for a second look usually wants that report. When they ask
+it, so someone who comes back and asks for a Second Look usually wants that report. When they ask
 for a review, run `python3 scripts/schedule.py status`. If `unopened_report` has a path, ask once:
 
 "Your <Month D> review is ready. Want to go through it, or run a new one?"
@@ -137,7 +137,7 @@ If they want to go through it, run `python3 scripts/open_report.py <path>`, offe
 the schedule doesn't move. If they want a new one, carry on with a full review.
 
 Skip this check when they name a scope, when they already asked for a new review, and on scheduled
-runs, whose prompt starts "Run a full second look review using the skill at". A scheduled run never
+runs, whose prompt starts "Run a full Second Look review using the skill at". A scheduled run never
 stops to ask; it builds the next report.
 
 Every review is a full review: all their apps, everything since the last review (or the last
@@ -184,14 +184,14 @@ Cursor's Automations run in the cloud and can't read the session logs on their c
 don't use them for this. If they say "none", run nothing and don't ask again unless they bring
 it up.
 
-**Task prompt** (for app scheduled tasks): "Run a full second look review using the skill at
+**Task prompt** (for app scheduled tasks): "Run a full Second Look review using the skill at
 ~/.agents/skills/second-look (read its SKILL.md first). If there's no profile yet, ask the four
 profile questions and wait. Build and check the report, save it to ~/.second-look/reports/ (don't open it),
 write the log entry, run `python3 ~/.agents/skills/second-look/scripts/schedule.py reviewed`,
 then end with one question: which fixes they want to try before the next review."
 
 **Claude desktop scheduled tasks.** Check `list_scheduled_tasks` first and update an existing
-second look task instead of adding a second one. Cron can't count days, so map the cadence:
+Second Look task instead of adding a second one. Cron can't count days, so map the cadence:
 every 2 weeks → `0 10 1,15 * *` (the 1st and 15th at 10:00); weekly → `0 10 * * 1`; monthly →
 `0 10 1 * *`. Tell them the dates, and that a missed run starts the next time the app opens.
 
@@ -305,7 +305,7 @@ and still works on current models.
 **claude.ai:**
 
 - Call `recent_chats` for the window (page back with `before` until you pass the start
-  date) and `conversation_search` for their main projects and for "second look". Open the
+  date) and `conversation_search` for their main projects and for "Second Look". Open the
   real work chats, 15–30 of them. Skip chats under 3 messages.
 - For each chat, record: date, kind of work, briefed (goal, background and done criteria in
   the first message), corrections ("no", "actually", "I meant", "that's not" openers),
@@ -393,7 +393,7 @@ P1 habit: give it a card in "How you brief AI and set up your apps" so its fix j
 
 ## 4. The report
 
-One HTML file with report pages (Overview, Briefs & setup, Skills, Habits & usage) and a Settings page, built from `report-template.html` and named "second look · <start> – <end>".
+One HTML file with report pages (Overview, Briefs & setup, Skills, Habits & usage) and a Settings page, built from `report-template.html` and named "Second Look · <start> – <end>".
 Lead with the answer, then the evidence.
 
 **One comparison window.** Every habit number that shows a change compares the last 4 weeks with
@@ -413,7 +413,7 @@ prose, tables and chart text: tokens, context (say "what the AI has read"), comp
 app), edge case (say what could break). Commands they type (`/clear`) and anything inside a copy
 block are fine. One word per thing: session (never chat or conversation), the AI (never the
 agent), rules (never standing preferences), helper agent, usage and usage limit, brief, checking,
-fix, second look (never "the coach" or "I"). Each fix keeps one name everywhere. Cut a line that
+fix, Second Look (never "the coach" or "I"). Each fix keeps one name everywhere. Cut a line that
 only restates a heading, a column or a term card. An action they can't do by hand gets a prompt
 to paste into their AI app, and says which app. Every next step, in any table or list, says where
 to go or gives the line to paste ("In Claude Code, paste: “Reinstall mermaid-diagrams.”"), so nothing
@@ -481,7 +481,7 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
   pops up while they're away. The task's session in the app, or the notification in a terminal,
   tells them it's ready, and the check at the start of "Running a review" opens it when they ask.
 
-**Settings.** Under Review schedule, Replace the sample controls with a schedule summary from
+**Settings.** Under Review schedule, replace the sample controls with a schedule summary from
 `schedule.py status` and directions to manage it in its owning app. Show cadence,
 runner and next due date when known. For reminders, say “Next reminder”. If there
 is no schedule, show “No recurring review” and explain how to set one up. Show
@@ -511,7 +511,7 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 
 **App bar and sidebar.** Set the review's date in `.report-date`. Locally, once the report is saved in `~/.second-look/reports/` as `<end-date>.html`, run `python3 scripts/report_menu.py <report.html>`. It fills the menu in every saved report, so they can all reach each other, and shows a plain label when there's only one. On claude.ai, replace everything between the `report-menu` comments with `<p class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25<span class="report-year">, 2026</span></span></p>`, because an artifact has no folder of saved reports. Keep the Feedback link (`#report-issue`, https://github.com/txz8096/second-look/issues/new) and the light and dark switch (`#theme-btn`) as they are. Keep sidebar labels free of counts or badges. On desktop keep the sidebar pinned below the app bar and sized to the viewport, with its method, Guidance and references, and About links at the viewport bottom. Scroll long reference lists inside the sidebar, so the report never has to be scrolled to reach About. On phones it remains a viewport-height drawer with the same pinned footer.
 
-**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then "Following up on your last review" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
+**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with its link to Data coverage in Settings), then "Following up on your last review" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
 
 **How you brief AI and set up your apps** (`#part-2`). A headline with the biggest finding that
 links to the plan. If a much quicker fix goes first, the headline says so. "Following up on your last review" (`#last-cycle`) sits on the Overview, only when an
@@ -570,7 +570,7 @@ go in the sidebar's "Guidance and references" list.
 - **Habits over time** (`#trends`), filled from the cube. Its charts sit in five
   groups, one tab per question (`GROUPS` in the template script): explaining what you want,
   checking the work, handing off the right work, automating repeat work, and where usage goes.
-  The group with the most charts going the wrong way opens first. A group with no chart that
+  The first group with data opens first. A group with no chart that
   has data under the current filters is hidden, and one line names it and says why: its charts
   need Claude Code or Codex, the Work filter leaves it out, or too few sessions. Each group opens
   with a short answer to its question in plain words, comparing the last 4 weeks with the 4 before (whatever the time
@@ -634,15 +634,15 @@ for a chart its apps can't give. Each dashed term opens a card with the reason a
 steps to add the data. Write none of this by hand.
 
 - **Locally,** copy `scope` from `collect.py` into `SCOPE`. Each source has a `state`: `logs`,
-  `export` (with `to`, the export date), `missing` (an export not added), or `not_found` (the
-  app isn't on this computer). `cut` marks the first day second look has for a source whose
+  `export` (with `to`, the date of the latest session in the export, or the file's date when no session could be read), `missing` (an export not added), or `not_found` (the
+  app isn't on this computer). `cut` marks the first day Second Look has for a source whose
   older logs were deleted. `collect.py` sets it for Claude Code when its logs reach back to the
   `cleanupPeriodDays` limit. When `history.json` holds Claude Code weeks from before
   `oldest_claude_log`, set `cut` to the first of those weeks instead.
 - **On claude.ai,** mark Claude Code, Codex, Cursor and Antigravity `not_readable`, and
   claude.ai `export` only when they uploaded `conversations.json`.
-- Keep "no sessions" apart from "can't see". A app they didn't use yet is an empty track with
-  no card. Only data second look can't reach is dashed.
+- Keep "no sessions" apart from "can't see". An app they didn't use yet is an empty track with
+  no card. Only data Second Look can't reach is dashed.
 - **Someone new.** Distinguish verified absence, files not included and unreadable files. Set
   `#part-3` to `data-skills-state="none"` only after successfully checking the applicable skill
   folders and finding no saved skills. Keep the built-in `.skills-empty` component, replace the
@@ -756,8 +756,6 @@ repeat from the log stops appearing after its fix, say so in "Following up on yo
 - Never edit their files, or set up a schedule, hook or skill, without a yes. Propose exact edits.
 - Ask a clarifying question when their intent is unclear.
 - Tables for comparisons. Bullets only for list-shaped content.
-
-On Overview, keep “What you use AI for”. It stacks weekly session counts by kind of work for the last 13 complete weeks using the report cube. Keep its link to Data coverage in Settings.
 
 
 ## Approved report states and filters

@@ -3,12 +3,12 @@
   "owner": {
     "name": "Melissa Tang"
   },
-  "description": "Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current.",
+  "description": "Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try.",
   "plugins": [
     {
       "name": "second-look",
       "source": "./plugins/second-look",
-      "description": "Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current."
+      "description": "Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try."
     }
   ]
 }

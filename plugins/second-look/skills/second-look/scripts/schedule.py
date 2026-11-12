@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Recurring second look reviews.
+"""Recurring Second Look reviews.
 
 Three ways a review can recur, set up after the first report:
 
@@ -44,7 +44,7 @@ HEADLESS_TIMEOUT = 45 * 60
 REPORT_NAME = re.compile(r"(\d{4}-\d{2}-\d{2})\.html")
 
 HEADLESS_PROMPT = (
-    "Run a full second look review using the skill at ~/.agents/skills/second-look (read its "
+    "Run a full Second Look review using the skill at ~/.agents/skills/second-look (read its "
     "SKILL.md first). Nobody is watching this run, so don't ask questions: if there's no profile, "
     "stop and write a one-line note to ~/.second-look/reports/needs-setup.txt. Otherwise build and "
     "check the report, save it to ~/.second-look/reports/, append the log entry, and run "
@@ -156,7 +156,7 @@ def job_off(dry):
         if CRON_MARKER in current:
             lines = [l for l in current.splitlines() if CRON_MARKER not in l]
             if dry:
-                print("would remove the second look crontab line")
+                print("would remove the Second Look crontab line")
             else:
                 subprocess.run(["crontab", "-"], input="\n".join(lines) + "\n", text=True, check=True)
     if os.path.exists(JOB_SCRIPT) and not os.path.samefile(SCRIPT, JOB_SCRIPT) and not dry:
@@ -187,10 +187,10 @@ def notify(message, dry):
         print("would notify:", message)
         return
     if sys.platform == "darwin":
-        script = 'display notification "%s" with title "second look"' % message.replace('"', "'")
+        script = 'display notification "%s" with title "Second Look"' % message.replace('"', "'")
         subprocess.run(["osascript", "-e", script], check=False)
     elif shutil.which("notify-send"):
-        subprocess.run(["notify-send", "second look", message], check=False)
+        subprocess.run(["notify-send", "Second Look", message], check=False)
     else:
         print(message)
 
@@ -214,7 +214,7 @@ def stale_exports():
 def ready_message():
     date, _ = latest_report()
     saved = "Saved as %s.html in ~/.second-look/reports." % date if date else "Saved in ~/.second-look/reports."
-    return "Your review is ready. Ask your assistant for a second look to go through it. " + saved
+    return "Your review is ready. Ask your assistant for a Second Look to go through it. " + saved
 
 
 def run_headless(s, dry):
@@ -235,7 +235,7 @@ def run_headless(s, dry):
     if code == 0 and load().get("last_review") == today().isoformat():
         notify(ready_message() + stale_exports(), dry)
     else:
-        notify("Your scheduled review didn't finish. Ask your assistant for a second look. Details: " + log, dry)
+        notify("Your scheduled review didn't finish. Ask your assistant for a Second Look. Details: " + log, dry)
 
 
 def status(s):
@@ -246,7 +246,7 @@ def status(s):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Recurring second look reviews.")
+    ap = argparse.ArgumentParser(description="Recurring Second Look reviews.")
     ap.add_argument("command", choices=["set", "off", "status", "reviewed", "check", "refresh"])
     ap.add_argument("--days", type=int, help="with set: days between reviews (1-365)")
     ap.add_argument("--method", choices=["app", "headless", "notify"], help="with set: how reviews recur")
@@ -315,7 +315,7 @@ def main():
         if s.get("method") == "headless":
             run_headless(s, a.dry_run)
         else:
-            notify("Your review is due. Ask your assistant for a second look." + stale_exports(), a.dry_run)
+            notify("Your review is due. Ask your assistant for a Second Look." + stale_exports(), a.dry_run)
 
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
-# second look
+# Second Look
 
-second look reviews how a person works with AI apps and tracks their habits over time. These are the words its reports use.
+Second Look reviews how a person works with AI apps and tracks their habits over time. These are the words its reports use.
 
 ## App
 
@@ -12,20 +12,16 @@ An AI product where you work, such as Codex, Claude Code or Cursor. A tool call 
 How much of a person's AI allowance a session or request consumed, weighted so re-reading cached history counts for less than new input or output.
 _Avoid_: Cost, spend, token cost, tokens
 
-**Request**:
-One message the person sent to the assistant.
-_Avoid_: Prompt (in reports), turn
-
 **Doing the work**:
 Usage spent reading, thinking and writing for what the person asked.
 _Avoid_: Productive usage, shipped, finished
 
-**Re-reading long conversations**:
-Usage spent re-reading conversation history once a session passes the long-conversation line.
+**Re-reading long sessions**:
+Usage spent re-reading a session's history once it passes the long-session line.
 _Avoid_: Overhead, bloat, waste
 
-**Long-conversation line**:
-The conversation length past which re-reading counts separately. It is a chosen setting, not a measured limit on quality.
+**Long-session line**:
+The session length past which re-reading counts separately. It is a chosen setting, not a measured limit on quality.
 _Avoid_: Context limit, bloat threshold
 
 **Starting context**:
@@ -41,11 +37,11 @@ A finding backed by usage evidence, placed inside the report part it belongs to.
 _Avoid_: Token report, token effectiveness, usage section
 
 **Long-session share**:
-The share of a person's usage that came from sessions past the long-conversation line. The one usage number tracked in the glance and over time.
+The share of a person's usage that came from sessions past the long-session line. The one usage number tracked over time.
 _Avoid_: Bloat rate, overhead share
 
 **Usage breakdown**:
-The split of all usage into doing the work, re-reading long conversations and redoing work. Shown only when usage limits are a real constraint for the person.
+The split of all usage into doing the work, re-reading long sessions and redoing work. Shown only when usage limits are a real constraint for the person.
 _Avoid_: Ledger, token ledger
 
 **Redoing work**:
@@ -69,10 +65,6 @@ _Avoid_: Duplicate, restart
 **Unattended run**:
 A session that a scheduled task, a loop or a headless run (`claude -p`, `codex exec`) started, with nobody typing the first message.
 _Avoid_: Background session, bot run
-
-**Incident**:
-Something notable that happened within one review period, such as a few very long sessions. Reports list incidents without a fix.
-_Avoid_: Habit, pattern
 
 **Habit**:
 A pattern that recurs across review periods. Only habits get paired with a fix to try.

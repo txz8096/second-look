@@ -1,4 +1,4 @@
-# second look report design system
+# Second Look report design system
 
 The source of truth is `report-template.html` (a filled-in sample report).
 Build every report from a copy of it. Keep its doctype and `<html lang>` lines, charset and viewport lines, `<style>` block, font links, logo and scripts
@@ -10,7 +10,7 @@ append overrides at the end.
 
 ## Tokens
 
-The values below are the dark theme, which is the default. The app bar's switch sets `data-mode="light"` on `<html>`, and `:root[data-mode="light"]` in the template overrides the tokens with shadcn's light neutrals and a darker pink for text (`--accent` `#B02A55`, `--series` `#e6308a`). `--accent-fill` stays Proof Pink in both, for the logo's underline. Components use tokens only, so a new color goes in both blocks. The choice is saved in `localStorage` as `second-look-theme`.
+The values below are the dark theme, which is the default. The app bar's switch sets `data-mode="light"` on `<html>`, and `:root[data-mode="light"]` in the template overrides the tokens with shadcn's light neutrals and a darker pink for text and chart series (`--accent` `#B02A55`, `--series` `#D1416B`). `--accent-fill` stays Proof Pink in both, for the logo's underline. Components use tokens only, so a new color goes in both blocks. The choice is saved in `localStorage` as `second-look-theme`.
 
 | Token | Value | Use |
 |---|---|---|
@@ -70,7 +70,7 @@ An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs
 
 1. App bar (64px, stays on screen): the sidebar toggle and logo on the left; the report menu (`#report-menu`, a `details` that works with scripts off) the Feedback link (`#report-issue`, to https://github.com/txz8096/second-look/issues/new) and the light and dark switch (`#theme-btn`, hidden with scripts off) on the right. The menu shows "Latest report" or "Earlier report" with this report's date, and opens a scrolling list of every saved report, newest first, with the latest marked. `scripts/report_menu.py` writes the list between the `report-menu` comments, using relative links, and switching reports stays on the same page. With one report, or on claude.ai, it's a plain label. Phones show only the date, and at 400px and narrower the year drops too, so the bar fits. The sample report's earlier dates are plain text, since it has no other reports to open.
 2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Briefs & setup, Skills, Habits & usage, with no numerical counts or badges. On desktop it stays pinned below the app bar and fills the available viewport height, with method, Guidance and references, and About at the viewport bottom. Long references scroll inside the sidebar; About stays reachable without scrolling the report. On phones the drawer fills the available viewport height with the same footer. Short viewports allow the navigation and references to scroll within their own areas. Settings contains Review schedule and Data coverage. The latter holds the session history timeline and app-specific Add export or Replace export disclosures. Habits & usage links to the timeline. The sample controls update the preview summary. Generated reports direct users to the app that owns the schedule. At the bottom, on every page, a note (`#side-about`) always shows the method, and a folded "Guidance and references" list sits under it. The template's note also says it's a sample report. Both print after the report.
-3. Overview (`#overview`): "Your latest review" as the `h1`, the summary paragraph (20px, plain words, no numbers), "Following up on your last review" (`#last-cycle`, one card per decision, one folded row per fix; only after a review with logged fixes), then "Explore your report", one row per page.
+3. Overview (`#overview`): "Your latest review" as the `h1`, the summary paragraph (20px, plain words, no numbers), “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with a link to Data coverage in Settings), "Following up on your last review" (`#last-cycle`, one card per decision, one folded row per fix; only after a review with logged fixes), then "Explore your report", one row per page.
 4. How you brief AI and set up your apps (`#part-2`): headline linking to the plan, pattern cards
    (`article.icard`), then "Your plan until <date>" (`#plan`): one numbered row per fix with
    its name, time, what it saves, and what the next review checks, one line each from 681px with
@@ -96,7 +96,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
 - A group whose charts have no data under the current filters is hidden (tab and panel), and
   one muted line under the charts names it and gives the true reason: its charts need Claude
   Code or Codex, the Work filter leaves it out, or too few sessions. If every group is empty, all stay.
-- The group with the most charts going the wrong way opens first. Inside a group, those charts
+- The first group with data opens first. Inside a group, the charts going the wrong way
   come first, biggest slip first (measured in noise floors).
 - The open group starts with one sentence of what changed, comparing the last 4 weeks with
   the 4 before, whatever the time filter. No label, no values. Changes under the noise floor
@@ -105,7 +105,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   direction the line moved ("Up: you typed more rules by hand."). It says what the measure did,
   never why. With the time filter on 4 weeks the earlier point is off the chart, so it reads "Up
   from the 4 weeks before: …". A flat chart has none. A chart with no line has only its reason.
-- Time, App and Work are always visible. Time uses a 142px dropdown with 4 weeks, 3 months, 6 months, 12 months and Custom range (From/To). Keep the controls, Clear filters and right-aligned session count in one desktop row where space permits; View data coverage follows underneath. Phones keep Time/count together, then wrap App and Work/Clear with 44px targets. Clear is disabled in the report default selection. Presets apply immediately; custom dates apply together only when valid. Dismissal discards drafts and restores focus. Keep app/work selections when time changes. Use the collector's nested daily totals for partial weeks; legacy weekly-only rows require complete weeks and an explanatory validation message. Never prorate weekly history. The first question card with data opens first.
+- Time, App and Work are always visible. Time uses a 142px dropdown with 4 weeks, 3 months, 6 months, 12 months and Custom range (From/To). Keep the controls, Clear filters and right-aligned session count in one desktop row where space permits; View data coverage follows underneath. Phones keep Time/count together, then wrap App and Work/Clear with 44px targets. Clear is disabled in the report default selection. Presets apply immediately; custom dates apply together only when valid. Dismissal discards drafts and restores focus. Keep app/work selections when time changes. Use the collector's nested daily totals for partial weeks; legacy weekly-only rows require complete weeks and an explanatory validation message. Never prorate weekly history.
 - The time filter opens on the range the data covers: 3 months, 6 months or 12 months.
 - Every chart fills its card: the script sets the viewBox from the card's width and redraws when the page's width changes, so text and height stay the same.
 - Each group opens by answering its question in plain words (`say` and `opens` in `GROUPS`), then names at most two changes from `READS` and says "The rest held steady." when that's true. It compares the last 4 weeks with the 4 before, and says "lately" for that. Metric names stay on the charts.
@@ -125,7 +125,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
 - Named milestones are quiet solid hairlines from one common top. Unnamed ones are fainter and
   stop below the label row. The group's first chart names them all; the others name only the
   latest, and tooltips name any of them. Dashed lines and hatching mean only
-  one thing: data second look can't see.
+  one thing: data Second Look can't see.
 - Coverage is said once under the group summary ("These charts count Claude Code and Codex
   only.", or "Output checking counts all your apps. The others count only Claude Code and Codex."), in muted text, never yellow.
 - "Am I automating repeat work?" ends with "What you could automate next" (`#automate-next`):
@@ -176,7 +176,7 @@ Use these definitions word for word:
 
 | Term | Definition |
 |---|---|
-| Briefed starts | Your first message gives at least two of three things: the goal, the background, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.” Sessions that open on review comments aren’t counted. |
+| Briefed starts | Your first message gives at least two of three things: the goal, the background, and what done looks like. Example: “Add a pricing table for freelancers. Match the current cards. Done when it fits on a phone screen.” |
 | Corrections | Messages that fix a misunderstanding, like “no, I meant…” or “that’s not what I asked”. Counted per 10 messages you send, so busy and quiet weeks compare fairly. |
 | Restarts | A new session that opens with mostly the same request as one from the last two days, in the same app. It usually means the first try went off track. |
 | Rules retyped per week | A rule typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in the saved instructions of every app you use. |
@@ -215,11 +215,9 @@ inside Settings → Data coverage) · the "Habits over the last year" heading.
 
 Use dividers between expandable rows and list or table rows. Omit the divider after the final row. Keep the enclosing border when the list sits inside a bordered container.
 
-On Overview, keep “What you use AI for”. It stacks weekly session counts by kind of work for the last 13 complete weeks using the report cube. Keep its link to Data coverage in Settings.
-
 ## Chart palette and data access
 
-Use as few colors as the information needs, within one chart and across a chart group. Labeled bars in separate rows, such as “What you used AI for,” and independently labeled single-series charts use pink first (`--chart-pink`, `#e6308a`). The shared `--series` token is pink in both themes. Habit trends, category/app share bars, helper-agent breakdowns and coverage marks all use it. Row labels, chart titles and values identify what each mark represents; no category legend is needed for these independent marks.
+Use as few colors as the information needs, within one chart and across a chart group. Labeled bars in separate rows, such as “What you used AI for,” and independently labeled single-series charts use pink first (`--chart-pink`, `#e6308a`). The shared `--series` token is `--chart-pink` in the dark theme and `#D1416B` in the light theme. Habit trends, category/app share bars, helper-agent breakdowns and coverage marks all use it. Row labels, chart titles and values identify what each mark represents; no category legend is needed for these independent marks.
 
 Use more hues only when overlapping or stacked categories need differentiation, with clear legends or direct series labels. Overview's stacked activity chart keeps its stable category mapping: prototyping orange, creating bright orange, research light blue, brainstorming blue, career green, consultation deep blue, and other lime. Filtering or missing categories never shifts those assignments, and its legend uses the same mapping.
 
@@ -228,7 +226,6 @@ The available `--chart-*` palette is orange `#c44601`, bright orange `#f57600`, 
 Overview stacked activity charts show a compact tooltip on hover, keyboard focus or tap: week, total sessions, and directly labeled category counts. Use the existing neutral surface, text, border and radius tokens; no extra category colors are needed in the tooltip. Keep it within the viewport, allow hovering over it, dismiss with Escape or an outside tap, and toggle it with tap or Enter/Space. Overview has no **View chart data** disclosure. Its equivalent table remains visually hidden for screen readers and becomes visible in print. Across all chart types and screens, do not add a persistent **View chart data** link or disclosure by default. Add separate data access only when a clear user need calls for it; keep essential values accessible through direct labels, accessible tooltips or equivalent screen-reader data. All tables have captions and row and column headers; disclosed tables retain keyboard access and their own horizontal scroll area. Missing data remains missing; do not turn it into zero. `scripts/prerender.py` preserves these tables and the activity chart in script-blocked reports.
 
 The colors are not independently certified for every pairing: essential graphical boundaries need 3:1, ordinary text 4.5:1, and category identity must have a non-color cue. Solid fills do not meet every surface or adjacency threshold. Keep the readable data-table alternative: it conveys the same categories, dates and values without requiring the graph or its colors to be distinguished. This does not mean the fills universally reach 3:1. Run `scripts/check_chart_palette.py` and verify the rendered light/dark, narrow and filtered states before changing the palette.
-
 
 ## Conditional report states
 

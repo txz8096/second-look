@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Weekly evidence collector for the second look skill.
+"""Weekly evidence collector for the Second Look skill.
 
 Reads local session logs from Claude Code, Codex, Cursor and Antigravity, plus any
 claude.ai, ChatGPT or Gemini data exports you pass in, and prints a compact JSON
@@ -657,62 +657,14 @@ def last_4_weeks(cube, last_week):
     return out
 
 
-def weekly_trend(aggs):
-    """One row per week (Monday) across all tools: the metrics the coach charts over time."""
-    rows = collections.defaultdict(lambda: {
-        "prompts": 0, "sessions": set(), "days": set(), "chars": [], "short": 0,
-        "corrections": 0, "by_tool": collections.Counter(), "skills": collections.Counter(),
-        "tool_calls": 0, "session_turns": collections.Counter()})
-    for a in aggs:
-        for ts, session, text in a.prompts:
-            if not ts:
-                continue
-            r = rows[week_of(ts)]
-            r["prompts"] += 1
-            r["sessions"].add((a.name, session))
-            r["days"].add(ts.astimezone().date())
-            r["chars"].append(len(text))
-            r["short"] += len(text) < 40
-            r["corrections"] += bool(CORRECTION.search(text))
-            r["by_tool"][a.name] += 1
-            r["session_turns"][(a.name, session)] += 1
-        for ts, kind, name in a.events:
-            if not ts:
-                continue
-            r = rows[week_of(ts)]
-            if kind == "skill":
-                r["skills"][name] += 1
-            else:
-                r["tool_calls"] += 1
-    out = []
-    for wk in sorted(rows):
-        r = rows[wk]
-        n, s = r["prompts"], len(r["sessions"])
-        chars = sorted(r["chars"])
-        out.append({
-            "week": wk,
-            "sessions": s,
-            "active_days": len(r["days"]),
-            "prompts": n,
-            "prompts_per_session": round(n / s, 1) if s else 0,
-            "median_prompt_chars": chars[len(chars) // 2] if chars else 0,
-            "short_prompt_share": round(r["short"] / n, 2) if n else 0,
-            "correction_rate": round(r["corrections"] / n, 3) if n else 0,
-            "one_turn_session_share": round(sum(1 for v in r["session_turns"].values() if v == 1) / s, 2) if s else 0,
-            "distinct_skills": len(r["skills"]),
-            "skill_runs": sum(r["skills"].values()),
-            "agent_tool_calls": r["tool_calls"],
-            "prompts_by_tool": dict(r["by_tool"]),
-        })
-    return out
-
-
 def coverage(aggs):
     """Earliest and latest data per source, so the report can mark gaps honestly."""
     cov = {}
     for a in aggs:
         stamps = [ts for ts, _, _ in a.prompts if ts]
-        cov[a.name] = {"first": min(stamps).date().isoformat(), "last": max(stamps).date().isoformat()} if stamps else None
+        # local dates, like the cube
+        cov[a.name] = ({"first": min(stamps).astimezone().date().isoformat(),
+                        "last": max(stamps).astimezone().date().isoformat()} if stamps else None)
     return cov
 
 
@@ -733,7 +685,8 @@ def data_scope(home, aggs, export_paths):
         "codex": os.path.isdir(os.path.join(home, ".codex/sessions")),
         "cursor": any(os.path.exists(os.path.join(home, p)) for p in (
             "Library/Application Support/Cursor/User/globalStorage/state.vscdb", ".config/Cursor/User/globalStorage/state.vscdb")),
-        "antigravity": os.path.isdir(os.path.join(home, ".gemini/antigravity-cli")),
+        "antigravity": any(os.path.isdir(os.path.join(home, ".gemini", d))
+                           for d in ("antigravity-cli", "antigravity", "antigravity-ide")),
     }
     sources = []
     for sid, present in local.items():
@@ -805,7 +758,7 @@ def agent_checks(steps):
 
 
 def scheduled_prompts(home):
-    """Prompts that scheduled jobs send: Claude desktop's scheduled tasks and second look's own headless review.
+    """Prompts that scheduled jobs send: Claude desktop's scheduled tasks and Second Look's own headless review.
     A session opening on one of them was started by a schedule, not by hand."""
     found = []
     for p in glob.glob(os.path.join(home, ".claude/scheduled-tasks/*/SKILL.md")):
@@ -972,7 +925,7 @@ def checks_summary(sessions, n=6):
     """Agent-side checks for the window. Only Claude Code and Codex log tool calls."""
     rows = [r for r in sessions if r["source"] in ("claude_code", "codex")]
     edited = [r for r in rows if r["edited"]]
-    samples = [{"source": r["source"], "date": r["start"].date().isoformat(), "first": clean(r["first"], 120), **s}
+    samples = [{"source": r["source"], "date": r["start"].astimezone().date().isoformat(), "first": clean(r["first"], 120), **s}
                for r in sorted(rows, key=lambda r: r["start"], reverse=True) for s in r["unchecked_samples"]]
     return {"sessions_with_edits": len(edited),
             "agent_checked": sum(r["agent_checked"] for r in edited),
@@ -996,7 +949,7 @@ def delegation_summary(sessions, n=5):
             "read_heavy_line": READ_HEAVY,
             "read_heavy_sessions": len(heavy),
             "read_heavy_usage_share": round(sum(r.get("usage", 0) for r in heavy) / total, 2) if total else None,
-            "read_heavy_samples": [{"source": r["source"], "date": r["start"].date().isoformat(), "reads": r["reads"],
+            "read_heavy_samples": [{"source": r["source"], "date": r["start"].astimezone().date().isoformat(), "reads": r["reads"],
                                     "peak_tokens": r.get("peak"), "first": clean(r["first"], 120)}
                                    for r in sorted(heavy, key=lambda r: -r["reads"])[:n]],
             "note": "Reads are file reads, searches and read-only shell commands in the main session. "
@@ -1030,7 +983,8 @@ def automation_summary(sessions, since, n=5):
         repeats.append({
             "times": len(runs), "by_hand": len(by_hand),
             "last_4_weeks": sum(r["start"] >= now - dt.timedelta(days=28) for r in runs),
-            "first": runs[0]["start"].date().isoformat(), "last": runs[-1]["start"].date().isoformat(),
+            "first": runs[0]["start"].astimezone().date().isoformat(),
+            "last": runs[-1]["start"].astimezone().date().isoformat(),
             # a request that lands on the same weekday most weeks is a schedule waiting to happen
             "weekday": days[0] if days[1] / len(runs) >= 0.6 else None,
             "sources": sorted({r["source"] for r in runs}), "category": runs[-1]["category"],
@@ -1051,7 +1005,7 @@ def automation_summary(sessions, since, n=5):
 
 def installed_skills(home):
     found = {}
-    for pat in (".claude/skills/*/SKILL.md", ".codex/skills/*/SKILL.md",
+    for pat in (".claude/skills/*/SKILL.md", ".codex/skills/*/SKILL.md", ".cursor/skills/*/SKILL.md",
                 ".agents/skills/*/SKILL.md", ".claude/plugins/**/skills/*/SKILL.md"):
         for p in glob.glob(os.path.join(home, pat), recursive=True):
             name = os.path.basename(os.path.dirname(p))

@@ -9,13 +9,9 @@
   --color-text-3: #9fa1a6;
   --color-rule: #3e4148;
   --color-accent: #f2a7b8;
-  --color-accent-tint: #3c1e26;
   --color-dark: #0d0f14;
   --color-dark-text-2: #c4c6cb;
   --color-on-accent: #0d0f14;
-  --color-code: #e5e6e8;
-  --color-warning: #e59b37;
-
 
   --font-display: var(--font-familjen), system-ui, sans-serif;
   --font-body: var(--font-familjen), system-ui, sans-serif;
@@ -61,47 +57,7 @@ body {
   --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* Hero entrance: each block rises in on a stagger set by --delay. */
-@keyframes rise-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-}
-
-.rise-in {
-  animation: rise-in 600ms var(--ease-out-strong) var(--delay, 0ms) both;
-}
-
-/* The hero plot wipes in left to right, like the year being drawn, then the latest week lands. */
-@keyframes wipe-in {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-.wipe-in {
-  animation: wipe-in 1100ms cubic-bezier(0.65, 0, 0.35, 1) var(--delay, 0ms) both;
-}
-
-/* Small reveals: tooltip cards, an opened FAQ answer, the copy icon swap. */
-@keyframes pop-in {
-  from {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.98);
-  }
-}
-
-@keyframes fade-down {
-  from {
-    opacity: 0;
-    transform: translateY(-6px);
-  }
-}
-
+/* The copy icon swap. */
 @keyframes icon-in {
   from {
     opacity: 0;
@@ -109,24 +65,11 @@ body {
   }
 }
 
-.pop-in {
-  transform-origin: top left;
-  animation: pop-in 160ms var(--ease-out-strong);
-}
-
-.fade-down {
-  animation: fade-down 220ms var(--ease-out-strong);
-}
-
 .icon-in {
   animation: icon-in 180ms var(--ease-out-strong);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise-in,
-  .wipe-in,
-  .pop-in,
-  .fade-down,
   .icon-in {
     animation: none;
   }

@@ -15,7 +15,7 @@ const plexMono = IBM_Plex_Mono({
 
 const title = "Second Look";
 const description =
-  "Reviews how you work with AI across Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, and keeps your skills current.";
+  "Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try.";
 
 // Link previews in Slack, iMessage and LinkedIn read these; there is no share image yet.
 export const metadata: Metadata = {

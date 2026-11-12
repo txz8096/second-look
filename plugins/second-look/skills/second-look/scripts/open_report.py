@@ -7,7 +7,7 @@ App preview panes (the Claude desktop app, IDE previews, Quick Look) often show 
 as a snapshot without scripts, and may keep an old copy after a rebuild. A real browser runs
 the filters, copy buttons and hover details and always reads the current file.
 Prints the command to run by hand when it can't open one. Also records the report as opened,
-so a later request for a second look doesn't offer it again.
+so a later request for a Second Look doesn't offer it again.
 """
 import os, shlex, subprocess, sys
 

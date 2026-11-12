@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs the second look skill for Claude Code, Codex and Cursor.
+# Installs the Second Look skill for Claude Code, Codex and Cursor.
 #
 #   curl -fsSL https://raw.githubusercontent.com/txz8096/second-look/main/install.sh | bash
 #
@@ -27,7 +27,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-command -v python3 >/dev/null || { echo "second look needs python3. Install it, then run this again." >&2; exit 1; }
+command -v python3 >/dev/null || { echo "Second Look needs python3. Install it, then run this again." >&2; exit 1; }
 
 # Claude Code's current history setting, in days.
 current_retention="$(python3 -c 'import json,os,sys; p=sys.argv[1]; print(json.load(open(p)).get("cleanupPeriodDays", 30) if os.path.exists(p) else 30)' "$SETTINGS" 2>/dev/null || echo 30)"
@@ -56,13 +56,13 @@ apps = [
     ("Antigravity", any(os.path.isdir(os.path.join(home, ".gemini", d)) for d in ("antigravity-cli", "antigravity", "antigravity-ide")),
      "~/.gemini/antigravity-cli", lambda: sessions(".gemini/antigravity*/brain/*/.system_generated/logs")),
 ]
-# second look reads Antigravity's logs but doesn't install into it
+# Second Look reads Antigravity's logs but doesn't install into it
 LINKED = {"Claude Code": "~/.claude", "Codex": "~/.codex", "Cursor": "~/.cursor"}
 exports = [(name, os.path.join(home, ".second-look/exports", rel)) for name, rel in
            (("claude.ai export", "claude/conversations.json"), ("ChatGPT export", "chatgpt/conversations.json"),
             ("Gemini export", "gemini/MyActivity.json"))]
 
-print("Found on this computer (second look reads these when you ask for a review):")
+print("Found on this computer (Second Look reads these when you ask for a review):")
 found = []
 for name, present, where, detail in apps:
     if present:
@@ -171,8 +171,8 @@ python3 "$SHARED/scripts/schedule.py" refresh
 
 cat <<EOF
 
-Done. Ask your assistant for "a second look", or type /second-look in Claude Code.
-After your first report, second look asks whether to run the review every two weeks.
+Done. Ask your assistant for "a Second Look", or type /second-look in Claude Code.
+After your first report, Second Look asks whether to run the review every two weeks.
 
 Optional, for your claude.ai, ChatGPT and Gemini history:
   claude.ai  Settings > Privacy > Export data
