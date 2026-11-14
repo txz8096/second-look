@@ -8,7 +8,41 @@ signals and a few trimmed prompt samples. Nothing leaves the machine.
 
 Usage: python3 collect.py [--days 7] [--home ~] [--out summary.json]
 """
-import argparse, collections, datetime as dt, glob, hashlib, json, os, re, sqlite3, sys
+import argparse, collections, datetime as dt, functools, glob, hashlib, json, os, re, sqlite3, sys
+
+
+@functools.lru_cache(maxsize=4096)
+def project_name(cwd):
+    """Resolve a recorded folder to its repository name, including linked worktrees."""
+    if not isinstance(cwd, str) or not os.path.isabs(cwd):
+        return ""
+    folder = os.path.realpath(cwd)
+    while True:
+        marker = os.path.join(folder, ".git")
+        if os.path.isdir(marker):
+            return os.path.basename(folder)
+        if os.path.isfile(marker):
+            try:
+                with open(marker, encoding="utf-8") as f:
+                    target = f.read().strip()
+                if not target.startswith("gitdir: "):
+                    return ""
+                gitdir = os.path.realpath(os.path.join(folder, target[8:]))
+                if not os.path.isdir(gitdir):
+                    return ""
+                common = os.path.join(gitdir, "commondir")
+                if os.path.isfile(common):
+                    with open(common, encoding="utf-8") as f:
+                        shared = os.path.realpath(os.path.join(gitdir, f.read().strip()))
+                    if os.path.basename(shared) == ".git":
+                        return os.path.basename(os.path.dirname(shared))
+                return os.path.basename(folder)
+            except OSError:
+                return ""
+        parent = os.path.dirname(folder)
+        if parent == folder:
+            return ""
+        folder = parent
 
 CORRECTION = re.compile(
     r"^\s*(no[,. ]|nope|actually|that'?s not|not what i|wrong|i said|i meant|instead[,]|"
@@ -135,6 +169,7 @@ class Agg:
         self.skill_sessions = set()
         self.unattended = set()    # sessions a headless run started
         self.timeline = collections.defaultdict(list)   # session -> [(kind, detail)] in log order
+        self.projects = {}
 
     def add_action(self, session, name, blob, shell=False, background=False):
         """Record what an agent tool call did: edit, check, ship, read, delegate, set up a recurring
@@ -215,6 +250,8 @@ def claude_code(home, since):
             continue
         session = os.path.basename(path)[:-6]
         for e in iter_jsonl(path):
+            if session not in a.projects and isinstance(e.get("cwd"), str):
+                a.projects[session] = project_name(e["cwd"])
             ts = parse_ts(e.get("timestamp"))
             if ts and ts < since:
                 continue
@@ -256,10 +293,12 @@ def codex(home, since):
             continue
         session = os.path.basename(path)[:-6]
         for e in iter_jsonl(path):
+            p = e.get("payload") if isinstance(e.get("payload"), dict) else e
+            if session not in a.projects and isinstance(p.get("cwd"), str):
+                a.projects[session] = project_name(p["cwd"])
             ts = parse_ts(e.get("timestamp"))
             if ts and ts < since:
                 continue
-            p = e.get("payload") if isinstance(e.get("payload"), dict) else e
             kind = p.get("type")
             # codex exec is a headless run; apps built on the Codex SDK also run through exec, so they're left out
             origin = str(p.get("originator", "")).lower()
@@ -811,6 +850,7 @@ def sessions_of(aggs, metered=None, scheduled=()):
             opener = content_words(texts[0])
             out.append({
                 "source": a.name, "session": session, "start": start, "category": category,
+                "project": a.projects.get(session, ""),
                 "first": texts[0], "prompts": len(texts),
                 "briefable": bool(typed[0]),   # a session that opens on review comments or app context has no first message to brief
                 "briefed": is_briefed(typed[0]),
@@ -873,7 +913,7 @@ def session_cube(sessions):
             "metered", "usage", "long_usage", "start_tokens", "logged", "unattended", "setups", "parallel", "repeats")
     daily = collections.defaultdict(lambda: dict.fromkeys(keys, 0))
     for r in sessions:
-        row = daily[(r["start"].astimezone().date().isoformat(), r["source"], r["category"])]
+        row = daily[(r["start"].astimezone().date().isoformat(), r["source"], r["category"], r.get("project", ""))]
         row["sessions"] += 1
         row["prompts"] += r["prompts"]
         row["briefable"] += r["briefable"]
@@ -904,14 +944,14 @@ def session_cube(sessions):
             row["long_usage"] += round(r["usage"]) if r["long"] else 0
             row["start_tokens"] += r["start_tokens"]
     cube = collections.defaultdict(lambda: {**dict.fromkeys(keys, 0), "days": []})
-    for (day, source, category), values in sorted(daily.items()):
+    for (day, source, category, project), values in sorted(daily.items()):
         date = dt.date.fromisoformat(day)
         week = (date - dt.timedelta(days=date.weekday())).isoformat()
-        row = cube[(week, source, category)]
+        row = cube[(week, source, category, project)]
         for key in keys:
             row[key] += values[key]
         row["days"].append({"date": day, **values})
-    return [{"week": w, "source": s, "category": c, **v} for (w, s, c), v in sorted(cube.items())]
+    return [{"week": w, "source": s, "category": c, "project": p, **v} for (w, s, c, p), v in sorted(cube.items())]
 
 
 def label_samples(sessions, n=12):

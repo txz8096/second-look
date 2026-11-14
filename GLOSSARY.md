@@ -6,6 +6,10 @@ Second Look reviews how a person works with AI apps and tracks their habits over
 
 An AI product where you work, such as Codex, Claude Code or Cursor. A tool call is an action an assistant takes, such as reading a file. A helper agent handles a task in a separate session.
 
+## Project
+
+The name of the git repository a Claude Code or Codex session ran in. Worktrees use the main repository's name. Only the name is retained. **Unknown** includes sessions outside a repository, apps without verified folder metadata and older history without a project; it does not mean the session had no project.
+
 ## Usage
 
 **Usage**:

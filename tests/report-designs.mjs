@@ -26,7 +26,7 @@ const main = fixture('sample', source);
    const initial = await page.locator('#f-sum').innerText();
    const countBounds=await page.locator('#f-sum').boundingBox(),timeBounds=await page.locator('#f-range').boundingBox();
    assert.ok(Math.abs(countBounds.y+countBounds.height/2-timeBounds.y-timeBounds.height/2)<6,'Time/count share a row');
-   if(width===1440) for(const id of ['f-source','f-cat','f-reset']){
+   if(width===1440) for(const id of ['f-source','f-cat','f-project','f-reset']){
     const r=await page.locator('#'+id).boundingBox(); assert.ok(Math.abs(r.y+r.height/2-timeBounds.y-timeBounds.height/2)<6,id+' stays on desktop row');
    }
    await page.locator('#f-range').focus(); await page.keyboard.press('Enter');
@@ -38,7 +38,8 @@ const main = fixture('sample', source);
    assert.equal(await page.locator('#f-range-value').innerText(),'4 weeks');
    assert.equal(await page.locator('#f-range-menu').isVisible(),false);
    assert.notEqual(await page.locator('#f-sum').innerText(),initial);
-   await page.locator('#f-source [data-id="codex"]').click();await page.locator('#f-cat').selectOption('prototyping');
+   await page.locator('#f-source').selectOption('codex');await page.locator('#f-cat').selectOption('prototyping');
+   await page.locator('#f-project').selectOption('project:Streak');
    await page.locator('#f-range').click(); await page.locator('#f-from').fill('2026-10-20'); await page.locator('#f-to').fill('2026-10-19');
    assert.equal(await page.locator('#f-apply').isDisabled(),true);assert.match(await page.locator('#f-date-error').innerText(),/on or before/);
    await page.locator('#f-to').fill('2026-10-20');assert.equal(await page.locator('#f-apply').isDisabled(),false);
@@ -49,11 +50,13 @@ const main = fixture('sample', source);
    await page.locator('#f-from').fill('2026-10-19');await page.locator('#f-to').fill('2026-10-19');await page.locator('#f-apply').click();
    assert.match(await page.locator('#f-range-value').innerText(),/Oct 19/);
    assert.equal(await page.locator('#f-cat').inputValue(),'prototyping');
-   assert.equal(await page.locator('#f-source [data-id="codex"]').getAttribute('aria-pressed'),'true');
+   assert.equal(await page.locator('#f-project').inputValue(),'project:Streak');
+   assert.equal(await page.locator('#f-source').inputValue(),'codex');
    await page.locator('#f-reset').click();assert.equal(await page.locator('#f-sum').innerText(),initial);
-   assert.equal(await page.locator('#f-cat').inputValue(),'all');assert.equal(await page.locator('#f-reset').isDisabled(),true);
+   assert.equal(await page.locator('#f-cat').inputValue(),'all');assert.equal(await page.locator('#f-source').inputValue(),'all');assert.equal(await page.locator('#f-project').inputValue(),'all');assert.equal(await page.locator('#f-reset').isDisabled(),true);
    await page.locator('#f-range').click();await page.locator('#f-from').fill('2026-10-20');await page.locator('#f-to').fill('2026-10-21');
    await page.locator('#f-apply').click();
+   assert.equal(await page.locator('.filters').evaluate(n=>n.scrollWidth<=n.clientWidth),true,'filters fit viewport');
    await page.locator('#trends').screenshot({path:path.join(output,`${width}-${theme}-filters.png`)});
    assert.deepEqual(errors,[]);
    if(width===1440&&theme==='dark'){
@@ -79,6 +82,44 @@ const main = fixture('sample', source);
   assert.equal(await page.locator('#f-apply').isDisabled(),true);assert.match(await page.locator('#f-date-error').innerText(),/weekly totals only/);
   await page.locator('#f-from').fill('2026-10-12');await page.locator('#f-to').fill('2026-10-18');await page.locator('#f-apply').click();assert.equal(await page.locator('#f-sum').innerText(),'12 sessions');
   console.log('PASS daily/legacy: inclusive boundaries, single-day count, empty recovery, oldest range, weekly-only validation');
+  const projectCube = [
+   {...cube[0],project:'Atlas'},
+   {...cube[0],project:'all',sessions:5,prompts:5,briefable:5,briefed:5,days:[{date:'2026-10-18',sessions:5,prompts:5,briefable:5,briefed:5}]},
+   {...cube[0],source:'claude_code',category:'prototyping',project:'Atlas',sessions:8,prompts:8,briefable:8,briefed:8,days:[{date:'2026-10-18',sessions:8,prompts:8,briefable:8,briefed:8}]},
+   {...cube[0],sessions:30,prompts:30,briefable:30,briefed:30,days:[{date:'2026-10-18',sessions:30,prompts:30,briefable:30,briefed:30}]}
+  ];
+  await page.goto(fixture('projects',source.replace('const CUBE = sampleCube();','const CUBE = '+JSON.stringify(projectCube)+';'))+'#part-1');
+  assert.equal(await page.locator('#f-sum').innerText(),'55 sessions');
+  assert.deepEqual(await page.locator('#f-project option').allTextContents(),['All projects','Atlas','all','Unknown']);
+  await page.locator('#f-project').selectOption('project:Atlas');
+  assert.equal(await page.locator('#f-sum').innerText(),'20 sessions');
+  assert.equal(await page.locator('#cat-table tbody tr .num').allTextContents().then(c=>c.filter((_,i)=>i%5===0).reduce((n,c)=>n+Number(c),0)),20);
+  assert.match(await page.locator('#src-bars').textContent(),/Codex/);
+  assert.match(await page.locator('#src-bars').textContent(),/Claude Code/);
+  await page.locator('#f-source').selectOption('codex');await page.locator('#f-cat').selectOption('research');
+  await selectRange('2026-10-18','2026-10-18');
+  assert.equal(await page.locator('#f-sum').innerText(),'7 sessions');
+  assert.equal(await page.locator('#f-project').inputValue(),'project:Atlas');
+  assert.equal(await page.locator('#cat-table tbody tr .num').first().textContent(),'7');
+  await page.locator('#f-reset').click();
+  await page.locator('#f-project').selectOption('project:all');assert.equal(await page.locator('#f-sum').innerText(),'5 sessions');
+  await page.locator('#f-project').selectOption('project:');assert.equal(await page.locator('#f-sum').innerText(),'30 sessions');
+  await page.locator('#f-source').selectOption('claude_code');
+  assert.equal(await page.locator('#f-sum').innerText(),'0 sessions');
+  assert.match(await page.locator('.filter-empty').innerText(),/55 sessions are available/);
+  await page.locator('#f-clear').click();assert.equal(await page.locator('#f-project').inputValue(),'all');
+  const manyProjects = Array.from({length:40},(_,i)=>({...cube[0],project:'A long repository name with words '+i}));
+  await page.goto(fixture('many-projects',source.replace('const CUBE = sampleCube();','const CUBE = '+JSON.stringify(manyProjects)+';'))+'#part-1');
+  assert.equal(await page.locator('#f-project option').count(),41);
+  await page.locator('#f-project').selectOption('project:A long repository name with words 39');
+  for(const width of [1440,390,320]) {
+   await page.setViewportSize({width,height:1000});
+   assert.equal(await page.locator('.filters').evaluate(n=>n.scrollWidth<=n.clientWidth),true,'long project fits '+width);
+   await page.locator('.filters').screenshot({path:path.join(output,`long-project-${width}.png`)});
+  }
+  await page.setViewportSize({width:1440,height:1000});
+  console.log('PASS projects: legacy history, project/app/work/date intersections, tables, reset, empty recovery, reserved names, 40 long names');
+
   await page.goto(fixture('empty-skills',source.replace('data-skills-state="available"','data-skills-state="none"').replace(/<p class="part-meta">Checked Oct 25:[\s\S]*?<\/p>/, '<p class="part-meta">Example data · Saved skill folders checked and readable; no skill files found.</p>'))+'#part-3');
   assert.equal(await page.locator('.skills-empty').isVisible(),true);assert.equal(await page.locator('#fix-first').isVisible(),false);
   assert.deepEqual(await page.locator('.skill-resources a').allTextContents(),['skills.shCommunity directory · Browse skills and installation instructions↗','Anthropic skillsAnthropic · Browse skills for Claude and learn how to install them↗','Skill authoring best practicesClaude Docs · Naming, descriptions, structure and testing↗']);

@@ -1,7 +1,7 @@
 {
   "name": "second-look",
   "description": "Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try.",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "author": { "name": "Melissa Tang" },
   "homepage": "https://github.com/txz8096/second-look",
   "license": "MIT"

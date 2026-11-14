@@ -101,11 +101,14 @@ def cube_problems(cube, end):
     unknown = sorted({str(r["source"]) for r in cube if str(r["source"]) not in SOURCES})
     if unknown:
         problems.append(f"CUBE has sources the script can't draw: {', '.join(unknown)}")
-    keys = [(r["week"], r["source"], r["category"]) for r in cube]
+    keys = [(r["week"], r["source"], r["category"], str(r.get("project") or "")) for r in cube]
     repeated = len(keys) - len(set(keys))
     if repeated:
-        problems.append(f"CUBE repeats {repeated} rows for the same week, app and kind of work, which double-counts them; a week and app in the cube replaces the same one in history.json")
+        problems.append(f"CUBE repeats {repeated} rows for the same week, app, kind of work and project, which double-counts them; a week and app in the cube replaces the same one in history.json")
     for row in cube:
+        project = row.get("project", "")
+        if not isinstance(project, str) or "/" in project or "\\" in project or project in (".", ".."):
+            problems.append("CUBE project must be a repository name or an empty string, never a path")
         if "days" not in row:
             continue
         days = row["days"]

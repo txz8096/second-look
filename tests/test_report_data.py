@@ -70,5 +70,52 @@ class ReportDataTests(unittest.TestCase):
         del row['days']
         self.assertEqual(check.cube_problems([row],dt.date(2026,10,19)),[])
 
+    def test_projects_keep_separate_daily_and_weekly_totals(self):
+        sessions = [self.session('2026-10-12T12:00:00') for _ in range(3)]
+        sessions[0]['project'] = 'Atlas'
+        sessions[1]['project'] = 'Streak'
+        rows = collect.session_cube(sessions)
+        self.assertEqual({r['project']: r['sessions'] for r in rows}, {'': 1, 'Atlas': 1, 'Streak': 1})
+        self.assertEqual(check.cube_problems(rows, dt.date(2026,10,19)), [])
+        self.assertTrue(any('repeats' in p for p in check.cube_problems(rows + rows[:1], dt.date(2026,10,19))))
+        rows[0]['project'] = '/private/project'
+        self.assertTrue(any('never a path' in p for p in check.cube_problems(rows, dt.date(2026,10,19))))
+
+    def test_worktree_and_subfolder_resolve_to_main_repository(self):
+        with tempfile.TemporaryDirectory() as root:
+            repo = Path(root)/'Atlas'
+            (repo/'.git/worktrees/branch').mkdir(parents=True)
+            (repo/'src').mkdir()
+            worktree = Path(root)/'branch'
+            worktree.mkdir()
+            (worktree/'.git').write_text(f'gitdir: {repo}/.git/worktrees/branch\n')
+            (repo/'.git/worktrees/branch/commondir').write_text('../..\n')
+            self.assertEqual(collect.project_name(str(repo/'src')), 'Atlas')
+            self.assertEqual(collect.project_name(str(worktree)), 'Atlas')
+            self.assertEqual(collect.project_name(root), '')
+            self.assertEqual(collect.project_name('relative/project'), '')
+
+    def test_collectors_take_project_from_metadata_even_before_date_window(self):
+        with tempfile.TemporaryDirectory() as home:
+            repo = Path(home)/'Atlas'
+            (repo/'.git').mkdir(parents=True)
+            claude = Path(home)/'.claude/projects/test/session.jsonl'
+            codex = Path(home)/'.codex/sessions/session.jsonl'
+            claude.parent.mkdir(parents=True)
+            codex.parent.mkdir(parents=True)
+            old = '2026-10-01T12:00:00+00:00'
+            new = '2026-10-12T12:00:00+00:00'
+            claude.write_text('\n'.join(json.dumps(e) for e in [
+                {'timestamp': old, 'cwd': str(repo)},
+                {'timestamp': new, 'type': 'user', 'message': {'role': 'user', 'content': 'Please research this feature'}}]))
+            codex.write_text('\n'.join(json.dumps(e) for e in [
+                {'timestamp': old, 'type': 'session_meta', 'payload': {'cwd': str(repo)}},
+                {'timestamp': new, 'payload': {'type': 'user_message', 'message': 'Please research this feature'}}]))
+            since = dt.datetime.fromisoformat('2026-10-10T00:00:00+00:00')
+            sessions = collect.sessions_of([collect.claude_code(home, since), collect.codex(home, since)])
+            self.assertEqual(len(sessions), 2)
+            self.assertEqual({s['project'] for s in sessions}, {'Atlas'})
+            self.assertNotIn(str(repo), json.dumps(collect.session_cube(sessions)))
+
 if __name__ == '__main__':
     unittest.main()

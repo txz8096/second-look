@@ -274,6 +274,11 @@ session logs are.
 As far as your logs do. Claude Code keeps 30 days by default, which is why the installer
 offers to keep a year. claude.ai, ChatGPT and Gemini cover sessions present in the supplied exports. Each run saves
 weekly totals with daily breakdowns, so weeks your apps later delete stay in the trend. Custom date ranges use those daily totals; older weekly-only history supports complete weeks.
+In Habits & usage, Time, App, Work and Project filter the charts. Claude Code and Codex
+sessions use their git repository name, with worktrees grouped under the main repository.
+Only the name is saved, never the full path. Other apps, sessions outside a repository and
+older history appear under “Unknown”. The repository must still be available
+when the review runs.
 </details>
 
 <details>

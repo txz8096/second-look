@@ -292,7 +292,7 @@ and still works on current models.
    `--claude-export ~/.second-look/exports/claude/conversations.json` and
    `--chatgpt-export ~/.second-look/exports/chatgpt/conversations.json` and
    `--gemini-export ~/.second-look/exports/gemini/MyActivity.json` when those files
-   exist. It returns `cube` (weekly rows by source and kind of work, each with additive daily `days` totals), `coverage`,
+   exist. It returns `cube` (weekly rows by source, kind of work and project, each with additive daily `days` totals), `coverage`,
    `label_samples` and an `automation` block matched across the whole year. Spot-check the
    labels against the samples before trusting a number.
    Merge the cube into `~/.second-look/history.json`, keeping older weeks the apps have
@@ -454,7 +454,7 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
     collector already returns it.
   - `CUBE`: replace `sampleCube()` with the collector's `cube` array, plus the older weeks kept
     in `history.json`, pasted as is. A week and app in the cube replaces the same week and app
-    in history, so nothing counts twice. Rows keep the collector's `week`, `source` and `category`
+    in history, so nothing counts twice. Rows keep the collector's `week`, `source`, `category` and `project`
     keys and nested `days` totals. Never discard the daily totals when merging history. Weeks outside the 52 are left out.
   - `SCOPE`: the collector's `scope` (see "Data scope"), including `through` and measured `latest_session` dates. Never infer a session date from a file timestamp.
   - `MILESTONES`: dated changes to mark on every chart, like a fix they started from
@@ -773,16 +773,22 @@ never mix its records or findings with the user's data. Do not run the findings 
 on a preflight message. Retain older included history when only the recent window is quiet.
 
 Time is a dropdown with 4 weeks, 3 months, 6 months, 12 months and a custom From/To range.
-Keep Time, App, Work, Clear filters and the right-aligned session count in one desktop row when
-space permits; coverage goes underneath. Phones keep Time/count together and wrap the original
-App and Work controls with 44px touch targets. Clear resets the report default date range,
-All apps and All work. Presets apply immediately; custom dates apply together only when valid.
+App, Work and Project use single-select dropdowns. Keep Time, App, Work, Project, Clear and the right-aligned session count in one desktop row when
+space permits; coverage goes underneath. Phones keep Time/count together and wrap the
+App, Work and Project controls with 44px touch targets. Clear resets the report default date range,
+All apps, All work and All projects. Presets apply immediately; custom dates apply together only when valid.
 Escape or outside dismissal abandons draft dates. Both dates are required and From cannot
 follow To; the saved report bounds the available dates. The collector's daily totals make
 partial-week counts exact. Legacy weekly-only history supports complete weeks; the UI explains
 why an unsupported partial-week range cannot apply. Never split or prorate real weekly totals.
-Keep app/work selections when time changes. Counts, charts and share tables use the same
-selection. Filtered-empty copy says no included sessions match, names the verified outside
+Keep app/work/project selections when time changes. Counts, charts and share tables use the same
+selection. Project options show every project in the saved data, ordered by session count, with Unknown last.
+Claude Code and Codex use the repository name from the session’s recorded working folder;
+linked worktrees use their main repository’s name. Keep only that name, never the full path.
+Apps without verified folder metadata, folders outside repositories and older rows without a
+`project` count under "Unknown" (stored as an empty string); never guess or split
+older totals. Project filtering works best for Claude Code and Codex sessions run inside a
+repository that still exists. Filtered-empty copy says no included sessions match, names the verified outside
 count and offers Clear filters. It does not imply missing coverage or no activity elsewhere.
 
 An updated export creates a new report snapshot. Recompute its review summary and activity

@@ -339,11 +339,9 @@ td.best { color: var(--accent); font-weight: 600; }
 .filters { display: none; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
 .fgroup { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .flabel { margin-right: 4px; }
-/* one segmented control: a neutral track, the chosen item cut out of it */
-.seg { display: inline-flex; flex-wrap: wrap; align-items: center; min-height: 32px; box-sizing: border-box; padding: 2px; border-radius: var(--r-8); background: var(--seg-track); }
-button.chip { height: 28px; padding: 0 10px; border: 0; border-radius: var(--r-6); background: transparent; color: var(--muted); font-size: 13px; }
-button.chip:hover { background: transparent; color: var(--fg); }
-#f-source .chip[aria-pressed="true"] { background: var(--seg-on); color: var(--fg); font-weight: 500; }
+.filters .fgroup { flex-wrap: nowrap; min-width: 0; }
+.filters select { min-width: 0; max-width: 200px; text-overflow: ellipsis; }
+.filters .flabel { flex-shrink: 0; }
 .time-filter { flex: none; }
 #f-range-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 button#f-range { display: inline-flex; justify-content: space-between; align-items: center; gap: 12px; width: 142px; padding: 0 10px; text-align: left; }
@@ -559,13 +557,15 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .tl-status { text-align: left; }
   .tl-status .term[data-align="end"] .term-card { left: 0; right: auto; }
   .tl-axis > span:first-child, .tl-axis > span:last-child { display: none; }
-  .filters > .time-filter { order: 0; flex: 1; min-width: 0; }
+  .filters > .time-filter { order: 0; flex: 1 0 calc(100% - 140px); min-width: 0; }
   .time-filter #f-range { flex: 1; min-width: 0; max-width: 142px; }
   #f-range-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .filters > .fsum { order: 1; }
-  .filters > .app-filter { order: 2; flex-basis: 100%; }
-  .filters > .work-filter, .filters > #f-reset { order: 3; }
-  .filters > .filter-coverage { order: 4; }
+  .filters > .app-filter, .filters > .work-filter, .filters > .project-filter, .filters > #f-reset { order: 2; }
+  .filters > .project-filter { flex-basis: 100%; }
+  .filters select { max-width: 100%; }
+  .project-filter select { flex: 1; }
+  .filters > .filter-coverage { order: 3; }
   .range-dates input { min-height: 44px; font-size: 16px; }
   .skill-benefits { grid-template-columns: 1fr; }
   pre { padding: 40px 12px 12px; }
@@ -574,13 +574,11 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .term { text-underline-offset: 5px; }
   /* type floor: nothing under 13px, secondary text 14px */
   .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval { font-size: 13px; }
-  .def, .sum-meta, .part-meta, .fsum, button.chip, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
+  .def, .sum-meta, .part-meta, .fsum, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
     .side-about, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
   .scope-line, .tl-name, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
   /* tap targets */
   button:not(.brow):not(.menu-btn), select { min-height: 44px; }
-  .seg { min-height: 48px; }
-  button.chip { height: 44px; }
   button.copy { min-height: 32px; height: 32px; top: 4px; left: 4px; right: auto; }
   details > summary { min-height: 44px; box-sizing: border-box; }
 }
@@ -985,9 +983,10 @@ Then tell me in plain words what changed before you save it.</pre></div>
         <button type="button" id="f-apply" disabled>Apply range</button>
       </div>
     </div>
-    <div class="fgroup app-filter" role="group" aria-label="App"><span class="flabel">App</span><span class="seg" id="f-source"></span></div>
+    <div class="fgroup app-filter"><label class="flabel" for="f-source">App</label><select id="f-source"></select></div>
     <div class="fgroup work-filter"><label class="flabel" for="f-cat">Work</label><select id="f-cat"></select></div>
-    <button type="button" id="f-reset" disabled>Clear filters</button>
+    <div class="fgroup project-filter"><label class="flabel" for="f-project">Project</label><select id="f-project"></select></div>
+    <button type="button" id="f-reset" aria-label="Clear all filters" disabled>Clear</button>
     <span class="fsum" id="f-sum" role="status" aria-live="polite" aria-atomic="true"></span>
     <a class="filter-coverage" href="#scope-details">View data coverage</a>
   </div>
@@ -1139,7 +1138,7 @@ stackTables();
   // ---- report data: a real report replaces these four values with the collector's output ----
   // END: the Monday of the last complete week, "YYYY-MM-DD" (the collector's last_complete_week). The charts show the 52 weeks up to it.
   const END = "2026-10-19";
-  // CUBE: the collector's "cube" array, pasted as is: [{"week": "YYYY-MM-DD", "source": "claude_code", "category": "prototyping", "sessions": 3, ...}, ...]
+  // CUBE: the collector's "cube" array, pasted as is: [{"week": "YYYY-MM-DD", "source": "claude_code", "category": "prototyping", "project": "Atlas", "sessions": 3, ...}, ...]
   // Rows for weeks outside the 52 are left out.
   const CUBE = sampleCube();
   // SCOPE: the collector's "scope" object, pasted as is. What each source can show.
@@ -1159,7 +1158,7 @@ stackTables();
   const weeks = Array.from({length: WEEKS}, (_, i) => new Date(end.getFullYear(), end.getMonth(), end.getDate() - (WEEKS - 1 - i) * 7));
   const idxOf = iso => WEEKS - 1 - Math.round((end - monday(new Date(iso + "T00:00:00"))) / (7 * 864e5));
   // history saved before "briefable" existed counts every session
-  const rows = CUBE.map(r => ({...r, briefable: r.briefable ?? r.sessions, w: idxOf(r.week), s: r.source, c: r.category})).filter(r => r.w >= 0 && r.w < WEEKS);
+  const rows = CUBE.map(r => ({...r, briefable: r.briefable ?? r.sessions, w: idxOf(r.week), s: r.source, c: r.category, p: r.project || ""})).filter(r => r.w >= 0 && r.w < WEEKS);
 
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const CHART_CATEGORIES = {
@@ -1337,7 +1336,7 @@ stackTables();
       const restart = clamp(proto && i >= 48 ? 0.22 : ramp(0.13, 0.06, i, 18, 34));
       const skill = clamp(i < 19 ? 0 : ramp(0.05, 0.45, i, 19, 51) + (c === "career" ? 0.15 : 0));
       const retype = i < 37 ? 0.55 : 0.18;
-      rows.push({week: iso(i), source: src, category: c, sessions, prompts, briefable: sessions,
+      rows.push({week: iso(i), source: src, category: c, project: ["claude_code", "codex"].includes(src) ? ["Streak", "Atlas", "Fieldnotes"][i % 3] : "", sessions, prompts, briefable: sessions,
         briefed: rr(sessions * brief), corrections: rr(prompts * corr), refinements: rr(sessions * ramp(1.2, 2.4, i, 10, 40)),
         build: BUILD.has(c) ? sessions : 0, checked: rr(sessions * check), restarts: rr(sessions * restart),
         retyped: rr(sessions * retype), skilled: rr(sessions * skill), ...agentChecks(src, c, sessions, i), ...automation(src, sessions, i), ...usage(src, sessions, i)});
@@ -1580,7 +1579,7 @@ stackTables();
     // the coverage note, said once for the whole group
     const left = rs.filter(r => r.leftOut), note = panel.querySelector(".grp-note");
     const drawnHere = rs.filter(r => !r.empty && !r.unmeasured);
-    if (left.length && !none) { note.hidden = false; const rest = drawnHere.filter(r => !r.leftOut); note.textContent = !rest.length ? `${left.length === 1 ? "This chart counts" : "These charts count"} Claude Code and Codex only.` : `${listed(rest.map(r => r.m.title))} ${rest.length === 1 ? "counts" : "count"} ${state.sources.size ? "the apps you picked" : "all your apps"}. ${left.length === 1 ? "The other counts" : "The others count"} only Claude Code and Codex.`; }
+    if (left.length && !none) { note.hidden = false; const rest = drawnHere.filter(r => !r.leftOut); note.textContent = !rest.length ? `${left.length === 1 ? "This chart counts" : "These charts count"} Claude Code and Codex only.` : `${listed(rest.map(r => r.m.title))} ${rest.length === 1 ? "counts" : "count"} ${state.source !== "all" ? "the app you picked" : "all your apps"}. ${left.length === 1 ? "The other counts" : "The others count"} only Claude Code and Codex.`; }
     // slipping charts first; the caller redraws them in this order
     const order = {bad: 0, good: 1, flat: 2};
     return {slips: bad.length, ordered: [...rs].sort((a, b) => order[trendOf(a)] - order[trendOf(b)] || size(b) - size(a))};
@@ -1657,7 +1656,7 @@ stackTables();
   // charts drawn at build time: drop their filter controls, then redraw live
   const trendsEl = document.getElementById("trends"), filtersEl = trendsEl.querySelector(".filters");
   if (trendsEl.hasAttribute("data-static")) {
-    trendsEl.querySelectorAll("#f-presets button, #f-source .chip, #f-cat option").forEach(n => n.remove());
+    trendsEl.querySelectorAll("#f-presets button, #f-source option, #f-cat option, #f-project option").forEach(n => n.remove());
     trendsEl.removeAttribute("data-static");
   }
   // scripts run: show the filters and tiles, hide the no-script notes
@@ -1668,11 +1667,11 @@ stackTables();
   const dataWeeks = rows.some(r => r.sessions > 0) ? WEEKS - Math.min(...rows.filter(r => r.sessions > 0).map(r => r.w)) : WEEKS;
   const DEFAULT_RANGE = (RANGES.find(([n]) => n >= 13 && n >= dataWeeks) || [WEEKS])[0];
   let viewEnd = WEEKS, viewStart = WEEKS - DEFAULT_RANGE;
-  const state = {custom: null, range: DEFAULT_RANGE, sources: new Set(), cat: "all", picked: null, allCharts: new Set()};
+  const state = {custom: null, range: DEFAULT_RANGE, source: "all", cat: "all", project: null, picked: null, allCharts: new Set()};
   const staticNote = trendsEl.querySelector(".static-note");
   if (staticNote) staticNote.textContent = `Showing the last ${RANGES.find(([n]) => n === DEFAULT_RANGE)[1]} across every app. Open this file in a browser to filter the charts.`;
   trendsEl.toggleAttribute("data-nodata", !rows.length);
-  const rangeEl = document.getElementById("f-range"), srcEl = document.getElementById("f-source"), catEl = document.getElementById("f-cat");
+  const rangeEl = document.getElementById("f-range"), srcEl = document.getElementById("f-source"), catEl = document.getElementById("f-cat"), projectEl = document.getElementById("f-project");
   const menu = document.getElementById("f-range-menu"), fromEl = document.getElementById("f-from"), toEl = document.getElementById("f-to"), applyEl = document.getElementById("f-apply");
   const isoDay = d => [d.getFullYear(), String(d.getMonth() + 1).padStart(2, "0"), String(d.getDate()).padStart(2, "0")].join("-");
   const reportTo = [SCOPE.through || isoDay(sunOf(end)), isoDay(sunOf(end))].sort()[0];
@@ -1722,9 +1721,10 @@ stackTables();
     viewStart = Math.max(0, idxOf(state.custom.from)); viewEnd = Math.min(WEEKS, idxOf(state.custom.to) + 1);
     state.range = viewEnd - viewStart; render(); closeRange();
   });
-  const resetFilters = () => { state.sources.clear(); state.cat = "all"; state.custom = null; state.range = DEFAULT_RANGE; render(); rangeEl.focus({preventScroll: true}); };
+  const resetFilters = () => { state.source = "all"; state.cat = "all"; state.project = null; state.custom = null; state.range = DEFAULT_RANGE; render(); rangeEl.focus({preventScroll: true}); };
   document.getElementById("f-reset").addEventListener("click", resetFilters);
-  const selectedRows = () => !state.custom ? rows : rows.flatMap(r => {
+  const projectOk = r => state.project === null || r.p === state.project;
+  const selectedRows = () => !state.custom ? rows.filter(projectOk) : rows.filter(projectOk).flatMap(r => {
     const {from, to} = state.custom;
     if (r.week > to || isoDay(sunOf(weeks[r.w])) < from) return [];
     if (r.week >= from && isoDay(sunOf(weeks[r.w])) <= to) return [r];
@@ -1734,21 +1734,20 @@ stackTables();
     return [selected];
   });
   const present = SOURCES.filter(([id]) => rows.some(r => r.s === id && r.sessions > 0));
-  const toggleSource = id => {
-    if (id === "all") state.sources.clear();
-    else if (state.sources.has(id)) state.sources.delete(id); else state.sources.add(id);
-    if (state.sources.size === present.length) state.sources.clear();
-    render();
-  };
-  [["all", "All"], ...present].forEach(([id, label]) => {
-    const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = label; b.dataset.id = id;
-    b.addEventListener("click", () => toggleSource(id));
-    srcEl.appendChild(b);
+  const toggleSource = id => { state.source = state.source === id ? "all" : id; render(); };
+  [["all", "All apps"], ...present].forEach(([id, label]) => { const o = document.createElement("option"); o.value = id; o.textContent = label; srcEl.appendChild(o); });
+  srcEl.addEventListener("change", () => { state.source = srcEl.value; render(); });
+  const projects = new Map();
+  rows.forEach(r => projects.set(r.p, (projects.get(r.p) || 0) + r.sessions));
+  const allProjects = document.createElement("option"); allProjects.value = "all"; allProjects.textContent = "All projects"; projectEl.appendChild(allProjects);
+  [...projects].sort((a, b) => Number(!a[0]) - Number(!b[0]) || b[1] - a[1] || a[0].localeCompare(b[0])).forEach(([id]) => {
+    const o = document.createElement("option"); o.value = "project:" + id; o.textContent = id || "Unknown"; projectEl.appendChild(o);
   });
+  projectEl.addEventListener("change", () => { state.project = projectEl.value === "all" ? null : projectEl.value.slice(8); render(); });
   [["all", "All work"], ...CATS.filter(([id]) => rows.some(row => row.c === id && row.sessions > 0))].forEach(([id, label]) => { const o = document.createElement("option"); o.value = id; o.textContent = label; catEl.appendChild(o); });
   catEl.addEventListener("change", () => { state.cat = catEl.value; render(); });
 
-  const srcOk = r => !state.sources.size || state.sources.has(r.s);
+  const srcOk = r => state.source === "all" || state.source === r.s;
   const catOk = r => state.cat === "all" || r.c === state.cat;
   const sumRows = (list, keys) => { const t = {}; keys.forEach(k => t[k] = 0); list.forEach(r => keys.forEach(k => t[k] += r[k] || 0)); return t; };
   const KEYS = ["sessions", "prompts", "briefable", "briefed", "corrections", "refinements", "build", "checked", "restarts", "retyped", "skilled", "edited", "agent_checked", "unchecked_ships", "delegated", "delegated_research", "delegated_check", "delegated_build", "read_heavy", "metered", "usage", "long_usage", "start_tokens", "logged", "unattended", "setups", "parallel", "repeats"];
@@ -1851,7 +1850,7 @@ stackTables();
     card.innerHTML = `<div class="chart-head"><h3>${title}</h3></div><p class="def">${m.def}</p>`;
     const firstData = raw.findIndex(v => v != null);
     const usageMetric = m.den === "usage" || m.den === "metered";
-    const chosen = (state.sources.size ? [...state.sources] : SOURCES.map(([id]) => id));
+    const chosen = (state.source !== "all" ? [state.source] : SOURCES.map(([id]) => id));
     // usage and agent-side metrics come only from Claude Code and Codex
     const logged = m.logs || usageMetric;
     const inWindow = id => selectedRows().some(r => r.s === id && r.w >= i0 && r.w < viewEnd && catOk(r) && r.sessions > 0);
@@ -2015,8 +2014,9 @@ stackTables();
     document.getElementById("f-range-value").textContent = rangeLabel();
     rangeEl.title = state.custom ? `${state.custom.from} to ${state.custom.to}` : rangeLabel();
     document.getElementById("f-presets").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(!state.custom && +b.dataset.n === state.range)));
-    document.getElementById("f-reset").disabled = !state.custom && state.range === DEFAULT_RANGE && !state.sources.size && state.cat === "all";
-    srcEl.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.id === "all" ? !state.sources.size : state.sources.has(b.dataset.id))));
+    document.getElementById("f-reset").disabled = !state.custom && state.range === DEFAULT_RANGE && state.source === "all" && state.cat === "all" && state.project === null;
+    srcEl.value = state.source;
+    projectEl.value = state.project === null ? "all" : "project:" + state.project;
     catEl.value = state.cat;
     const totals = weekTotals(r => srcOk(r) && catOk(r));
     const inRange = filteredRows.filter(r => r.w >= i0 && srcOk(r) && catOk(r));
@@ -2060,7 +2060,7 @@ stackTables();
     document.getElementById("prod-meta").textContent = windows;
 
     // what you used AI for: respects time + source, not the work filter (so you can compare kinds)
-    const prevRows = !state.custom && state.range === 4 ? rows.filter(r => r.w >= i0 - state.range && r.w < i0 && srcOk(r)) : null;
+    const prevRows = !state.custom && state.range === 4 ? rows.filter(r => r.w >= i0 - state.range && r.w < i0 && srcOk(r) && projectOk(r)) : null;
     const catRows = filteredRows.filter(r => r.w >= i0 && srcOk(r));
     const catTotal = catRows.reduce((a, r) => a + r.sessions, 0);
     const prevCat = prevRows && {total: prevRows.reduce((a, r) => a + r.sessions, 0)};
@@ -2069,7 +2069,7 @@ stackTables();
       catTotal, prevCat, id => { state.cat = state.cat === id ? "all" : id; render(); }, id => state.cat === id);
     const srcRows = filteredRows.filter(r => r.w >= i0 && catOk(r));
     const srcTotal = srcRows.reduce((a, r) => a + r.sessions, 0);
-    bars(document.getElementById("src-bars"), SOURCES.map(([id, label]) => ({id, label, n: srcRows.filter(r => r.s === id).reduce((a, r) => a + r.sessions, 0)})).filter(x => x.n), srcTotal, null, toggleSource, id => state.sources.has(id));
+    bars(document.getElementById("src-bars"), SOURCES.map(([id, label]) => ({id, label, n: srcRows.filter(r => r.s === id).reduce((a, r) => a + r.sessions, 0)})).filter(x => x.n), srcTotal, null, toggleSource, id => state.source === id);
 
     // habits by kind of work
     const ctb = document.querySelector("#cat-table tbody"); ctb.innerHTML = "";
