@@ -11,7 +11,7 @@ The product is the source of truth: `SKILL.md`, the scripts and `report-template
 | Surface | Where | Notes |
 |---|---|---|
 | Skill | `plugins/second-look/skills/second-look/SKILL.md`, `references/design-system.md`, `scripts/`, `install.sh` | The `description` in the `SKILL.md` frontmatter is also marketing copy |
-| Report template | `plugins/second-look/skills/second-look/report-template.html` | Published as `/sample-report.html`. `public/sample-report.html` is a build copy, so never edit it |
+| Report template | `plugins/second-look/skills/second-look/report-template.html` | Also the sample report: `src/app/sample-report.html/route.ts` reads this file and serves it at `/sample-report.html`. No second copy exists, so never add one |
 | Landing page | `src/components/`, metadata in `src/app/layout.tsx` | `Hero.tsx` links to `/sample-report.html` through `public/sample-report-preview.png`, a hand-kept screenshot of the report's Overview: retake it when the Overview changes. `Faq.tsx` is a hand-kept copy of the README FAQ and doesn't update itself |
 | GitHub README | `README.md` | Repeats the tool table, schedule table, install steps, privacy and FAQ |
 | GitHub About box | Outside the repo. Read with `gh repo view --json description,homepageUrl`, change with `gh repo edit` | Ask before changing it, because it's public |

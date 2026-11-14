@@ -16,8 +16,6 @@
 # next.js
 /.next/
 /out/
-# copied from the skill's report template at build time
-/public/sample-report.html
 
 # production
 /build
