@@ -82,6 +82,10 @@ button.theme-btn:hover { border: 0; background: var(--surface-2); color: var(--f
 .side-nav a:hover { color: var(--fg); }
 .side-nav a.on, .side-nav a.on:hover { background: var(--accent-soft); color: var(--accent); }
 #settings .icard { margin-bottom: 16px; }
+.coverage-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
+.coverage-heading h3 { margin: 0; }
+#coverage-return { color: var(--muted); font-size: 24px; line-height: 1; text-decoration: none; }
+#coverage-return:hover { color: var(--accent); }
 .schedule-fields { display: flex; flex-wrap: wrap; gap: 16px; margin: 16px 0; }
 .schedule-fields label { display: grid; flex: 1 1 12rem; min-width: 0; gap: 4px; font-weight: 600; }
 .schedule-fields select { width: 100%; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--fg); font: inherit; font-size: 16px; }
@@ -1089,7 +1093,10 @@ Then tell me in plain words what changed before you save it.</pre></div>
     </div>
   </section>
   <section class="icard" id="scope-details" aria-labelledby="coverage-title">
-    <h3 id="coverage-title">Data coverage</h3>
+    <div class="coverage-heading">
+      <a id="coverage-return" href="#overview" aria-label="Back to previous view" title="Back" hidden>←</a>
+      <h3 id="coverage-title">Data coverage</h3>
+    </div>
     <p>One local review can read Codex, Claude Code, Cursor and Antigravity sessions on this computer. To include sessions from web apps in a local review, add an export.</p>
       <div class="tl" id="tl-sources"></div>
       <div class="tl-axis" id="tl-axis"></div>
@@ -2240,7 +2247,21 @@ function showPage(id) {
   document.body.dataset.page = page.id;
 }
 // a target can be a page or anything inside one. scroll false leaves the scrolling to the caller
+let coverageOrigin = null;
+const coverageReturn = document.getElementById("coverage-return");
+coverageReturn.addEventListener("click", e => {
+  e.preventDefault();
+  e.stopPropagation();
+  if (!coverageOrigin) return;
+  const origin = coverageOrigin;
+  goTo(origin.page, false);
+  try { history.replaceState(null, "", origin.url); } catch (e) { /* sandboxed viewer */ }
+  origin.link?.focus({preventScroll: true});
+  window.scrollTo({left: origin.x, top: origin.y, behavior: "instant"});
+});
 function goTo(id, scroll = true) {
+  if (id !== "scope-details") coverageOrigin = null;
+  coverageReturn.hidden = !coverageOrigin;
   const el = id && document.getElementById(id), page = el && el.closest(".page");
   const changed = !page || !page.classList.contains("on");
   showPage(page ? page.id : "overview");
@@ -2263,11 +2284,21 @@ function goTo(id, scroll = true) {
   });
   document.addEventListener("click", e => {
     const a = e.target.closest('a[href^="#"]:not([data-jump])');
-    if (a) { e.preventDefault(); goTo(a.getAttribute("href").slice(1)); return; }
+    if (a) {
+      e.preventDefault();
+      const id = a.getAttribute("href").slice(1);
+      if (id === "scope-details" && document.body.dataset.page !== "settings") {
+        coverageOrigin = {page: document.body.dataset.page, url: location.href, x: window.scrollX, y: window.scrollY, link: a};
+      }
+      goTo(id);
+      return;
+    }
     if (narrow() && document.body.classList.contains("side-open") && !side.contains(e.target)) { document.body.classList.remove("side-open"); btn.setAttribute("aria-expanded", "false"); }
   });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && document.body.classList.contains("side-open")) { document.body.classList.remove("side-open"); btn.setAttribute("aria-expanded", "false"); btn.focus(); } });
   const fromAddress = () => {
+    coverageOrigin = null;
+    coverageReturn.hidden = true;
     const id = decodeURIComponent(location.hash.slice(1)), el = id && document.getElementById(id), page = el && el.closest(".page");
     showPage(page ? page.id : "overview");
     if (el && el !== page) el.scrollIntoView({block: "start"}); else window.scrollTo(0, 0);
