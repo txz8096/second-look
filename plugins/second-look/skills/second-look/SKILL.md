@@ -435,7 +435,7 @@ card only when it would change what they do. Write the card title the way you'd 
 one breath. The caps below apply to your text even where the template's sample looks longer.
 
 **Caps.** At most five cards, biggest first; the rest go in the log. Card title: a finding, ten
-words or fewer. What happens: two sentences. Evidence: up to three facts, each with its window.
+words or fewer. Summary: two sentences that add concrete detail beyond the title, without repeating it. Evidence: up to three facts, each with its window.
 Why it matters: one sentence about their work. Skills to fix and Worth a look: five rows each.
 
 **Design rules.** `report-template.html` is the design. `references/design-system.md`
@@ -517,8 +517,7 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 links to the plan. If a much quicker fix goes first, the headline says so. "Following up on your last review" (`#last-cycle`) sits on the Overview, only when an
 earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Try more" (Revise) or "You can stop these" (Drop), without heading icons. Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result with the number when there is one ("You used it more: 11% to 18%", "Too soon to tell, 2 weeks in", "Not tried yet. Now only for long prototypes"). Put what changed, with its window, in the fold. Name what a percentage measures and which apps it covers in the result or its expanded explanation. All fixes start collapsed. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
 biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the apps as
-plain text, including every app its evidence names, and one how-sure chip (Sure, Likely, Hunch); What happens, Evidence and Why it
-matters; when you have one, their own prompt quoted in the card; an optional collapsed "Which apps have which rules". Then the fix in the same
+plain text, including every app its evidence names, and one how-sure chip (Sure, Likely, Hunch); a full-width, left-aligned `.ic-summary` paragraph directly below the heading, with no "What happens" label. Explain the behavior and what the title leaves out in two sentences; add detail without restating the title. Put Evidence and Why it matters inside one native `details.ic-evidence`, collapsed by default and labelled "Evidence and why it matters". Keep the evidence's windows and limits. Put any supporting prompt quote and "Which apps have which rules" comparison inside that disclosure too. Keep both available when expanded and in print. Then the fix in the same
 card: the "Try this: <fix name>" block, a `.try-saves` line with what it saves (see "Saving time and usage"), the action in plain steps per app ("Cursor: Cursor Settings,
 then Rules"), and a paste-ready block. Every pattern with a fix gets one, and every fix goes in the
 plan. How-sure chips mean: Sure, seen repeatedly or checked in their files. Likely, repeated, but

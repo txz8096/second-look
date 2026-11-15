@@ -145,8 +145,7 @@ and summary row (too much to read before the first chart).
 
 ## Pattern card
 
-A number in a pink circle, matching the fix's row in the plan; title; the apps as plain muted text and one how-sure chip; What happens, Evidence and Why it matters as labelled rows; their own prompt, when
-there is one; an optional fold ("Which apps have which rules"); then the "Try this" block
+A number in a pink circle, matching the fix's row in the plan; title; the apps as plain muted text and one how-sure chip; then a full-width, left-aligned `.ic-summary` paragraph, with no "What happens" label. Its two sentences explain the behavior in more detail than the title without restating it. A native `details.ic-evidence` row labelled "Evidence and why it matters" starts collapsed beneath the summary. Its top divider and chevron follow the existing folds; omit its bottom divider before the action panel. Inside, Evidence and Why it matters remain separate labelled groups with a divider between them. Keep supporting prompt quotes and rule comparisons inside the disclosure too. Its summary is a keyboard-operable target at least 44px tall, and printing includes the evidence and restores the reader's disclosure state afterward. Then the "Try this" block
 in a pink panel: "Try this: <fix name>", one pink line saying what it saves (`.try-saves`) with its working in a muted line under it (`.saves-how`), the action in plain steps, a paste-ready block with
 Copy in its corner. Folds inside cards all look the same: a row between hairlines with a chevron, pink on hover.
 
@@ -158,7 +157,7 @@ Copy in its corner. Folds inside cards all look the same: a row between hairline
 
 Habit names carry a dashed underline, quieter on chart titles
 (`--term-quiet`). Hover or keyboard focus opens a card that says how the habit is counted. The
-first "skills" in part 3's headline carries one too, and so do the first session, model, test, ship and skill in part 2's pattern cards. It's pure CSS, so it works in viewers that block scripts; the script only
+first "skills" in part 3's headline carries one too, and so do the first session, model, test, ship and skill in part 2's pattern cards, including terms inside their evidence disclosures. It's pure CSS, so it works in viewers that block scripts; the script only
 keeps the card on screen and lets Escape close it.
 
 ```html

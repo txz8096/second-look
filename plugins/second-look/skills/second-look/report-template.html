@@ -229,9 +229,14 @@ details.last-fix > summary:hover .fix-name { color: var(--accent); }
 .rank { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font: 700 18px/1 var(--display); font-variant-numeric: tabular-nums; }
 .ic-head h3 { font-size: 18px; line-height: 1.45; }
 .ic-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13px; line-height: 1.4; color: var(--muted); }
-.ic-grid { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 10px 16px; margin: 0; }
-.ic-grid dt { font-size: 14px; line-height: 22px; font-weight: 400; color: var(--muted); }
-.ic-grid dd { margin: 0; min-width: 0; font-size: 14px; line-height: 22px; }
+.ic-summary { font-size: 14px; line-height: 22px; text-align: left; }
+.ic-grid { display: grid; gap: 12px; margin: 0; }
+.ic-grid > div + div { padding-top: 12px; border-top: 1px solid var(--line); }
+.ic-grid dt { font-size: 14px; line-height: 22px; font-weight: 500; }
+.ic-grid dd { margin: 4px 0 0; min-width: 0; font-size: 14px; line-height: 22px; }
+.ic-grid dd > :is(blockquote, details) { margin-top: 12px; }
+.ic-grid dd > details.nested { border-bottom: 0; }
+.ic-grid blockquote + .def { margin-top: 0; }
 /* a real quote from a real session, with what came of it */
 blockquote { margin: 0; padding-left: 12px; border-left: 2px solid var(--line); font-size: 14px; line-height: 22px; color: var(--fg); }
 blockquote + .def { margin-top: -16px; padding: 6px 0 0 12px; border-left: 2px solid var(--line); font-size: 13px; line-height: 18px; }
@@ -306,6 +311,9 @@ details.nested { border-block: 1px solid var(--line); }
 details.nested > summary { padding: 10px 0; gap: 8px; font-size: 14px; line-height: 20px; font-weight: 500; }
 details.nested > summary:hover { color: var(--accent); }
 details.nested > .body { padding: 4px 0 16px 24px; }
+details.ic-evidence { border-bottom: 0; }
+details.ic-evidence > summary { min-height: 44px; align-items: center; padding: 12px 0 0; }
+details.ic-evidence > .body { padding: 12px 0 0; }
 .try details.nested { border-block: 0; border-top: 1px solid var(--accent-soft-2); }
 .try details.nested > summary { padding-bottom: 0; }
 
@@ -552,9 +560,6 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .chart.lead svg { min-width: 590px; }
   .rank { width: 32px; height: 32px; font-size: 16px; }
   .icard { padding: 16px; }
-  .ic-grid { grid-template-columns: 1fr; gap: 0; }
-  .ic-grid dt { margin-top: 10px; font-size: 13px; }
-  .ic-grid dt:first-child { margin-top: 0; }
   .grp-tiles { grid-auto-flow: row; grid-template-columns: 1fr 1fr; gap: 8px; }
   .grp-tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .tl-row, .tl-axis { grid-template-columns: 1fr; gap: 6px; }
@@ -580,7 +585,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval { font-size: 13px; }
   .def, .sum-meta, .part-meta, .fsum, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
     .side-about, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
-  .scope-line, .tl-name, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
+  .scope-line, .tl-name, .ic-summary, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
   /* tap targets */
   button:not(.brow):not(.menu-btn), select { min-height: 44px; }
   button.copy { min-height: 32px; height: 32px; top: 4px; left: 4px; right: auto; }
@@ -732,11 +737,10 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   <article id="p-rules" class="icard">
     <div class="ic-head"><span class="rank">1</span><h3>You retype the same rules across your apps</h3>
       <p class="ic-tags">Claude Code · Codex · Cursor · claude.ai · ChatGPT <span class="conf strong">Sure</span></p></div>
-    <dl class="ic-grid">
-      <dt>What happens</dt><dd>You type the same rules by hand, because only some of your apps have them saved.</dd>
-      <dt>Evidence</dt><dd>You retyped rules 27 times in the last 4 weeks. “just show the diff, skip the recap” alone came up in 9 <span class="term" tabindex="0" aria-describedby="def-session-part2">sessions<span class="term-card" role="tooltip" id="def-session-part2">One conversation with an AI, from your first message until you start a new one.</span></span>. Codex and ChatGPT are missing all 4 of your rules, Cursor 2.</dd>
-      <dt>Why it matters</dt><dd>You lose time every session, and Codex, Cursor and ChatGPT still answer without your rules.</dd>
-    </dl>
+    <p class="ic-summary">Your preferences are saved in Claude Code and claude.ai, but Codex, Cursor and ChatGPT have gaps. You end up adding instructions about output format, documentation and prototype tools during the session instead of having them available from the start.</p>
+    <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
+      <div class="body"><dl class="ic-grid">
+        <div><dt>Evidence</dt><dd>You retyped rules 27 times in the last 4 weeks. “just show the diff, skip the recap” alone came up in 9 <span class="term" tabindex="0" aria-describedby="def-session-part2">sessions<span class="term-card" role="tooltip" id="def-session-part2">One conversation with an AI, from your first message until you start a new one.</span></span>. Codex and ChatGPT are missing all 4 of your rules, Cursor 2.
     <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Which apps have which rules</span></summary>
       <div class="body"><div class="tbl"><table>
         <thead><tr><th>Rule</th><th>Claude Code</th><th>Codex</th><th>Cursor</th><th>claude.ai</th><th>ChatGPT</th></tr></thead>
@@ -745,7 +749,10 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
           <tr><td>Show changes, not whole files</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
           <tr><td>Link official docs for how a tool works</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
           <tr><td>Prototype stack: React + Tailwind</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>—</td></tr>
-        </tbody></table></div></div></details>
+        </tbody></table></div></div></details></dd></div>
+        <div><dt>Why it matters</dt><dd>You lose time every session, and Codex, Cursor and ChatGPT still answer without your rules.</dd></div>
+      </dl></div>
+    </details>
     <section class="try" id="try-rules" aria-labelledby="try-rules-h">
       <h4 id="try-rules-h">Try this: Add your rules to the apps missing them</h4>
       <p class="try-saves">Saves about 5 minutes a week<span class="saves-how">About 7 rules retyped a week × under a minute each.</span></p>
@@ -761,13 +768,15 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   <article id="p-brief" class="icard">
     <div class="ic-head"><span class="rank">2</span><h3>Prototype sessions start vague, then restart</h3>
       <p class="ic-tags">Claude Code · Codex · Cursor · claude.ai <span class="conf sugg">Likely</span></p></div>
-    <dl class="ic-grid">
-      <dt>What happens</dt><dd>Your first message names what to build, but not who it’s for or what done looks like. You fill in the gaps over the next few messages, and sometimes start a new session.</dd>
-      <dt>Evidence</dt><dd>In the last 4 weeks, 16 of your 25 <span class="term" tabindex="0" aria-describedby="def-restarts-part2">restarts<span class="term-card" role="tooltip" id="def-restarts-part2">A new session that opens with mostly the same request as one from the last two days, in the same app. It usually means the first try went off track.</span></span> were prototype sessions, including 4 Streak settings-screen sessions on Oct 14–15. In those 4 weeks, 44% of prototype sessions opened with a brief.</dd>
-      <dt>Why it matters</dt><dd>Each restart repeats the setup, and without a definition of done it’s hard to tell when a prototype is finished.</dd>
-    </dl>
+    <p class="ic-summary">Your first message names a screen to build but leaves out who will use it, what success looks like or which tools to use. Those decisions arrive over the next few messages, so the assistant starts building before the brief is complete and some work starts over in a new session.</p>
+    <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
+      <div class="body"><dl class="ic-grid">
+        <div><dt>Evidence</dt><dd>In the last 4 weeks, 16 of your 25 <span class="term" tabindex="0" aria-describedby="def-restarts-part2">restarts<span class="term-card" role="tooltip" id="def-restarts-part2">A new session that opens with mostly the same request as one from the last two days, in the same app. It usually means the first try went off track.</span></span> were prototype sessions, including 4 Streak settings-screen sessions on Oct 14–15. In those 4 weeks, 44% of prototype sessions opened with a brief.
     <blockquote>“build the settings screen for streak, make it look good and hook up reminders”</blockquote>
-    <p class="def">How 3 of the 4 settings-screen restarts opened. The next 5–8 messages each added a missing piece, like who it was for or the stack.</p>
+    <p class="def">How 3 of the 4 settings-screen restarts opened. The next 5–8 messages each added a missing piece, like who it was for or the stack.</p></dd></div>
+        <div><dt>Why it matters</dt><dd>Each restart repeats the setup, and without a definition of done it’s hard to tell when a prototype is finished.</dd></div>
+      </dl></div>
+    </details>
     <section class="try" id="try-brief" aria-labelledby="try-brief-h">
       <h4 id="try-brief-h">Try this: Brief before big prototype tasks</h4>
       <p class="try-saves">Saves about 30 minutes a week<span class="saves-how">About 2 restarts avoided a week × 15 minutes of repeated setup.</span></p>
@@ -784,11 +793,13 @@ Before building, list up to 3 questions you need answered.</pre></div>
   <article id="p-trust" class="icard">
     <div class="ic-head"><span class="rank">3</span><h3>Prototypes often go out without a last check</h3>
       <p class="ic-tags">Claude Code · Codex · claude.ai <span class="conf val">Hunch</span></p></div>
-    <dl class="ic-grid">
-      <dt>What happens</dt><dd>When a prototype looks done, the session often ends with no critique or <span class="term" tabindex="0" aria-describedby="def-test-part2">test<span class="term-card" role="tooltip" id="def-test-part2">A check that the code really works, run by the AI or by you.</span></span>.</dd>
-      <dt>Evidence</dt><dd>3 prototypes went into the Streak beta with no check in the session, Oct 6–20. In the last 4 weeks, checking in prototype sessions fell from 43% to 23%, and Claude Code and Codex saved code they hadn’t tested 10 times.</dd>
-      <dt>Why it matters</dt><dd>Beta testers use what you <span class="term" tabindex="0" aria-describedby="def-ship-part2">ship<span class="term-card" role="tooltip" id="def-ship-part2">Put it where other people can use it.</span></span>, so a broken screen does more harm there than in a sketch.</dd>
-    </dl>
+    <p class="ic-summary">Some Streak beta work is shared once the screen looks finished, without a critique or <span class="term" tabindex="0" aria-describedby="def-test-part2">test<span class="term-card" role="tooltip" id="def-test-part2">A check that the code really works, run by the AI or by you.</span></span> recorded in the session. There is no clear account of which behavior was checked or which assumptions still need review before other people use it.</p>
+    <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
+      <div class="body"><dl class="ic-grid">
+        <div><dt>Evidence</dt><dd>3 prototypes went into the Streak beta with no check in the session, Oct 6–20. In the last 4 weeks, checking in prototype sessions fell from 43% to 23%, and Claude Code and Codex saved code they hadn’t tested 10 times.</dd></div>
+        <div><dt>Why it matters</dt><dd>Beta testers use what you <span class="term" tabindex="0" aria-describedby="def-ship-part2">ship<span class="term-card" role="tooltip" id="def-ship-part2">Put it where other people can use it.</span></span>, so a broken screen does more harm there than in a sketch.</dd></div>
+      </dl></div>
+    </details>
     <section class="try" id="try-trust" aria-labelledby="try-trust-h">
       <h4 id="try-trust-h">Try this: Check beta work before it ships</h4>
       <p class="try-saves">Means fewer fixes after launch</p>
@@ -811,11 +822,13 @@ Before building, list up to 3 questions you need answered.</pre></div>
   <article id="p-long" class="icard">
     <div class="ic-head"><span class="rank">4</span><h3>Long sessions drift across projects and eat your usage</h3>
       <p class="ic-tags">Claude Code · Codex <span class="conf sugg">Likely</span></p></div>
-    <dl class="ic-grid">
-      <dt>What happens</dt><dd>Some sessions jump from one project to the next without starting fresh. Every message in a very long session makes the AI re-read everything before it, including files from the earlier project.</dd>
-      <dt>Evidence</dt><dd>In the last 4 weeks, 14 of 72 Claude Code and Codex sessions were very long (past about a novel’s worth of text) and took 61% of your usage. A message in them took 2.6× the usage of your typical one. 2 ran past 60 messages across the onboarding flow, a Streak sync bug and a pricing page.</dd>
-      <dt>Why it matters</dt><dd>You reach your limit sooner, and leftovers from the last project can steer the next one.</dd>
-    </dl>
+    <p class="ic-summary">Work on one project continues in the same session when you move to another. The next task carries the earlier messages and files with it, increasing the context the assistant has to process and leaving unrelated project details in the session.</p>
+    <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
+      <div class="body"><dl class="ic-grid">
+        <div><dt>Evidence</dt><dd>In the last 4 weeks, 14 of 72 Claude Code and Codex sessions were very long (past about a novel’s worth of text) and took 61% of your usage. A message in them took 2.6× the usage of your typical one. 2 ran past 60 messages across the onboarding flow, a Streak sync bug and a pricing page.</dd></div>
+        <div><dt>Why it matters</dt><dd>You reach your limit sooner, and leftovers from the last project can steer the next one.</dd></div>
+      </dl></div>
+    </details>
     <section class="try" id="try-long" aria-labelledby="try-long-h">
       <h4 id="try-long-h">Try this: Start fresh between projects</h4>
       <p class="try-saves">Saves about a tenth of your Claude Code and Codex usage<span class="saves-how">Very long sessions took 61% of that usage. Starting fresh could cut about a sixth of it.</span></p>
@@ -826,11 +839,13 @@ Before building, list up to 3 questions you need answered.</pre></div>
   <article id="p-model" class="icard">
     <div class="ic-head"><span class="rank">5</span><h3>Your strongest model does your simplest work</h3>
       <p class="ic-tags">Claude Code <span class="conf sugg">Likely</span></p></div>
-    <dl class="ic-grid">
-      <dt>What happens</dt><dd>Every Claude Code session runs on Opus, including quick questions and lookups a cheaper <span class="term" tabindex="0" aria-describedby="def-model-part2">model<span class="term-card" role="tooltip" id="def-model-part2">The version of the AI you’re talking to. Stronger ones use up your limit faster.</span></span> handles just as well.</dd>
-      <dt>Evidence</dt><dd>In the last 4 weeks, 19 of your 62 Claude Code sessions were short and changed no code. They took 14% of your usage on Opus.</dd>
-      <dt>Why it matters</dt><dd>Simple work on a cheaper model leaves more of your limit for the work that needs the strongest one.</dd>
-    </dl>
+    <p class="ic-summary">Quick questions and lookups use Opus by default alongside harder coding tasks. The <span class="term" tabindex="0" aria-describedby="def-model-part2">model<span class="term-card" role="tooltip" id="def-model-part2">The version of the AI you’re talking to. Stronger ones use up your limit faster.</span></span> choice stays the same even for short sessions that change no code, so these smaller requests draw on the same usage allowance as more demanding work.</p>
+    <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
+      <div class="body"><dl class="ic-grid">
+        <div><dt>Evidence</dt><dd>In the last 4 weeks, 19 of your 62 Claude Code sessions were short and changed no code. They took 14% of your usage on Opus.</dd></div>
+        <div><dt>Why it matters</dt><dd>Simple work on a cheaper model leaves more of your limit for the work that needs the strongest one.</dd></div>
+      </dl></div>
+    </details>
     <section class="try" id="try-model" aria-labelledby="try-model-h">
       <h4 id="try-model-h">Try this: Match the model to the job</h4>
       <p class="try-saves">Saves about a tenth of your Claude Code usage<span class="saves-how">Short sessions took 14% of it × the price gap to a cheaper model.</span></p>
@@ -2306,6 +2321,17 @@ function goTo(id, scroll = true) {
   window.addEventListener("popstate", fromAddress);
   fromAddress();
   window.addEventListener("beforeprint", () => side.querySelectorAll("details").forEach(d => { d.open = true; }));
+  const evidencePrintState = new Map();
+  window.addEventListener("beforeprint", () => {
+    document.querySelectorAll("details.ic-evidence, .ic-evidence details").forEach(d => {
+      if (!evidencePrintState.has(d)) evidencePrintState.set(d, d.open);
+      d.open = true;
+    });
+  });
+  window.addEventListener("afterprint", () => {
+    evidencePrintState.forEach((open, d) => { d.open = open; });
+    evidencePrintState.clear();
+  });
   // the light and dark switch; it remembers the choice where the browser allows it
   const themeBtn = document.getElementById("theme-btn"), showMode = () => {
     const light = document.documentElement.dataset.mode === "light";
