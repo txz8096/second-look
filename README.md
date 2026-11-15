@@ -199,8 +199,8 @@ skill and config files for the skills check. Sources it can't open are marked "N
 <details>
 <summary><b>Where does it run, and is anything uploaded?</b></summary>
 
-It runs on your machine, and reports are saved in `~/.second-look/`. Nothing goes to second
-look, because there's no Second Look server. The review runs inside your assistant, so what
+It runs on your machine, and reports are saved in `~/.second-look/`. Nothing goes to Second
+Look, because there's no Second Look server. The review runs inside your assistant, so what
 it reads goes to your model provider like any other message you send, under your existing
 account settings. See [Privacy](#privacy).
 </details>
@@ -232,8 +232,8 @@ your standing rules live, and where your skills are. Your answers become a profi
 <details>
 <summary><b>How often should I run it?</b></summary>
 
-Every two weeks works well. Each review checks last cycle's experiments, then gives a fix for
-every new pattern. You can also ask for a review any time; it covers everything since the last
+Every two weeks works well. Each review checks the fixes from your last review, then gives a
+fix for every new pattern. You can also ask for a review any time; it covers everything since the last
 one. Name a narrower scope, like "my Cursor sessions", if that's all you want.
 </details>
 

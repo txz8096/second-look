@@ -3,7 +3,7 @@
 import { Check, Copy } from "lucide-react";
 import { useState } from "react";
 
-export function CopyButton({ text, label, compact = false }: { text: string; label: string; compact?: boolean }) {
+export function CopyButton({ text, label }: { text: string; label: string }) {
   const [copied, setCopied] = useState(false);
 
   async function copy() {
@@ -18,28 +18,20 @@ export function CopyButton({ text, label, compact = false }: { text: string; lab
 
   const Icon = copied ? Check : Copy;
 
-  if (compact) {
-    return (
+  return (
+    <>
       <button
         type="button"
         onClick={copy}
-        aria-label={copied ? "Copied" : label}
+        aria-label={label}
         className="-m-3 inline-flex size-11 shrink-0 items-center justify-center rounded text-text-3 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-accent"
       >
         <Icon key={String(copied)} size={18} className={copied ? "icon-in" : undefined} aria-hidden="true" />
       </button>
-    );
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={copy}
-      aria-label={copied ? "Copied" : label}
-      className="relative inline-flex shrink-0 items-center gap-1.5 rounded border border-rule px-2 py-1 font-mono text-xs text-text-3 transition-colors after:absolute after:-inset-2 hover:text-ink focus-visible:outline-2 focus-visible:outline-accent"
-    >
-      <Icon key={String(copied)} size={14} className={copied ? "icon-in" : undefined} aria-hidden="true" />
-      {copied ? "Copied" : "Copy"}
-    </button>
+      {/* A label swapped on a focused button is announced unreliably; a status region is not. */}
+      <span role="status" className="sr-only">
+        {copied ? "Copied" : ""}
+      </span>
+    </>
   );
 }

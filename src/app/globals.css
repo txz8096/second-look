@@ -15,7 +15,6 @@
 
   --font-display: var(--font-familjen), system-ui, sans-serif;
   --font-body: var(--font-familjen), system-ui, sans-serif;
-  --font-mono: var(--font-familjen), system-ui, sans-serif;
   --font-code: var(--font-plex-mono), ui-monospace, monospace;
   --text-section: 2.5rem;
   --text-section--line-height: 1.12;
