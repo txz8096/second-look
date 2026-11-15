@@ -325,8 +325,10 @@ People use this review to get more back for what they put in, so look for saving
 Rank findings and fixes by what they save, and give every fix a saving. A much quicker fix may go
 first if the part's headline says so.
 
-- **Time.** Work it out from their counts: rules retyped × a minute each, restarts × their typical
-  session, corrections × a couple of minutes. Compare it with what the fix takes. Round down.
+- **Time.** Count the repeated work, including time spent typing instructions and waiting for
+  unnecessary AI responses. Use supported durations or clearly stated assumptions when estimating
+  minutes; don't treat typing time as the whole saving. When durations aren't supported, name what
+  the fix saves and say total time saved isn't measured. Compare it with what the fix takes.
 - **Usage.** Take it from `usage`: long sessions, what loads at the start, lookups in the main
   session, and the model mix below.
 - **How to write it.** "About 30 minutes a week", "About a tenth of your Claude Code usage". Always "about". With
@@ -518,8 +520,11 @@ links to the plan. If a much quicker fix goes first, the headline says so. "Foll
 earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Try more" (Revise) or "You can stop these" (Drop), without heading icons. Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result with the number when there is one ("You used it more: 11% to 18%", "Too soon to tell, 2 weeks in", "Not tried yet. Now only for long prototypes"). Put what changed, with its window, in the fold. Name what a percentage measures and which apps it covers in the result or its expanded explanation. All fixes start collapsed. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
 biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the apps as
 plain text, including every app its evidence names, and one how-sure chip (Sure, Likely, Hunch); a full-width, left-aligned `.ic-summary` paragraph directly below the heading, with no "What happens" label. Explain the behavior and what the title leaves out in two sentences; add detail without restating the title. Put Evidence and Why it matters inside one native `details.ic-evidence`, collapsed by default and labelled "Evidence and why it matters". Keep the evidence's windows and limits. Put any supporting prompt quote and "Which apps have which rules" comparison inside that disclosure too. Keep both available when expanded and in print. Then the fix in the same
-card: the "Try this: <fix name>" block, a `.try-saves` line with what it saves (see "Saving time and usage"), the action in plain steps per app ("Cursor: Cursor Settings,
-then Rules"), and a paste-ready block. Every pattern with a fix gets one, and every fix goes in the
+card: the "Try this: <fix name>" block, a `.try-saves` line with what it saves (see "Saving time and usage"), one short instruction naming the app to open, and a paste-ready block specific to that app.
+Choose one app the user uses and can act from; avoid a platform-by-platform setup list. For shared
+rules, that app can be asked to update other accessible instruction files, preserve existing rules,
+flag conflicts, verify saved changes and report anything it cannot reach. Never promise access or
+automatic model switching. A handoff prompt still tells the user to start a fresh session. Every pattern with a fix gets one, and every fix goes in the
 plan. How-sure chips mean: Sure, seen repeatedly or checked in their files. Likely, repeated, but
 something else could explain it. Hunch, thin evidence.
 

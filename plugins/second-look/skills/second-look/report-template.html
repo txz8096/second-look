@@ -754,14 +754,18 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
       </dl></div>
     </details>
     <section class="try" id="try-rules" aria-labelledby="try-rules-h">
-      <h4 id="try-rules-h">Try this: Add your rules to the apps missing them</h4>
-      <p class="try-saves">Saves about 5 minutes a week<span class="saves-how">About 7 rules retyped a week × under a minute each.</span></p>
-      <p class="try-do">Copy the block once. Codex: paste it into a new session and say “Save these as my rules for every project.” Cursor: Cursor Settings, then Rules. ChatGPT: Settings → Personalization → Custom instructions. Claude Code and claude.ai already have them.</p>
+      <h4 id="try-rules-h">Try this: Fill the gaps in your saved rules</h4>
+      <p class="try-saves">Saves retyping and waiting for extra replies<span class="saves-how">About 7 repeated instructions a week. Avoiding them also avoids extra AI responses; total time saved isn't measured.</span></p>
+      <p class="try-do">Open a new Codex session and paste this once.</p>
       <div class="field"><button type="button" class="copy" hidden>Copy</button>
-<pre>- Confirm the plan before editing more than one file.
+<pre>Save these as my standing rules in Codex, then add them wherever they're missing in the other AI apps you can access. Preserve existing instructions, skip duplicates, and flag conflicts before changing them.
+
+- Confirm the plan before editing more than one file.
 - Show changes, not whole files. Skip the recap at the end.
 - Link the official docs when you tell me how a tool works.
-- Prototypes use React + Tailwind.</pre></div>
+- Prototypes use React + Tailwind.
+
+Verify what you saved. Tell me what changed and anything you couldn't update.</pre></div>
     </section>
   </article>
 
@@ -780,13 +784,16 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     <section class="try" id="try-brief" aria-labelledby="try-brief-h">
       <h4 id="try-brief-h">Try this: Brief before big prototype tasks</h4>
       <p class="try-saves">Saves about 30 minutes a week<span class="saves-how">About 2 restarts avoided a week × 15 minutes of repeated setup.</span></p>
-      <p class="try-do">Starting a prototype that’s more than a quick tweak? Copy this as your first message and fill in the brackets. If you don’t know what done looks like yet, say so.</p>
+      <p class="try-do">In Codex, paste this as your first message before a prototype task and fill in the brackets.</p>
       <div class="field"><button type="button" class="copy" hidden>Copy</button>
-<pre>Goal: [what this prototype should let someone do]
+<pre>Help me brief this prototype before you build it.
+
+Goal: [what this prototype should let someone do]
 User: [who uses it]
-Done when: [what you'll check to call it finished]
+Done when: [what we'll check to call it finished]
 Limits: [tools to use, what to leave alone]
-Before building, list up to 3 questions you need answered.</pre></div>
+
+Ask up to 3 questions about anything missing. If I don't know an answer, help me decide. Confirm the brief with me before building.</pre></div>
     </section>
   </article>
 
@@ -803,10 +810,11 @@ Before building, list up to 3 questions you need answered.</pre></div>
     <section class="try" id="try-trust" aria-labelledby="try-trust-h">
       <h4 id="try-trust-h">Try this: Check beta work before it ships</h4>
       <p class="try-saves">Means fewer fixes after launch</p>
-      <p class="try-do">Only for work others will see. Paste this before you share it.</p>
+      <p class="try-do">In Codex, paste this before you share beta work.</p>
       <div class="field"><button type="button" class="copy" hidden>Copy</button>
-<pre>What are the 3 most likely ways this breaks for a real user, and what did you assume that I didn't tell you?</pre></div>
-      <p class="def">If your pr-review <span class="term" tabindex="0" aria-describedby="def-skill-part2">skill<span class="term-card" role="tooltip" id="def-skill-part2">A skill is a saved set of steps the AI follows the same way each time.</span></span> is fixed, type <code>/pr-review</code> first for a fuller check.</p>
+<pre>Review this beta work before I share it. What are the 3 most likely ways it breaks for a real user, and which assumptions need checking?
+
+Inspect the work and run the relevant checks you can. Use my pr-review skill if it has been fixed. Tell me what passed, what failed, and what remains unverified.</pre></div>
       <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>How much to check, by type of work</span></summary>
         <div class="body"><div class="tbl"><table>
           <thead><tr><th>Type of work</th><th>Risk</th><th>Light check</th></tr></thead>
@@ -832,7 +840,11 @@ Before building, list up to 3 questions you need answered.</pre></div>
     <section class="try" id="try-long" aria-labelledby="try-long-h">
       <h4 id="try-long-h">Try this: Start fresh between projects</h4>
       <p class="try-saves">Saves about a tenth of your Claude Code and Codex usage<span class="saves-how">Very long sessions took 61% of that usage. Starting fresh could cut about a sixth of it.</span></p>
-      <p class="try-do">When you switch projects or finish a piece of work, open a new session. In Claude Code, <code>/clear</code> does the same. If the next task needs context, first ask: “Summarize this in five lines for a new session.” Paste that into the new session.</p>
+      <p class="try-do">In Codex, paste this when you finish a piece of work or switch projects.</p>
+      <div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Summarize this work in five lines for a fresh Codex session: goal, current state, relevant files, decisions, and next step.
+
+Include unfinished checks and only the context the next task needs. Then remind me to open a new Codex session and paste this handoff before continuing.</pre></div>
     </section>
   </article>
 
@@ -849,7 +861,13 @@ Before building, list up to 3 questions you need answered.</pre></div>
     <section class="try" id="try-model" aria-labelledby="try-model-h">
       <h4 id="try-model-h">Try this: Match the model to the job</h4>
       <p class="try-saves">Saves about a tenth of your Claude Code usage<span class="saves-how">Short sessions took 14% of it × the price gap to a cheaper model.</span></p>
-      <p class="try-do">Switch before you start. In Claude Code and Codex, type <code>/model</code>. In Cursor, use the model menu. If you correct a cheaper model twice, move up a level.</p>
+      <p class="try-do">In Claude Code, paste this before your next task.</p>
+      <div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Before working on the task below, recommend the least expensive model available to me that is likely to handle it well. Explain the choice briefly and tell me how to switch if needed.
+
+If I correct a cheaper model twice, recommend moving to a stronger one. Do not claim the model changed unless you can verify it.
+
+Task: [what I need help with]</pre></div>
       <div class="tbl"><table class="unlabeled">
         <thead><tr><th>Use</th><th>For</th></tr></thead>
         <tbody>
@@ -867,7 +885,7 @@ Before building, list up to 3 questions you need answered.</pre></div>
     <h3 id="plan-h">Your plan until Nov 8</h3>
     <div class="plan-cols"><span>Time</span><span>Saves</span><span>Nov 8 review checks</span></div>
     <ol class="plan-list">
-      <li><a class="row-link" href="#try-rules" data-jump="try-rules">Add your rules to the apps missing them</a><span class="plan-effort">5 minutes, once</span><span class="plan-saves">About 5 minutes a week</span><span class="plan-check" data-label="Nov 8 checks">Rules retyped, and corrections in Codex and Cursor</span></li>
+      <li><a class="row-link" href="#try-rules" data-jump="try-rules">Fill the gaps in your saved rules</a><span class="plan-effort">5 minutes, once</span><span class="plan-saves">Retyping and waiting for extra replies</span><span class="plan-check" data-label="Nov 8 checks">Rules retyped, and corrections in Codex and Cursor</span></li>
       <li><a class="row-link" href="#try-brief" data-jump="try-brief">Brief before big prototype tasks</a><span class="plan-effort">A minute before any prototype that’s more than a quick tweak</span><span class="plan-saves">About 30 minutes a week</span><span class="plan-check" data-label="Nov 8 checks">Briefed starts and restarts in prototype sessions</span></li>
       <li><a class="row-link" href="#try-trust" data-jump="try-trust">Check beta work before it ships</a><span class="plan-effort">5 minutes per piece others will see</span><span class="plan-saves">Fewer fixes after launch</span><span class="plan-check" data-label="Nov 8 checks">Output checking and untested changes shipped</span><span class="plan-first">Better with your pr-review skill. <a href="#fix-pr-review" data-jump="fix-pr-review">Fix it when you have 5 minutes</a>.</span></li>
       <li><a class="row-link" href="#try-long" data-jump="try-long">Start fresh between projects</a><span class="plan-effort">A habit, whenever you switch projects</span><span class="plan-saves">About a tenth of your Claude Code and Codex usage</span><span class="plan-check" data-label="Nov 8 checks">Long-session share</span></li>

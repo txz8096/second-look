@@ -146,8 +146,15 @@ and summary row (too much to read before the first chart).
 ## Pattern card
 
 A number in a pink circle, matching the fix's row in the plan; title; the apps as plain muted text and one how-sure chip; then a full-width, left-aligned `.ic-summary` paragraph, with no "What happens" label. Its two sentences explain the behavior in more detail than the title without restating it. A native `details.ic-evidence` row labelled "Evidence and why it matters" starts collapsed beneath the summary. Its top divider and chevron follow the existing folds; omit its bottom divider before the action panel. Inside, Evidence and Why it matters remain separate labelled groups with a divider between them. Keep supporting prompt quotes and rule comparisons inside the disclosure too. Its summary is a keyboard-operable target at least 44px tall, and printing includes the evidence and restores the reader's disclosure state afterward. Then the "Try this" block
-in a pink panel: "Try this: <fix name>", one pink line saying what it saves (`.try-saves`) with its working in a muted line under it (`.saves-how`), the action in plain steps, a paste-ready block with
-Copy in its corner. Folds inside cards all look the same: a row between hairlines with a chevron, pink on hover.
+in a pink panel: "Try this: <fix name>", one pink line saying what it saves (`.try-saves`) with its working in a muted line under it (`.saves-how`), one short instruction naming the app to open, and one paste-ready block specific to that app with
+Copy in its corner. Avoid platform-by-platform setup lists in the action panel. Preserve per-task
+steps such as starting a fresh session, and disclose any inaccessible settings or unverified model switch
+in the prompt. Folds inside cards all look the same: a row between hairlines with a chevron, pink on hover.
+
+For rules saved instead of repeated, include both retyping and waiting for extra AI replies in the
+saving. Give a minute estimate only when the durations are supported or the assumptions are stated;
+otherwise name the benefit and say total time saved isn't measured. Keep the plan's saving consistent
+with the card, without repeating the word "Saves".
 
 ## Fix review
 
