@@ -23,7 +23,7 @@ function CodeBlock({ text }: { text: string }) {
   return (
     <div className="flex items-start gap-4 rounded-md border border-rule bg-dark p-5">
       <code className="min-w-0 flex-1 font-code text-sm leading-[1.55] break-words text-ink">{text}</code>
-      <CopyButton text={text} label={`Copy ${text}`} compact />
+      <CopyButton text={text} label={`Copy ${text}`} />
     </div>
   );
 }

@@ -58,7 +58,7 @@ BUILTIN_COMMANDS = {"clear", "compact", "help", "model", "config", "cost", "init
                     "login", "logout", "status", "memory", "permissions", "exit", "doctor",
                     "add-dir", "agents", "hooks", "mcp", "context", "usage", "rewind", "plan"}
 
-# Behavior signals. Heuristics: the coach spot-checks samples before trusting a number.
+# Behavior signals. Heuristics: the review spot-checks samples before trusting a number.
 GOAL = re.compile(r"\b(goal|so that|i want|i need|trying to|help me|purpose|because|in order to)\b", re.I)
 CONTEXT = re.compile(r"\b(i'?m|my|our|for (a|an|the)|users?|audience|context|background|currently|we have)\b", re.I)
 DONE = re.compile(r"\b(done when|output|format|table|list|bullets?|steps|should|must|include|words|"
@@ -955,7 +955,7 @@ def session_cube(sessions):
 
 
 def label_samples(sessions, n=12):
-    """Recent sessions with their labels, for the coach to spot-check the classifier."""
+    """Recent sessions with their labels, for the review to spot-check the classifier."""
     recent = sorted(sessions, key=lambda r: r["start"], reverse=True)[:n]
     return [{"source": r["source"], "category": r["category"], "briefed": r["briefed"],
              "restart": r["restart"], "first": clean(r["first"], 160)} for r in recent]

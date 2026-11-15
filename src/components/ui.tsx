@@ -25,7 +25,7 @@ export function Kicker({
   as?: "p" | "h2";
 }) {
   return (
-    <Tag className={`font-mono text-[13px] font-normal tracking-[1.2px] text-accent uppercase ${className}`}>
+    <Tag className={`font-body text-[13px] font-normal tracking-[1.2px] text-accent uppercase ${className}`}>
       {children}
     </Tag>
   );
