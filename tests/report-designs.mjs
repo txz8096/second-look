@@ -133,7 +133,7 @@ const main = fixture('sample', source);
   }
   await page.setViewportSize({width:1440,height:1000});
   await page.goto(fixture('no-findings',source.replace('data-findings-state="available"','data-findings-state="none"'))+'#part-2');
-  assert.equal(await page.locator('.briefs-empty').isVisible(),true);assert.equal(await page.locator('#plan').isVisible(),false);
+  assert.equal(await page.locator('.briefs-empty').isVisible(),true);
   await page.locator('#part-2').screenshot({path:path.join(output,'no-findings.png')});
   await page.goto(main);assert.equal(await page.locator('#work-mix .work-mix-week').count(),13);
   assert.deepEqual(await page.locator('.explore .dest-t').allTextContents(),['Briefs & setup','Skills','Habits & usage']);

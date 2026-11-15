@@ -16,7 +16,7 @@ A review runs in four steps, then the report:
 2. **Habit evidence.** What do their sessions show about briefing, correcting, checking,
    handing off and usage?
 3. **Repeat work.** Which requests keep coming back by hand, and what runs without them?
-4. **The report.** One file, built from the template, with an overview and three pages, including a plan they can try.
+4. **The report.** One file, built from the template, with an overview and three pages, including fixes they can try.
 
 ## Where you're running
 
@@ -206,9 +206,7 @@ start". That's expected; don't call it out as a finding.
 | "stop the reviews", "no more reminders" | `schedule.py off`. If `method` is `app`, also delete or disable the app task |
 | "when's my next review?" | `schedule.py status` |
 
-Confirm in one line what changed and the next due date. Use `next_due` from `status` for
-"Your plan until <date>" and its plan rows. With no schedule, use the
-last review plus 14 days.
+Confirm in one line what changed and the next due date.
 
 ### The walkthrough (full reviews, 30 minutes)
 
@@ -217,7 +215,7 @@ last review plus 14 days.
 | Check-in | 0–2 min | The fixes from the last review: done or not? One sentence each |
 | Coaching | 2–15 min | Skill P1s first, then habit P1s, then P2s as time allows. Tie one habit to a 12-month trend |
 | Questions | 15–28 min | They ask anything. Answer from evidence and say when you don't know |
-| Close | 28–30 min | Confirm the plan: every fix in the report. Log them |
+| Close | 28–30 min | Confirm which fixes they'll try: every fix in the report. Log them |
 
 Open with a question. Then show the evidence. The report holds every finding; the call
 covers what fits.
@@ -391,7 +389,7 @@ Never set up a schedule, hook or skill during the review. Propose it with paste-
 they say yes first.
 
 A repeat that came back 4 or more times in the last 4 weeks and cost real time is also a
-P1 habit: give it a card in "How you brief AI and set up your apps" so its fix joins the plan.
+P1 habit: give it a card in "How you brief AI and set up your apps" so its fix gets a Try block.
 
 ## 4. The report
 
@@ -515,17 +513,17 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 
 **Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with its link to Data coverage in Settings), then "Following up on your last review" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
 
-**How you brief AI and set up your apps** (`#part-2`). A headline with the biggest finding that
-links to the plan. If a much quicker fix goes first, the headline says so. "Following up on your last review" (`#last-cycle`) sits on the Overview, only when an
+**How you brief AI and set up your apps** (`#part-2`). A headline with the biggest finding and how many fixes
+follow. If a much quicker fix goes first, the headline says so. "Following up on your last review" (`#last-cycle`) sits on the Overview, only when an
 earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Try more" (Revise) or "You can stop these" (Drop), without heading icons. Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result with the number when there is one ("You used it more: 11% to 18%", "Too soon to tell, 2 weeks in", "Not tried yet. Now only for long prototypes"). Put what changed, with its window, in the fold. Name what a percentage measures and which apps it covers in the result or its expanded explanation. All fixes start collapsed. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
-biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number in the plan. Each card: a title that states the finding; the apps as
+biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number. Each card: a title that states the finding; the apps as
 plain text, including every app its evidence names, and one how-sure chip (Sure, Likely, Hunch); a full-width, left-aligned `.ic-summary` paragraph directly below the heading, with no "What happens" label. Explain the behavior and what the title leaves out in two sentences; add detail without restating the title. Put Evidence and Why it matters inside one native `details.ic-evidence`, collapsed by default and labelled "Evidence and why it matters". Keep the evidence's windows and limits. Put any supporting prompt quote and "Which apps have which rules" comparison inside that disclosure too. Keep both available when expanded and in print. Then the fix in the same
 card: the "Try this: <fix name>" block, a `.try-saves` line with what it saves (see "Saving time and usage"), one short instruction naming the app to open, and a paste-ready block specific to that app.
 Choose one app the user uses and can act from; avoid a platform-by-platform setup list. For shared
 rules, that app can be asked to update other accessible instruction files, preserve existing rules,
 flag conflicts, verify saved changes and report anything it cannot reach. Never promise access or
-automatic model switching. A handoff prompt still tells the user to start a fresh session. Every pattern with a fix gets one, and every fix goes in the
-plan. How-sure chips mean: Sure, seen repeatedly or checked in their files. Likely, repeated, but
+automatic model switching. A handoff prompt still tells the user to start a fresh session. Every pattern with a fix gets one.
+How-sure chips mean: Sure, seen repeatedly or checked in their files. Likely, repeated, but
 something else could explain it. Hunch, thin evidence.
 
 - **Over-trust.** If they ship what they build with AI, include an over-trust pattern when the
@@ -545,14 +543,7 @@ something else could explain it. Hunch, thin evidence.
   schedule, hook or skill, ready to paste. In the fix line, say what it does ("runs on its own
   every Monday"), not the mechanism ("Stop hook").
 
-Close the part with "Your plan until <next review>" (`#plan`), a pink panel: one
-numbered row per fix, in card order. Each row has the fix's name (the same words as its Try
-block, linking to it), the time it takes
-(`.plan-effort`), what it saves (`.plan-saves`, the same saving as its Try block, without the word "Saves") and what the next review will check, naming real charts (`.plan-check`, with the
-template's `data-label`). The column line above the list carries the review date. A skill fix that blocks or improves a
-row gets a `.plan-first` line linking to it. End with the `.plan-next` line linking to the other
-skill fixes and to "What you could automate next"; drop a link with nothing behind it. A fix
-appears twice in the report: its Try block and its plan row. Keep each fix's bet, metric and
+Keep each fix's bet, metric and
 keep-it-if rule in the log.
 
 **Keep your skills current** (`#part-3`). A one-sentence headline with how many skills are
@@ -560,7 +551,7 @@ wrong today (count every skill marked Stale, and a wrong fact is Stale); the sca
 you couldn't read, named as a place ("your Cursor skills folder"), with what that means for the
 counts. "Skills to fix" (`#fix-first`; issue, fix), blockers first, then biggest impact. Every fix cell reads "In [app], paste: “…”", or "In any AI chat, paste: “…”" when the app doesn't matter; a cell that links to a `.fix-block` reads "Paste the fix (5 min)". A sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
 goes low. The big ones get a prompt to paste into their AI app in a `.fix-block`, shown open,
-with an id the plan can link to (`fix-pr-review`), saying which app to open. The block's last line is always "Then tell me in plain words what changed before you save it." Never show a diff.
+with an id the table can link to (`fix-pr-review`), saying which app to open. The block's last line is always "Then tell me in plain words what changed before you save it." Never show a diff.
 "Worth a look" (issue, why it matters, how sure, next step), including the
 starting-context row from "Usage" when it applies. Next steps are something they can do, or a line to paste in the same "In [app], paste: “…”" form. Collapsed "Skills you wrote" (a status table, with the counts in its summary line);
 collapsed "Skills you installed from others". Counts agree across all of it. Keep the tap
@@ -651,7 +642,7 @@ steps to add the data. Write none of this by hand.
   `#part-3` to `data-skills-state="none"` only after successfully checking the applicable skill
   folders and finding no saved skills. Keep the built-in `.skills-empty` component, replace the
   scope line with what was actually checked, and remove the sample result sections, skill
-  tables, fixes and their plan links. The component explains skills, links to skills.sh and
+  tables and fixes. The component explains skills, links to skills.sh and
   Anthropic skills for discovery/installation, then offers one optional authoring guide.
   Preserve its platform-inclusive “Reuse across AI apps” copy. Link repeat work to `#part-2`
   only when that page contains relevant supported evidence; otherwise omit that link.
@@ -660,7 +651,7 @@ steps to add the data. Write none of this by hand.
   in their assistant; neither state proves absence. Keep available session findings.
 - **No actionable findings.** When adequate evidence reveals nothing worth fixing, set
   `#part-2` to `data-findings-state="none"`. Keep its heading, verified scope and built-in
-  `.briefs-empty` result. Delete the sample cards, Try blocks, plan and their links elsewhere;
+  `.briefs-empty` result. Delete the sample cards, Try blocks and their links elsewhere;
   do not invent recommendations. If evidence is sparse instead, explain that limit, retain
   supported observations and charts, and omit weak claims. These are different outcomes.
 - **First review.** Same report, no extra sections. "Following up on your last review" is deleted, and each chart shows whatever

@@ -225,7 +225,6 @@ details.last-fix > summary:hover .fix-name { color: var(--accent); }
 .ic-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; align-items: start; }
 .ic-head .ic-tags { grid-column: 2; }
 .ic-head .rank { grid-row: 1 / span 2; }
-/* matches the fix's number in the plan */
 .rank { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--accent-soft); color: var(--accent); font: 700 18px/1 var(--display); font-variant-numeric: tabular-nums; }
 .ic-head h3 { font-size: 18px; line-height: 1.45; }
 .ic-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; font-size: 13px; line-height: 1.4; color: var(--muted); }
@@ -241,7 +240,7 @@ details.last-fix > summary:hover .fix-name { color: var(--accent); }
 blockquote { margin: 0; padding-left: 12px; border-left: 2px solid var(--line); font-size: 14px; line-height: 22px; color: var(--fg); }
 blockquote + .def { margin-top: -16px; padding: 6px 0 0 12px; border-left: 2px solid var(--line); font-size: 13px; line-height: 18px; }
 
-/* the fix in each pattern: the same pink panel as the plan */
+/* the fix in each pattern: a pink panel */
 .try { display: grid; gap: 12px; padding: 16px; background: var(--accent-soft); border: 1px solid var(--accent-soft-2); border-radius: var(--r-10); scroll-margin-top: 24px; }
 .try h4 { font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.5; }
 .try-saves { font-size: 14px; font-weight: 600; line-height: 20px; color: var(--accent); }
@@ -253,32 +252,6 @@ button.copy::before { content: ""; width: 14px; height: 14px; background: var(--
 pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: var(--r-8); padding: 12px 84px 12px 12px;
   font-size: 13px; line-height: 20px; white-space: pre-wrap; word-break: break-word; }
 
-/* the plan: the one pink surface, one row per fix */
-.plan { gap: 8px; padding: 20px; background: var(--accent-soft); border: 1px solid var(--accent-soft-2); border-radius: var(--r-14); }
-.plan h3 { font-size: 24px; line-height: 1.35; }
-.plan-cols { display: none; font-size: 13px; font-weight: 500; color: var(--muted); }
-.plan-list { list-style: none; margin: 0; padding: 0; counter-reset: fix; }
-.plan-list li { counter-increment: fix; display: grid; grid-template-columns: 40px minmax(0, 1fr) auto; gap: 4px 12px; align-items: baseline; padding: 16px 0; border-top: 1px solid var(--accent-soft-2); }
-.plan-list li::before { content: counter(fix); grid-row: 1 / span 4; font: 700 32px/1.1 var(--display); color: var(--accent); font-variant-numeric: tabular-nums; }
-.plan-effort, .plan-saves, .plan-check, .plan-first { grid-column: 2 / -1; font-size: 14px; line-height: 1.5; }
-.plan-check { color: var(--muted); }
-.plan-saves::before { content: "Saves: "; }
-.plan-check::before { content: attr(data-label) ": "; }
-.plan-next { padding-top: 12px; border-top: 1px solid var(--accent-soft-2); font-size: 14px; line-height: 1.5; color: var(--muted); }
-a.row-link { font-size: 14px; font-weight: 600; line-height: 1.35; color: var(--fg); text-decoration: underline; text-decoration-color: var(--line-strong); text-underline-offset: 4px; }
-a.row-link:hover { color: var(--accent); text-decoration-color: currentColor; }
-@media (min-width: 681px) {
-  .plan-cols { display: grid; margin-top: 8px; }
-  .plan-cols, .plan-list li { grid-template-columns: 40px minmax(0, 1.2fr) minmax(0, .9fr) minmax(0, .9fr) minmax(0, 1fr); column-gap: 16px; }
-  .plan-cols span:first-child { grid-column: 3; }
-  .plan-list li { padding: 14px 0; }
-  a.row-link { grid-column: 2; grid-row: 1; }
-  .plan-effort { grid-column: 3; grid-row: 1; }
-  .plan-saves { grid-column: 4; grid-row: 1; }
-  .plan-check { grid-column: 5; grid-row: 1; }
-  .plan-first { grid-column: 2 / -1; grid-row: 2; }
-  .plan-saves::before, .plan-check::before { content: none; }
-}
 .flash { animation: flash 1.6s ease-out; }
 @keyframes flash { 0%, 30% { background: var(--accent-soft-2); } }
 
@@ -545,9 +518,6 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .brand-logo { height: 26px; }
   .summary { font-size: 17px; }
   .part-head h2 { font-size: 28px; }
-  .plan { padding: 16px; }
-  .plan-list li { grid-template-columns: 32px minmax(0, 1fr); }
-  .plan-list li::before { font-size: 24px; }
   .chart { grid-row: auto; grid-template-rows: none; }
   .chart > * { grid-row: auto !important; }
   /* the charts that moved stay; the rest wait behind one button */
@@ -711,7 +681,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     <div class="last-group">
       <h4>Try more</h4>
       <details class="last-fix"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span class="sum-main"><span class="fix-name">Brief before big prototype tasks</span><span class="fix-result">Not tried yet. Now only for long prototypes</span></span></summary>
-        <p>It’s only for longer prototype sessions now. It’s fix 2 in your plan.</p></details>
+        <p>It’s only for longer prototype sessions now. It’s fix 2 in this review.</p></details>
     </div>
   </div>
 </section>
@@ -730,7 +700,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 <div class="part page" id="part-2" data-findings-state="available">
   <div class="part-head">
     <h2>How you brief AI and set up your apps</h2>
-    <p class="headline">Vague prototype starts take the most time. Syncing your rules is the quickest fix, so it comes first. Five fixes below, all in <a href="#plan" data-jump="plan">your plan until Nov 8</a>.</p>
+    <p class="headline">Vague prototype starts take the most time. Syncing your rules is the quickest fix, so it comes first. Five fixes below.</p>
   </div>
 
 
@@ -880,19 +850,6 @@ Task: [what I need help with]</pre></div>
   </article>
 
   <div class="briefs-empty"><p>Nothing to fix this time.</p><p class="def">Your trends and usage are still in the report.</p><a href="#part-1">View trends →</a></div>
-
-  <section class="plan" id="plan" aria-labelledby="plan-h">
-    <h3 id="plan-h">Your plan until Nov 8</h3>
-    <div class="plan-cols"><span>Time</span><span>Saves</span><span>Nov 8 review checks</span></div>
-    <ol class="plan-list">
-      <li><a class="row-link" href="#try-rules" data-jump="try-rules">Fill the gaps in your saved rules</a><span class="plan-effort">5 minutes, once</span><span class="plan-saves">Retyping and waiting for extra replies</span><span class="plan-check" data-label="Nov 8 checks">Rules retyped, and corrections in Codex and Cursor</span></li>
-      <li><a class="row-link" href="#try-brief" data-jump="try-brief">Brief before big prototype tasks</a><span class="plan-effort">A minute before any prototype that’s more than a quick tweak</span><span class="plan-saves">About 30 minutes a week</span><span class="plan-check" data-label="Nov 8 checks">Briefed starts and restarts in prototype sessions</span></li>
-      <li><a class="row-link" href="#try-trust" data-jump="try-trust">Check beta work before it ships</a><span class="plan-effort">5 minutes per piece others will see</span><span class="plan-saves">Fewer fixes after launch</span><span class="plan-check" data-label="Nov 8 checks">Output checking and untested changes shipped</span><span class="plan-first">Better with your pr-review skill. <a href="#fix-pr-review" data-jump="fix-pr-review">Fix it when you have 5 minutes</a>.</span></li>
-      <li><a class="row-link" href="#try-long" data-jump="try-long">Start fresh between projects</a><span class="plan-effort">A habit, whenever you switch projects</span><span class="plan-saves">About a tenth of your Claude Code and Codex usage</span><span class="plan-check" data-label="Nov 8 checks">Long-session share</span></li>
-      <li><a class="row-link" href="#try-model" data-jump="try-model">Match the model to the job</a><span class="plan-effort">A few seconds per session</span><span class="plan-saves">About a tenth of your Claude Code usage</span><span class="plan-check" data-label="Nov 8 checks">Corrections on cheaper models, usage on Opus</span></li>
-    </ol>
-    <p class="plan-next">When these are done: <a href="#fix-first" data-jump="fix-first">the other skill fixes</a>, then <a href="#automate-next" data-jump="automate-next">the repeats you could automate</a>.</p>
-  </section>
 </div>
 
 <!-- SKILLS (#part-3) -->
@@ -908,7 +865,7 @@ Task: [what I need help with]</pre></div>
     <div class="tbl"><table>
       <thead><tr><th>Issue</th><th>Fix</th></tr></thead>
       <tbody>
-        <tr><td><b>pr-review</b> names a tool that doesn’t exist, so the visual check can get skipped<span class="def">Fix 3 in your plan works better with it.</span></td><td><a href="#fix-pr-review" data-jump="fix-pr-review">Paste the fix</a> (5 min)</td></tr>
+        <tr><td><b>pr-review</b> names a tool that doesn’t exist, so the visual check can get skipped<span class="def">Fix 3, checking beta work before it ships, works better with it.</span></td><td><a href="#fix-pr-review" data-jump="fix-pr-review">Paste the fix</a> (5 min)</td></tr>
         <tr><td><b>release-notes</b> still lists last quarter’s pricing tiers<span class="def">Its output goes into every changelog.</span></td><td><a href="#fix-release-notes" data-jump="fix-release-notes">Paste the fix</a> (5 min)</td></tr>
         <tr><td><b>beta-feedback-synth</b> says the team has 4 engineers; your notes say 6</td><td>In claude.ai, paste: “Change the team size in my beta-feedback-synth skill from 4 to 6.” (1 min)</td></tr>
         <tr><td><b>api-docs</b> is installed twice, and the claude.ai copy is older<span class="def">Two versions give different advice.</span></td><td>In claude.ai, paste: “Help me delete the older copy of my api-docs skill.”</td></tr>
@@ -2229,7 +2186,7 @@ document.addEventListener("focusin", e => { if (e.target.closest(".tbl")) e.targ
   document.addEventListener("click", hide);
 })();
 
-// ---- plan rows and the headline link jump to their target and flash it ----
+// ---- jump links scroll to their target and flash it ----
 (function () {
   const reduce = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.querySelectorAll("a[data-jump]").forEach(a => a.addEventListener("click", e => {

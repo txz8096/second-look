@@ -39,10 +39,11 @@ FORBIDDEN = {
     "Part 1 of 3": "no part numbers",
     'class="last-list"': "fixes from the last review now sit in .last-group cards",
     'id="glance"': "the at-a-glance table was removed; the numbers live in the charts",
-    'id="start-here"': "the Start here line was removed; the plan says where to start",
+    'id="start-here"': "the Start here line was removed; the headline says where to start",
     'id="toc"': "the floating contents menu was replaced by the sidebar",
-    "Compare the fixes": "merged into the plan; each fix is its Try block plus one plan row",
-    "review will check</span>": "the separate next-review fold was merged into the plan rows",
+    "Compare the fixes": "removed; each fix is its Try block",
+    "review will check</span>": "the separate next-review fold was removed",
+    'class="plan': "the plan was removed; each fix lives in its Try block",
     'class="diff"': "skill fixes are prompts they can paste into their AI app, not diffs",
     "Geist": "old font",
     '"Inter"': "old font",
@@ -250,21 +251,15 @@ def main():
     for i in REQUIRED_IDS:
         if f'id="{i}"' not in html:
             problems.append(f'missing section id="{i}"')
-    no_findings = bool(re.search(r'<div[^>]*id="part-2"[^>]*data-findings-state="none"', html))
-    if 'id="plan"' not in html and not no_findings:
-        problems.append('missing the plan (section id="plan") at the end of part 2')
     tries, saves = html.count('<section class="try"'), html.count('class="try-saves"')
     if tries != saves:
         problems.append(f'each Try this block needs one <p class="try-saves"> line saying what it saves (found {saves} of {tries})')
     for line in re.findall(r'<p class="try-saves">(.*?)</p>', html, re.S):
         if re.search(r"\babout\b", line, re.I) and 'class="saves-how"' not in line:
             problems.append(f'this saving needs its working in a <span class="saves-how">: "{re.sub(r"<[^>]+>", "", line).strip()}"')
-    rows = len(re.findall(r'<li><a class="row-link"', html))
-    if rows != html.count('class="plan-saves"'):
-        problems.append('each plan row needs a <span class="plan-saves"> saying what the fix saves')
     cards = re.findall(r'<article\b[^>]*class="icard[^"]*"[^>]*>\s*<div class="ic-head">(?:<span class="rank">(\d+)</span>)?', html)
     if cards != [str(i + 1) for i in range(len(cards))]:
-        problems.append('number the pattern cards 1, 2, 3 in order: <span class="rank">1</span> first in each .ic-head, matching the plan')
+        problems.append('number the pattern cards 1, 2, 3 in order: <span class="rank">1</span> first in each .ic-head')
     for t in REQUIRED_TEXT:
         if t not in html:
             problems.append(f'missing "{t}"')
