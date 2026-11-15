@@ -19,13 +19,19 @@ export function CopyButton({ text, label }: { text: string; label: string }) {
   const Icon = copied ? Check : Copy;
 
   return (
-    <button
-      type="button"
-      onClick={copy}
-      aria-label={copied ? "Copied" : label}
-      className="-m-3 inline-flex size-11 shrink-0 items-center justify-center rounded text-text-3 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-accent"
-    >
-      <Icon key={String(copied)} size={18} className={copied ? "icon-in" : undefined} aria-hidden="true" />
-    </button>
+    <>
+      <button
+        type="button"
+        onClick={copy}
+        aria-label={label}
+        className="-m-3 inline-flex size-11 shrink-0 items-center justify-center rounded text-text-3 transition-colors hover:text-ink focus-visible:outline-2 focus-visible:outline-accent"
+      >
+        <Icon key={String(copied)} size={18} className={copied ? "icon-in" : undefined} aria-hidden="true" />
+      </button>
+      {/* A label swapped on a focused button is announced unreliably; a status region is not. */}
+      <span role="status" className="sr-only">
+        {copied ? "Copied" : ""}
+      </span>
+    </>
   );
 }
