@@ -1,7 +1,7 @@
 # Unslop pass state
 
-last_release_covered: v0.5.0
-rotation_index: 1
+last_release_covered: v0.6.0
+rotation_index: 2
 
 ## Keep as is
 

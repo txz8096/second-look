@@ -272,20 +272,25 @@ session logs are.
 <summary><b>How far back does the yearly view go?</b></summary>
 
 As far as your logs do. Claude Code keeps 30 days by default, which is why the installer
-offers to keep a year. claude.ai, ChatGPT and Gemini cover sessions present in the supplied exports. Each run saves
-weekly totals with daily breakdowns, so weeks your apps later delete stay in the trend. Custom date ranges use those daily totals; older weekly-only history supports complete weeks.
-In Habits & usage, Time, App, Work and Project filter charts and share tables, not findings or fixes.
-The collector recognizes local folders in Claude Code, Codex and Cursor without requiring Git.
-Matching names combine across apps; ask your assistant to separate, merge or rename a group.
-Saved project identities survive verified folder renames and previously recorded folder deletion.
-Full paths are not saved. Missing or unverified project metadata appears under “Unknown”. Native
-project membership in cloud exports has not yet been verified.
+offers to keep a year. claude.ai, ChatGPT and Gemini cover the sessions in the exports you supply.
+Each run saves weekly totals with daily breakdowns, so weeks your apps later delete stay in the
+trend. Custom date ranges use those daily totals; older history saved only as weekly totals
+supports complete weeks.
 
-The collector can retain all available history with `--all-history --trend --state-dir ~/.second-look`.
-It keeps per-session metrics without prompt text and preserves older totals when original logs are
-missing. Existing aggregate-only history is replaced only when a reread reproduces its totals.
-The report's Time menu adds All history to show every saved week; it still opens on 12 months or less.
-No host retention setting is changed by historical collection.
+In Habits & usage, the Time, App, Work and Project filters change the charts and share tables.
+They don't change findings or fixes. The collector recognizes project folders in Claude Code,
+Codex and Cursor, with or without Git. Projects with the same name combine across apps; ask your
+assistant to separate, merge or rename one. A saved project keeps its identity through a verified
+folder rename, and after you delete a folder it already recorded. Full paths aren't saved.
+Sessions with missing or unverified project information appear under “Unknown”. Second Look
+hasn't yet verified the project grouping inside claude.ai, ChatGPT and Gemini exports.
+
+To keep all the history your apps still have, run the collector with
+`--all-history --trend --state-dir ~/.second-look`. It saves per-session numbers without prompt
+text, and keeps older totals after the original logs are gone. History saved earlier as totals
+only is replaced only when a fresh read reproduces those totals exactly. The Time menu then adds
+All history, which shows every saved week; the report still opens on 12 months or less.
+Collecting history doesn't change any app's own retention settings.
 </details>
 
 <details>

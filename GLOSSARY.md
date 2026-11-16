@@ -12,11 +12,7 @@ An exchange with an AI, from your first message until you start a new session. U
 
 ## Project
 
-A group of sessions associated with recorded project or workspace information. Verified local folders
-in Claude Code, Codex and Cursor qualify without Git; worktrees use their main repository.
-Matching names combine across apps unless the user separates them. Stable IDs preserve identity;
-display labels may change. Full paths are not retained. **Unknown** means usable project information
-was unavailable, including unresolved older history; it does not mean the session had no project.
+A group of sessions that share recorded project or workspace information. Verified local folders in Claude Code, Codex and Cursor count, with or without Git; worktrees use their main repository. Projects with the same name combine across apps unless the user separates them. Each project keeps a stable ID while its display label can change. Full paths are not retained. **Unknown** means usable project information was unavailable, including older history that couldn't be matched; it does not mean the session had no project.
 
 ## Usage
 
