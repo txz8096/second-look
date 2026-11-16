@@ -183,7 +183,7 @@ Use these definitions word for word:
 | Restarts | A new session that opens with mostly the same request as one from the last two days, in the same app. It usually means the first try went off track. |
 | Rules retyped per week | A rule typed by hand, like “use tables” or “no filler”. If you type it more than once, it belongs in the saved instructions of every app you use. |
 | Long-session share | Share of your usage from very long sessions, about a novel’s worth of text or more. Each message there makes the AI re-read the whole session first, so they use up your limit fastest. Starting fresh between tasks lowers it. Claude Code and Codex only. |
-| Session | One conversation with an AI, from your first message until you start a new one. |
+| Session | An exchange with an AI, from your first message until you start a new session. |
 | Model | The version of the AI you’re talking to. Stronger ones use up your limit faster. |
 | Test | A check that the code really works, run by the AI or by you. |
 | Ship | Put it where other people can use it. |

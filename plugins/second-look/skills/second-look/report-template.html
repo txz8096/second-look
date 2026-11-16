@@ -713,7 +713,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     <p class="ic-summary">Your preferences are saved in Claude Code and claude.ai, but Codex, Cursor and ChatGPT have gaps. You end up adding instructions about output format, documentation and prototype tools during the session instead of having them available from the start.</p>
     <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
       <div class="body"><dl class="ic-grid">
-        <div><dt>Evidence</dt><dd>You retyped rules 27 times in the last 4 weeks. “just show the diff, skip the recap” alone came up in 9 <span class="term" tabindex="0" aria-describedby="def-session-part2">sessions<span class="term-card" role="tooltip" id="def-session-part2">One conversation with an AI, from your first message until you start a new one.</span></span>. Codex and ChatGPT are missing all 4 of your rules, Cursor 2.
+        <div><dt>Evidence</dt><dd>You retyped rules 27 times in the last 4 weeks. “just show the diff, skip the recap” alone came up in 9 <span class="term" tabindex="0" aria-describedby="def-session-part2">sessions<span class="term-card" role="tooltip" id="def-session-part2">An exchange with an AI, from your first message until you start a new session.</span></span>. Codex and ChatGPT are missing all 4 of your rules, Cursor 2.
     <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Which apps have which rules</span></summary>
       <div class="body"><div class="tbl"><table>
         <thead><tr><th>Rule</th><th>Claude Code</th><th>Codex</th><th>Cursor</th><th>claude.ai</th><th>ChatGPT</th></tr></thead>
@@ -1479,7 +1479,7 @@ stackTables();
      def: "Code saved or shipped after changes with no test in the session.",
      card: "Checks you ran outside the session don’t show, so open a few sessions before acting on this. A saved rule to test before shipping brings it down."},
     {id: "readheavy", el: "g-delegate", title: "Sessions crowded with lookups", num: "read_heavy", den: "metered", fmt: pct, d: "pts", better: "down", logs: true,
-     def: "Sessions where the AI did 25 or more lookups in your main conversation. A helper could have taken that reading.",
+     def: "Sessions where the AI did 25 or more lookups in your main session. A helper could have taken that reading.",
      card: "Everything the AI opens stays in the session and gets re-read with every message. Past 25 lookups, even a small follow-up takes a lot of usage."},
     {id: "repeats", el: "g-automate", title: "Repeat tasks done by hand", num: "repeats", den: null, fmt: count, d: "rel", better: "down", logs: true,
      def: "Opening messages that match 3 or more earlier ones, with no skill or schedule behind them.",

@@ -33,7 +33,7 @@ export function Install() {
     <section id="install" className="border-t border-rule bg-surface">
       <Container className="grid gap-10 py-16 lg:grid-cols-[440px_1fr] lg:gap-20">
         <div className="flex flex-col items-start gap-6">
-          <SectionHeading size="compact">Try it on your own conversations.</SectionHeading>
+          <SectionHeading size="compact">Try it on your own sessions.</SectionHeading>
           <p className="font-body text-lg leading-[1.55] text-text-2">Start from Claude Code, Codex or Cursor.</p>
           <PrimaryButton href={links.github} className="gap-2.5">
             <GithubIcon size={18} />

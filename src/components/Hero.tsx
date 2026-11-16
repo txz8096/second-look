@@ -18,7 +18,7 @@ export function Hero() {
           </div>
           <div className="flex min-w-0 flex-col gap-6 lg:pt-10">
             <p className="font-body text-xl leading-[1.55] text-text-2">
-              Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try.
+              Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try.
             </p>
             <div className="flex flex-wrap items-center gap-3">
               <PrimaryButton href={links.sampleReport}>

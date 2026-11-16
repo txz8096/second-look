@@ -22,7 +22,7 @@ The product is the source of truth: `SKILL.md`, the scripts and `report-template
 These must match everywhere they appear:
 
 - The product name, always title case: Second Look. Paths, commands and the skill id stay `second-look`, and the wordmark artwork stays as drawn
-- The one-line description: "Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try."
+- The one-line description: "Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try."
 - The supported tools, and what each one reads and can do
 - The report's part names, sections and what a finding contains
 - Review cadence and time windows

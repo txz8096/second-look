@@ -80,8 +80,6 @@ def lint_problems(html):
     text = re.sub(r"<!--.*?-->", " ", text, flags=re.S)
     text = htmllib.unescape(re.sub(r"<[^>]+>", " ", text))
     text = re.sub(r"“[^”]*”|‘[^’]*’|„[^“”]*[“”]|「[^」]*」|\"[^\"\n]*\"", " ", text)
-    # the session term card defines "session" in the one word the page otherwise avoids
-    text = text.replace("One conversation with an AI, from your first message until you start a new one.", " ")
     problems = []
     for pattern, why in LINT:
         for word in sorted({m.group(0) for m in re.finditer(pattern, text, re.I)}):

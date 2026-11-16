@@ -2,7 +2,7 @@
 
 **Performance review for your AI workflow.**
 
-Second Look reviews your AI conversations across your apps, finds recurring problems, and recommends fixes to try.
+Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try.
 
 [Website](https://txz8096.github.io/second-look/) ·
 [Sample report](https://txz8096.github.io/second-look/sample-report.html) ·
@@ -172,7 +172,7 @@ review runs in the app where you start it, and it reads every app's files from t
 Seven. Claude Code, Codex and Cursor can run a review and are read directly. Antigravity is
 read directly but can't start a review, so start one from another app on the same computer.
 claude.ai, ChatGPT and Gemini (the web app) are read from data exports you download, so they
-cover sessions present in the supplied exports. Gemini's export has no conversation boundaries, so its
+cover sessions present in the supplied exports. Gemini's export has no session boundaries, so its
 sessions are grouped by time and its numbers are estimates. Antigravity support is new and
 built on an undocumented file format, so a release that changes it can hide your sessions
 until Second Look is updated.

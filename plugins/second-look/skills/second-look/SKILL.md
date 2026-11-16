@@ -1,6 +1,6 @@
 ---
 name: second-look
-description: "Reviews how you work with AI. Reads your sessions from Claude Code, Codex, Cursor, Antigravity, claude.ai, ChatGPT and Gemini, finds patterns in how you brief AI and manage context, shows where your token usage goes, spots repeat work you could hand to a skill, hook or schedule, pairs each with a fix to try, checks your skills for stale facts and missed updates, and tracks habits over 12 months. Use when the user says second look, run my review, coach me, how am I using AI, review my prompting, what should I automate, are my skills stale, reflect on my AI sessions, or asks for a review of a date range or project. Also use when they want to change, check or stop their recurring Second Look reviews (\"make it monthly\", \"stop the reviews\"), add a claude.ai, ChatGPT or Gemini export (\"add my ChatGPT export\"), or keep more history (\"keep a year of logs\")."
+description: "Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try."
 ---
 
 # Second Look
@@ -49,7 +49,7 @@ Code, Cursor or Antigravity logs from here. Run Second Look there for those."
 ## Files
 
 Everything the user owns lives in `~/.second-look/`. Second Look has no server. What you read
-during a review reaches their model provider as part of this conversation, like any other
+during a review reaches their model provider as part of this session, like any other
 message, so quote only what a finding needs.
 
 | File | What it holds |
@@ -57,7 +57,7 @@ message, so quote only what a finding needs.
 | `profile.md` | Name, what they build, focus areas, where their context file and skills live |
 | `log.md` | One entry per review: snapshot, findings, the fixes they picked and how each will be judged |
 | `history.json` | Weekly habit rows with daily totals, kept longer than the apps keep their own logs |
-| `exports/claude/conversations.json`, `exports/chatgpt/conversations.json`, `exports/gemini/MyActivity.json` | Data exports for the 12-month view |
+| `exports/claude/conversations.json`, `exports/chatgpt/conversations.json`, `exports/gemini/MyActivity.json` | Data exports for historical trends |
 | `reports/` | Saved reports, when they aren't published as artifacts |
 | `schedule.json` | Recurring review setting: on or off, days between reviews, how they run, date of the last review, date of the last report they opened |
 
@@ -278,7 +278,7 @@ and still works on current models.
      citing the number.
    - `delegation`: sessions that handed work to a subagent (by purpose: research, check,
      build, sorted by keywords in each request, so treat the types as estimates) and "Sessions crowded with lookups" (`read_heavy`: 25+ reads and searches in the main
-     conversation, whether or not a subagent also ran) with their share of usage.
+     session, whether or not a subagent also ran) with their share of usage.
    - `usage.models`: which model each session mostly ran on, each model's share of usage, and
      the light sessions on it (short, no code edits) with samples. See "Saving time and usage".
    - `automation`: see "3. Repeat work".
@@ -676,7 +676,7 @@ in one line. It stops Claude Code deleting logs after 30 days. Weeks already del
 | Checking | Output checking | checked / build sessions | Asked for sources, what could break or a critique | Higher |
 | Checking | Tested by the AI | agent_checked / edited | A test, build, lint or browser check after the last code edit | Higher |
 | Checking | Untested changes shipped per week | unchecked_ships | A commit, push, deploy or "ship it" with edits unchecked | Lower |
-| Handing off | Sessions crowded with lookups | read_heavy / metered | 25+ reads and searches in the main conversation | Lower |
+| Handing off | Sessions crowded with lookups | read_heavy / metered | 25+ reads and searches in the main session | Lower |
 | Handing off | What you handed off (bars, beside the line chart) | delegated_research, delegated_check, delegated_build / all three | Subagent runs, sorted by keywords in each request | More research and checks |
 | Automating | Repeat tasks done by hand | repeats | Opener matches 3+ earlier ones, no skill run, no schedule | Lower |
 | Automating | Sessions you didn't start | unattended / logged | Started by a schedule, a loop or a headless run | — |
