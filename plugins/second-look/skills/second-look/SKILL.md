@@ -584,7 +584,7 @@ go in the sidebar's "Guidance and references" list.
 - **Activity since your last review** (with its dates; on a first review, "Activity, <dates>"): the
   usage-limit line, then the visible "By app" and "Skills and commands" tables, counted over the same dates.
 
-**Sidebar note** (`#side-about`, at the bottom of the sidebar). Replace the sample sentences with the method in one short sentence ("Read from your AI logs and exports, with secrets removed."), and list what you actually used under "Guidance and references", one per line (this list lives here, not under tables). On claude.ai, add the profile and the Log entry after that list.
+**Sidebar note** (`#side-about`, at the bottom of the sidebar). Replace the sample sentences with the method in one short sentence ("Read from your AI logs and exports, with secrets removed."), and list what you actually used under "Guidance and references", one per line, each linked to its original source (`<a href="…" target="_blank" rel="noopener noreferrer">`; this list lives here, not under tables). Link the page itself, never a search or a secondhand summary; leave an item unlinked only when it has no public page, such as the user's own files. On claude.ai, add the profile and the Log entry after that list.
 
 Reports contain real prompts. Keep them private unless the user chooses to share one, and
 remove anything about other people before they do.
@@ -708,15 +708,17 @@ Brainstorming, Career, Consultation.
 ## Rubric (cite when explaining why)
 
 - **Prompting.** Anthropic AI Fluency Index (Feb 2026,
-  https://www.anthropic.com/research/AI-fluency-index): iterate and refine; set the terms
+  https://academy.claude.com/tutorials/the-ai-fluency-index): iterate and refine; set the terms
   of collaboration up front; give examples and a format; check output, which people do
-  less when it looks polished. Anthropic's prompting guide.
+  less when it looks polished. Anthropic's prompting guide
+  (https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview).
 - **Context.** Claude Code best practices
-  (https://www.anthropic.com/engineering/claude-code-best-practices): a short, specific
+  (https://code.claude.com/docs/en/best-practices): a short, specific
   CLAUDE.md; clear context between unrelated tasks; plan first; subagents for research.
 - **Memory.** One canonical rules file, copied into each app. A rule typed 3+ times
   belongs in config.
-- **Skills.** Agent Skills docs: a trigger description in the user's words; a lean
+- **Skills.** Agent Skills docs
+  (https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview): a trigger description in the user's words; a lean
   SKILL.md; scripts for deterministic steps; one shared folder (`~/.agents/skills`) linked
   into each app; tests with a no-skill baseline.
 - **Automation.** A request typed 3+ times belongs in a skill, a hook or a schedule. Claude

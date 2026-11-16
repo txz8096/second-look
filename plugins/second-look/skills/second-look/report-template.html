@@ -113,6 +113,8 @@ button.theme-btn:hover { border: 0; background: var(--surface-2); color: var(--f
 .side-about details.nested > summary:hover { color: var(--fg); }
 .side-about details.nested .chev { margin-top: 0; }
 .side-about ul { display: grid; max-height: max(48px, min(30dvh, calc(100dvh - 540px))); overflow-y: auto; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.side-about li a { color: inherit; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 3px; }
+.side-about li a:hover { color: var(--fg); text-decoration-color: currentColor; }
 .side-about-link { display: flex; align-items: center; gap: 8px; width: fit-content; padding: 8px 0; text-decoration: none; }
 .side-about-link:hover { text-decoration: underline; }
 .side-about-link svg { flex: none; }
@@ -637,15 +639,16 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     <details class="nested">
       <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Guidance and references</span></summary>
       <ul>
-        <li>Anthropic’s AI Fluency Index</li>
-        <li>Anthropic’s prompting guide</li>
-        <li>Claude Code best practices</li>
-        <li>Agent Skills docs</li>
-        <li>Claude Code changelog</li>
-        <li>Anthropic on plugin evals (Sep 2026)</li>
-        <li>Anthropic on skill-creator evals (Mar 2026)</li>
-        <li>Anthropic on Claude Design (Jun 2026)</li>
-        <li>Codex and Cursor skills docs</li>
+        <li><a href="https://academy.claude.com/tutorials/the-ai-fluency-index" target="_blank" rel="noopener noreferrer">Anthropic’s AI Fluency Index</a></li>
+        <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener noreferrer">Anthropic’s prompting guide</a></li>
+        <li><a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener noreferrer">Claude Code best practices</a></li>
+        <li><a href="https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview" target="_blank" rel="noopener noreferrer">Agent Skills docs</a></li>
+        <li><a href="https://code.claude.com/docs/en/changelog" target="_blank" rel="noopener noreferrer">Claude Code changelog</a></li>
+        <li><a href="https://code.claude.com/docs/en/plugin-evals" target="_blank" rel="noopener noreferrer">Anthropic on plugin evals (Sep 2026)</a></li>
+        <li><a href="https://claude.com/resources/articles/improving-skill-creator-test-measure-and-refine-agent-skills" target="_blank" rel="noopener noreferrer">Anthropic on skill-creator evals (Mar 2026)</a></li>
+        <li><a href="https://claude.com/resources/articles/claude-design-stays-on-brand-for-daily-work" target="_blank" rel="noopener noreferrer">Anthropic on Claude Design (Jun 2026)</a></li>
+        <li><a href="https://learn.chatgpt.com/docs/build-skills" target="_blank" rel="noopener noreferrer">Codex skills docs</a></li>
+        <li><a href="https://cursor.com/docs/skills" target="_blank" rel="noopener noreferrer">Cursor skills docs</a></li>
       </ul>
     </details>
     <a class="side-about-link" href="https://txz8096.github.io/second-look/" target="_blank" rel="noopener">About Second Look<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg></a>
