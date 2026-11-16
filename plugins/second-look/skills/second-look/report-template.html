@@ -694,7 +694,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     <div class="dests">
       <a class="dest" href="#part-2"><span class="dest-text"><span class="dest-t">Briefs &amp; setup</span><span class="dest-d">Five fixes for your rules, prototype starts, final checks, long sessions and model choice.</span></span><span class="dest-go">View fixes<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
       <a class="dest" href="#part-3"><span class="dest-text"><span class="dest-t">Skills</span><span class="dest-d">Three of your seven skills give wrong information today.</span></span><span class="dest-go">Review skills<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
-      <a class="dest" href="#part-1"><span class="dest-text"><span class="dest-t">Habits &amp; usage</span><span class="dest-d">How you brief, check, refine and use your apps over the last 12 months.</span></span><span class="dest-go">View trends<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
+      <a class="dest" href="#part-1"><span class="dest-text"><span class="dest-t">Habits &amp; usage</span><span class="dest-d">How you brief, check, refine and use your apps over time.</span></span><span class="dest-go">View trends<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
     </div>
   </section>
 </div>
@@ -1129,17 +1129,16 @@ stackTables();
 
 // ---- trends with filters ----
 (function () {
-  const WEEKS = 52;
   const SOURCES = [["claude_ai", "claude.ai"], ["claude_code", "Claude Code"], ["codex", "Codex"], ["cursor", "Cursor"], ["antigravity", "Antigravity"], ["chatgpt", "ChatGPT"], ["gemini_web", "Gemini"]];
   const CATS = [["prototyping", "Prototyping"], ["creating", "Writing & content"], ["research", "Research"], ["brainstorming", "Brainstorming"], ["career", "Career"], ["consultation", "Consultation"]];
   const BUILD = new Set(["prototyping", "creating", "research"]);
   const name = (list, id) => list.find(x => x[0] === id)[1];
 
   // ---- report data: a real report replaces these four values with the collector's output ----
-  // END: the Monday of the last complete week, "YYYY-MM-DD" (the collector's last_complete_week). The charts show the 52 weeks up to it.
+  // END: the Monday of the last complete week, "YYYY-MM-DD" (the collector's last_complete_week). The charts retain all available weeks up to it.
   const END = "2026-10-19";
   // CUBE: the collector's "cube" array, pasted as is: [{"week": "YYYY-MM-DD", "source": "claude_code", "category": "prototyping", "project": "Atlas", "sessions": 3, ...}, ...]
-  // Rows for weeks outside the 52 are left out.
+  // Keep all historical rows. Only weeks after END are excluded from charts.
   const CUBE = sampleCube();
   // SCOPE: the collector's "scope" object, pasted as is. What each source can show.
   // state: logs | export | missing (an export not added) | not_found (app not on this computer) | not_readable (a claude.ai run)
@@ -1151,10 +1150,13 @@ stackTables();
   // MILESTONES: dated changes the person made, drawn as lines on every chart: [{"week": "YYYY-MM-DD", "label": "..."}], or [] for none
   const MILESTONES = [{"week": "2026-03-09", "label": "First skill"}, {"week": "2026-07-13", "label": "Saved global rules"}, {"week": "2026-09-28", "label": "Streak redesign starts"}];
 
-  // the 52 Mondays ending at END's week, and the cube read into week slots
+  // All available Mondays ending at END, with a 52-week minimum for existing presets.
   const monday = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() + 6) % 7);
   const sunOf = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() + 6);
   const end = monday(new Date(END + "T00:00:00"));
+  const earliestWeek = CUBE.filter(r => r.sessions > 0 && r.week <= END).reduce((first, r) => r.week < first ? r.week : first, END);
+  const historyWeeks = Math.max(1, Math.round((end - monday(new Date(earliestWeek + "T00:00:00"))) / (7 * 864e5)) + 1);
+  const WEEKS = Math.max(52, historyWeeks);
   const weeks = Array.from({length: WEEKS}, (_, i) => new Date(end.getFullYear(), end.getMonth(), end.getDate() - (WEEKS - 1 - i) * 7));
   const idxOf = iso => WEEKS - 1 - Math.round((end - monday(new Date(iso + "T00:00:00"))) / (7 * 864e5));
   // history saved before "briefable" existed counts every session
@@ -1279,6 +1281,7 @@ stackTables();
 
   // ---- the template's sample cube, in the collector's shape; a real report doesn't call it ----
   function sampleCube() {
+  const WEEKS = 52; // Sample fixture only; real history has no year limit.
   const iso = i => { const e = new Date(END + "T00:00:00"), d = new Date(e.getFullYear(), e.getMonth(), e.getDate() - (WEEKS - 1 - i) * 7);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
   let seed = 80; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
@@ -1415,7 +1418,7 @@ stackTables();
       return row(name(SOURCES, src.id), whole ? `<i class="seg-out" style="left:0;width:100%"></i>` : segs(on, src.cut ? Math.max(0, idxOf(src.cut)) : 0), status(src, on));
     });
     document.getElementById("tl-sources").innerHTML = srcRows.join("");
-    const q = [0, 13, 26, 39, WEEKS - 1].map(i => weeks[i].toLocaleDateString("en-US", {month: "short", year: i === 0 || i === WEEKS - 1 ? "numeric" : undefined}));
+    const q = [0, 0.25, 0.5, 0.75, 1].map(f => Math.round(f * (WEEKS - 1))).map(i => weeks[i].toLocaleDateString("en-US", {month: "short", year: i === 0 || i === WEEKS - 1 ? "numeric" : undefined}));
     document.getElementById("tl-axis").innerHTML = `<span></span><span>${q.map(t => `<span>${t}</span>`).join("")}</span><span></span>`;
 
     // the one-line summary under the part title
@@ -1662,10 +1665,11 @@ stackTables();
   // scripts run: show the filters and tiles, hide the no-script notes
   trendsEl.setAttribute("data-live", "");
   // ---- filter state ----
-  const RANGES = [[4, "4 weeks"], [13, "3 months"], [26, "6 months"], [52, "12 months"]];
-  // open on the range the data covers, so a few months of data isn't squeezed into the end of a year
+  const RANGES = [[4, "4 weeks"], [13, "3 months"], [26, "6 months"], [52, "12 months"], ["all", "All history"]];
+  // open on the range the data covers, so a few months of data isn't squeezed into the end of a year;
+  // longer history opens on 12 months, and All history shows the rest
   const dataWeeks = rows.some(r => r.sessions > 0) ? WEEKS - Math.min(...rows.filter(r => r.sessions > 0).map(r => r.w)) : WEEKS;
-  const DEFAULT_RANGE = (RANGES.find(([n]) => n >= 13 && n >= dataWeeks) || [WEEKS])[0];
+  const DEFAULT_RANGE = (RANGES.find(([n]) => n >= 13 && n >= dataWeeks) || [52])[0];
   let viewEnd = WEEKS, viewStart = WEEKS - DEFAULT_RANGE;
   const state = {custom: null, range: DEFAULT_RANGE, source: "all", cat: "all", project: null, picked: null, allCharts: new Set()};
   const staticNote = trendsEl.querySelector(".static-note");
@@ -1689,7 +1693,7 @@ stackTables();
     menu.style.left = Math.max(12, Math.min(r.left, innerWidth - w - 12)) + "px";
     menu.style.top = Math.max(12, Math.min(r.bottom + 8, innerHeight - h - 12)) + "px";
   };
-  fromEl.min = toEl.min = isoDay(weeks[0]); fromEl.max = toEl.max = reportTo;
+  fromEl.min = toEl.min = earliestWeek; fromEl.max = toEl.max = reportTo;
   const legacyBoundary = (from, to) => rows.some(r => !Array.isArray(r.days) && r.sessions > 0 &&
     r.week <= to && isoDay(sunOf(weeks[r.w])) >= from && (r.week < from || isoDay(sunOf(weeks[r.w])) > to));
   const validateDates = () => {
@@ -1741,7 +1745,7 @@ stackTables();
   rows.forEach(r => projects.set(r.p, (projects.get(r.p) || 0) + r.sessions));
   const allProjects = document.createElement("option"); allProjects.value = "all"; allProjects.textContent = "All projects"; projectEl.appendChild(allProjects);
   [...projects].sort((a, b) => Number(!a[0]) - Number(!b[0]) || b[1] - a[1] || a[0].localeCompare(b[0])).forEach(([id]) => {
-    const o = document.createElement("option"); o.value = "project:" + id; o.textContent = id || "Unknown"; projectEl.appendChild(o);
+    const o = document.createElement("option"); o.value = "project:" + id; o.textContent = rows.find(r => r.p === id)?.project_label || id || "Unknown"; projectEl.appendChild(o);
   });
   projectEl.addEventListener("change", () => { state.project = projectEl.value === "all" ? null : projectEl.value.slice(8); render(); });
   [["all", "All work"], ...CATS.filter(([id]) => rows.some(row => row.c === id && row.sessions > 0))].forEach(([id, label]) => { const o = document.createElement("option"); o.value = id; o.textContent = label; catEl.appendChild(o); });
@@ -1898,8 +1902,9 @@ stackTables();
     [0, 0.5, 1].forEach(f => { const v = ymax * f; add("line", {x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "var(--grid)", "stroke-width": 1}); add("text", {x: L - 6, y: y(v) + 3, "text-anchor": "end"}).textContent = v === 0 && m.fmt !== pct ? "0" : m.fmt(v); });
     idx.forEach((wi, k) => {
       const d = weeks[wi];
-      const show = state.range <= 4 ? true : state.range <= 13 ? k % 4 === 0 : d.getDate() <= 7 && (state.range <= 26 ? d.getMonth() % 2 === 0 : [0, 3, 6, 9].includes(d.getMonth()));
-      if (show) add("text", {x: x(k), y: Hh - 6, "text-anchor": k === idx.length - 1 ? "end" : "middle"}).textContent = state.range <= 13 ? mon(d) : d.toLocaleDateString("en-US", {month: "short"});
+      const span = viewEnd - viewStart;
+      const show = span > 52 ? k % Math.max(1, Math.ceil(span / 5)) === 0 : span <= 4 ? true : span <= 13 ? k % 4 === 0 : d.getDate() <= 7 && (span <= 26 ? d.getMonth() % 2 === 0 : [0, 3, 6, 9].includes(d.getMonth()));
+      if (show) add("text", {x: x(k), y: Hh - 6, "text-anchor": k === idx.length - 1 ? "end" : "middle"}).textContent = span <= 13 ? mon(d) : d.toLocaleDateString("en-US", {month: "short", ...(span > 52 ? {year: "2-digit"} : {})});
     });
     if (scopeAt) {
       const pid = "hatch-" + m.id, pat = add("pattern", {id: pid, width: 6, height: 6, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)"});
@@ -2009,11 +2014,11 @@ stackTables();
     // back out of the group while the groups redraw
     groupsEl.before(filtersEl);
     renderScope();
-    if (!state.custom) { viewEnd = WEEKS; viewStart = WEEKS - state.range; }
+    if (!state.custom) { viewEnd = WEEKS; viewStart = state.range === "all" ? WEEKS - historyWeeks : Math.max(0, WEEKS - state.range); }
     const i0 = viewStart, filteredRows = selectedRows();
     document.getElementById("f-range-value").textContent = rangeLabel();
-    rangeEl.title = state.custom ? `${state.custom.from} to ${state.custom.to}` : rangeLabel();
-    document.getElementById("f-presets").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(!state.custom && +b.dataset.n === state.range)));
+    rangeEl.title = state.custom ? `${state.custom.from} to ${state.custom.to}` : `${rangeLabel()} · Available: ${earliestWeek} to ${reportTo}`;
+    document.getElementById("f-presets").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(!state.custom && b.dataset.n === String(state.range))));
     document.getElementById("f-reset").disabled = !state.custom && state.range === DEFAULT_RANGE && state.source === "all" && state.cat === "all" && state.project === null;
     srcEl.value = state.source;
     projectEl.value = state.project === null ? "all" : "project:" + state.project;
@@ -2131,7 +2136,7 @@ stackTables();
     const weakBrief = eligible.filter(p => p.briefed != null).sort((a, b) => a.briefed - b.briefed)[0];
     const weakCheck = eligible.filter(p => p.checked != null).sort((a, b) => a.checked - b.checked)[0];
     const span = rangeLabel(), low = p => p.label.toLowerCase();
-    document.getElementById("cat-meta").textContent = state.custom ? span : `Last ${span}`;
+    document.getElementById("cat-meta").textContent = state.custom || state.range === "all" ? span : `Last ${span}`;
     ins.textContent = eligible.length < 2 || !weakBrief ? ""
       : (state.custom ? `From ${span}, you ` : `Over the last ${span}, you `) + (weakCheck && weakCheck.c === weakBrief.c ? `brief and check least in ${low(weakBrief)} (${pct(weakBrief.briefed)}, ${pct(weakCheck.checked)}).`
       : weakCheck ? `brief least in ${low(weakBrief)} (${pct(weakBrief.briefed)}) and check least in ${low(weakCheck)} (${pct(weakCheck.checked)}).`

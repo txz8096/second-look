@@ -9,6 +9,10 @@ signals and a few trimmed prompt samples. Nothing leaves the machine.
 Usage: python3 collect.py [--days 7] [--home ~] [--out summary.json]
 """
 import argparse, collections, datetime as dt, functools, glob, hashlib, json, os, re, sqlite3, sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from projects import ProjectStore, lock_state
+from history import HistoryStore
+from urllib.parse import urlparse, unquote
 
 
 @functools.lru_cache(maxsize=4096)
@@ -170,6 +174,7 @@ class Agg:
         self.unattended = set()    # sessions a headless run started
         self.timeline = collections.defaultdict(list)   # session -> [(kind, detail)] in log order
         self.projects = {}
+        self.project_metadata = {}
 
     def add_action(self, session, name, blob, shell=False, background=False):
         """Record what an agent tool call did: edit, check, ship, read, delegate, set up a recurring
@@ -252,6 +257,7 @@ def claude_code(home, since):
         for e in iter_jsonl(path):
             if session not in a.projects and isinstance(e.get("cwd"), str):
                 a.projects[session] = project_name(e["cwd"])
+                a.project_metadata[session] = {"cwd": e["cwd"]}
             ts = parse_ts(e.get("timestamp"))
             if ts and ts < since:
                 continue
@@ -296,6 +302,10 @@ def codex(home, since):
             p = e.get("payload") if isinstance(e.get("payload"), dict) else e
             if session not in a.projects and isinstance(p.get("cwd"), str):
                 a.projects[session] = project_name(p["cwd"])
+                a.project_metadata[session] = {"cwd": p["cwd"]}
+            roots = p.get("workspace_roots") or p.get("runtime_workspace_roots")
+            if isinstance(roots, list):
+                a.project_metadata.setdefault(session, {}).setdefault("roots", roots)
             ts = parse_ts(e.get("timestamp"))
             if ts and ts < since:
                 continue
@@ -349,6 +359,23 @@ def cursor(home, since):
             con = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
             rows = con.execute(
                 "SELECT key, value FROM cursorDiskKV WHERE key LIKE 'bubbleId:%'").fetchall()
+            for _, value in con.execute("SELECT key, value FROM cursorDiskKV WHERE key LIKE 'composerData:%'"):
+                try:
+                    composer = json.loads(value)
+                    workspace = composer.get("workspaceIdentifier") or {}
+                    uri = workspace.get("uri") or {}
+                    folder = uri.get("fsPath") or uri.get("path") if isinstance(uri, dict) and uri.get("scheme") == "file" else None
+                    if not folder and isinstance(workspace.get("id"), str) and re.fullmatch(r"[a-zA-Z0-9_-]+", workspace["id"]):
+                        meta = os.path.join(os.path.dirname(os.path.dirname(db)), "workspaceStorage", workspace["id"], "workspace.json")
+                        if os.path.isfile(meta):
+                            address = json.load(open(meta)).get("folder", "")
+                            parsed = urlparse(address)
+                            if parsed.scheme == "file" and not parsed.netloc:
+                                folder = unquote(parsed.path)
+                    if isinstance(folder, str) and os.path.isabs(folder) and composer.get("composerId"):
+                        a.project_metadata[composer["composerId"]] = {"cwd": folder, "roots": [folder]}
+                except (ValueError, TypeError, AttributeError, OSError):
+                    continue
         except Exception as ex:
             print(f"cursor: could not read {db}: {ex}", file=sys.stderr)
             continue
@@ -1137,13 +1164,15 @@ def main():
     ap.add_argument("--home", default=os.path.expanduser("~"))
     ap.add_argument("--samples", type=int, default=5)
     ap.add_argument("--out")
+    ap.add_argument("--all-history", action="store_true", help="read all available raw history, without a one-year cutoff")
+    ap.add_argument("--state-dir", help="persist project mappings and session metrics here; normally ~/.second-look")
     ap.add_argument("--trend", action="store_true",
-                    help="add a weekly series (use with --days 365) for 12-month trends")
+                    help="add weekly and daily totals; use --all-history for historical recovery")
     ap.add_argument("--claude-export", help="path to claude.ai export conversations.json")
     ap.add_argument("--chatgpt-export", help="path to ChatGPT export conversations.json")
     ap.add_argument("--gemini-export", help="path to Google Takeout My Activity/Gemini Apps/MyActivity.json")
     args = ap.parse_args()
-    since = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=args.days)
+    since = dt.datetime(1970, 1, 1, tzinfo=dt.timezone.utc) if args.all_history else dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=args.days)
 
     aggs = [claude_code(args.home, since), codex(args.home, since), cursor(args.home, since),
             antigravity(args.home, since)]
@@ -1176,7 +1205,24 @@ def main():
         "available_skill_files": len(skills),
     }
     metered, limit_hits = usage_by_session(args.home, since)
+    # Full available sessions are required when updating persisted history: a date slice can
+    # otherwise replace a complete session with its last few prompts.
+    if args.state_dir and (not args.all_history or not args.trend):
+        ap.error("--state-dir requires --all-history --trend to preserve complete session metrics")
+    state_lock = lock_state(os.path.expanduser(args.state_dir)) if args.state_dir else None
+    projects = ProjectStore(os.path.join(os.path.expanduser(args.state_dir), "projects.json") if args.state_dir else None)
+    for agg in aggs:
+        for sid, metadata in agg.project_metadata.items():
+            member = projects.folder(agg.name, metadata.get("cwd"), metadata.get("roots"), home=args.home)
+            agg.projects[sid] = projects.project_for(member) if member else ""
+            metadata["member"] = member
     sessions = sessions_of(aggs, metered, scheduled_prompts(args.home))
+    for session in sessions:
+        agg = next(a for a in aggs if a.name == session["source"])
+        session["project_member"] = agg.project_metadata.get(session["session"], {}).get("member", "")
+    result["projects"] = projects.labels()
+    result["project_coverage"] = {a.name: {"sessions": sum(r["source"] == a.name for r in sessions),
+        "unknown": sum(r["source"] == a.name and not r["project"] for r in sessions)} for a in aggs}
     result["usage"] = usage_summary([r for r in sessions if r["start"] >= since], metered, limit_hits, args.home)
     result["agent_checks"] = checks_summary([r for r in sessions if r["start"] >= since])
     result["delegation"] = delegation_summary([r for r in sessions if r["start"] >= since])
@@ -1185,7 +1231,17 @@ def main():
     result["scope"] = data_scope(args.home, aggs, {"claude": args.claude_export, "chatgpt": args.chatgpt_export,
                                                    "gemini": args.gemini_export})
     if args.trend:
-        result["cube"] = session_cube(sessions)
+        if args.state_dir:
+            history = HistoryStore(os.path.join(os.path.expanduser(args.state_dir), "history.json"))
+            result["cube"] = history.update(sessions, projects, session_cube)
+            result["history_notes"] = history.notes
+            projects.save()
+            history.save()
+        else:
+            result["cube"] = session_cube(sessions)
+        for row in result["cube"]:
+            if row.get("project") in result["projects"]:
+                row["project_label"] = result["projects"][row["project"]]
         # the week in progress would read as a quiet full week, so the report's charts stop before it
         result["last_complete_week"] = last_complete_week(result["cube"], week_of(dt.datetime.now(dt.timezone.utc)))
         result["last_4_weeks"] = last_4_weeks(result["cube"], result["last_complete_week"])

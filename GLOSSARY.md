@@ -12,7 +12,11 @@ An exchange with an AI, from your first message until you start a new session. U
 
 ## Project
 
-The name of the git repository a Claude Code or Codex session ran in. Worktrees use the main repository's name. Only the name is retained. **Unknown** includes sessions outside a repository, apps without verified folder metadata and older history without a project; it does not mean the session had no project.
+A group of sessions associated with recorded project or workspace information. Verified local folders
+in Claude Code, Codex and Cursor qualify without Git; worktrees use their main repository.
+Matching names combine across apps unless the user separates them. Stable IDs preserve identity;
+display labels may change. Full paths are not retained. **Unknown** means usable project information
+was unavailable, including unresolved older history; it does not mean the session had no project.
 
 ## Usage
 

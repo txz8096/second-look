@@ -6,7 +6,7 @@ import path from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
 const {chromium} = await import(process.env.SECOND_LOOK_PLAYWRIGHT ? pathToFileURL(path.join(process.env.SECOND_LOOK_PLAYWRIGHT, 'index.mjs')).href : 'playwright');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const source = fs.readFileSync(path.join(root, 'plugins/second-look/skills/second-look/report-template.html'), 'utf8');
+const source = fs.readFileSync(process.env.SECOND_LOOK_TEMPLATE || path.join(root, 'plugins/second-look/skills/second-look/report-template.html'), 'utf8');
 const output = process.env.SECOND_LOOK_QA_DIR || fs.mkdtempSync(path.join(os.tmpdir(), 'second-look-designs-'));
 fs.mkdirSync(output, {recursive:true});
 const chrome = process.env.SECOND_LOOK_CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
@@ -33,7 +33,7 @@ const main = fixture('sample', source);
    await page.locator('#f-range-menu').waitFor({state:'visible'});
    assert.equal(await page.locator('#f-apply').isDisabled(),true);
    const box=await page.locator('#f-range-menu').boundingBox();assert.ok(box.x>=0&&box.x+box.width<=width);
-   assert.deepEqual(await page.locator('#f-presets button').allTextContents(),['4 weeks','3 months','6 months','12 months']);
+   assert.deepEqual(await page.locator('#f-presets button').allTextContents(),['4 weeks','3 months','6 months','12 months','All history']);
    await page.locator('#f-presets button').filter({hasText:'4 weeks'}).click();
    assert.equal(await page.locator('#f-range-value').innerText(),'4 weeks');
    assert.equal(await page.locator('#f-range-menu').isVisible(),false);
@@ -76,12 +76,12 @@ const main = fixture('sample', source);
   assert.match(await page.locator('#cat-table').textContent(),/7/);assert.doesNotMatch(await page.locator('#cat-table').textContent(),/100/);
   await selectRange('2026-10-13','2026-10-17');assert.equal(await page.locator('#f-sum').innerText(),'0 sessions');assert.match(await page.locator('.filter-empty').innerText(),/112 sessions are available/);
   await page.locator('#f-clear').click();assert.equal(await page.locator('#f-sum').innerText(),'112 sessions');
-  await selectRange('2025-10-27','2025-10-27');assert.equal(await page.locator('#f-sum').innerText(),'0 sessions');
+  await page.locator('#f-range').click();await page.locator('#f-from').fill('2025-10-27');await page.locator('#f-to').fill('2025-10-27');assert.equal(await page.locator('#f-apply').isDisabled(),true);assert.match(await page.locator('#f-date-error').innerText(),/within this saved report/);await page.locator('#f-from').fill('2026-10-12');await page.locator('#f-to').fill('2026-10-12');await page.locator('#f-apply').click();assert.equal(await page.locator('#f-sum').innerText(),'5 sessions');
   await page.goto(fixture('legacy',source.replace('const CUBE = sampleCube();','const CUBE = '+JSON.stringify(cube.map(row=>Object.fromEntries(Object.entries(row).filter(([key])=>key!=='days'))))+';'))+'#part-1');
   await page.locator('#f-range').click();await page.locator('#f-from').fill('2026-10-18');await page.locator('#f-to').fill('2026-10-18');
   assert.equal(await page.locator('#f-apply').isDisabled(),true);assert.match(await page.locator('#f-date-error').innerText(),/weekly totals only/);
   await page.locator('#f-from').fill('2026-10-12');await page.locator('#f-to').fill('2026-10-18');await page.locator('#f-apply').click();assert.equal(await page.locator('#f-sum').innerText(),'12 sessions');
-  console.log('PASS daily/legacy: inclusive boundaries, single-day count, empty recovery, oldest range, weekly-only validation');
+  console.log('PASS daily/legacy: inclusive boundaries, single-day count, empty recovery, earliest available date, dates before history rejected, weekly-only validation');
   const projectCube = [
    {...cube[0],project:'Atlas'},
    {...cube[0],project:'all',sessions:5,prompts:5,briefable:5,briefed:5,days:[{date:'2026-10-18',sessions:5,prompts:5,briefable:5,briefed:5}]},

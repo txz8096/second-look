@@ -107,7 +107,9 @@ def cube_problems(cube, end):
     for row in cube:
         project = row.get("project", "")
         if not isinstance(project, str) or "/" in project or "\\" in project or project in (".", ".."):
-            problems.append("CUBE project must be a repository name or an empty string, never a path")
+            problems.append("CUBE project must be a project ID/name or an empty string, never a path")
+        if "project_label" in row and (not isinstance(row["project_label"], str) or any(c in row["project_label"] for c in "/\\")):
+            problems.append("CUBE project_label must be a display name, never a path")
         if "days" not in row:
             continue
         days = row["days"]
@@ -128,12 +130,11 @@ def cube_problems(cube, end):
     if not end:
         return problems
     end -= dt.timedelta(days=end.weekday())
-    start = end - dt.timedelta(weeks=51)
     days = [to_date(r["week"]) for r in cube if (r.get("sessions") or 0) > 0]
     days = [d for d in days if d]
-    if not any(start <= d <= end for d in days):
-        problems.append(f"no CUBE row with sessions falls in the 52 weeks up to END ({end}), so every chart would be empty")
-    elif max(days) > end + dt.timedelta(days=7):
+    if days and not any(d <= end for d in days):
+        problems.append(f"no CUBE row with sessions falls on or before END ({end})")
+    elif days and max(days) > end + dt.timedelta(days=7):
         problems.append(f"END ({end}) is stale: the CUBE runs to {max(days)}, so its newest weeks would be dropped; END is the Monday of the last complete week")
     # the week in progress reads as a quiet full week. A new user with nothing earlier has only that week to show
     today = dt.date.today()

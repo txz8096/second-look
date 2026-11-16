@@ -215,7 +215,7 @@ Confirm in one line what changed and the next due date.
 | Block | Time | What happens |
 |---|---|---|
 | Check-in | 0–2 min | The fixes from the last review: done or not? One sentence each |
-| Coaching | 2–15 min | Skill P1s first, then habit P1s, then P2s as time allows. Tie one habit to a 12-month trend |
+| Coaching | 2–15 min | Skill P1s first, then habit P1s, then P2s as time allows. Tie one habit to a measured trend |
 | Questions | 15–28 min | They ask anything. Answer from evidence and say when you don't know |
 | Close | 28–30 min | Confirm which fixes they'll try: every fix in the report. Log them |
 
@@ -288,16 +288,22 @@ and still works on current models.
 3. **Context drift.** Compare `context_file` with `~/.claude/CLAUDE.md`,
    `~/.codex/AGENTS.md`, Cursor rules and `~/.gemini/GEMINI.md` (Antigravity). Note which rules
    each app is missing.
-4. **12-month trend.** Run `python3 scripts/collect.py --days 365 --trend`, adding
+4. **Available history.** Run `python3 scripts/collect.py --all-history --trend --state-dir ~/.second-look`, adding
    `--claude-export ~/.second-look/exports/claude/conversations.json` and
    `--chatgpt-export ~/.second-look/exports/chatgpt/conversations.json` and
    `--gemini-export ~/.second-look/exports/gemini/MyActivity.json` when those files
    exist. It returns `cube` (weekly rows by source, kind of work and project, each with additive daily `days` totals), `coverage`,
-   `label_samples` and an `automation` block matched across the whole year. Spot-check the
+   `label_samples` and an `automation` block matched across available raw history. Spot-check the
    labels against the samples before trusting a number.
-   Merge the cube into `~/.second-look/history.json`, keeping older weeks the apps have
-   deleted. If any export is over 90 days old, add a P3: download a fresh one and say
-   "add my <app> export". Gemini's export has no conversation ids, so the collector
+   The collector saves prompt-free per-session metrics in `~/.second-look/history.json` and
+   project mappings in `~/.second-look/projects.json`. It merges sessions by stable hashed IDs,
+   keeps deleted-log history and rebuilds project totals after mapping corrections. Never manually
+   overwrite the history file with a cube array. Read `history_notes`: legacy app/week totals are
+   retained when raw sessions cannot reproduce their numeric totals; do not guess their projects.
+   This recovery mode reads all available logs each run; incremental raw-file caching is not yet
+   implemented. Do not change host retention settings to obtain older data. If any export is over
+   90 days old, add a P3: download a fresh one and say
+   "add my <app> export". Gemini's export has no session IDs, so the collector
    groups prompts less than 30 minutes apart into one session: call its session-based
    numbers (restarts, briefed starts) estimates.
 5. Read `~/.second-look/log.md` for the fixes from the last review.
@@ -362,7 +368,7 @@ other apps. Never suggest a cheaper model for career, legal, medical or money wo
 Goal: work that comes back on a rhythm, or the same way every time, stops depending on them
 to remember and retype it. Local only, from Claude Code and Codex.
 
-Read the `automation` block from the 365-day run, since repeats need history to show up:
+Read the `automation` block from the all-history run, since repeats need history to show up:
 
 | Field | What it is |
 |---|---|
@@ -451,13 +457,13 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
   script. Leave the rest of the script as it is.
   - `END`: the Monday of the last complete week, as `"YYYY-MM-DD"` (the collector's
     `last_complete_week`). The week in progress stays out, because a few days would read as a
-    quiet full week. The charts show the 52 weeks up to `END`, and the newest days wait for the
+    quiet full week. The charts hold every saved week up to `END`, and the newest days wait for the
     next review. Someone whose every session is in the week in progress gets that week, and the
     collector already returns it.
-  - `CUBE`: replace `sampleCube()` with the collector's `cube` array, plus the older weeks kept
-    in `history.json`, pasted as is. A week and app in the cube replaces the same week and app
-    in history, so nothing counts twice. Rows keep the collector's `week`, `source`, `category` and `project`
-    keys and nested `days` totals. Never discard the daily totals when merging history. Weeks outside the 52 are left out.
+  - `CUBE`: replace `sampleCube()` with the persisted collector's already-merged `cube` array,
+    pasted as is. Keep `week`, `source`, `category`, `project`, `project_label` and nested `days`
+    totals. Never merge the same rows again or discard old history. Keep older rows: the Time
+    menu's All history option shows every saved week.
   - `SCOPE`: the collector's `scope` (see "Data scope"), including `through` and measured `latest_session` dates. Never infer a session date from a file timestamp.
   - `MILESTONES`: dated changes to mark on every chart, like a fix they started from
     `log.md`, as `[{"week": "YYYY-MM-DD", "label": "..."}]`. Labels stay under 25 characters, in
@@ -771,7 +777,7 @@ access recovery. Offer the separate labeled sample report only as an optional ex
 never mix its records or findings with the user's data. Do not run the findings report checker
 on a preflight message. Retain older included history when only the recent window is quiet.
 
-Time is a dropdown with 4 weeks, 3 months, 6 months, 12 months and a custom From/To range.
+Time is a dropdown with 4 weeks, 3 months, 6 months, 12 months, All history and a custom From/To range. From/To starts at the earliest saved week.
 App, Work and Project use single-select dropdowns. Keep Time, App, Work, Project, Clear and the right-aligned session count in one desktop row when
 space permits; coverage goes underneath. Phones keep Time/count together and wrap the
 App, Work and Project controls with 44px touch targets. Clear resets the report default date range,
@@ -782,12 +788,18 @@ partial-week counts exact. Legacy weekly-only history supports complete weeks; t
 why an unsupported partial-week range cannot apply. Never split or prorate real weekly totals.
 Keep app/work/project selections when time changes. Counts, charts and share tables use the same
 selection. Project options show every project in the saved data, ordered by session count, with Unknown last.
-Claude Code and Codex use the repository name from the session’s recorded working folder;
-linked worktrees use their main repository’s name. Keep only that name, never the full path.
-Apps without verified folder metadata, folders outside repositories and older rows without a
-`project` count under "Unknown" (stored as an empty string); never guess or split
-older totals. Project filtering works best for Claude Code and Codex sessions run inside a
-repository that still exists. Filtered-empty copy says no included sessions match, names the verified outside
+Claude Code, Codex and Cursor use verified local folder metadata, including ordinary non-Git
+folders. Repository subfolders and worktrees map to their repository root. Native project membership
+in cloud exports remains unverified and is not inferred. Unknown means no usable membership metadata.
+Matching names combine across apps after case, spacing and hyphen normalization. Project IDs stay
+separate from display labels. Keep full paths out of stored mappings and reports.
+
+For a user-requested grouping correction, use `python3 scripts/projects.py --state-dir ~/.second-look
+list` to resolve IDs, then `merge TARGET OTHER...`, `separate MEMBER LABEL`, `rename PROJECT LABEL`
+or `assign-folder APP ABSOLUTE_FOLDER PROJECT`. These operations honor the user's instruction; do not
+ask again when the requested grouping is clear. Regenerate with the all-history collector afterward.
+When a folder move cannot be verified, ask whether it is the same project before assigning it. Never
+change findings or fixes merely because a chart filter changes. Filtered-empty copy says no included sessions match, names the verified outside
 count and offers Clear filters. It does not imply missing coverage or no activity elsewhere.
 
 An updated export creates a new report snapshot. Recompute its review summary and activity

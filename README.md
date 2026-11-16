@@ -274,11 +274,18 @@ session logs are.
 As far as your logs do. Claude Code keeps 30 days by default, which is why the installer
 offers to keep a year. claude.ai, ChatGPT and Gemini cover sessions present in the supplied exports. Each run saves
 weekly totals with daily breakdowns, so weeks your apps later delete stay in the trend. Custom date ranges use those daily totals; older weekly-only history supports complete weeks.
-In Habits & usage, Time, App, Work and Project filter the charts. Claude Code and Codex
-sessions use their git repository name, with worktrees grouped under the main repository.
-Only the name is saved, never the full path. Other apps, sessions outside a repository and
-older history appear under “Unknown”. The repository must still be available
-when the review runs.
+In Habits & usage, Time, App, Work and Project filter charts and share tables, not findings or fixes.
+The collector recognizes local folders in Claude Code, Codex and Cursor without requiring Git.
+Matching names combine across apps; ask your assistant to separate, merge or rename a group.
+Saved project identities survive verified folder renames and previously recorded folder deletion.
+Full paths are not saved. Missing or unverified project metadata appears under “Unknown”. Native
+project membership in cloud exports has not yet been verified.
+
+The collector can retain all available history with `--all-history --trend --state-dir ~/.second-look`.
+It keeps per-session metrics without prompt text and preserves older totals when original logs are
+missing. Existing aggregate-only history is replaced only when a reread reproduces its totals.
+The report's Time menu adds All history to show every saved week; it still opens on 12 months or less.
+No host retention setting is changed by historical collection.
 </details>
 
 <details>
