@@ -126,8 +126,9 @@ hand.
 
 ## Running a review
 
-**Check for a finished report first (locally).** A scheduled run saves its report without opening
-it, so someone who comes back and asks for a Second Look usually wants that report. When they ask
+**Check for a finished report first (locally).** A scheduled run opens its report in their
+browser when it finishes, but the browser may not have opened, or they closed it before reading.
+Someone who comes back and asks for a Second Look usually wants that report. When they ask
 for a review, run `python3 scripts/schedule.py status`. If `unopened_report` has a path, ask once:
 
 "Your <Month D> review is ready. Want to go through it, or run a new one?"
@@ -171,7 +172,7 @@ option that works where you're running:
 |---|---|---|
 | Claude desktop app (you have `create_scheduled_task`) | A scheduled task (details below) | `schedule.py set --days N --method app --app "Claude desktop"` |
 | Codex app | A scheduled task in Codex. If you can't create it yourself, walk them through it: Scheduled → New task, paste the task prompt below, set it to repeat every N days or weeks, choose this computer as where it runs | `schedule.py set --days N --method app --app "Codex app"` |
-| Terminal only, with the `claude` or `codex` command | A daily local job that runs the review without a window when it's due, then notifies them the report is ready. Tell them it runs with file access approved in advance | `schedule.py set --days N --method headless --agent claude` (or `codex`) |
+| Terminal only, with the `claude` or `codex` command | A daily local job that runs the review without a window when it's due, then opens the report in their browser and notifies them it's ready. Tell them it runs with file access approved in advance | `schedule.py set --days N --method headless --agent claude` (or `codex`) |
 | Anything else (Cursor, Antigravity, or if they'd rather not run reviews unattended) | A notification when a review is due | `schedule.py set --days N --method notify` |
 | claude.ai | Suggest a claude.ai scheduled task with the task prompt below. Say it will only see their claude.ai chats | Nothing to run |
 
@@ -186,8 +187,9 @@ it up.
 
 **Task prompt** (for app scheduled tasks): "Run a full Second Look review using the skill at
 ~/.agents/skills/second-look (read its SKILL.md first). If there's no profile yet, ask the four
-profile questions and wait. Build and check the report, save it to ~/.second-look/reports/ (don't open it),
+profile questions and wait. Build and check the report, save it to ~/.second-look/reports/,
 write the log entry, run `python3 ~/.agents/skills/second-look/scripts/schedule.py reviewed`,
+open the report with `python3 ~/.agents/skills/second-look/scripts/open_report.py <report.html>`,
 then end with one question: which fixes they want to try before the next review."
 
 **Claude desktop scheduled tasks.** Check `list_scheduled_tasks` first and update an existing
@@ -477,9 +479,9 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
   so the report opens in their own browser. App preview panes, like the Claude desktop app's,
   can show a local file without its scripts or keep an old copy after a rebuild. In your
   closing message, give the path and the command to open it again (`open <path>` on macOS).
-  This also records the report as opened. Skip this on scheduled runs, so a private report never
-  pops up while they're away. The task's session in the app, or the notification in a terminal,
-  tells them it's ready, and the check at the start of "Running a review" opens it when they ask.
+  This also records the report as opened. Do this on scheduled runs too, as the last step, so
+  the report is waiting in their browser when they come back instead of hidden in a folder. If
+  the browser doesn't open, the check at the start of "Running a review" offers it when they ask.
 
 **Settings.** Under Review schedule, replace the sample controls with a schedule summary from
 `schedule.py status` and directions to manage it in its owning app. Show cadence,

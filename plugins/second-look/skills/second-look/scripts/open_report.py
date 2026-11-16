@@ -9,10 +9,10 @@ the filters, copy buttons and hover details and always reads the current file.
 Prints the command to run by hand when it can't open one. Also records the report as opened,
 so a later request for a Second Look doesn't offer it again.
 """
-import os, shlex, subprocess, sys
+import os, sys
 
 sys.dont_write_bytecode = True  # keep the skill folder free of __pycache__
-from schedule import mark_opened
+from schedule import open_in_browser
 
 
 def main():
@@ -21,28 +21,7 @@ def main():
     report = os.path.abspath(os.path.expanduser(sys.argv[1]))
     if not os.path.exists(report):
         sys.exit(f"{report} doesn't exist")
-
-    try:
-        mark_opened(report)
-    except (OSError, ValueError):
-        pass  # opening the report matters more than remembering it
-
-    if sys.platform == "darwin":
-        cmd = ["open", report]
-    elif sys.platform.startswith("win"):
-        cmd = None
-    else:
-        cmd = ["xdg-open", report]
-
-    try:
-        if cmd is None:
-            os.startfile(report)
-        else:
-            subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
-        print(f"Opened {report} in your browser.")
-    except (OSError, subprocess.SubprocessError):
-        by_hand = f'start "" "{report}"' if cmd is None else shlex.join(cmd)
-        print(f"Couldn't open a browser. Open it with: {by_hand}")
+    open_in_browser(report)
 
 
 if __name__ == "__main__":

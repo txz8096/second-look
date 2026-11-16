@@ -6,8 +6,8 @@ Three ways a review can recur, set up after the first report:
   app       A scheduled task in the Claude desktop app or the Codex app runs the review.
             This script only records the cadence, so `status` knows when the next one is due.
   headless  A daily local job (launchd on macOS, cron on Linux) runs `check`. When a review is
-            due, it starts Claude Code or Codex without a window to run the review, then shows
-            a notification that the report is ready.
+            due, it starts Claude Code or Codex without a window to run the review, then opens
+            the report in their browser and shows a notification that it's ready.
   notify    The same daily job only shows a notification that a review is due.
 
 Usage: python3 schedule.py set --days 14 --method app --app "Claude desktop"
@@ -21,7 +21,7 @@ Usage: python3 schedule.py set --days 14 --method app --app "Claude desktop"
 Add --dry-run (or set SECOND_LOOK_DRY_RUN=1) to print scheduler, agent and notification actions
 without running them.
 """
-import argparse, datetime as dt, json, os, plistlib, re, shutil, subprocess, sys
+import argparse, datetime as dt, json, os, plistlib, re, shlex, shutil, subprocess, sys
 
 HOME = os.path.expanduser("~")
 DIR = os.path.join(HOME, ".second-look")
@@ -76,7 +76,7 @@ def unopened_report(s):
 
 
 def mark_opened(report):
-    """Record that a report was opened. open_report.py calls this; scheduled runs never do."""
+    """Record that a report was opened. open_in_browser calls this."""
     m = REPORT_NAME.fullmatch(os.path.basename(report))
     if not m or os.path.dirname(os.path.realpath(report)) != os.path.realpath(os.path.join(DIR, "reports")):
         return
@@ -195,6 +195,37 @@ def notify(message, dry):
         print(message)
 
 
+def open_in_browser(report, dry=False):
+    """Open a report in the user's own browser and record it as opened. Returns True if it opened.
+
+    Prints the command to run by hand when it can't open one.
+    """
+    if dry:
+        print("would open:", report)
+        return True
+    try:
+        mark_opened(report)
+    except (OSError, ValueError):
+        pass  # opening the report matters more than remembering it
+    if sys.platform == "darwin":
+        cmd = ["open", report]
+    elif sys.platform.startswith("win"):
+        cmd = None
+    else:
+        cmd = ["xdg-open", report]
+    try:
+        if cmd is None:
+            os.startfile(report)
+        else:
+            subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=30)
+        print(f"Opened {report} in your browser.")
+        return True
+    except (OSError, subprocess.SubprocessError):
+        by_hand = f'start "" "{report}"' if cmd is None else shlex.join(cmd)
+        print(f"Couldn't open a browser. Open it with: {by_hand}")
+        return False
+
+
 def stale_exports():
     """A reminder line for exports over STALE_EXPORT_DAYS old, or "" when all are fresh."""
     old = []
@@ -211,9 +242,11 @@ def stale_exports():
             "to add it." % (names, STALE_EXPORT_DAYS))
 
 
-def ready_message():
+def ready_message(opened=False):
     date, _ = latest_report()
     saved = "Saved as %s.html in ~/.second-look/reports." % date if date else "Saved in ~/.second-look/reports."
+    if opened:
+        return "Your review is ready and open in your browser. " + saved
     return "Your review is ready. Ask your assistant for a Second Look to go through it. " + saved
 
 
@@ -221,7 +254,8 @@ def run_headless(s, dry):
     cmd = agent_command(s["agent"], s["agent_path"])
     if dry:
         print("would run:", " ".join(cmd[:2]), "...")
-        notify(ready_message() + stale_exports(), dry)
+        _, report = latest_report()
+        notify(ready_message(bool(report) and open_in_browser(report, dry)) + stale_exports(), dry)
         return
     os.makedirs(os.path.join(DIR, "reports"), exist_ok=True)
     log = os.path.join(DIR, "reports", "run-%s.log" % today().isoformat())
@@ -233,7 +267,8 @@ def run_headless(s, dry):
             out.write("\n%s\n" % e)
             code = 1
     if code == 0 and load().get("last_review") == today().isoformat():
-        notify(ready_message() + stale_exports(), dry)
+        _, report = latest_report()
+        notify(ready_message(bool(report) and open_in_browser(report, dry)) + stale_exports(), dry)
     else:
         notify("Your scheduled review didn't finish. Ask your assistant for a Second Look. Details: " + log, dry)
 
