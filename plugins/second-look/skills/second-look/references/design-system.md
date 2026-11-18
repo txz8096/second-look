@@ -28,7 +28,7 @@ The values below are the dark theme, which is the default. The app bar's switch 
 
 The neutrals are shadcn/ui's dark theme, written as plain CSS: the report stays one file, so it uses the look and none of the React components. The one status colour (`--p1`) marks states, such as a broken skill. Never use it to grade the user's habits:
 changes in their numbers are plain text, and "best" cells are pink, never green or red.
-Pink marks the things to act on: "Try this" panels, the fix-review group headers, the chosen tile and action counts. Independent chart series and labeled bar rows use pink; stacked categories use the palette below.
+Pink marks the things to act on: fix panels, the fix-review group headers, the chosen tile and action counts. Independent chart series and labeled bar rows use pink; stacked categories use the palette below.
 
 **The signature.** Neutral cards with hairline borders hold the findings, charts, panels and tables; headers are never filled. The fix in each pattern is a pink panel with a pink hairline. No side stripes on panels.
 
@@ -42,7 +42,7 @@ Familjen Grotesk for everything; IBM Plex Mono for code and quoted prompts. Head
 | Part title (`.part-head h2`) | 32px |
 | Summary, section headings | 20px |
 | Pattern title | 18px |
-| Part headline, "Try this" title, chart and panel titles, chart group summary | 16px |
+| Part headline, fix panel title, chart and panel titles, chart group summary | 16px |
 | Card text, tables, tabs, notes | 14px |
 | Labels (sentence case, weight 500, muted), code, small notes | 13px |
 | Chips | 12px |
@@ -60,7 +60,7 @@ them.
 
 ## Radii
 
-6px tooltips and the chosen filter · 8px buttons, inputs, tiles, code blocks and the filter track · 10px "Try this" panels · 14px cards, tables and the report menu ·
+6px tooltips and the chosen filter · 8px buttons, inputs, tiles, code blocks and the filter track · 10px fix panels · 14px cards, tables and the report menu ·
 fully rounded chips.
 
 ## Page structure, in order
@@ -71,7 +71,7 @@ An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs
 2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Briefs & setup, Skills, Habits & usage, with no numerical counts or badges. On desktop it stays pinned below the app bar and fills the available viewport height, with method, Guidance and references, and About at the viewport bottom. Long references scroll inside the sidebar; About stays reachable without scrolling the report. On phones the drawer fills the available viewport height with the same footer. Short viewports allow the navigation and references to scroll within their own areas. Settings contains Review schedule and Data coverage. The latter holds the session history timeline and app-specific Add export or Replace export disclosures. Overview and Habits & usage link to the timeline. When opened through these links, an arrow-only back link to the left of Data coverage restores the originating page, scroll position and link focus without resetting filters. Give the arrow an accessible name, “Back to previous view”. Hide the back link when Settings is opened directly. The sample controls update the preview summary. Generated reports direct users to the app that owns the schedule. At the bottom, on every page, a note (`#side-about`) always shows the method, and a folded "Guidance and references" list sits under it, each item a link to its original source that opens in a new tab, in the note's muted color with an underline. The template's note also says it's a sample report. Both print after the report.
 3. Overview (`#overview`): "Your latest review" as the `h1`, the summary paragraph (20px, plain words, no numbers), “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with a link to Data coverage in Settings), "Following up on your last review" (`#last-cycle`, one card per decision, one folded row per fix; only after a review with logged fixes), then "Explore your report", one row per page.
 4. How you brief AI and set up your apps (`#part-2`): headline, then pattern cards
-   (`article.icard`), each ending in its "Try this" fix.
+   (`article.icard`), each ending in its fix panel with Approve and Decline.
 5. Keep your skills current (`#part-3`): headline, scan line, "Skills to fix" (`#fix-first`, with paste-to-your-AI blocks in `.fix-block`), "Worth a look",
    collapsed "Skills you wrote", collapsed installed skills.
 6. How your habits are changing (`#part-1`, last despite its id): data-scope line, `#trends`: five question
@@ -142,9 +142,8 @@ and summary row (too much to read before the first chart).
 
 ## Pattern card
 
-A number in a pink circle, the fix's number; title; the apps as plain muted text and one how-sure chip; then a full-width, left-aligned `.ic-summary` paragraph, with no "What happens" label. Its two sentences explain the behavior in more detail than the title without restating it. A native `details.ic-evidence` row labelled "Evidence and why it matters" starts collapsed beneath the summary. Its top divider and chevron follow the existing folds; omit its bottom divider before the action panel. Inside, Evidence and Why it matters remain separate labelled groups with a divider between them. Keep supporting prompt quotes inside evidence. When a shared standing rule applies to at least two apps the person uses, add a separate collapsed `details.ic-rule-comparison` row immediately below evidence in `.ic-disclosures`. Use the same 44px minimum target and the divider between rows. Omit the comparison for one-app fixes and findings without a shared rule. Its summary is a keyboard-operable target at least 44px tall, and printing includes the evidence and restores the reader's disclosure state afterward. Then the "Try this" block
-in a pink panel: "Try this: <fix name>", one pink line saying what it saves (`.try-saves`) with its working in a muted line under it (`.saves-how`), one short instruction naming the app to open, and one paste-ready block specific to that app with
-Copy in its corner. Keep one entry app in the action panel. For a shared rule, the text that Copy returns names the relevant destinations and scope, includes the exact rule, and asks for a verified outcome or a manual paste step for each app. Preserve per-task
+A number in a pink circle, the fix's number; title; the apps as plain muted text and one how-sure chip; then a full-width, left-aligned `.ic-summary` paragraph, with no "What happens" label. Its two sentences explain the behavior in more detail than the title without restating it. A native `details.ic-evidence` row labelled "Evidence and why it matters" starts collapsed beneath the summary. Its top divider and chevron follow the existing folds; omit its bottom divider before the action panel. Inside, Evidence and Why it matters remain separate labelled groups with a divider between them. Keep supporting prompt quotes inside evidence. When a shared standing rule applies to at least two apps the person uses, add a separate collapsed `details.ic-rule-comparison` row immediately below evidence in `.ic-disclosures`. Use the same 44px minimum target and the divider between rows. Omit the comparison for one-app fixes and findings without a shared rule. Its summary is a keyboard-operable target at least 44px tall, and printing includes the evidence and restores the reader's disclosure state afterward. Then the fix
+in a pink panel (`section.try`): one sentence saying what the app will set up, one pink line saying what it saves (`.try-saves`) with its working in a muted line under it (`.saves-how`), then "Approve opens <app> with this prompt…" (`.try-do`), the prompt in a collapsed "View prompt" fold with Copy in its corner, then a status line (`.fix-status`, muted, hidden while empty) and the actions: Approve (primary fill) and Decline (outline), 36px tall, 44px on phones. States: approved shows "Sent to <app>…" and Approve reads "Open <app> again"; declined shows "You declined this." with Undo; `data-app="copy"` shows "Copy prompt" in place of Approve. Without scripts the actions stay hidden. Print opens the prompt and hides the actions. Keep one entry app per panel. For a shared rule, the prompt names the relevant destinations and scope, includes the exact rule, and asks for a verified outcome or a manual paste step for each app. Every prompt asks the app to show the change and wait for a yes. Preserve per-task
 steps such as starting a fresh session, and disclose any inaccessible settings or unverified model switch
 in the prompt. Folds inside cards all look the same: a row between hairlines with a chevron, pink on hover.
 

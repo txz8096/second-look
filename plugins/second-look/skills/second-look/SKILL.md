@@ -357,8 +357,14 @@ leaves more room in their limit. Use the models they have today, at these levels
 | Middle | Everyday building, edits, first drafts | Decisions that are expensive to undo |
 | Strongest | Hard bugs, big design decisions, work others rely on | Routine work |
 
-Give the way to switch for their app: `/model` in Claude Code and Codex, the model menu in Cursor,
-and for a Claude Code helper agent, `model:` in its file. Add "If you correct a cheaper model twice,
+No app picks a model per task on its own, so make the fix a settings change, not a rule that
+asks the strongest model to judge each task. In Claude Code, the fix prompt asks the fixer to
+read `~/.claude/settings.json` and the helper agent files first, then propose: a middle default
+model for new sessions, switching up with `/model` for hard work (or `opusplan`, which plans on
+Opus and builds on Sonnet, for someone who plans first); `model:` on helper agents and skills that
+only read or repeat simple steps; and effort left at its default, since it already adjusts to each
+step. It names what's already set, shows each change and waits for a yes. Elsewhere, give the way
+to switch: `/model` in Codex, the model menu in Cursor. Add "If you correct a cheaper model twice,
 move up a level", because a retry can cost more than the difference. The next review checks corrections
 in the sessions they moved. Logs show the model only for Claude Code and Codex, so make no claim about
 other apps. Never suggest a cheaper model for career, legal, medical or money work.
@@ -397,7 +403,7 @@ Never set up a schedule, hook or skill during the review. Propose it with paste-
 they say yes first.
 
 A repeat that came back 4 or more times in the last 4 weeks and cost real time is also a
-P1 habit: give it a card in "How you brief AI and set up your apps" so its fix gets a Try block.
+P1 habit: give it a card in "How you brief AI and set up your apps" so its fix gets a fix panel.
 
 ## 4. The report
 
@@ -531,8 +537,27 @@ applies to two or more apps the person uses, put a separate collapsed `details.i
 labelled "Which apps have which rules" directly below evidence in `.ic-disclosures`. Show only the apps
 the rule applies to. Distinguish rules known to be missing from settings you could not check. Omit the
 comparison for a one-app fix or a finding without shared rules. Keep both disclosures available in print. Then the fix in the same
-card: the "Try this: <fix name>" block, a `.try-saves` line with what it saves (see "Saving time and usage"), one short instruction naming the app to open, and a paste-ready block specific to that app.
-Choose one app the user uses and can act from. For a rule shared across apps, the copyable prompt
+card: the fix panel (`section.try`). Its `h4` says in one sentence what the app will set up ("Ask
+Codex to set up a rule that offers a handoff when you switch projects."); the fix's name stays the
+same in the log and on the Overview. Then a `.try-saves` line with what it saves (see "Saving time
+and usage"), and a `.try-do` line: "Approve opens <app> with this prompt. <App> shows the rule and
+saves nothing until you say yes." (the skill, each change, as fits). The prompt sits in a collapsed
+`details.try-prompt` labelled "View prompt", then Approve and Decline. Set `data-app` and
+`data-app-name` on the panel. Use the app the fix is for; for a fix across apps, use whichever of
+Codex and Claude Code has more of their sessions in the window: `codex` for Codex, `claude-desktop`
+for Claude Code in the Claude desktop app, `copy` for Claude Code only in a terminal (long links
+fail there), claude.ai, or any other app. Approve opens a new session in that app with the prompt
+typed in but not sent, and copies the prompt in case no app opens; `copy` shows "Copy prompt"
+instead. Decline is remembered in that browser only, so the next review judges a fix from the logs,
+never from a Decline. Keep every prompt under 1,800 characters, so it fits in the link.
+Pick the form that fits the fix, and don't force every fix into one: a saved rule when the AI
+should act differently every time; a skill, hook or schedule for steps that repeat; a settings
+change when the app already has a setting for it (default model, a helper agent's or skill's
+`model:`, a skill's `disable-model-invocation`); a one-time prompt or a habit when only the user
+can do it, such as briefing or opening a fresh session. A settings prompt asks the fixer to read
+the current settings first, skip what's already set, show the exact change and the file it goes
+in, and wait for the user's yes before changing anything; after the change, it reads back what
+changed. Choose one app the user uses and can act from. For a rule shared across apps, the copyable prompt
 must name every relevant destination and the scope of the rule in each. Include the exact rule text.
 Ask the fixer to apply it in each app's supported format where it is missing, keep equivalent rules,
 preserve other instructions and flag conflicts before editing. Ask for an outcome for each app: read
@@ -556,8 +581,8 @@ something else could explain it. Hunch, thin evidence.
   and hands checks to a fresh helper agent that gets the claim and where to verify it, never
   the reasoning behind it. Keep building, taste and anything that needs their own facts in the
   main session.
-- **Repeat work.** A P1 repeat from "3. Repeat work" gets a card whose "Try this" holds the
-  schedule, hook or skill, ready to paste. In the fix line, say what it does ("runs on its own
+- **Repeat work.** A P1 repeat from "3. Repeat work" gets a card whose fix panel sets up the
+  schedule, hook or skill. In the fix line, say what it does ("runs on its own
   every Monday"), not the mechanism ("Stop hook").
 
 Keep each fix's bet, metric and
@@ -668,7 +693,7 @@ steps to add the data. Write none of this by hand.
   in their assistant; neither state proves absence. Keep available session findings.
 - **No actionable findings.** When adequate evidence reveals nothing worth fixing, set
   `#part-2` to `data-findings-state="none"`. Keep its heading, verified scope and built-in
-  `.briefs-empty` result. Delete the sample cards, Try blocks and their links elsewhere;
+  `.briefs-empty` result. Delete the sample cards, fix panels and their links elsewhere;
   do not invent recommendations. If evidence is sparse instead, explain that limit, retain
   supported observations and charts, and omit weak claims. These are different outcomes.
 - **First review.** Same report, no extra sections. "Following up on your last review" is deleted, and each chart shows whatever

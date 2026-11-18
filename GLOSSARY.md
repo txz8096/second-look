@@ -82,6 +82,10 @@ _Avoid_: Background session, bot run
 A pattern that recurs across review periods. Only habits get paired with a fix to try.
 _Avoid_: Incident, behavior
 
+**Fix**:
+A change Second Look suggests for a habit: a saved rule, a skill, hook or schedule, a settings change, or a one-time prompt. **Approve** opens the user's app with the fix's prompt typed in; the app shows the change and waits for their yes. **Decline** sets the fix aside in that browser.
+_Avoid_: Automation (for every fix), auto-fix, apply
+
 ## Work categories
 
 **Writing & content** covers drafting and editing documents, decks, posts, and similar material. **Consultation** covers sessions classified as asking for advice.

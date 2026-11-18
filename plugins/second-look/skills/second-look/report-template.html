@@ -247,6 +247,14 @@ blockquote + .def { margin-top: -16px; padding: 6px 0 0 12px; border-left: 2px s
 .try-saves { font-size: 14px; font-weight: 600; line-height: 20px; color: var(--accent); }
 .saves-how { display: block; margin-top: 2px; font-size: 13px; line-height: 18px; font-weight: 400; color: var(--muted); }
 .try-do { font-size: 14px; line-height: 22px; }
+/* approve sends the prompt to the user's app; decline is remembered in this browser */
+.fix-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+button.fix-approve { background: var(--primary); color: var(--on-primary); border-color: var(--primary); padding: 0 16px; }
+button.fix-approve:hover { background: var(--primary); border-color: var(--primary); opacity: .9; }
+button.fix-decline, button.fix-undo { background: transparent; border-color: var(--line-strong); padding: 0 16px; }
+.fix-status { font-size: 14px; line-height: 22px; color: var(--muted); }
+.fix-status:empty { display: none; }
+@media print { .fix-actions, .fix-status:empty { display: none !important; } }
 .field { position: relative; min-width: 0; }
 button.copy { position: absolute; top: 6px; right: 6px; z-index: 1; display: inline-flex; align-items: center; gap: 6px; height: 26px; padding: 0 8px; border: 0; border-radius: var(--r-6); background: transparent; font-size: 13px; font-weight: 400; }
 button.copy::before { content: ""; width: 14px; height: 14px; background: var(--muted); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='14' height='14' x='8' y='8' rx='2'/%3E%3Cpath d='M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='14' height='14' x='8' y='8' rx='2'/%3E%3Cpath d='M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2'/%3E%3C/svg%3E") center / contain no-repeat; }
@@ -563,6 +571,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .def, .sum-meta, .part-meta, .fsum, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
     .side-about, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
   .scope-line, .tl-name, .ic-summary, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
+  .fix-actions button { min-height: 44px; }
   /* tap targets */
   button:not(.brow):not(.menu-btn), select { min-height: 44px; }
   button.copy { min-height: 32px; height: 32px; top: 4px; left: 4px; right: auto; }
@@ -733,11 +742,12 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
             <tr><td>Prototype stack: React + Tailwind</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>—</td></tr>
           </tbody></table></div></div></details>
     </div>
-    <section class="try" id="try-rules" aria-labelledby="try-rules-h">
-      <h4 id="try-rules-h">Try this: Fill the gaps in your saved rules</h4>
+    <section class="try" id="try-rules" aria-labelledby="try-rules-h" data-app="codex" data-app-name="Codex">
+      <h4 id="try-rules-h">Ask Codex to fill gaps in your saved rules across the AI apps you use.</h4>
       <p class="try-saves">Saves retyping and waiting for extra replies<span class="saves-how">About 7 repeated instructions a week. Avoiding them also avoids extra AI responses; total time saved isn't measured.</span></p>
-      <p class="try-do">Open a new Codex session and paste this once.</p>
-      <div class="field"><button type="button" class="copy" hidden>Copy</button>
+      <p class="try-do">Approve opens Codex with this prompt. Codex shows each rule and saves nothing until you say yes.</p>
+      <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+        <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Use the rules below as my standing preferences. In Codex and ChatGPT, save all four. In Cursor, add only the rules on showing changes and linking official docs. Keep equivalent rules in Claude Code and claude.ai. Use each app’s supported settings at the scope where I use these preferences. Preserve my other instructions and flag conflicts before editing.
 
 - Confirm the plan before editing more than one file.
@@ -745,7 +755,9 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 - Link the official docs when you tell me how a tool works.
 - Prototypes use React + Tailwind.
 
-Read back the saved rules and tell me what changed or was already set in each app. If you can’t update an app, tell me where to paste the exact missing text and give it to me to copy. Tell me which apps I should check in a fresh session to confirm the rules work.</pre></div>
+Show me each rule and where it goes in each app, and wait for my yes before saving anything. Then read back the saved rules and tell me what changed or was already set in each app. If you can’t update an app, tell me where to paste the exact missing text and give it to me to copy. Tell me which apps I should check in a fresh session to confirm the rules work.</pre></div></div></details>
+      <p class="fix-status" role="status" aria-live="polite"></p>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -761,19 +773,19 @@ Read back the saved rules and tell me what changed or was already set in each ap
         <div><dt>Why it matters</dt><dd>Each restart repeats the setup, and without a definition of done it’s hard to tell when a prototype is finished.</dd></div>
       </dl></div>
     </details>
-    <section class="try" id="try-brief" aria-labelledby="try-brief-h">
-      <h4 id="try-brief-h">Try this: Brief before big prototype tasks</h4>
+    <section class="try" id="try-brief" aria-labelledby="try-brief-h" data-app="codex" data-app-name="Codex">
+      <h4 id="try-brief-h">Ask Codex to set up a rule that starts substantial prototype work with an approved brief.</h4>
       <p class="try-saves">Saves about 30 minutes a week<span class="saves-how">About 2 restarts avoided a week × 15 minutes of repeated setup.</span></p>
-      <p class="try-do">In Codex, paste this as your first message before a prototype task and fill in the brackets.</p>
-      <div class="field"><button type="button" class="copy" hidden>Copy</button>
-<pre>Help me brief this prototype before you build it.
+      <p class="try-do">Approve opens Codex with this prompt. Codex shows the rule and saves nothing until you say yes.</p>
+      <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+        <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Add this rule to my saved rules in Codex, Claude Code, Cursor and claude.ai, at the scope where I start prototypes:
 
-Goal: [what this prototype should let someone do]
-User: [who uses it]
-Done when: [what we'll check to call it finished]
-Limits: [tools to use, what to leave alone]
+Before building a prototype that will take more than a few messages, check my first message for the goal, who uses it, what done looks like, and limits (tools to use, what to leave alone). Ask up to 3 questions about anything missing. If I don’t know an answer, help me decide. Confirm the brief with me before building. Skip this for small changes.
 
-Ask up to 3 questions about anything missing. If I don't know an answer, help me decide. Confirm the brief with me before building.</pre></div>
+Before saving, check for an equivalent rule and keep my other instructions. Show me the exact text and where it goes in each app, and wait for my yes. After saving, read it back. For any app you can’t update, give me the text and where to paste it. Tell me which apps to test in a fresh session.</pre></div></div></details>
+      <p class="fix-status" role="status" aria-live="polite"></p>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -787,23 +799,25 @@ Ask up to 3 questions about anything missing. If I don't know an answer, help me
         <div><dt>Why it matters</dt><dd>Beta testers use what you <span class="term" tabindex="0" aria-describedby="def-ship-part2">ship<span class="term-card" role="tooltip" id="def-ship-part2">Put it where other people can use it.</span></span>, so a broken screen does more harm there than in a sketch.</dd></div>
       </dl></div>
     </details>
-    <section class="try" id="try-trust" aria-labelledby="try-trust-h">
-      <h4 id="try-trust-h">Try this: Check beta work before it ships</h4>
-      <p class="try-saves">Means fewer fixes after launch</p>
-      <p class="try-do">In Codex, paste this before you share beta work.</p>
-      <div class="field"><button type="button" class="copy" hidden>Copy</button>
-<pre>Review this beta work before I share it. What are the 3 most likely ways it breaks for a real user, and which assumptions need checking?
+    <section class="try" id="try-trust" aria-labelledby="try-trust-h" data-app="codex" data-app-name="Codex">
+      <h4 id="try-trust-h">Ask Codex to set up a skill that checks beta work whenever you say “ship it”.</h4>
+      <p class="try-saves">Means fewer fixes after launch<span class="saves-how">Runs on its own in Codex and Claude Code, so you no longer paste a check before you share.</span></p>
+      <p class="try-do">Approve opens Codex with this prompt. Codex shows the skill and saves nothing until you say yes.</p>
+      <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+        <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Set up a skill called ship-checks in Codex and Claude Code. It should run when I say “ship it”, “share this with beta” or ask whether work is ready for others.
 
-Inspect the work and run the relevant checks you can. Use my pr-review skill if it has been fixed. Tell me what passed, what failed, and what remains unverified.</pre></div>
-      <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>How much to check, by type of work</span></summary>
-        <div class="body"><div class="tbl"><table>
-          <thead><tr><th>Type of work</th><th>Risk</th><th>Light check</th></tr></thead>
-          <tbody>
-            <tr><td>Anything beta users will see</td><td><span class="pill p1">High</span></td><td>The “3 ways it breaks” question, and pr-review once it’s fixed</td></tr>
-            <tr><td>Facts for decisions or docs</td><td><span class="pill p2">Medium</span></td><td>Ask for sources; spot-check one</td></tr>
-            <tr><td>Code changes</td><td><span class="pill p2">Medium</span></td><td>Run it, and ask what it assumed</td></tr>
-            <tr><td>Routine writing and formatting</td><td><span class="pill p3">Low</span></td><td>None</td></tr>
-          </tbody></table></div></div></details>
+When it runs:
+- Name the type of work, then run the checks that fit it:
+  - Anything beta users will see: list the 3 most likely ways it breaks for a real user, then check each. Use my pr-review skill if it works.
+  - Facts for decisions or docs: cite sources and spot-check one.
+  - Code changes: run it and say what it assumed.
+  - Routine writing and formatting: no check.
+- End with what passed, what failed and what is still unverified. Don’t say the work is ready while something failed.
+
+Before saving, check whether I already have a skill or rule that does this. Show me the full skill and where you’ll save it in each app, and wait for my yes. After saving, read back what changed. For any app you can’t update, give me the exact text and where to paste it. Tell me which apps to test in a fresh session.</pre></div></div></details>
+      <p class="fix-status" role="status" aria-live="polite"></p>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -817,14 +831,19 @@ Inspect the work and run the relevant checks you can. Use my pr-review skill if 
         <div><dt>Why it matters</dt><dd>You reach your limit sooner, and leftovers from the last project can steer the next one.</dd></div>
       </dl></div>
     </details>
-    <section class="try" id="try-long" aria-labelledby="try-long-h">
-      <h4 id="try-long-h">Try this: Start fresh between projects</h4>
+    <section class="try" id="try-long" aria-labelledby="try-long-h" data-app="codex" data-app-name="Codex">
+      <h4 id="try-long-h">Ask Codex to set up a rule that offers a handoff and a fresh session when you switch projects.</h4>
       <p class="try-saves">Saves about a tenth of your Claude Code and Codex usage<span class="saves-how">Very long sessions took 61% of that usage. Starting fresh could cut about a sixth of it.</span></p>
-      <p class="try-do">In Codex, paste this when you finish a piece of work or switch projects.</p>
-      <div class="field"><button type="button" class="copy" hidden>Copy</button>
-<pre>Summarize this work in five lines for a fresh Codex session: goal, current state, relevant files, decisions, and next step.
+      <p class="try-do">Approve opens Codex with this prompt. Codex shows the rule and saves nothing until you say yes.</p>
+      <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+        <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Add this rule to my saved rules in Codex and Claude Code:
 
-Include unfinished checks and only the context the next task needs. Then remind me to open a new Codex session and paste this handoff before continuing.</pre></div>
+When I finish a piece of work or move to a different project in the same session, stop before starting the new work. Write a five-line handoff: goal, current state, relevant files, decisions, next step, including unfinished checks. Then suggest I open a new session and paste it. Continue here only if I say so.
+
+Before saving, check for an equivalent rule and keep my other instructions. Show me the exact text and where it goes in each app, and wait for my yes. After saving, read it back. For any app you can’t update, give me the text and where to paste it. Tell me which apps to test in a fresh session.</pre></div></div></details>
+      <p class="fix-status" role="status" aria-live="polite"></p>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -838,16 +857,10 @@ Include unfinished checks and only the context the next task needs. Then remind 
         <div><dt>Why it matters</dt><dd>Simple work on a cheaper model leaves more of your limit for the work that needs the strongest one.</dd></div>
       </dl></div>
     </details>
-    <section class="try" id="try-model" aria-labelledby="try-model-h">
-      <h4 id="try-model-h">Try this: Match the model to the job</h4>
+    <section class="try" id="try-model" aria-labelledby="try-model-h" data-app="claude-desktop" data-app-name="Claude Code">
+      <h4 id="try-model-h">Ask Claude Code to change your model settings so simple work runs on a cheaper model.</h4>
       <p class="try-saves">Saves about a tenth of your Claude Code usage<span class="saves-how">Short sessions took 14% of it × the price gap to a cheaper model.</span></p>
-      <p class="try-do">In Claude Code, paste this before your next task.</p>
-      <div class="field"><button type="button" class="copy" hidden>Copy</button>
-<pre>Before working on the task below, recommend the least expensive model available to me that is likely to handle it well. Explain the choice briefly and tell me how to switch if needed.
-
-If I correct a cheaper model twice, recommend moving to a stronger one. Do not claim the model changed unless you can verify it.
-
-Task: [what I need help with]</pre></div>
+      <p class="try-do">Approve opens Claude Code with this prompt. Claude Code reads your settings, shows each change and changes nothing until you say yes.</p>
       <div class="tbl"><table class="unlabeled">
         <thead><tr><th>Use</th><th>For</th></tr></thead>
         <tbody>
@@ -856,6 +869,18 @@ Task: [what I need help with]</pre></div>
           <tr><td>Strongest (on Claude, Opus)</td><td>Hard bugs, big design decisions, work others rely on</td></tr>
         </tbody>
       </table></div>
+      <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+        <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Help me set up Claude Code so simple work runs on a cheaper model without me choosing each time.
+
+First read ~/.claude/settings.json and my helper agent files, and tell me what's already set. Then propose only what's missing:
+- Default model for new sessions: Sonnet. I'll switch up with /model opus for hard bugs and big design decisions. If I usually plan first, offer opusplan instead.
+- Helper agents that only read or search: model: haiku in their files.
+- Effort: leave it at the default, since it already adjusts to each step.
+
+Show me each change and the file it goes in, and wait for my yes before changing anything. Then read back what changed. If I correct a cheaper model twice, I'll move up a level.</pre></div></div></details>
+      <p class="fix-status" role="status" aria-live="polite"></p>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -1120,6 +1145,40 @@ document.addEventListener('click', e => {
     const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected'; setTimeout(() => btn.textContent = 'Copy', 1500);
   });
 });
+
+// Approve sends the fix's prompt to the app named on the card and copies it in case no app opens.
+// Decline is remembered in this browser only; the next review judges from the logs
+(() => {
+  const links = { codex: t => "codex://new?prompt=" + encodeURIComponent(t), "claude-desktop": t => "claude://code/new?q=" + encodeURIComponent(t) };
+  const key = sec => "second-look-fix:" + document.title + ":" + sec.id;
+  const remember = (sec, v) => { try { v ? localStorage.setItem(key(sec), v) : localStorage.removeItem(key(sec)); } catch (e) { /* storage can be blocked */ } };
+  const copyText = t => navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject();
+  const show = (sec, state, opened, copied) => {
+    const app = sec.dataset.appName, status = sec.querySelector(".fix-status");
+    const approve = sec.querySelector(".fix-approve"), decline = sec.querySelector(".fix-decline"), undo = sec.querySelector(".fix-undo");
+    sec.dataset.state = state || "";
+    approve.hidden = state === "declined"; decline.hidden = !!state; undo.hidden = state !== "declined";
+    approve.textContent = links[sec.dataset.app] ? (state === "approved" ? "Open " + app + " again" : "Approve") : "Copy prompt";
+    status.textContent = state === "declined" ? "You declined this."
+      : state === "approved" ? (opened ? "Sent to " + app + ". " : "") + (copied
+        ? (opened ? "The prompt is copied too: if " + app + " didn't open, paste it into a new " + app + " session." : "Prompt copied. Paste it into a new " + app + " session.")
+        : (opened ? "If " + app + " didn't open, copy" : "Copy") + " the prompt from View prompt into a new " + app + " session.") : "";
+  };
+  document.querySelectorAll("section.try[data-app]").forEach(sec => {
+    sec.querySelector(".fix-actions").hidden = false;
+    let saved = null; try { saved = localStorage.getItem(key(sec)); } catch (e) { /* storage can be blocked */ }
+    show(sec, saved === "declined" ? "declined" : null);
+  });
+  document.addEventListener("click", e => {
+    const btn = e.target.closest(".fix-approve, .fix-decline, .fix-undo"), sec = btn && btn.closest("section.try");
+    if (!sec) return;
+    if (btn.classList.contains("fix-decline")) { remember(sec, "declined"); show(sec, "declined"); return; }
+    if (btn.classList.contains("fix-undo")) { remember(sec, null); show(sec, null); return; }
+    const text = sec.querySelector(".try-prompt pre").textContent, link = links[sec.dataset.app];
+    copyText(text).then(() => true, () => false).then(copied => show(sec, "approved", !!link, copied));
+    if (link) location.href = link(text);
+  });
+})();
 
 // on phones, each table row reads as a card: every cell gets its column's name
 function stackTables(root = document) {
@@ -2313,7 +2372,7 @@ function goTo(id, scroll = true) {
   window.addEventListener("beforeprint", () => side.querySelectorAll("details").forEach(d => { d.open = true; }));
   const evidencePrintState = new Map();
   window.addEventListener("beforeprint", () => {
-    document.querySelectorAll("details.ic-evidence, .ic-evidence details, details.ic-rule-comparison").forEach(d => {
+    document.querySelectorAll("details.ic-evidence, .ic-evidence details, details.ic-rule-comparison, details.try-prompt").forEach(d => {
       if (!evidencePrintState.has(d)) evidencePrintState.set(d, d.open);
       d.open = true;
     });

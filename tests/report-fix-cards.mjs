@@ -73,14 +73,24 @@ try {
     assert.equal(await rules.evaluate(node => node.open), false);
     assert.equal(await comparison.locator('table').isVisible(), true);
     assert.equal(await comparison.locator('tbody tr').count(), 4);
-    const prompt = await page.locator('#try-rules pre').innerText();
+    const prompt = await page.locator('#try-rules pre').textContent();
     for (const app of await comparison.locator('thead th:not(:first-child)').allTextContents()) {
       assert.ok(prompt.includes(app), `Copyable prompt must name ${app}`);
     }
     assert.match(prompt, /where to paste the exact missing text/);
+    const viewPrompt = page.locator('#try-rules details.try-prompt');
+    assert.equal(await viewPrompt.getAttribute('open'), null);
+    await viewPrompt.locator(':scope > summary').click();
     await page.locator('#try-rules button.copy').click();
     assert.equal(await page.evaluate(() => window.copiedFix), prompt);
-    await page.locator('#p-rules').screenshot({path: path.join(output, `${width}-${theme}-rules-expanded.png`)});
+    await viewPrompt.locator(':scope > summary').click();
+    // every fix panel: an app to open, a prompt under the link limit, Approve and Decline
+    for (const panel of await page.locator('#part-2 section.try').all()) {
+      assert.match(await panel.getAttribute('data-app'), /^(codex|claude-desktop|copy)$/);
+      assert.ok((await panel.locator('.try-prompt pre').textContent()).length <= 1800);
+      assert.equal(await panel.locator('.fix-approve').isVisible(), true);
+      assert.equal(await panel.locator('.fix-decline').isVisible(), true);
+    }
     const brief = page.locator('#p-brief > .ic-evidence');
     await brief.locator(':scope > summary').click();
     assert.match(await brief.locator('blockquote').innerText(), /settings screen for streak/);
@@ -101,6 +111,23 @@ try {
     assert.equal(await brief.evaluate(node => node.open), true);
     assert.equal(await comparison.evaluate(node => node.open), false);
     assert.equal(await page.locator('.ic-evidence[open]').count(), 2);
+    // Decline is remembered in this browser; Undo clears it
+    const briefFix = page.locator('#try-brief');
+    await briefFix.locator('.fix-decline').click();
+    assert.equal(await briefFix.locator('.fix-status').innerText(), 'You declined this.');
+    assert.equal(await briefFix.locator('.fix-approve').isVisible(), false);
+    await page.reload();
+    assert.equal(await briefFix.locator('.fix-status').innerText(), 'You declined this.');
+    await briefFix.locator('.fix-undo').click();
+    assert.equal(await briefFix.locator('.fix-approve').isVisible(), true);
+    assert.equal(await page.evaluate(() => Object.keys(localStorage).filter(k => k.startsWith('second-look-fix:')).length), 0);
+    // Approve on a copy-only panel copies the full prompt and says so
+    const model = page.locator('#try-model');
+    await model.evaluate(node => { node.dataset.app = 'copy'; });
+    await model.locator('.fix-approve').click();
+    assert.equal(await page.evaluate(() => window.copiedFix), await model.locator('.try-prompt pre').textContent());
+    assert.match(await model.locator('.fix-status').innerText(), /^Prompt copied/);
+    await page.locator('#p-rules').screenshot({path: path.join(output, `${width}-${theme}-rules-expanded.png`)});
     assert.deepEqual(errors, []);
     await page.close();
     console.log(`PASS ${width} ${theme}: summaries, keyboard disclosure, supporting evidence, print state, overflow`);
