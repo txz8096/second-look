@@ -9,7 +9,12 @@ export function Hero() {
       <Container className="flex flex-col gap-10 py-16">
         <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,680fr)_minmax(0,456fr)] lg:items-start lg:gap-16">
           <div className="flex flex-col gap-5">
-            <Kicker>Open-source reflection skill</Kicker>
+            <div className="flex flex-wrap items-center gap-3">
+              <Kicker>Open-source reflection skill</Kicker>
+              <span className="rounded-full bg-accent/10 px-2.5 py-0.5 font-body text-xs leading-4 font-medium whitespace-nowrap text-accent">
+                Early access
+              </span>
+            </div>
             <h1 className="font-display text-[44px] leading-[1.04] font-bold tracking-[-1.6px] text-ink md:text-[56px]">
               Performance review{" "}
               <br className="hidden lg:block" />

@@ -4,6 +4,8 @@
 
 Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try.
 
+> **Early access.** You can try Second Look today. Setup and reports may change as the skill evolves. If something breaks or a recommendation misses the mark, [open an issue](https://github.com/txz8096/second-look/issues/new).
+
 [Website](https://txz8096.github.io/second-look/) ·
 [Sample report](https://txz8096.github.io/second-look/sample-report.html) ·
 [Quick start](#quick-start) · [Privacy](#privacy)
