@@ -235,8 +235,7 @@ details.last-fix > summary:hover .fix-name { color: var(--accent); }
 .ic-grid > div + div { padding-top: 12px; border-top: 1px solid var(--line); }
 .ic-grid dt { font-size: 14px; line-height: 22px; font-weight: 500; }
 .ic-grid dd { margin: 4px 0 0; min-width: 0; font-size: 14px; line-height: 22px; }
-.ic-grid dd > :is(blockquote, details) { margin-top: 12px; }
-.ic-grid dd > details.nested { border-bottom: 0; }
+.ic-grid dd > blockquote { margin-top: 12px; }
 .ic-grid blockquote + .def { margin-top: 0; }
 /* a real quote from a real session, with what came of it */
 blockquote { margin: 0; padding-left: 12px; border-left: 2px solid var(--line); font-size: 14px; line-height: 22px; color: var(--fg); }
@@ -289,6 +288,12 @@ details.nested > .body { padding: 4px 0 16px 24px; }
 details.ic-evidence { border-bottom: 0; }
 details.ic-evidence > summary { min-height: 44px; align-items: center; padding: 12px 0 0; }
 details.ic-evidence > .body { padding: 12px 0 0; }
+.ic-disclosures { display: grid; min-width: 0; }
+.ic-disclosures > .ic-evidence > summary,
+details.ic-rule-comparison > summary { min-height: 44px; align-items: center; padding: 0; }
+.ic-disclosures > .ic-evidence > .body { padding-bottom: 12px; }
+details.ic-rule-comparison { min-width: 0; border-bottom: 0; }
+details.ic-rule-comparison > .body { padding-bottom: 0; }
 .try details.nested { border-block: 0; border-top: 1px solid var(--accent-soft-2); }
 .try details.nested > summary { padding-bottom: 0; }
 
@@ -711,34 +716,36 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     <div class="ic-head"><span class="rank">1</span><h3>You retype the same rules across your apps</h3>
       <p class="ic-tags">Claude Code · Codex · Cursor · claude.ai · ChatGPT <span class="conf strong">Sure</span></p></div>
     <p class="ic-summary">Your preferences are saved in Claude Code and claude.ai, but Codex, Cursor and ChatGPT have gaps. You end up adding instructions about output format, documentation and prototype tools during the session instead of having them available from the start.</p>
-    <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
-      <div class="body"><dl class="ic-grid">
-        <div><dt>Evidence</dt><dd>You retyped rules 27 times in the last 4 weeks. “just show the diff, skip the recap” alone came up in 9 <span class="term" tabindex="0" aria-describedby="def-session-part2">sessions<span class="term-card" role="tooltip" id="def-session-part2">An exchange with an AI, from your first message until you start a new session.</span></span>. Codex and ChatGPT are missing all 4 of your rules, Cursor 2.
-    <details class="nested"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Which apps have which rules</span></summary>
-      <div class="body"><div class="tbl"><table>
-        <thead><tr><th>Rule</th><th>Claude Code</th><th>Codex</th><th>Cursor</th><th>claude.ai</th><th>ChatGPT</th></tr></thead>
-        <tbody>
-          <tr><td>Confirm the plan before editing</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>—</td></tr>
-          <tr><td>Show changes, not whole files</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
-          <tr><td>Link official docs for how a tool works</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
-          <tr><td>Prototype stack: React + Tailwind</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>—</td></tr>
-        </tbody></table></div></div></details></dd></div>
-        <div><dt>Why it matters</dt><dd>You lose time every session, and Codex, Cursor and ChatGPT still answer without your rules.</dd></div>
-      </dl></div>
-    </details>
+    <div class="ic-disclosures">
+      <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
+        <div class="body"><dl class="ic-grid">
+          <div><dt>Evidence</dt><dd>You retyped rules 27 times in the last 4 weeks. “just show the diff, skip the recap” alone came up in 9 <span class="term" tabindex="0" aria-describedby="def-session-part2">sessions<span class="term-card" role="tooltip" id="def-session-part2">An exchange with an AI, from your first message until you start a new session.</span></span>. Codex and ChatGPT are missing all 4 of your rules, Cursor 2.</dd></div>
+          <div><dt>Why it matters</dt><dd>You lose time every session, and Codex, Cursor and ChatGPT still answer without your rules.</dd></div>
+        </dl></div>
+      </details>
+      <details class="nested ic-rule-comparison"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Which apps have which rules</span></summary>
+        <div class="body"><div class="tbl"><table>
+          <thead><tr><th>Rule</th><th>Claude Code</th><th>Codex</th><th>Cursor</th><th>claude.ai</th><th>ChatGPT</th></tr></thead>
+          <tbody>
+            <tr><td>Confirm the plan before editing</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>—</td></tr>
+            <tr><td>Show changes, not whole files</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
+            <tr><td>Link official docs for how a tool works</td><td>✓</td><td>—</td><td>—</td><td>✓</td><td>—</td></tr>
+            <tr><td>Prototype stack: React + Tailwind</td><td>✓</td><td>—</td><td>✓</td><td>✓</td><td>—</td></tr>
+          </tbody></table></div></div></details>
+    </div>
     <section class="try" id="try-rules" aria-labelledby="try-rules-h">
       <h4 id="try-rules-h">Try this: Fill the gaps in your saved rules</h4>
       <p class="try-saves">Saves retyping and waiting for extra replies<span class="saves-how">About 7 repeated instructions a week. Avoiding them also avoids extra AI responses; total time saved isn't measured.</span></p>
       <p class="try-do">Open a new Codex session and paste this once.</p>
       <div class="field"><button type="button" class="copy" hidden>Copy</button>
-<pre>Save these as my standing rules in Codex, then add them wherever they're missing in the other AI apps you can access. Preserve existing instructions, skip duplicates, and flag conflicts before changing them.
+<pre>Use the rules below as my standing preferences. In Codex and ChatGPT, save all four. In Cursor, add only the rules on showing changes and linking official docs. Keep equivalent rules in Claude Code and claude.ai. Use each app’s supported settings at the scope where I use these preferences. Preserve my other instructions and flag conflicts before editing.
 
 - Confirm the plan before editing more than one file.
 - Show changes, not whole files. Skip the recap at the end.
 - Link the official docs when you tell me how a tool works.
 - Prototypes use React + Tailwind.
 
-Verify what you saved. Tell me what changed and anything you couldn't update.</pre></div>
+Read back the saved rules and tell me what changed or was already set in each app. If you can’t update an app, tell me where to paste the exact missing text and give it to me to copy. Tell me which apps I should check in a fresh session to confirm the rules work.</pre></div>
     </section>
   </article>
 
@@ -2306,7 +2313,7 @@ function goTo(id, scroll = true) {
   window.addEventListener("beforeprint", () => side.querySelectorAll("details").forEach(d => { d.open = true; }));
   const evidencePrintState = new Map();
   window.addEventListener("beforeprint", () => {
-    document.querySelectorAll("details.ic-evidence, .ic-evidence details").forEach(d => {
+    document.querySelectorAll("details.ic-evidence, .ic-evidence details, details.ic-rule-comparison").forEach(d => {
       if (!evidencePrintState.has(d)) evidencePrintState.set(d, d.open);
       d.open = true;
     });

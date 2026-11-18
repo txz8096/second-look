@@ -25,6 +25,11 @@ try {
     page.on('pageerror', error => errors.push(error.message));
     await page.route('https://fonts.googleapis.com/**', route => route.abort());
     await page.route('https://fonts.gstatic.com/**', route => route.abort());
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'clipboard', {value: {
+        writeText: async text => { window.copiedFix = text; },
+      }});
+    });
     await page.goto(url + '#part-2');
     await page.evaluate(mode => { document.documentElement.dataset.mode = mode; }, theme);
     const cards = page.locator('#part-2 > .icard');
@@ -35,7 +40,7 @@ try {
       const title = await card.locator('h3').innerText();
       assert.ok((await summary.innerText()).split(/\s+/).length > title.split(/\s+/).length + 10);
       assert.equal(await summary.evaluate(node => getComputedStyle(node).textAlign), 'left');
-      const evidence = card.locator(':scope > details.ic-evidence');
+      const evidence = card.locator('details.ic-evidence');
       const toggle = evidence.locator(':scope > summary');
       assert.equal(await evidence.getAttribute('open'), null);
       assert.equal((await toggle.innerText()).trim(), 'Evidence and why it matters');
@@ -55,27 +60,41 @@ try {
       assert.equal(await toggle.evaluate(node => node === document.activeElement), true);
     }
     await page.locator('#part-2').screenshot({path: path.join(output, `${width}-${theme}-collapsed.png`)});
-    const rules = page.locator('#p-rules > .ic-evidence');
-    await rules.locator(':scope > summary').click();
-    const comparison = rules.locator('details.nested');
-    assert.equal(await comparison.count(), 1);
+    const rules = page.locator('#p-rules .ic-evidence');
+    const comparison = page.locator('#p-rules .ic-evidence + .ic-rule-comparison');
+    assert.equal(await page.locator('.ic-rule-comparison').count(), 1);
+    const comparisonToggle = comparison.locator(':scope > summary');
+    assert.equal(await comparison.getAttribute('open'), null);
+    assert.equal(await comparison.locator('table').isVisible(), false);
+    assert.ok((await comparisonToggle.boundingBox()).height >= 44);
     assert.equal(await comparison.evaluate(node => getComputedStyle(node).borderBottomWidth), '0px');
-    await comparison.locator('summary').click();
+    await comparisonToggle.focus();
+    await page.keyboard.press('Enter');
+    assert.equal(await rules.evaluate(node => node.open), false);
+    assert.equal(await comparison.locator('table').isVisible(), true);
     assert.equal(await comparison.locator('tbody tr').count(), 4);
+    const prompt = await page.locator('#try-rules pre').innerText();
+    for (const app of await comparison.locator('thead th:not(:first-child)').allTextContents()) {
+      assert.ok(prompt.includes(app), `Copyable prompt must name ${app}`);
+    }
+    assert.match(prompt, /where to paste the exact missing text/);
+    await page.locator('#try-rules button.copy').click();
+    assert.equal(await page.evaluate(() => window.copiedFix), prompt);
     await page.locator('#p-rules').screenshot({path: path.join(output, `${width}-${theme}-rules-expanded.png`)});
     const brief = page.locator('#p-brief > .ic-evidence');
     await brief.locator(':scope > summary').click();
     assert.match(await brief.locator('blockquote').innerText(), /settings screen for streak/);
     assert.match(await brief.locator('blockquote + .def').innerText(), /5–8 messages/);
-    assert.equal(await page.locator('#part-2 .ic-summary, #part-2 .ic-evidence summary, #part-2 .ic-evidence dd, #part-2 .try').evaluateAll(nodes => nodes.every(node => {
+    assert.equal(await page.locator('#part-2 .ic-summary, #part-2 .ic-evidence summary, #part-2 .ic-rule-comparison summary, #part-2 .ic-evidence dd, #part-2 .try').evaluateAll(nodes => nodes.every(node => {
       const box = node.getBoundingClientRect();
       return !box.width || (box.left >= 0 && box.right <= innerWidth);
     })), true);
-    await comparison.locator('summary').click();
+    await comparisonToggle.click();
+    await rules.locator(':scope > summary').click();
     await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
-    assert.equal(await page.locator('.ic-evidence:not([open]), .ic-evidence details:not([open])').count(), 0);
+    assert.equal(await page.locator('.ic-evidence:not([open]), .ic-rule-comparison:not([open])').count(), 0);
     await page.emulateMedia({media: 'print'});
-    assert.equal(await rules.locator('tbody').isVisible(), true);
+    assert.equal(await comparison.locator('tbody').isVisible(), true);
     await page.emulateMedia({media: 'screen'});
     await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
     assert.equal(await rules.evaluate(node => node.open), true);
@@ -88,7 +107,7 @@ try {
   }
   const page = await browser.newPage({javaScriptEnabled: false, viewport: {width: 390, height: 844}});
   await page.goto(url + '#part-2');
-  const toggle = page.locator('#p-rules > .ic-evidence > summary');
+  const toggle = page.locator('#p-rules .ic-evidence > summary');
   await toggle.focus();
   await page.keyboard.press('Enter');
   assert.equal(await page.locator('#p-rules .ic-grid').isVisible(), true);

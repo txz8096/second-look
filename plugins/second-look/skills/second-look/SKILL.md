@@ -525,11 +525,19 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 follow. If a much quicker fix goes first, the headline says so. "Following up on your last review" (`#last-cycle`) sits on the Overview, only when an
 earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Try more" (Revise) or "You can stop these" (Drop), without heading icons. Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result with the number when there is one ("You used it more: 11% to 18%", "Too soon to tell, 2 weeks in", "Not tried yet. Now only for long prototypes"). Put what changed, with its window, in the fold. Name what a percentage measures and which apps it covers in the result or its expanded explanation. All fixes start collapsed. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
 biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number. Each card: a title that states the finding; the apps as
-plain text, including every app its evidence names, and one how-sure chip (Sure, Likely, Hunch); a full-width, left-aligned `.ic-summary` paragraph directly below the heading, with no "What happens" label. Explain the behavior and what the title leaves out in two sentences; add detail without restating the title. Put Evidence and Why it matters inside one native `details.ic-evidence`, collapsed by default and labelled "Evidence and why it matters". Keep the evidence's windows and limits. Put any supporting prompt quote and "Which apps have which rules" comparison inside that disclosure too. Keep both available when expanded and in print. Then the fix in the same
+plain text, including every app its evidence names, and one how-sure chip (Sure, Likely, Hunch); a full-width, left-aligned `.ic-summary` paragraph directly below the heading, with no "What happens" label. Explain the behavior and what the title leaves out in two sentences; add detail without restating the title. Put Evidence and Why it matters inside one native `details.ic-evidence`, collapsed by default and labelled "Evidence and why it matters". Keep the evidence's windows, limits and supporting quotes there. When the same standing rule
+applies to two or more apps the person uses, put a separate collapsed `details.ic-rule-comparison`
+labelled "Which apps have which rules" directly below evidence in `.ic-disclosures`. Show only the apps
+the rule applies to. Distinguish rules known to be missing from settings you could not check. Omit the
+comparison for a one-app fix or a finding without shared rules. Keep both disclosures available in print. Then the fix in the same
 card: the "Try this: <fix name>" block, a `.try-saves` line with what it saves (see "Saving time and usage"), one short instruction naming the app to open, and a paste-ready block specific to that app.
-Choose one app the user uses and can act from; avoid a platform-by-platform setup list. For shared
-rules, that app can be asked to update other accessible instruction files, preserve existing rules,
-flag conflicts, verify saved changes and report anything it cannot reach. Never promise access or
+Choose one app the user uses and can act from. For a rule shared across apps, the copyable prompt
+must name every relevant destination and the scope of the rule in each. Include the exact rule text.
+Ask the fixer to apply it in each app's supported format where it is missing, keep equivalent rules,
+preserve other instructions and flag conflicts before editing. Ask for an outcome for each app: read
+back what changed or was already set, and give the user the exact text to paste and where to put it
+for any app the fixer cannot update. Have the fixer say which apps still need a fresh-session check
+to confirm the rule takes effect. A one-app fix targets that app alone. Never promise access or
 automatic model switching. A handoff prompt still tells the user to start a fresh session. Every pattern with a fix gets one.
 How-sure chips mean: Sure, seen repeatedly or checked in their files. Likely, repeated, but
 something else could explain it. Hunch, thin evidence.
