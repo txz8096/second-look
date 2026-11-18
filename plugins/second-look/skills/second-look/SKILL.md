@@ -744,8 +744,9 @@ needs 5 sessions under it in a 4-week window before it shows, and Untested chang
 window, except Sessions per week, which counts itself. A comparison needs 8 weeks since that
 measure's data began; a quiet week after that counts as a quiet week.
 
-Kinds of work, from each session's opening message: Prototyping, Writing & content, Research,
-Brainstorming, Career, Consultation.
+Kinds of work, from each session's opening message: Coding, Design, Writing, Research,
+Planning & ideas, Questions & advice. A session that matches none of them counts as Questions & advice.
+Reviews saved before Nov 2026 used other names; the collector renames them when it loads history.
 
 ## Rubric (cite when explaining why)
 

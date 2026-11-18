@@ -88,4 +88,13 @@ _Avoid_: Automation (for every fix), auto-fix, apply
 
 ## Work categories
 
-**Writing & content** covers drafting and editing documents, decks, posts, and similar material. **Consultation** covers sessions classified as asking for advice.
+The six kinds of work, read from each session's opening message:
+
+- **Coding** covers building, fixing and shipping software, including prototypes.
+- **Design** covers interfaces, mockups, layouts, visuals and branding.
+- **Writing** covers drafting and editing documents, decks, posts, emails and similar material.
+- **Research** covers looking things up, comparing options and analyzing data.
+- **Planning & ideas** covers brainstorming, plans, roadmaps and priorities.
+- **Questions & advice** covers asking for advice or answers, and any session that fits none of the others.
+
+_Avoid_: Prototyping, Writing & content, Brainstorming, Career, Consultation (the names before Nov 2026)

@@ -4,6 +4,17 @@ import json
 from pathlib import Path
 from projects import atomic_json, digest
 
+# kind-of-work ids used before Nov 2026. Career has no successor, so it folds into advice
+LEGACY_CATEGORIES = {"prototyping": "coding", "creating": "writing", "brainstorming": "planning",
+                     "consultation": "advice", "career": "advice"}
+
+
+def rename_categories(rows):
+    """Move saved rows to the current kind-of-work ids, merging rows the rename makes identical."""
+    if not any(r.get("category") in LEGACY_CATEGORIES for r in rows):
+        return rows
+    return aggregate([{**r, "category": LEGACY_CATEGORIES.get(r.get("category"), r.get("category"))} for r in rows])
+
 
 def aggregate(rows):
     grouped = {}
@@ -41,10 +52,15 @@ class HistoryStore:
                 if not isinstance(old.get("sessions"), dict) or not isinstance(old.get("legacy"), list):
                     raise ValueError("Invalid history.json; left unchanged")
                 self.data = old
+                for record in self.data["sessions"].values():
+                    category = record["row"].get("category")
+                    record["row"]["category"] = LEGACY_CATEGORIES.get(category, category)
             elif isinstance(old, list) or isinstance(old, dict) and isinstance(old.get("cube"), list):
                 self.data["legacy"] = old if isinstance(old, list) else old["cube"]
             else:
                 raise ValueError("Unknown history.json format; left unchanged")
+        self.data["legacy"] = rename_categories(self.data["legacy"])
+        self.data["cube"] = rename_categories(self.data.get("cube", []))
 
     def update(self, sessions, projects, cube_fn):
         for session in sessions:

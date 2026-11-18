@@ -38,7 +38,7 @@ const main = fixture('sample', source);
    assert.equal(await page.locator('#f-range-value').innerText(),'4 weeks');
    assert.equal(await page.locator('#f-range-menu').isVisible(),false);
    assert.notEqual(await page.locator('#f-sum').innerText(),initial);
-   await page.locator('#f-source').selectOption('codex');await page.locator('#f-cat').selectOption('prototyping');
+   await page.locator('#f-source').selectOption('codex');await page.locator('#f-cat').selectOption('coding');
    await page.locator('#f-project').selectOption('project:Streak');
    await page.locator('#f-range').click(); await page.locator('#f-from').fill('2026-10-20'); await page.locator('#f-to').fill('2026-10-19');
    assert.equal(await page.locator('#f-apply').isDisabled(),true);assert.match(await page.locator('#f-date-error').innerText(),/on or before/);
@@ -49,7 +49,7 @@ const main = fixture('sample', source);
    await page.locator('#f-range').click();assert.equal(await page.locator('#f-from').inputValue(),'');
    await page.locator('#f-from').fill('2026-10-19');await page.locator('#f-to').fill('2026-10-19');await page.locator('#f-apply').click();
    assert.match(await page.locator('#f-range-value').innerText(),/Oct 19/);
-   assert.equal(await page.locator('#f-cat').inputValue(),'prototyping');
+   assert.equal(await page.locator('#f-cat').inputValue(),'coding');
    assert.equal(await page.locator('#f-project').inputValue(),'project:Streak');
    assert.equal(await page.locator('#f-source').inputValue(),'codex');
    await page.locator('#f-reset').click();assert.equal(await page.locator('#f-sum').innerText(),initial);
@@ -85,7 +85,7 @@ const main = fixture('sample', source);
   const projectCube = [
    {...cube[0],project:'Atlas'},
    {...cube[0],project:'all',sessions:5,prompts:5,briefable:5,briefed:5,days:[{date:'2026-10-18',sessions:5,prompts:5,briefable:5,briefed:5}]},
-   {...cube[0],source:'claude_code',category:'prototyping',project:'Atlas',sessions:8,prompts:8,briefable:8,briefed:8,days:[{date:'2026-10-18',sessions:8,prompts:8,briefable:8,briefed:8}]},
+   {...cube[0],source:'claude_code',category:'coding',project:'Atlas',sessions:8,prompts:8,briefable:8,briefed:8,days:[{date:'2026-10-18',sessions:8,prompts:8,briefable:8,briefed:8}]},
    {...cube[0],sessions:30,prompts:30,briefable:30,briefed:30,days:[{date:'2026-10-18',sessions:30,prompts:30,briefable:30,briefed:30}]}
   ];
   await page.goto(fixture('projects',source.replace('const CUBE = sampleCube();','const CUBE = '+JSON.stringify(projectCube)+';'))+'#part-1');

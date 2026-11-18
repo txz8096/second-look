@@ -93,16 +93,18 @@ PROSE = re.compile(r"\.(md|mdx|txt|rst)$|/\.(claude|codex|cursor|gemini|agents)/
 ACCEPT = re.compile(r"^\s*(lgtm|ship it|looks good|perfect|((ok(ay)?|yes|great|good|perfect)[,.! ]+)?"
                     r"(commit|push|merge|deploy|publish|ship)( it| this| that)?)\b", re.I)
 CATEGORIES = [  # order breaks ties
-    ("career", re.compile(r"recruiter|interview|resume|r[eé]sum[eé]|cover letter|job (description|posting|"
-                               r"search|offer)|hiring manager|salary|negotiat|linkedin|application|offer call", re.I)),
-    ("prototyping", re.compile(r"prototype|\bbuild|implement|component|\bcss\b|react|tailwind|\bbug|error|"
-                               r"\bfix\b|refactor|deploy|\bapi\b|\bmcp\b|script|\bcode\b|function|layout", re.I)),
-    ("creating", re.compile(r"\bwrite|draft|essay|blog|\bpost\b|deck|slides|\bdoc\b|case study|\bcopy\b|"
-                            r"email|rewrite|poster|outline|edit (this|my)", re.I)),
+    ("coding", re.compile(r"prototype|\bbuild|implement|component|\bcss\b|react|tailwind|\bbug|error|"
+                          r"\bfix\b|refactor|deploy|\bapi\b|\bmcp\b|script|\bcode\b|function|\btests?\b", re.I)),
+    ("design", re.compile(r"\bdesign|figma|mock-?up|wireframe|\bui\b|\bux\b|layout|typography|palette|\blogo|"
+                          r"\bicons?\b|artboard|canvas|visual|branding", re.I)),
+    ("writing", re.compile(r"\bwrite|draft|essay|blog|\bpost\b|deck|slides|\bdoc\b|case study|\bcopy\b|"
+                           r"email|rewrite|poster|outline|edit (this|my)|resume|r[eé]sum[eé]|cover letter", re.I)),
     ("research", re.compile(r"research|compare|competit|landscape|sources|studies|market|look up|analy[sz]e|"
                             r"what does the data|benchmark", re.I)),
-    ("brainstorming", re.compile(r"brainstorm|ideas?\b|what if|explore|options|how might|could we|name for|"
-                                 r"concepts?|directions", re.I)),
+    ("planning", re.compile(r"brainstorm|ideas?\b|what if|explore|options|how might|could we|name for|"
+                            r"concepts?|directions|\bplan\b|roadmap|strateg|prioriti", re.I)),
+    ("advice", re.compile(r"advice|should i\b|recommend|interview|salary|negotiat|recruiter|hiring manager|"
+                          r"job (search|offer)", re.I)),
 ]
 # Automation: runs nobody started by hand, jobs set up to recur, work sent off to run alongside,
 # and repeat requests still typed by hand. Claude Code and Codex only, the tools that log tool calls.
@@ -124,7 +126,7 @@ URL = re.compile(r"\S+://\S+")   # paths and domains would make unrelated reques
 COMMENT_BATCH = re.compile(r"^\s*Apply this review feedback to the design\b")   # Pencil's template around review comments
 CODING_TOOLS = {"claude_code", "codex", "cursor", "antigravity"}
 LOGGED = {"claude_code", "codex"}   # the tools that log tool calls and tokens
-BUILD_CATEGORIES = {"prototyping", "creating", "research"}
+BUILD_CATEGORIES = {"coding", "design", "writing", "research"}
 
 
 def clean(text, n=300):
@@ -782,11 +784,11 @@ def classify(source, prompts):
     for text in (prompts[0], CHECK.sub(" ", " ".join(prompts[:3]))):
         scores = {name: len(rx.findall(text)) for name, rx in CATEGORIES}
         if source in CODING_TOOLS:
-            scores["prototyping"] += 1
+            scores["coding"] += 1
         best = max(scores.values())
         if best:
             return next(name for name, _ in CATEGORIES if scores[name] == best)
-    return "consultation"
+    return "advice"
 
 
 def is_briefed(first):

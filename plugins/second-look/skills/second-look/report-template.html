@@ -1196,14 +1196,14 @@ stackTables();
 // ---- trends with filters ----
 (function () {
   const SOURCES = [["claude_ai", "claude.ai"], ["claude_code", "Claude Code"], ["codex", "Codex"], ["cursor", "Cursor"], ["antigravity", "Antigravity"], ["chatgpt", "ChatGPT"], ["gemini_web", "Gemini"]];
-  const CATS = [["prototyping", "Prototyping"], ["creating", "Writing & content"], ["research", "Research"], ["brainstorming", "Brainstorming"], ["career", "Career"], ["consultation", "Consultation"]];
-  const BUILD = new Set(["prototyping", "creating", "research"]);
+  const CATS = [["coding", "Coding"], ["design", "Design"], ["writing", "Writing"], ["research", "Research"], ["planning", "Planning & ideas"], ["advice", "Questions & advice"]];
+  const BUILD = new Set(["coding", "design", "writing", "research"]);
   const name = (list, id) => list.find(x => x[0] === id)[1];
 
   // ---- report data: a real report replaces these four values with the collector's output ----
   // END: the Monday of the last complete week, "YYYY-MM-DD" (the collector's last_complete_week). The charts retain all available weeks up to it.
   const END = "2026-10-19";
-  // CUBE: the collector's "cube" array, pasted as is: [{"week": "YYYY-MM-DD", "source": "claude_code", "category": "prototyping", "project": "Atlas", "sessions": 3, ...}, ...]
+  // CUBE: the collector's "cube" array, pasted as is: [{"week": "YYYY-MM-DD", "source": "claude_code", "category": "coding", "project": "Atlas", "sessions": 3, ...}, ...]
   // Keep all historical rows. Only weeks after END are excluded from charts.
   const CUBE = sampleCube();
   // SCOPE: the collector's "scope" object, pasted as is. What each source can show.
@@ -1230,8 +1230,8 @@ stackTables();
 
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const CHART_CATEGORIES = {
-    prototyping: "orange", creating: "orange-bright", research: "blue-light",
-    brainstorming: "blue", career: "green", consultation: "blue-deep", other: "lime"
+    coding: "orange", design: "green", writing: "orange-bright", research: "blue-light",
+    planning: "blue", advice: "blue-deep", other: "lime"
   };
   const chartPaint = color => `--chart-fill:var(--chart-${color})`;
   const categoryPaint = id => chartPaint(CHART_CATEGORIES[id] || CHART_CATEGORIES.other);
@@ -1360,11 +1360,11 @@ stackTables();
   };
   const mix = src => {
     return {
-      claude_ai: {prototyping: .1, creating: .2, research: .2, brainstorming: .15, career: 0, consultation: .22},
-      chatgpt: {prototyping: .02, creating: .15, research: .2, brainstorming: .13, career: 0, consultation: .5},
-      claude_code: {prototyping: .72, creating: .14, research: .04, brainstorming: 0, career: 0, consultation: 0},
-      codex: {prototyping: .9, creating: .1, research: 0, brainstorming: 0, career: 0, consultation: 0},
-      cursor: {prototyping: .9, creating: .1, research: 0, brainstorming: 0, career: 0, consultation: 0},
+      claude_ai: {coding: .1, design: .05, writing: .2, research: .2, planning: .15, advice: .22},
+      chatgpt: {coding: .02, design: 0, writing: .15, research: .2, planning: .13, advice: .5},
+      claude_code: {coding: .62, design: .1, writing: .14, research: .04, planning: 0, advice: 0},
+      codex: {coding: .9, design: 0, writing: .1, research: 0, planning: 0, advice: 0},
+      cursor: {coding: .8, design: .1, writing: .1, research: 0, planning: 0, advice: 0},
     }[src];
   };
   // usage: only Claude Code and Codex log tokens
@@ -1374,7 +1374,7 @@ stackTables();
   };
   // agent checks: only Claude Code and Codex log tool calls
   const agentChecks = (src, c, sessions, i) => {
-    const edited = (src === "claude_code" || src === "codex") && c === "prototyping" ? rr(sessions * 0.7) : 0;
+    const edited = (src === "claude_code" || src === "codex") && c === "coding" ? rr(sessions * 0.7) : 0;
     const logged = src === "claude_code" || src === "codex" ? sessions : 0;
     const agent_checked = rr(edited * ramp(0.55, 0.72, i, 10, 40) * (i >= 48 ? 0.6 : 1)), unchecked_ships = rr(edited * (i >= 48 ? 0.25 : 0.08));
     const delegated = rr(logged * ramp(0, 0.18, i, 30, 51)), read_heavy = rr(logged * ramp(0.16, 0.09, i, 30, 51));
@@ -1396,14 +1396,14 @@ stackTables();
     CATS.forEach(([c]) => {
       const sessions = rr(n * m[c] / tot * (0.85 + rnd() * 0.3));
       if (!sessions) return;
-      const proto = c === "prototyping";
-      const pps = proto ? 9 : c === "consultation" ? 3 : 6;
+      const proto = c === "coding";
+      const pps = proto ? 9 : c === "advice" ? 3 : 6;
       const prompts = rr(sessions * pps);
-      const brief = clamp(ramp(0.2, 0.56, i, 18, 32) - (proto ? 0.14 : 0) + (c === "career" ? 0.12 : 0));
+      const brief = clamp(ramp(0.2, 0.56, i, 18, 32) - (proto ? 0.14 : 0));
       const corr = ramp(0.19, 0.088, i, 19, 30) + (proto ? 0.05 : 0);
       const check = BUILD.has(c) ? clamp(proto && i >= 48 ? 0.18 : ramp(0.3, 0.46, i, 10, 40)) : 0;
       const restart = clamp(proto && i >= 48 ? 0.22 : ramp(0.13, 0.06, i, 18, 34));
-      const skill = clamp(i < 19 ? 0 : ramp(0.05, 0.45, i, 19, 51) + (c === "career" ? 0.15 : 0));
+      const skill = clamp(i < 19 ? 0 : ramp(0.05, 0.45, i, 19, 51));
       const retype = i < 37 ? 0.55 : 0.18;
       rows.push({week: iso(i), source: src, category: c, project: ["claude_code", "codex"].includes(src) ? ["Streak", "Atlas", "Fieldnotes"][i % 3] : "", sessions, prompts, briefable: sessions,
         briefed: rr(sessions * brief), corrections: rr(prompts * corr), refinements: rr(sessions * ramp(1.2, 2.4, i, 10, 40)),

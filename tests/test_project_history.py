@@ -55,6 +55,18 @@ class ProjectHistoryTests(unittest.TestCase):
             self.assertIsNone(folder_identity(home,home=home))
             self.assertIsNone(folder_identity(str(Path(home)/'.codex/scratch/chat-1'),home=home))
 
+    def test_old_kind_of_work_ids_are_renamed_on_load(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp)/'history.json'
+            path.write_text(json.dumps({"version": 2, "cube": [],
+                "sessions": {"k": {"member": "", "row": {"week": "2026-10-05", "source": "codex", "category": "prototyping", "sessions": 1}}},
+                "legacy": [{"week": "2026-01-05", "source": "chatgpt", "category": "career", "sessions": 2},
+                           {"week": "2026-01-05", "source": "chatgpt", "category": "consultation", "sessions": 3},
+                           {"week": "2026-01-05", "source": "chatgpt", "category": "creating", "sessions": 4}]}))
+            store = HistoryStore(str(path))
+            self.assertEqual(store.data["sessions"]["k"]["row"]["category"], "coding")
+            self.assertEqual({r["category"]: r["sessions"] for r in store.data["legacy"]}, {"advice": 5, "writing": 4})
+
     def test_ledger_survives_deleted_logs_and_regroups_old_sessions(self):
         with tempfile.TemporaryDirectory() as tmp:
             store=ProjectStore(); a=store.register('codex','a','Atlas'); b=store.register('claude_code','b','atlas')
