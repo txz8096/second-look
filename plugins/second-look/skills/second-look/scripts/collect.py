@@ -1023,7 +1023,7 @@ def delegation_summary(sessions, n=5):
                     "A subagent's own reading stays in its context and isn't counted."}
 
 
-def automation_summary(sessions, since, n=5):
+def automation_summary(sessions, since, n=None):
     """What runs without the user, and which hand-typed requests keep coming back. Claude Code and Codex only.
     Repeats are matched across every session collected, so run it with --days 365 for the full picture."""
     rows = [r for r in sessions if r["source"] in LOGGED]

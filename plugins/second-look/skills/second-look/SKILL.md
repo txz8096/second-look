@@ -442,9 +442,10 @@ someone else's report, add their number or cut it. The chip carries the doubt: a
 card only when it would change what they do. Write the card title the way you'd say it to them in
 one breath. The caps below apply to your text even where the template's sample looks longer.
 
-**Caps.** At most five cards, biggest first; the rest go in the log. Card title: a finding, ten
+**Caps.** One card for every pattern with a fix, biggest first, with no limit on how many. Card title: a finding, ten
 words or fewer. Summary: two sentences that add concrete detail beyond the title, without repeating it. Evidence: up to three facts, each with its window.
-Why it matters: one sentence about their work. Skills to fix and Worth a look: five rows each.
+Why it matters: one sentence about their work. Skills to fix: one row per skill that needs a change, with installed skills
+that are only Behind sharing one row. What you could automate next: every repeat kept. Worth a look: five rows.
 
 **Design rules.** `report-template.html` is the design. `references/design-system.md`
 explains its tokens, type, radii, structure and the parts removed on purpose.
@@ -519,7 +520,7 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 
 **App bar and sidebar.** Set the review's date in `.report-date`. Locally, once the report is saved in `~/.second-look/reports/` as `<end-date>.html`, run `python3 scripts/report_menu.py <report.html>`. It fills the menu in every saved report, so they can all reach each other, and shows a plain label when there's only one. On claude.ai, replace everything between the `report-menu` comments with `<p class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25<span class="report-year">, 2026</span></span></p>`, because an artifact has no folder of saved reports. Keep the Feedback link (`#report-issue`, https://github.com/txz8096/second-look/issues/new) and the light and dark switch (`#theme-btn`) as they are. Keep sidebar labels free of counts or badges. On desktop keep the sidebar pinned below the app bar and sized to the viewport, with its method, Guidance and references, and About links at the viewport bottom. Scroll long reference lists inside the sidebar, so the report never has to be scrolled to reach About. On phones it remains a viewport-height drawer with the same pinned footer.
 
-**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with its link to Data coverage in Settings), then "Following up on your last review" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."). Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
+**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with its link to Data coverage in Settings), then "Following up on your last review" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."), with the real count in words; past five, name the three biggest and say how many more. Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
 
 **How you brief AI and set up your apps** (`#part-2`). A headline with the biggest finding and how many fixes
 follow. If a much quicker fix goes first, the headline says so. "Following up on your last review" (`#last-cycle`) sits on the Overview, only when an
@@ -565,7 +566,7 @@ keep-it-if rule in the log.
 **Keep your skills current** (`#part-3`). A one-sentence headline with how many skills are
 wrong today (count every skill marked Stale, and a wrong fact is Stale); the scan date and anything
 you couldn't read, named as a place ("your Cursor skills folder"), with what that means for the
-counts. "Skills to fix" (`#fix-first`; issue, fix), blockers first, then biggest impact. Every fix cell reads "In [app], paste: “…”", or "In any AI chat, paste: “…”" when the app doesn't matter; a cell that links to a `.fix-block` reads "Paste the fix (5 min)". A sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
+counts. "Skills to fix" (`#fix-first`; issue, fix), blockers first, then biggest impact. Installed skills that are only Behind their source share one row ("23 installed skills have updates", fix: update them from source), with the list in "Skills you installed from others"; an installed skill gets its own row only when it's broken. Every fix cell reads "In [app], paste: “…”", or "In any AI chat, paste: “…”" when the app doesn't matter; a cell that links to a `.fix-block` reads "Paste the fix (5 min)". A sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
 goes low. The big ones get a prompt to paste into their AI app in a `.fix-block`, shown open,
 with an id the table can link to (`fix-pr-review`), saying which app to open. The block's last line is always "Then tell me in plain words what changed before you save it." Never show a diff.
 "Worth a look" (issue, why it matters, how sure, next step), including the
@@ -594,7 +595,7 @@ go in the sidebar's "Guidance and references" list.
   use is changing" uses the same two windows.
 - **What you could automate next** (`#automate-next`). The script moves this block under the
   automation group's charts. One row per repeat you kept from "3. Repeat work", most repeated
-  first, at most five: the request in curly quotes, trimmed to its ask; the count as
+  first: the request in curly quotes, trimmed to its ask; the count as
   "<n> times in <span>" from `last_4_weeks` (or `times` with the span from `first` to `last`);
   the fix as one line to paste, naming the app ("Tell Claude Code: “Every Monday, …”"). Delete the block when there are no repeats, and on claude.ai.
 - **Activity since your last review** (with its dates; on a first review, "Activity, <dates>"): the
