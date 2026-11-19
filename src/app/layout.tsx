@@ -1,16 +1,20 @@
 import type { Metadata } from "next";
-import { Familjen_Grotesk, IBM_Plex_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono, Manrope } from "next/font/google";
 import "./globals.css";
 
-const familjen = Familjen_Grotesk({
-  variable: "--font-familjen",
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-inter",
 });
 
-const plexMono = IBM_Plex_Mono({
-  variable: "--font-plex-mono",
+const manrope = Manrope({
   subsets: ["latin"],
-  weight: "400",
+  variable: "--font-manrope",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-jetbrains-mono",
 });
 
 const title = "Second Look";
@@ -29,7 +33,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${familjen.variable} ${plexMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

@@ -1,6 +1,6 @@
 import { ArrowUpRight, Minus, Plus } from "lucide-react";
 import { links } from "@/lib/site";
-import { Container, SectionHeading } from "./ui";
+import { Container, Kicker, SectionHeading } from "./ui";
 
 const faqs = [
   {
@@ -21,8 +21,9 @@ export function Faq() {
   return (
     <section id="faq" className="border-t border-rule bg-paper">
       <Container className="flex flex-col gap-8 py-16">
+        <Kicker>FAQ</Kicker>
         <div className="flex flex-wrap items-center justify-between gap-6">
-          <SectionHeading size="compact">A few practical questions</SectionHeading>
+          <SectionHeading size="small">A few practical questions</SectionHeading>
           <a href={`${links.github}#faq`} className="inline-flex min-h-11 items-center gap-2 font-body text-base text-accent underline-offset-4 hover:underline">
             More on GitHub <ArrowUpRight size={18} aria-hidden="true" />
           </a>
@@ -31,7 +32,7 @@ export function Faq() {
           {faqs.map((item) => (
             <details key={item.q} className="group border-b border-rule py-6 last:border-b-0">
               <summary className="flex min-h-11 cursor-pointer list-none items-center gap-8 [&::-webkit-details-marker]:hidden">
-                <h3 className="flex-1 font-display text-[22px] leading-[1.3] font-semibold text-ink">{item.q}</h3>
+                <h3 className="flex-1 font-body text-[22px] leading-[1.3] font-semibold text-ink">{item.q}</h3>
                 <Plus size={22} className="shrink-0 text-accent group-open:hidden" aria-hidden="true" />
                 <Minus size={22} className="hidden shrink-0 text-accent group-open:block" aria-hidden="true" />
               </summary>

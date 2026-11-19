@@ -31,10 +31,16 @@ export function Kicker({
   );
 }
 
-export function SectionHeading({ children, className = "", size = "default" }: { children: ReactNode; className?: string; size?: "default" | "compact" }) {
+const headingSizes = {
+  default: "text-[36px] leading-[1.08] tracking-[-0.9px] md:text-[48px] md:tracking-[-1.2px]",
+  compact: "text-[32px] leading-[1.12] tracking-[-1px] md:text-section",
+  small: "text-[32px] leading-[1.08] tracking-[-0.9px] md:text-4xl",
+};
+
+export function SectionHeading({ children, className = "", size = "default" }: { children: ReactNode; className?: string; size?: keyof typeof headingSizes }) {
   return (
     <h2
-      className={`font-display font-bold text-ink ${size === "compact" ? "text-[32px] leading-[1.12] tracking-[-1px] md:text-section" : "text-[36px] leading-[1.08] tracking-[-0.9px] md:text-[48px] md:tracking-[-1.2px]"} ${className}`}
+      className={`font-display font-bold text-ink ${headingSizes[size]} ${className}`}
     >
       {children}
     </h2>

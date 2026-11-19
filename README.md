@@ -1,6 +1,6 @@
 # Second Look
 
-**Performance review for your AI workflow.**
+**Performance review for how you work with AI.**
 
 Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try.
 

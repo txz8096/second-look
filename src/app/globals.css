@@ -13,9 +13,9 @@
   --color-dark-text-2: #c4c6cb;
   --color-on-accent: #0d0f14;
 
-  --font-display: var(--font-familjen), system-ui, sans-serif;
-  --font-body: var(--font-familjen), system-ui, sans-serif;
-  --font-code: var(--font-plex-mono), ui-monospace, monospace;
+  --font-display: var(--font-manrope), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+  --font-code: var(--font-jetbrains-mono), ui-monospace, monospace;
   --text-section: 2.5rem;
   --text-section--line-height: 1.12;
 }

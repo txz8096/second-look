@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { links } from "@/lib/site";
-import { Container, SectionHeading } from "./ui";
+import { Container, Kicker, SectionHeading } from "./ui";
 
 const benefits = [
   { title: "I’ve explained this before.", body: "You repeat the same instructions or corrections whenever a task comes up." },
@@ -12,9 +12,14 @@ const benefits = [
 export function Opportunities() {
   return (
     <section id="opportunities" className="border-t border-rule bg-paper">
-      <Container className="grid gap-10 py-16 lg:grid-cols-[440px_1fr] lg:gap-20">
+      <Container className="grid gap-10 py-16 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:gap-20">
         <div className="flex flex-col items-start gap-6">
-          <SectionHeading size="compact">Spend less time on the same AI problems</SectionHeading>
+          <Kicker>Benefits</Kicker>
+          <SectionHeading>
+            Spend less time<br className="hidden lg:block" />{" "}
+            on the same<br className="hidden lg:block" />{" "}
+            AI problems
+          </SectionHeading>
           <p className="font-body text-lg leading-[1.55] text-text-2">Use AI for recurring work? See if any of these sound familiar.</p>
           <a href={links.sampleReport} className="inline-flex min-h-11 items-center gap-2 font-body text-base text-accent underline-offset-4 hover:underline">
             See a sample report <ArrowRight size={18} aria-hidden="true" />

@@ -6,8 +6,8 @@ import { Container, Kicker, PrimaryButton, SecondaryButton } from "./ui";
 export function Hero() {
   return (
     <section id="top" className="bg-paper">
-      <Container className="flex flex-col gap-10 py-16">
-        <div className="grid items-end gap-8 lg:grid-cols-[minmax(0,680fr)_minmax(0,456fr)] lg:items-start lg:gap-16">
+      <Container className="flex flex-col gap-10 pt-14 pb-12">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,720fr)_minmax(0,416fr)] lg:items-end lg:gap-16">
           <div className="flex flex-col gap-5">
             <div className="flex flex-wrap items-center gap-3">
               <Kicker>Open-source reflection skill</Kicker>
@@ -16,12 +16,12 @@ export function Hero() {
               </span>
             </div>
             <h1 className="font-display text-[44px] leading-[1.04] font-bold tracking-[-1.6px] text-ink md:text-[56px]">
-              Performance review{" "}
-              <br className="hidden lg:block" />
-              for your AI workflow
+              Performance<br className="hidden lg:block" />{" "}
+              review for how<br className="hidden lg:block" />{" "}
+              you work with AI.
             </h1>
           </div>
-          <div className="flex min-w-0 flex-col gap-6 lg:pt-10">
+          <div className="flex min-w-0 flex-col gap-6">
             <p className="font-body text-xl leading-[1.55] text-text-2">
               Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try.
             </p>
@@ -42,7 +42,7 @@ export function Hero() {
               src={links.reportPreview}
               alt="A sample Second Look review with a session-usage chart"
               width={1440}
-              height={1000}
+              height={672}
               loading="eager"
               fetchPriority="high"
               unoptimized

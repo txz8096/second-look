@@ -1,6 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { links } from "@/lib/site";
-import { Container, SectionHeading } from "./ui";
+import { Container, Kicker, SectionHeading } from "./ui";
 
 const groups = [
   {
@@ -18,9 +18,10 @@ const groups = [
 export function Coverage() {
   return (
     <section id="coverage" className="border-t border-rule bg-paper">
-      <Container className="flex flex-col gap-8 py-16">
+      <Container className="flex flex-col gap-7 py-16">
+        <Kicker>Coverage</Kicker>
         <div className="flex flex-wrap items-center justify-between gap-6">
-          <SectionHeading size="compact">Coverage across your AI apps</SectionHeading>
+          <SectionHeading size="small">Coverage across your AI apps</SectionHeading>
           <a href={`${links.github}#supported-apps`} className="inline-flex min-h-11 items-center gap-2 font-body text-base text-accent underline-offset-4 hover:underline">
             Coverage details on GitHub <ArrowUpRight size={18} aria-hidden="true" />
           </a>

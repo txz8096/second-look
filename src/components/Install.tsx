@@ -11,8 +11,8 @@ function Step({ n, title, children }: { n: number; title: string; children: Reac
   return (
     <li className="flex flex-col gap-4 border-b border-rule pb-7 last:border-b-0 last:pb-0">
       <div className="flex items-center gap-3">
-        <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-rule font-body text-sm text-accent">{n}</span>
-        <h3 className="font-body text-xl font-semibold text-ink">{title}</h3>
+        <span className="flex size-7 shrink-0 items-center justify-center rounded-full border border-rule font-display text-sm text-accent">{n}</span>
+        <h3 className="font-display text-xl leading-[1.4] font-semibold text-ink">{title}</h3>
       </div>
       {children}
     </li>
@@ -30,10 +30,10 @@ function CodeBlock({ text }: { text: string }) {
 
 export function Install() {
   return (
-    <section id="install" className="border-t border-rule bg-surface">
-      <Container className="grid gap-10 py-16 lg:grid-cols-[440px_1fr] lg:gap-20">
+    <section id="install" className="border-t border-rule">
+      <Container className="grid gap-10 py-20 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:gap-20">
         <div className="flex flex-col items-start gap-6">
-          <SectionHeading size="compact">Try it on your own sessions.</SectionHeading>
+          <SectionHeading>Try it on your own conversations.</SectionHeading>
           <p className="font-body text-lg leading-[1.55] text-text-2">Start from Claude Code, Codex or Cursor.</p>
           <PrimaryButton href={links.github} className="gap-2.5">
             <GithubIcon size={18} />
