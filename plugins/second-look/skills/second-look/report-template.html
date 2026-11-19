@@ -365,6 +365,15 @@ button.theme-btn:hover { border: 0; background: var(--surface-2); color: var(--f
 .side-nav a { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; box-sizing: border-box; padding: 8px 12px; border-radius: var(--r-8); color: var(--muted); font-size: 14px; line-height: 20px; font-weight: 500; text-decoration: none; }
 .side-nav a:hover { color: var(--fg); }
 .side-nav a.on, .side-nav a.on:hover { background: var(--accent-soft); color: var(--accent); }
+/* Habits & usage opens into its five questions while that page is on; the open question is the pink one */
+.side-group { display: grid; gap: 4px; }
+.side-chev { display: none; flex-shrink: 0; color: var(--muted); }
+.side-sub { display: none; gap: 4px; margin-left: 16px; padding-left: 8px; border-left: 1px solid var(--line); }
+body[data-page="part-1"] .side-chev { display: block; }
+body[data-page="part-1"] .side-sub:not(:empty) { display: grid; }
+body[data-page="part-1"] .side-group > a.on, body[data-page="part-1"] .side-group > a.on:hover { background: none; color: var(--fg); }
+.side-nav .side-sub a { min-height: 36px; font-size: 13px; line-height: 1.4; font-weight: 400; }
+.side-nav .side-sub a[aria-current], .side-nav .side-sub a[aria-current]:hover { background: var(--accent-soft); color: var(--accent); font-weight: 500; }
 #settings .icard { margin-bottom: 16px; }
 .coverage-heading { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
 .coverage-heading h3 { margin: 0; }
@@ -618,7 +627,6 @@ td.best { color: var(--accent); font-weight: 600; }
 .skill-resources .dest { padding: 16px 20px; }
 
 /* habits over time */
-.scope-line { font-size: 14px; line-height: 1.6; color: var(--muted); }
 .fix-block { display: grid; gap: 8px; margin-top: 8px; scroll-margin-top: 24px; }
 .filters { display: none; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
 .fgroup { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
@@ -640,22 +648,26 @@ button#f-range { display: inline-flex; justify-content: space-between; align-ite
 .range-dates input { width: 100%; min-width: 0; box-sizing: border-box; height: 36px; padding: 0 8px; border: 1px solid var(--line); border-radius: var(--r-8); background: var(--bg); color: var(--fg); font: 14px var(--sans); }
 .range-custom > button { justify-self: end; }
 button:disabled { cursor: default; opacity: .5; }
-.filters > .filter-coverage { flex-basis: 100%; }
+.filters > .coverage-hint { flex-basis: 100%; }
 .filters > .fsum { margin-left: auto; white-space: nowrap; text-align: right; }
 .filter-empty { margin-top: 12px; }
 .filter-coverage { font-size: 13px; }
 .filter-coverage:hover { color: var(--accent-strong); }
+/* which apps and weeks the charts count, in a card on hover or focus of View data coverage */
+.coverage-anchor { position: relative; display: inline-block; }
+.coverage-card { position: absolute; z-index: 50; top: calc(100% + 8px); left: 0; box-sizing: border-box; width: 360px; max-width: calc(100vw - 32px);
+  display: grid; gap: 4px; padding: 12px; border: 1px solid var(--line); border-radius: var(--r-8); background: var(--surface); box-shadow: 0 8px 24px var(--drawer-shadow);
+  font-size: 14px; line-height: 1.43; color: var(--muted); text-align: left; opacity: 0; visibility: hidden; transition: opacity .12s, visibility 0s .12s; }
+.coverage-card::before { content: ""; position: absolute; left: 0; right: 0; top: -10px; height: 10px; }
+.coverage-card .card-h { color: var(--fg); font-weight: 600; }
+.coverage-anchor:hover .coverage-card:not(:empty), .coverage-anchor:focus-within .coverage-card:not(:empty) { opacity: 1; visibility: visible; transition: opacity .12s; }
+.coverage-anchor.dismissed .coverage-card:not(:empty) { opacity: 0; visibility: hidden; }
 .fsum { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
-/* group tabs: one question each, five across */
-.grp-tiles { display: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 8px; margin: 8px 0 4px; }
-button.grp-tile { height: auto; min-height: 44px; padding: 12px; border: 1px solid var(--line); border-radius: var(--r-8); background: var(--surface);
-  text-align: left; align-self: stretch; align-content: start; font-size: 14px; font-weight: 600; line-height: 18px; color: var(--fg); text-wrap: balance; }
-button.grp-tile:hover { background: var(--surface); color: var(--fg); border-color: var(--line-strong); }
-button.grp-tile[aria-pressed="true"], button.grp-tile[aria-pressed="true"]:hover { color: var(--fg); background: var(--accent-soft); border-color: var(--accent); }
+/* the five questions live in the sidebar under Habits & usage; the page title is the open one */
 .grp-panel { display: grid; gap: 8px; }
 .grp-panel.off { display: none; }
 .grp-title { display: none; font-size: 20px; }
-.grp-sum { font-size: 16px; line-height: 1.5; text-wrap: pretty; margin-top: 8px; }
+.grp-sum { font-size: 16px; line-height: 1.5; text-wrap: pretty; margin: 12px 0; }
 .grp-note { margin-bottom: 4px; }
 .multiples { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 0 12px; margin-top: 12px; }
 /* each chart is a card whose five rows line up across its row, so plots share a baseline. The gap is a margin: an empty row must add nothing */
@@ -728,12 +740,11 @@ button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--sur
 #trends:not([data-live]):not([data-static]) > :not(.sec-head):not(.nojs-note):not(#automate-next) { display: none; }
 #trends[data-static] .static-note { display: block; }
 #trends[data-live] .filters { display: flex; }
-#trends[data-live] .grp-tiles { display: grid; }
 #trends[data-static] .grp-panel.off { display: grid; }
 #trends[data-static] .grp-panel { margin-bottom: 32px; }
 #trends[data-static] .grp-title { display: block; }
 /* no session matches the filters: one line and a way back */
-#trends[data-empty] .multiples, #trends[data-empty] .split, #trends[data-empty] .insight, #trends[data-empty] .grp-tiles, #trends[data-empty] .grp-note, #trends[data-empty] .more-charts { display: none; }
+#trends[data-empty] .multiples, #trends[data-empty] .split, #trends[data-empty] .insight, #trends[data-empty] .grp-note, #trends[data-empty] .more-charts { display: none; }
 #f-clear { justify-self: start; margin-top: 8px; }
 /* nothing to draw at all, like a claude.ai run with no export */
 #trends[data-nodata] .filters, #trends[data-nodata] > details { display: none; }
@@ -829,8 +840,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .chart.lead svg { min-width: 590px; }
   .rank { width: 32px; height: 32px; font-size: 16px; }
   .icard { padding: 16px; }
-  .grp-tiles { grid-auto-flow: row; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .grp-tile:last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .side-nav .side-sub a { min-height: 44px; }
   .tl-row, .tl-axis { grid-template-columns: 1fr; gap: 6px; }
   .tl-status { text-align: left; }
   .tl-status .term[data-align="end"] .term-card { left: 0; right: auto; }
@@ -843,7 +853,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .filters > .project-filter { flex-basis: 100%; }
   .filters select { max-width: 100%; }
   .project-filter select { flex: 1; }
-  .filters > .filter-coverage { order: 3; }
+  .filters > .coverage-hint { order: 3; }
   .range-dates input { min-height: 44px; font-size: 16px; }
   .skill-benefits { grid-template-columns: 1fr; }
   pre { padding: 40px 12px 12px; }
@@ -854,7 +864,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval { font-size: 13px; }
   .def, .sum-meta, .part-meta, .fsum, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
     .side-about, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
-  .scope-line, .tl-name, .ic-summary, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
+  .tl-name, .ic-summary, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
   .fix-actions button { min-height: 44px; }
   /* tap targets */
   button:not(.brow):not(.menu-btn), select { min-height: 44px; }
@@ -929,13 +939,16 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     <a href="#overview" data-page="overview">Overview</a>
     <a href="#part-2" data-page="part-2">Briefs &amp; setup</a>
     <a href="#part-3" data-page="part-3">Skills</a>
-    <a href="#part-1" data-page="part-1">Habits &amp; usage</a>
+    <div class="side-group">
+      <a href="#part-1" data-page="part-1">Habits &amp; usage<svg class="side-chev" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></a>
+      <div class="side-sub" id="habit-questions" role="group" aria-label="Habits questions"></div>
+    </div>
     <a href="#settings" data-page="settings">Settings</a>
   </nav>
   <div class="side-about" id="side-about">
     <p>This is a sample report. A real report reads your AI logs and exports, with secrets removed.</p>
     <details class="nested">
-      <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>Guidance and references</span></summary>
+      <summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg><span>References</span></summary>
       <ul>
         <li><a href="https://academy.claude.com/tutorials/the-ai-fluency-index" target="_blank" rel="noopener noreferrer">Anthropic’s AI Fluency Index</a></li>
         <li><a href="https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview" target="_blank" rel="noopener noreferrer">Anthropic’s prompting guide</a></li>
@@ -1277,8 +1290,7 @@ Then tell me in plain words what changed before you save it.</pre></div>
 <!-- HABITS (#part-1), last -->
 <div class="part page" id="part-1">
   <div class="part-head">
-    <h2>How your habits are changing</h2>
-    <p class="scope-line" id="scope-line"></p>
+    <h2 id="habits-title">How your habits are changing</h2>
   </div>
 
 <section id="trends">
@@ -1301,7 +1313,7 @@ Then tell me in plain words what changed before you save it.</pre></div>
     <div class="fgroup project-filter"><label class="flabel" for="f-project">Project</label><select id="f-project"></select></div>
     <button type="button" id="f-reset" aria-label="Clear all filters" disabled>Clear</button>
     <span class="fsum" id="f-sum" role="status" aria-live="polite" aria-atomic="true"></span>
-    <a class="filter-coverage" href="#scope-details">View data coverage</a>
+    <div class="coverage-hint"><span class="coverage-anchor"><a class="filter-coverage" href="#scope-details" aria-describedby="coverage-card">View data coverage</a><span class="coverage-card" id="coverage-card" role="tooltip"></span></span></div>
   </div>
 
   <div id="groups"></div>
@@ -1771,7 +1783,7 @@ stackTables();
     const q = [0, 0.25, 0.5, 0.75, 1].map(f => Math.round(f * (WEEKS - 1))).map(i => weeks[i].toLocaleDateString("en-US", {month: "short", year: i === 0 || i === WEEKS - 1 ? "numeric" : undefined}));
     document.getElementById("tl-axis").innerHTML = `<span></span><span>${q.map(t => `<span>${t}</span>`).join("")}</span><span></span>`;
 
-    // the one-line summary under the part title
+    // which apps and weeks the charts count, shown when View data coverage is hovered or focused
     const seen = [], absent = [], unreadable = [];
     SCOPE.sources.forEach(src => {
       const label = name(SOURCES, src.id), on = activeWeeks(src.id, "sessions");
@@ -1789,7 +1801,18 @@ stackTables();
       line += ` ${scopeCard(`${list} ${names.length > 1 ? "aren't" : "isn't"} added`, names.length > 1 ? "These apps aren't added yet" : `${list} isn't added yet`, "Add them and their history joins every trend below.", steps)}.`;
     }
     if (unreadable.length) line += ` ${scopeCard(`${listed(unreadable)} can’t be read here`, "Run Second Look on your computer", "These apps keep their history on your computer, which a claude.ai run can’t open.")}.`;
-    document.getElementById("scope-line").innerHTML = line.trim();
+    // the card is plain text: the term cards inside the line would nest one card in another
+    const plain = document.createElement("div");
+    plain.innerHTML = line.trim();
+    plain.querySelectorAll(".term-card").forEach(n => n.remove());
+    const coverageCard = document.getElementById("coverage-card");
+    coverageCard.textContent = "";
+    if (plain.textContent.trim()) {
+      const head = document.createElement("span");
+      head.className = "card-h";
+      head.textContent = "Data coverage";
+      coverageCard.append(head, plain.textContent.trim());
+    }
   }
 
   // ---- metrics: every one has a one-line meaning; the card says how it's counted ----
@@ -1890,11 +1913,12 @@ stackTables();
   const trendOf = r => !r.dlt || r.m.better === "none" || r.dlt.flat ? "flat" : ((r.m.better === "up") === (r.dlt.v > 0) ? "good" : "bad");
   const listed = a => a.length < 2 ? a.join("") : a.slice(0, -1).join(", ") + " and " + a[a.length - 1];
   const cap = t => t.charAt(0).toUpperCase() + t.slice(1);
-  // empty tiles and panels; chart() fills each panel's grid
+  // the questions sit in the sidebar under Habits & usage; the page title names the open one
+  const questionsEl = document.getElementById("habit-questions"), habitsTitle = document.getElementById("habits-title");
+  // empty panels and their sidebar links; chart() fills each panel's grid
   function groupShells() {
-    groupsEl.innerHTML = `<div class="grp-tiles" role="group" aria-label="Chart groups">${GROUPS.map(g =>
-      `<button type="button" class="grp-tile" id="grp-tile-${g.id}" data-g="${g.id}" aria-controls="grp-${g.id}">${g.title}</button>`).join("")}</div>
-      ${GROUPS.map(g => `<div class="grp-panel" id="grp-${g.id}" role="region" aria-labelledby="grp-tile-${g.id}"><h3 class="grp-title">${g.title}</h3><p class="grp-sum" aria-live="polite"></p><p class="def grp-note" hidden></p><div class="multiples" id="g-${g.id}"></div></div>`).join("")}`;
+    questionsEl.innerHTML = GROUPS.map(g => `<a href="#part-1" data-g="${g.id}" aria-controls="grp-${g.id}">${g.title}</a>`).join("");
+    groupsEl.innerHTML = GROUPS.map(g => `<div class="grp-panel" id="grp-${g.id}" role="region" aria-label="${g.title}"><h3 class="grp-title">${g.title}</h3><p class="grp-sum" aria-live="polite"></p><p class="def grp-note" hidden></p><div class="multiples" id="g-${g.id}"></div></div>`).join("");
     if (autoNext) document.getElementById("grp-automate").appendChild(autoNext);
   }
   // what changed in one group over the last 4 weeks, and how to read each chart
@@ -1997,14 +2021,24 @@ stackTables();
   }
   function showGroup(id) {
     GROUPS.forEach(g => {
-      const panel = document.getElementById("grp-" + g.id), tile = document.getElementById("grp-tile-" + g.id);
+      const panel = document.getElementById("grp-" + g.id), link = questionsEl.querySelector(`[data-g="${g.id}"]`);
       if (panel) panel.classList.toggle("off", g.id !== id);
-      if (tile) tile.setAttribute("aria-pressed", String(g.id === id));
+      if (link) { if (g.id === id) link.setAttribute("aria-current", "true"); else link.removeAttribute("aria-current"); }
     });
+    const open = GROUPS.find(g => g.id === id);
+    if (open) habitsTitle.textContent = open.title;
     // the filters sit between the open group's summary and its charts
     document.getElementById("grp-" + id)?.querySelector(".grp-sum")?.after(filtersEl);
   }
-  groupsEl.addEventListener("click", e => { const t = e.target.closest("[data-g]"); if (t) { state.picked = t.dataset.g; showGroup(t.dataset.g); } });
+  // a question in the sidebar opens Habits & usage on that question
+  questionsEl.addEventListener("click", e => {
+    const t = e.target.closest("[data-g]"); if (!t) return;
+    e.preventDefault(); e.stopPropagation();
+    state.picked = t.dataset.g; showGroup(t.dataset.g);
+    goTo("part-1");
+  });
+  // a jump link into a closed group opens it without moving the page
+  window.openHabitsGroup = id => { if (!document.getElementById("grp-" + id)) return; state.picked = id; showGroup(id); };
 
   // charts drawn at build time: drop their filter controls, then redraw live
   const trendsEl = document.getElementById("trends"), filtersEl = trendsEl.querySelector(".filters");
@@ -2012,7 +2046,7 @@ stackTables();
     trendsEl.querySelectorAll("#f-presets button, #f-source option, #f-cat option, #f-project option").forEach(n => n.remove());
     trendsEl.removeAttribute("data-static");
   }
-  // scripts run: show the filters and tiles, hide the no-script notes
+  // scripts run: show the filters, hide the no-script notes
   trendsEl.setAttribute("data-live", "");
   // ---- filter state ----
   const RANGES = [[4, "4 weeks"], [13, "3 months"], [26, "6 months"], [52, "12 months"], ["all", "All history"]];
@@ -2387,7 +2421,7 @@ stackTables();
     const drawn = g => results.some(r => g.ids.includes(r.m.id) && !r.unmeasured && !r.empty);
     const hidden = GROUPS.filter(g => !drawn(g));
     const shown = hidden.length < GROUPS.length ? GROUPS.filter(drawn) : GROUPS;
-    if (shown !== GROUPS) hidden.forEach(g => { document.getElementById("grp-tile-" + g.id).remove(); document.getElementById("grp-" + g.id).remove(); });
+    if (shown !== GROUPS) hidden.forEach(g => { questionsEl.querySelector(`[data-g="${g.id}"]`)?.remove(); document.getElementById("grp-" + g.id).remove(); });
     if (shown !== GROUPS && hidden.length) {
       // one sentence per reason: the apps don't log it, the Work filter leaves it out, or too few sessions
       const whyHidden = g => { const w = new Set(results.filter(r => g.ids.includes(r.m.id)).map(r => r.why)); return w.size === 1 ? [...w][0] : "mixed"; };
@@ -2553,7 +2587,7 @@ document.addEventListener("focusin", e => { if (e.target.closest(".tbl")) e.targ
     goTo(a.dataset.jump, false);
     // a target inside a closed chart tab opens that tab first
     const panel = el.closest(".grp-panel.off");
-    if (panel) document.querySelector(`[data-g="${panel.id.replace("grp-", "")}"]`)?.click();
+    if (panel) window.openHabitsGroup?.(panel.id.replace("grp-", ""));
     el.scrollIntoView({behavior: reduce() ? "auto" : "smooth", block: el.offsetHeight > innerHeight - 96 ? "start" : "center"});
     el.tabIndex = -1; el.focus({preventScroll: true});
     el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
@@ -2587,7 +2621,7 @@ document.addEventListener("focusin", e => { if (e.target.closest(".tbl")) e.targ
 function showPage(id) {
   const page = document.getElementById(id) || document.getElementById("overview");
   document.querySelectorAll(".page").forEach(p => p.classList.toggle("on", p === page));
-  document.querySelectorAll(".side-nav a").forEach(a => {
+  document.querySelectorAll(".side-nav a[data-page]").forEach(a => {
     const on = a.dataset.page === page.id;
     a.classList.toggle("on", on);
     if (on) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
@@ -2707,5 +2741,12 @@ function goTo(id, scroll = true) {
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") document.querySelectorAll(".term").forEach(t => { if (t.matches(":hover, :focus")) t.classList.add("dismissed"); });
   });
+  // the data coverage card dismisses the same way, and comes back on the next hover or focus
+  const coverage = document.querySelector(".coverage-anchor");
+  if (coverage) {
+    document.addEventListener("keydown", e => { if (e.key === "Escape" && coverage.matches(":hover, :focus-within")) coverage.classList.add("dismissed"); });
+    coverage.addEventListener("pointerenter", () => coverage.classList.remove("dismissed"));
+    coverage.addEventListener("focusin", () => coverage.classList.remove("dismissed"));
+  }
 })();
 </script>

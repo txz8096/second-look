@@ -28,7 +28,7 @@ The values below are the dark theme, which is the default. The app bar's switch 
 
 The neutrals are shadcn/ui's dark theme, written as plain CSS: the report stays one file, so it uses the look and none of the React components. The one status colour (`--p1`) marks states, such as a broken skill. Never use it to grade the user's habits:
 changes in their numbers are plain text, and "best" cells are pink, never green or red.
-Pink marks the things to act on: fix panels, the fix-review group headers, the chosen tile and action counts. Independent chart series and labeled bar rows use pink; stacked categories use the palette below.
+Pink marks the things to act on: fix panels, the fix-review group headers, the open question in the sidebar and action counts. Independent chart series and labeled bar rows use pink; stacked categories use the palette below.
 
 **The signature.** Neutral cards with hairline borders hold the findings, charts, panels and tables; headers are never filled. The fix in each pattern is a pink panel with a pink hairline. No side stripes on panels.
 
@@ -60,7 +60,7 @@ them.
 
 ## Radii
 
-6px tooltips and the chosen filter · 8px buttons, inputs, tiles, code blocks and the filter track · 10px fix panels · 14px cards, tables and the report menu ·
+6px tooltips and the chosen filter · 8px buttons, inputs, sidebar links, the data coverage card, code blocks and the filter track · 10px fix panels · 14px cards, tables and the report menu ·
 fully rounded chips.
 
 ## Page structure, in order
@@ -68,19 +68,21 @@ fully rounded chips.
 An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs (Nov 6, 2026). Scripts off, every page shows in turn and the links still work.
 
 1. App bar (64px, stays on screen): the sidebar toggle and logo on the left; the report menu (`#report-menu`, a `details` that works with scripts off) the Feedback link (`#report-issue`, to https://github.com/txz8096/second-look/issues/new) and the light and dark switch (`#theme-btn`, hidden with scripts off) on the right. The menu shows "Latest report" or "Earlier report" with this report's date, and opens a scrolling list of every saved report, newest first, with the latest marked. `scripts/report_menu.py` writes the list between the `report-menu` comments, using relative links, and switching reports stays on the same page. With one report, or on claude.ai, it's a plain label. Phones show only the date, and at 400px and narrower the year drops too, so the bar fits. The sample report's earlier dates are plain text, since it has no other reports to open.
-2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Briefs & setup, Skills, Habits & usage, with no numerical counts or badges. On desktop it stays pinned below the app bar and fills the available viewport height, with method, Guidance and references, and About at the viewport bottom. Long references scroll inside the sidebar; About stays reachable without scrolling the report. On phones the drawer fills the available viewport height with the same footer. Short viewports allow the navigation and references to scroll within their own areas. Settings contains Review schedule and Data coverage. The latter holds the session history timeline and app-specific Add export or Replace export disclosures. Overview and Habits & usage link to the timeline. When opened through these links, an arrow-only back link to the left of Data coverage restores the originating page, scroll position and link focus without resetting filters. Give the arrow an accessible name, “Back to previous view”. Hide the back link when Settings is opened directly. The sample controls update the preview summary. Generated reports direct users to the app that owns the schedule. At the bottom, on every page, a note (`#side-about`) always shows the method, and a folded "Guidance and references" list sits under it, each item a link to its original source that opens in a new tab, in the note's muted color with an underline. The template's note also says it's a sample report. Both print after the report.
+2. Sidebar (`#side`, 256px; a drawer at 900px and narrower): Overview, Briefs & setup, Skills, Habits & usage, Settings, with no numerical counts or badges. While Habits & usage is open, its item turns plain (no pink) with a chevron pointing down and opens into the five questions (`#habit-questions`), indented under a left rule, 13px, 36px tall (44px on phones); the open question is pink on the soft pink fill. On other pages Habits & usage is a plain link. On desktop it stays pinned below the app bar and fills the available viewport height, with method, References, and About at the viewport bottom. Long references scroll inside the sidebar; About stays reachable without scrolling the report. On phones the drawer fills the available viewport height with the same footer. Short viewports allow the navigation and references to scroll within their own areas. Settings contains Review schedule and Data coverage. The latter holds the session history timeline and app-specific Add export or Replace export disclosures. Overview and Habits & usage link to the timeline. When opened through these links, an arrow-only back link to the left of Data coverage restores the originating page, scroll position and link focus without resetting filters. Give the arrow an accessible name, “Back to previous view”. Hide the back link when Settings is opened directly. The sample controls update the preview summary. Generated reports direct users to the app that owns the schedule. At the bottom, on every page, a note (`#side-about`) always shows the method, and a folded "References" list sits under it, each item a link to its original source that opens in a new tab, in the note's muted color with an underline. The template's note also says it's a sample report. Both print after the report.
 3. Overview (`#overview`): "Your latest review" as the `h1`, the summary paragraph (20px, plain words, no numbers), “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with a link to Data coverage in Settings), "Following up on your last review" (`#last-cycle`, one card per decision, one folded row per fix; only after a review with logged fixes), then "Explore your report", one row per page.
 4. How you brief AI and set up your apps (`#part-2`): headline, then pattern cards
    (`article.icard`), each ending in its fix panel with Approve and Decline.
 5. Keep your skills current (`#part-3`): headline, scan line, "Skills to fix" (`#fix-first`, with paste-to-your-AI blocks in `.fix-block`), "Worth a look",
    collapsed "Skills you wrote", collapsed installed skills.
-6. How your habits are changing (`#part-1`, last despite its id): data-scope line, `#trends`: five question
-   tiles; the open group shows its summary, the filters and its charts (see "Chart groups"),
-   then "Activity since your last review". `scripts/prerender.py` saves the drawn charts, bars and tables into
+6. How your habits are changing (`#part-1`, last despite its id): the page title is the open question
+   (“How your habits are changing” with scripts off), then `#trends`: the open group shows its summary (12px above and below),
+   the filters and its charts (see "Chart groups"). Under the filters, hovering or focusing View data coverage opens a
+   360px card, "Data coverage" over one plain line of which apps and weeks the charts count; Escape dismisses it,
+   and the link goes to Data coverage in Settings. Then comes "Activity since your last review". `scripts/prerender.py` saves the drawn charts, bars and tables into
    the file and marks the section `data-static`, which hides the filters and shows a note.
    The script clears the mark, sets `data-live` and redraws with live filters. With neither
    mark (scripts off, nothing prerendered), the section shows one line, "Open this file in a
-   browser to see the charts", and hides the empty filters, tabs and tables.
+   browser to see the charts", and hides the empty filters and tables.
 
 ## Chart groups
 
@@ -88,9 +90,10 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
 
 - Charts sit in five groups, one per question: "Am I explaining what I want?", "Am I checking
   the work?", "Am I handing off the right work?", "Am I automating repeat work?", "Where does my
-  usage go?". One group shows at a time; the tabs switch it. The tabs are boxed cards, five
-  across from 681px: the question only, with a pink border and tint on the open one.
-- A group whose charts have no data under the current filters is hidden (tab and panel), and
+  usage go?". One group shows at a time; the questions in the sidebar under Habits & usage switch it,
+  and the page title becomes the open question (decided Nov 19, 2026, over answer cards, underline tabs
+  and a picker in the title).
+- A group whose charts have no data under the current filters is hidden (sidebar question and panel), and
   one muted line under the charts names it and gives the true reason: its charts need Claude
   Code or Codex, the Work filter leaves it out, or too few sessions. If every group is empty, all stay.
 - The first group with data opens first. Inside a group, the charts going the wrong way
@@ -130,10 +133,9 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   plain text ("6 times in 4 weeks") and the fix as one line to paste. The script moves the block into
   that group. Delete it when there are no repeats.
 - Without scripts (prerendered), every group shows in turn with its question as a heading.
-- Phones: tabs in two columns; an odd last tab spans the row. The open tab's rule sits tight on
-  its own label, so it can't read as an underline on the tab above.
+- Phones: the questions sit in the sidebar drawer with the rest of the navigation.
 
-Rejected: full-width charts drawn by scaling a fixed viewBox (the axis text doubles); a fixed set of three groups (empty groups hide instead). Earlier: a chip row with
+Rejected: boxed question tiles above the summary (Nov 19, 2026: they took room above every chart, and the sidebar already says where you are); full-width charts drawn by scaling a fixed viewBox (the axis text doubles); a fixed set of three groups (empty groups hide instead). Earlier: a chip row with
 one group at a time and a repeated question heading (the chips gave
 no reason to pick one and showed nothing new on opening); every chart visible in work-stage
 order with a jump bar (still a long scroll, and some charts fit more than one stage); counts

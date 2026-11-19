@@ -4,8 +4,8 @@
 Usage: python3 prerender.py REPORT.html
 
 Runs the report once in headless Chrome (or Chromium, Edge, Brave), takes the rendered
-"How your habits are changing" charts, the data-scope line above them and the phone-ready
-tables, and writes them back into the file, with the charts marked data-static.
+"How your habits are changing" charts (with the data coverage card in their filter row) and
+the phone-ready tables, and writes them back into the file, with the charts marked data-static.
 In a normal browser the script clears the marker and redraws with working filters.
 Without a browser it changes nothing, says so and exits 0: the charts then draw only when
 scripts run. When the browser runs but the report's own script draws nothing, it says so and
@@ -22,7 +22,6 @@ MAC_APPS = [
 ]
 COMMANDS = ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "microsoft-edge", "brave-browser"]
 SECTION = re.compile(r'<section id="trends"[^>]*>.*?</section>', re.S)
-SCOPE_LINE = re.compile(r'<p class="scope-line" id="scope-line">.*?</p>', re.S)
 TABLE = re.compile(r'<div class="tbl">.*?</table></div>', re.S)
 LEAD_PLOT = re.compile(r'(<div class="chart lead[^"]*"[^>]*>.*?<div class="chart-plot")', re.S)
 
@@ -117,9 +116,6 @@ def main():
         it = iter(stacked)
         html = "".join(TABLE.sub(lambda _: next(it), part) if not SECTION.fullmatch(part) else part for part in re.split(f"({SECTION.pattern})", html, flags=re.S))
     html = SECTION.sub(lambda _: static, html, count=1)
-    line = SCOPE_LINE.search(run.stdout)
-    if line:
-        html = SCOPE_LINE.sub(lambda _: line.group(0), html, count=1)
     open(report, "w", encoding="utf-8").write(html)
     print(f"Charts drawn into {report}.")
 

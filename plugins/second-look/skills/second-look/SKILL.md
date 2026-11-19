@@ -69,7 +69,7 @@ Files that ship with this skill:
 | `second-look-logo.svg` | Both | The wordmark. The template already inlines it |
 | `references/design-system.md` | Both | Tokens, type, layout and allowed labels. Read it; don't rebuild from it |
 | `scripts/collect.py` | Local | Reads Claude Code, Codex, Cursor and Antigravity logs and the three data exports |
-| `scripts/prerender.py` | Local | Draws the year charts and the data-scope line into the report so they show where scripts are blocked |
+| `scripts/prerender.py` | Local | Draws the year charts and the data coverage card into the report so they show where scripts are blocked |
 | `scripts/check_report.py` | Both | Design check. Must print "Design check passed." before you publish |
 | `scripts/report_menu.py` | Local | Lists every saved report in each report's "Latest report" menu |
 | `scripts/open_report.py` | Local | Opens a finished report in the user's own browser |
@@ -515,7 +515,7 @@ metric names or term cards; the charts have those. Describe what they did in eve
 words: "you've been checking prototypes less and starting over more often", never "checking fell
 20 points". Say only what the charts and cards show, and leave out a guess about why. If a data source starting or changing could explain a change,
 don't claim the change: compare only apps present in both windows, or leave it out. App coverage
-goes in the scope line, not here. A scoped review says its scope in the summary ("This covers your
+goes in the data coverage card, not here. A scoped review says its scope in the summary ("This covers your
 MAT study sessions since Sep 28"). If the year's trend and the recent one differ, say which is which in words ("Over the past year… Lately…"). With no history, say that plainly: on a first review, say it's
 the first and what it covers ("It covers the 26 days your apps kept").
 
@@ -599,9 +599,9 @@ starting-context row from "Usage" when it applies. Next steps are something they
 collapsed "Skills you installed from others". Counts agree across all of it. Keep the tap
 definition on the first "skills" in the headline.
 When every row of a column says the same thing, drop the column and say it once. Dated sources
-go in the sidebar's "Guidance and references" list.
+go in the sidebar's "References" list.
 
-**How your habits are changing** (`#part-1`). The id stays `#part-1`. No headline; the summary already tells the story. Fill the scope line from `SCOPE` and keep the filters’ link to Data coverage in Settings.
+**How your habits are changing** (`#part-1`). The id stays `#part-1`. No headline; the summary already tells the story. The five questions sit in the sidebar under Habits & usage, and the page title becomes the open question; the script builds both from `GROUPS`. Fill the data coverage card from `SCOPE`: it opens on hover or focus of the filters’ View data coverage link, which goes to Data coverage in Settings.
 
 - **Chart accessibility.** Use as few chart colors as needed: pink for independent single-series charts and separately labeled bars; additional hues only to distinguish overlapping or stacked categories, with clear legends or direct labels. Keep the template’s stable stacked-category mappings. Overview exposes each week’s total and category counts in a tooltip on hover, keyboard focus or tap, and preserves a visually hidden equivalent table for screen readers and a visible table in print. The tooltip stays open while hovered, dismisses with Escape or an outside tap, and stays within the viewport. Across all chart types and screens, do not add a persistent “View chart data” link or disclosure by default. Add separate data access only when a clear user need calls for it; keep essential values accessible through direct labels, accessible tooltips or equivalent screen-reader data. Use solid fills and the original chart geometry: no added outlines, hatch patterns or line underlays. The tables provide the same information without relying on color; do not remove them or fade essential marks. Missing chart values stay missing. Run `scripts/check_chart_palette.py` before publishing; inspect both themes and phone layouts.
 - **Habits over time** (`#trends`), filled from the cube. Its charts sit in five
@@ -664,8 +664,8 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
 ## Data scope
 
 Every report marks the edges of its data, so no one reads a gap as a habit. The template draws
-it from one `SCOPE` object in its trends script, next to the cube: a dashed one-line summary
-under "How your habits are changing", the timeline under Data coverage in Settings, a dashed
+it from one `SCOPE` object in its trends script, next to the cube: a plain one-line summary
+in the card on the Habits filters' View data coverage link, the timeline under Data coverage in Settings, a dashed
 start line on any chart whose data begins at a scope limit, and a dashed "Needs Claude Code or Codex" panel
 for a chart its apps can't give. Each dashed term opens a card with the reason and the
 steps to add the data. Write none of this by hand.
