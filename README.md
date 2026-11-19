@@ -110,7 +110,7 @@ If a user asks you to install Second Look, follow these steps. Don't skip the fi
 - **Claude Code** reads `~/.claude/projects`. History defaults to 30 days and can be extended with `cleanupPeriodDays` in `~/.claude/settings.json`.
 - **Codex** reads the history in `~/.codex/sessions`.
 - **Cursor** reads the history in its local chat database.
-- **Antigravity** reads transcripts in `~/.gemini/antigravity-cli` and standing instructions in `~/.gemini/GEMINI.md`. Coverage depends on what the CLI keeps on disk, and app chats may be missing.
+- **Antigravity** reads transcripts in `~/.gemini/antigravity-cli` and standing instructions in `~/.gemini/GEMINI.md`. Coverage depends on what the CLI keeps on disk, and some sessions may be missing.
 
 </details>
 

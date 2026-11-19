@@ -8,8 +8,8 @@ const footerLinks = [
 export function Footer() {
   return (
     <footer className="border-t border-rule bg-paper">
-      <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-5 py-8 md:flex-row md:items-center md:justify-between md:px-10 xl:px-[120px]">
-        <div className="flex items-center gap-4">
+      <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-5 px-5 py-5 md:flex-row md:items-center md:justify-between md:px-10 xl:px-[120px]">
+        <div className="flex items-center gap-5">
           <Wordmark className="h-8 w-auto shrink-0" />
           <p className="font-body text-sm text-text-2">Open source · MIT License</p>
         </div>

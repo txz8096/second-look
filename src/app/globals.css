@@ -73,3 +73,46 @@ body {
     animation: none;
   }
 }
+
+/* Landing entrance, in the spirit of linear.app: content rises a short way out of a soft blur.
+   The hero plays once on load; sections play once as they scroll into view. */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(8px);
+  }
+}
+@keyframes shot-in {
+  from {
+    opacity: 0;
+    transform: translateY(48px) rotateX(18deg) scale(0.96);
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-in {
+    animation: rise-in 900ms var(--ease-out-strong) var(--hero-delay, 0ms) both;
+  }
+  .hero-stage {
+    perspective: 2000px;
+  }
+  .hero-shot {
+    transform-origin: 50% 0;
+    animation: shot-in 1400ms var(--ease-out-strong) 300ms both;
+  }
+}
+/* Hidden until RevealOnScroll marks them; without scripting they simply show. */
+@media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    transition:
+      opacity 800ms var(--ease-out-strong),
+      transform 800ms var(--ease-out-strong),
+      filter 800ms var(--ease-out-strong);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  [data-reveal]:not([data-revealed]) {
+    opacity: 0;
+    transform: translateY(24px);
+    filter: blur(6px);
+  }
+}

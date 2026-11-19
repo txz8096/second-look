@@ -1,5 +1,5 @@
 import { links } from "@/lib/site";
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { CopyButton } from "./CopyButton";
 import { GithubIcon } from "./Icons";
 import { Container, PrimaryButton, SectionHeading } from "./ui";
@@ -30,17 +30,17 @@ function CodeBlock({ text }: { text: string }) {
 
 export function Install() {
   return (
-    <section id="install" className="border-t border-rule">
+    <section id="install" className="bg-dark">
       <Container className="grid gap-10 py-20 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:gap-20">
-        <div className="flex flex-col items-start gap-6">
-          <SectionHeading>Try it on your own conversations.</SectionHeading>
+        <div className="flex flex-col items-start gap-6" data-reveal>
+          <SectionHeading>Try it on your own sessions.</SectionHeading>
           <p className="font-body text-lg leading-[1.55] text-text-2">Start from Claude Code, Codex or Cursor.</p>
           <PrimaryButton href={links.github} className="gap-2.5">
             <GithubIcon size={18} />
             Get the skill
           </PrimaryButton>
         </div>
-        <ol className="flex min-w-0 flex-col gap-7">
+        <ol className="flex min-w-0 flex-col gap-7" data-reveal style={{ "--reveal-delay": "80ms" } as CSSProperties}>
           <Step n={1} title="Ask your assistant to install it">
             <CodeBlock text={INSTALL_PROMPT} />
           </Step>

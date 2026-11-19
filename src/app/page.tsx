@@ -7,6 +7,7 @@ import { Install } from "@/components/Install";
 import { Nav } from "@/components/Nav";
 import { Opportunities } from "@/components/Opportunities";
 import { Privacy } from "@/components/Privacy";
+import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 export default function Home() {
   return (
@@ -22,6 +23,7 @@ export default function Home() {
         <Faq />
       </main>
       <Footer />
+      <RevealOnScroll />
     </>
   );
 }

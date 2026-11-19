@@ -9,7 +9,7 @@ const navLinks = [
 export function Nav() {
   return (
     <header className="sticky top-0 z-50 border-b border-rule bg-paper">
-      <nav className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-6 px-5 py-6 md:px-10 xl:px-[120px]">
+      <nav className="mx-auto flex w-full max-w-[1440px] items-center justify-between gap-6 px-5 py-5 md:px-10 xl:px-[120px]">
         <a href="#top" className="flex min-h-11 items-center gap-3">
           <Wordmark className="h-7 w-auto md:h-8" />
         </a>

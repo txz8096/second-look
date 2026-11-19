@@ -32,9 +32,8 @@ export function Kicker({
 }
 
 const headingSizes = {
-  default: "text-[36px] leading-[1.08] tracking-[-0.9px] md:text-[48px] md:tracking-[-1.2px]",
-  compact: "text-[32px] leading-[1.12] tracking-[-1px] md:text-section",
-  small: "text-[32px] leading-[1.08] tracking-[-0.9px] md:text-4xl",
+  default: "text-[36px] leading-[1.08] tracking-[-0.9px] md:text-[44px] md:tracking-[-1.1px]",
+  small: "text-[28px] leading-[1.08] tracking-[-0.7px] md:text-[32px] md:tracking-[-0.8px]",
 };
 
 export function SectionHeading({ children, className = "", size = "default" }: { children: ReactNode; className?: string; size?: keyof typeof headingSizes }) {

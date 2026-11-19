@@ -1,6 +1,6 @@
 import { ArrowUpRight, Minus, Plus } from "lucide-react";
 import { links } from "@/lib/site";
-import { Container, Kicker, SectionHeading } from "./ui";
+import { Container, SectionHeading } from "./ui";
 
 const faqs = [
   {
@@ -19,16 +19,15 @@ const faqs = [
 
 export function Faq() {
   return (
-    <section id="faq" className="border-t border-rule bg-paper">
+    <section id="faq" className="bg-paper">
       <Container className="flex flex-col gap-8 py-16">
-        <Kicker>FAQ</Kicker>
-        <div className="flex flex-wrap items-center justify-between gap-6">
-          <SectionHeading size="small">A few practical questions</SectionHeading>
+        <div className="flex flex-wrap items-center justify-between gap-6" data-reveal>
+          <SectionHeading size="small">FAQ</SectionHeading>
           <a href={`${links.github}#faq`} className="inline-flex min-h-11 items-center gap-2 font-body text-base text-accent underline-offset-4 hover:underline">
             More on GitHub <ArrowUpRight size={18} aria-hidden="true" />
           </a>
         </div>
-        <div>
+        <div data-reveal>
           {faqs.map((item) => (
             <details key={item.q} className="group border-b border-rule py-6 last:border-b-0">
               <summary className="flex min-h-11 cursor-pointer list-none items-center gap-8 [&::-webkit-details-marker]:hidden">

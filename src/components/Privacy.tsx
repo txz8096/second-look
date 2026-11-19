@@ -1,12 +1,11 @@
 import { ArrowUpRight } from "lucide-react";
 import { links } from "@/lib/site";
-import { Container, Kicker, SectionHeading } from "./ui";
+import { Container, SectionHeading } from "./ui";
 
 export function Privacy() {
   return (
-    <section id="privacy" className="border-t border-rule bg-surface">
-      <Container className="flex flex-col gap-5 py-16">
-        <Kicker>Privacy</Kicker>
+    <section id="privacy" className="bg-paper">
+      <Container className="flex flex-col gap-5 py-18" data-reveal>
         <div className="flex flex-wrap items-center justify-between gap-6">
           <SectionHeading size="small">No server. No account.</SectionHeading>
           <a href={`${links.github}#privacy`} className="inline-flex min-h-11 items-center gap-2 font-body text-base text-accent underline-offset-4 hover:underline">
