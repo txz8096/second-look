@@ -34,7 +34,7 @@ export function Install() {
       <Container className="grid gap-10 py-20 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:gap-20">
         <div className="flex flex-col items-start gap-6" data-reveal>
           <SectionHeading>Try it on your own sessions.</SectionHeading>
-          <p className="font-body text-lg leading-[1.55] text-text-2">Start from Claude Code, Codex or Cursor.</p>
+          <p className="font-body text-base leading-[1.55] text-text-2">Start from Claude Code, Codex or Cursor.</p>
           <PrimaryButton href={links.github} className="gap-2.5">
             <GithubIcon size={18} />
             Get the skill

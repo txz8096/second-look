@@ -15,10 +15,10 @@ export function Hero() {
               Early access
             </span>
           </div>
-          <h1 className="hero-in font-display text-[40px] leading-[1.04] font-bold tracking-[-1.4px] text-ink md:text-5xl md:tracking-[-1.5px]" style={{ "--hero-delay": "80ms" } as CSSProperties}>
+          <h1 className="hero-in font-display text-[40px] leading-[1.04] font-bold tracking-[-1.4px] text-ink md:text-[44px] md:tracking-[-1.5px]" style={{ "--hero-delay": "80ms" } as CSSProperties}>
             Performance review for your AI workflow
           </h1>
-          <p className="hero-in pt-1 font-body text-xl leading-[1.55] text-text-2" style={{ "--hero-delay": "160ms" } as CSSProperties}>
+          <p className="hero-in pt-1 font-body text-base leading-[1.55] text-text-2" style={{ "--hero-delay": "160ms" } as CSSProperties}>
             Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try.
           </p>
           <div className="hero-in flex flex-wrap items-center gap-3 pt-3" style={{ "--hero-delay": "240ms" } as CSSProperties}>

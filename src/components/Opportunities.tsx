@@ -15,12 +15,8 @@ export function Opportunities() {
     <section id="opportunities" className="bg-paper">
       <Container className="grid gap-10 py-[68px] lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:gap-20">
         <div className="flex flex-col items-start gap-6" data-reveal>
-          <SectionHeading>
-            Spend less time<br className="hidden lg:block" />{" "}
-            on the same<br className="hidden lg:block" />{" "}
-            problems
-          </SectionHeading>
-          <p className="font-body text-lg leading-[1.55] text-text-2">Use AI for recurring work? See if any of these sound familiar.</p>
+          <SectionHeading>Spend less time on the same problems</SectionHeading>
+          <p className="font-body text-base leading-[1.55] text-text-2">Use AI for recurring work? See if any of these sound familiar.</p>
           <PrimaryButton href={links.sampleReport} className="py-4">
             Sample report <ArrowRight size={18} aria-hidden="true" />
           </PrimaryButton>
@@ -33,8 +29,8 @@ export function Opportunities() {
               data-reveal
               style={{ "--reveal-delay": `${i * 80}ms` } as CSSProperties}
             >
-              <h3 className="font-display text-2xl leading-[1.2] font-semibold tracking-[-0.5px] text-ink">{benefit.title}</h3>
-              <p className="font-body text-lg leading-normal text-text-2">{benefit.body}</p>
+              <h3 className="font-display text-[22px] leading-[1.2] font-semibold tracking-[-0.5px] text-ink">{benefit.title}</h3>
+              <p className="font-body text-base leading-normal text-text-2">{benefit.body}</p>
             </li>
           ))}
         </ul>

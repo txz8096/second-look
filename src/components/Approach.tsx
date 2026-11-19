@@ -23,11 +23,11 @@ export function Approach() {
               data-reveal
               style={{ "--reveal-delay": `${i * 80}ms` } as CSSProperties}
             >
-              <h3 className="flex items-center gap-2.5 font-display text-2xl leading-tight font-semibold tracking-[-0.4px] text-ink">
-                <span aria-hidden="true" className="tracking-normal">{behavior.emoji}</span>
+              <h3 className="flex items-center gap-2.5 font-display text-[22px] leading-tight font-semibold tracking-[-0.4px] text-ink">
+                <span aria-hidden="true" className="text-2xl tracking-normal">{behavior.emoji}</span>
                 {behavior.label}
               </h3>
-              <p className="font-body text-lg leading-[1.55] text-text-2">{behavior.description}</p>
+              <p className="font-body text-base leading-[1.55] text-text-2">{behavior.description}</p>
             </li>
           ))}
         </ul>
