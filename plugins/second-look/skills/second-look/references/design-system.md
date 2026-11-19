@@ -34,7 +34,7 @@ Pink marks the things to act on: fix panels, the fix-review group headers, the c
 
 ## Type
 
-Familjen Grotesk for everything; IBM Plex Mono for code and quoted prompts. Headings 700, letter-spacing
+Inter for body text and Manrope for headings. Use JetBrains Mono for code and quoted prompts. Headings 700, letter-spacing
 -0.025em.
 
 | Role | Size |
@@ -47,7 +47,7 @@ Familjen Grotesk for everything; IBM Plex Mono for code and quoted prompts. Head
 | Labels (sentence case, weight 500, muted), code, small notes | 13px |
 | Chips | 12px |
 
-Running text, tables, charts and code blocks all use the full column. Pasted text and the automation counts are set in IBM Plex Mono; a quoted prompt sits on a neutral rule beside what came of it.
+Running text, tables, charts and code blocks all use the full column. Pasted text and the automation counts are set in JetBrains Mono; a quoted prompt sits on a neutral rule beside what came of it.
 
 No uppercase labels. On phones (680px and narrower) the template raises the floor: small text 14px, card body 16px, chart axis text 12px, and buttons, chips and
 section toggles at least 44px tall, and Copy sits in the block's left corner, clear of the

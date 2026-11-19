@@ -9,7 +9,7 @@ import argparse, datetime as dt, hashlib, html as htmllib, json, os, re, shutil,
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_TEMPLATE = os.path.join(os.path.dirname(HERE), "report-template.html")
 
-FONT_LINK = "family=Familjen+Grotesk:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500"
+REPORT_FONTS = ("Inter", "Manrope", "JetBrains Mono")
 REQUIRED_IDS = ["overview", "side", "part-1", "part-2", "part-3", "trends", "report-issue"]
 SECTION_ORDER = ["overview", "part-2", "part-3", "part-1"]
 REQUIRED_TEXT = [
@@ -241,8 +241,9 @@ def main():
         problems.append('missing <meta charset="utf-8">; without it browsers garble the dashes, dots and quotes')
     if not re.search(r'<meta name="viewport" content="width=device-width', html, re.I):
         problems.append('missing <meta name="viewport">; without it phones shrink the report to desktop width and the text is too small to read')
-    if FONT_LINK not in html:
-        problems.append("missing the Google Fonts link for Familjen Grotesk and IBM Plex Mono")
+    for font in REPORT_FONTS:
+        if f'@font-face {{ font-family: "{font}"; src: url(data:font/woff2;base64,' not in html:
+            problems.append(f"missing embedded report font: {font}")
     if 'class="brand-logo"' not in html:
         problems.append("missing the Second Look logo in the header")
     if 'rel="icon"' not in html:

@@ -456,7 +456,7 @@ that are only Behind sharing one row. What you could automate next: every repeat
 **Design rules.** `report-template.html` is the design. `references/design-system.md`
 explains its tokens, type, radii, structure and the parts removed on purpose.
 
-- Copy the template. Keep its viewport line, `<style>` block, favicon and font links, logo and
+- Copy the template. Keep its viewport line, `<style>` block, favicon and embedded fonts, logo and
   scripts exactly as they are. The viewport line and the styles are what make the report
   readable on a phone. Don't add CSS, inline styles, colors or fonts. If something doesn't fit,
   use an existing component or leave it out.
