@@ -814,8 +814,8 @@ on a preflight message. Retain older included history when only the recent windo
 
 Time is a dropdown with 4 weeks, 3 months, 6 months, 12 months, All history and a custom From/To range. From/To starts at the earliest saved week.
 App, Work and Project use single-select dropdowns. Keep Time, App, Work, Project, Clear and the right-aligned session count in one desktop row when
-space permits; coverage goes underneath. Phones keep Time/count together and wrap the
-App, Work and Project controls with 44px touch targets. Clear resets the report default date range,
+space permits; coverage goes underneath. Phones give Time, App, Work and Project a row each,
+labels in one column and 44px controls filling the rest, with Clear and the count on the last row. Clear resets the report default date range,
 All apps, All work and All projects. Presets apply immediately; custom dates apply together only when valid.
 Escape or outside dismissal abandons draft dates. Both dates are required and From cannot
 follow To; the saved report bounds the available dates. The collector's daily totals make

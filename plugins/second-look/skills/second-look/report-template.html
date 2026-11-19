@@ -395,6 +395,11 @@ body[data-page="part-1"] .side-group > a.on, body[data-page="part-1"] .side-grou
     background: var(--surface);
     color: var(--fg);
   }
+  /* the same chevron as the other menus, in place of the browser's triangle */
+  .schedule-fields select::picker-icon { content: ""; align-self: center; width: 16px; height: 16px; background: var(--muted); transition: transform .15s;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / contain no-repeat; }
+  .schedule-fields select:open::picker-icon { transform: rotate(180deg); }
   .schedule-fields option { padding: 8px 12px; border-radius: 4px; }
   .schedule-fields option:checked { color: var(--accent); }
   .schedule-fields option:is(:hover, :focus-visible) { background: var(--accent-soft); }
@@ -516,7 +521,8 @@ details.last-fix > summary:hover .fix-name { color: var(--accent); }
 .last-fix > p { padding: 0 16px 16px; font-size: 13px; line-height: 1.45; color: var(--muted); }
 
 /* pattern cards */
-.icard { display: grid; gap: 16px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-14); scroll-margin-top: 24px; }
+/* one column that can shrink: a wide chart inside scrolls or fits, and never widens the page */
+.icard { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-14); scroll-margin-top: 24px; }
 .ic-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 6px 12px; align-items: start; }
 .ic-head .ic-tags { grid-column: 2; }
 .ic-head .rank { grid-row: 1 / span 2; }
@@ -821,7 +827,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   a.feedback { padding: 8px; white-space: nowrap; }
   button.theme-btn { width: 40px; height: 44px; }
   a.report-opt { min-height: 44px; box-sizing: border-box; }
-  .report-pick-t { display: none; }
+  .report-pick-t, .report-year { display: none; }
   .wrap { padding: 24px max(16px, env(safe-area-inset-right, 0px)) 48px max(16px, env(safe-area-inset-left, 0px)); }
   .opening h1 { font-size: 28px; }
   a.dest { flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -845,15 +851,13 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .tl-status { text-align: left; }
   .tl-status .term[data-align="end"] .term-card { left: 0; right: auto; }
   .tl-axis > span:first-child, .tl-axis > span:last-child { display: none; }
-  .filters > .time-filter { order: 0; flex: 1 0 calc(100% - 140px); min-width: 0; }
-  .time-filter #f-range { flex: 1; min-width: 0; max-width: 142px; }
-  #f-range-value { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .filters > .fsum { order: 1; }
-  .filters > .app-filter, .filters > .work-filter, .filters > .project-filter, .filters > #f-reset { order: 2; }
-  .filters > .project-filter { flex-basis: 100%; }
-  .filters select { max-width: 100%; }
-  .project-filter select { flex: 1; }
-  .filters > .coverage-hint { order: 3; }
+  /* one filter per row, labels in one column and controls filling the rest; Clear and the count share the last row */
+  .filters { gap: 8px 12px; }
+  .filters > .fgroup { flex: 1 1 100%; gap: 0; }
+  .filters .flabel { width: 64px; margin-right: 0; }
+  .filters select, .time-filter #f-range { flex: 1; width: auto; min-width: 0; max-width: none; }
+  .filters > #f-reset, .filters > .fsum { order: 1; }
+  .filters > .coverage-hint { order: 2; }
   .range-dates input { min-height: 44px; font-size: 16px; }
   .skill-benefits { grid-template-columns: 1fr; }
   pre { padding: 40px 12px 12px; }
@@ -861,7 +865,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .chart svg text { font-size: 12px; }
   .term { text-underline-offset: 5px; }
   /* type floor: nothing under 13px, secondary text 14px */
-  .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval { font-size: 13px; }
+  .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval, .work-mix-week, .work-mix-week:hover, .work-mix-week:active { font-size: 13px; }
   .def, .sum-meta, .part-meta, .fsum, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
     .side-about, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
   .tl-name, .ic-summary, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
@@ -874,6 +878,19 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 @media (max-width: 600px) {
   .body { padding-left: 4px; }
   .auto-row { grid-template-columns: 1fr; gap: 4px; }
+  /* the 13 weeks fit the card instead of scrolling; every third week keeps its date, ending on the latest */
+  .work-mix-bars { grid-template-columns: repeat(13, minmax(0, 1fr)); gap: 3px; }
+  .work-mix-week, .work-mix-week:hover, .work-mix-week:active { grid-template-columns: minmax(0, 1fr); grid-template-rows: 140px auto; }
+  .work-mix-stack { width: 80%; }
+  .work-mix-week > span:last-child { justify-self: center; white-space: nowrap; }
+  .work-mix-week:first-child > span:last-child { justify-self: start; }
+  .work-mix-week:last-child > span:last-child { justify-self: end; }
+  .work-mix-week:not(:nth-child(3n+1)) > span:last-child { visibility: hidden; }
+  /* share bars: room for a two-word name on one line */
+  .brow { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 44px; }
+  /* a habits table with one value per row puts it on the name's line */
+  #part-1 table.stack:not(.unlabeled) tr:has(> td:nth-child(2):last-child) > td:nth-child(2) { grid-column: 2; grid-row: 1; display: block; padding: 0; text-align: right; }
+  #part-1 table.stack:not(.unlabeled) tr:has(> td:nth-child(2):last-child) > td:nth-child(2)::before { margin-right: 8px; }
   /* without scripts, tables scroll sideways */
   .tbl table { min-width: 600px; }
   /* with scripts, each row becomes a card: the first cell leads, the rest read "label  value" */
@@ -902,13 +919,12 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   #part-3 > section table.stack td > .v { display: inline; }
 }
 @media (max-width: 400px) {
-  .report-year { display: none; }
   .brand-logo { height: 22px; }
 }
 /* the smallest phones: everything in the bar gives up a little so the switch still fits */
 @media (max-width: 360px) {
   .bar-brand { gap: 8px; padding: 0 4px 0 12px; }
-  .brand-logo { height: 20px; }
+  .brand-logo { height: 18px; }
   .bar-actions { gap: 0; }
   a.feedback { padding: 8px 4px; }
   button.theme-btn { width: 32px; }
