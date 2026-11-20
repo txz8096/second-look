@@ -824,7 +824,8 @@ why an unsupported partial-week range cannot apply. Never split or prorate real 
 Keep app/work/project selections when time changes. Counts, charts and share tables use the same
 selection. Project options show every project in the saved data, ordered by session count, with Unknown last.
 Claude Code, Codex and Cursor use verified local folder metadata, including ordinary non-Git
-folders. Repository subfolders and worktrees map to their repository root. Native project membership
+folders. Folders an app creates per document or chat (named with a random ID) and scratch folders are
+not projects. Repository subfolders and worktrees map to their repository root. Native project membership
 in cloud exports remains unverified and is not inferred. Unknown means no usable membership metadata.
 Matching names combine across apps after case, spacing and hyphen normalization. Project IDs stay
 separate from display labels. Keep full paths out of stored mappings and reports.

@@ -55,6 +55,31 @@ class ProjectHistoryTests(unittest.TestCase):
             self.assertIsNone(folder_identity(home,home=home))
             self.assertIsNone(folder_identity(str(Path(home)/'.codex/scratch/chat-1'),home=home))
 
+    def test_app_generated_id_folders_are_unknown_and_old_mappings_are_dropped(self):
+        with tempfile.TemporaryDirectory() as home:
+            doc = Path(home)/'.pencil/documents/607a66f8-ee87-48be-b4af-1b641b85205b'; doc.mkdir(parents=True)
+            plain = Path(home)/'MAT study'; plain.mkdir()
+            self.assertIsNone(folder_identity(str(doc),home=home))
+            self.assertIsNone(folder_identity(str(doc/'assets'),home=home))
+            self.assertTrue(folder_identity(str(plain),home=home))
+            # A Git repository still counts even when an ID sits in its path.
+            repo = doc/'site'; (repo/'.git').mkdir(parents=True)
+            self.assertEqual(folder_identity(str(repo),home=home)['name'],'site')
+            # Mappings an earlier version saved for ID folders are dropped on load; others survive.
+            old = ProjectStore()
+            stale = old.register('claude_code','folder:a',doc.name)
+            kept = old.folder('claude_code',str(plain),home=home)
+            renamed = old.register('claude_code','folder:b','1df991d6-d708-4f53-aaf8-64098f9f9f8c')
+            old.data['projects'][old.project_for(renamed)].update(label='Pencil drafts',renamed=True)
+            old.data['paths']['claude_code:x'] = stale
+            path = Path(home)/'projects.json'; path.write_text(json.dumps(old.data))
+            store = ProjectStore(str(path))
+            self.assertEqual(store.project_for(stale),'')
+            self.assertNotIn(stale,store.data['paths'].values())
+            self.assertEqual(sorted(store.labels().values()),['MAT study','Pencil drafts'])
+            self.assertEqual(store.project_for(kept),old.project_for(kept))
+            self.assertEqual(store.folder('claude_code',str(doc),home=home),'')
+
     def test_old_kind_of_work_ids_are_renamed_on_load(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp)/'history.json'
@@ -97,6 +122,20 @@ class ProjectHistoryTests(unittest.TestCase):
             self.assertEqual(sum(r['sessions'] for r in full),2)
             self.assertEqual(full[0]['project'],store.project_for(member))
             self.assertEqual(history.update(sessions,store,collect.session_cube),full)
+
+    def test_legacy_name_keyed_rows_join_their_project(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path=Path(tmp)/'history.json'; store=ProjectStore()
+            member=store.register('codex','folder:x','second-look')
+            old=collect.session_cube([self.session('a','2023-01-02T12:00:00'),self.session('b','2023-01-03T12:00:00')])
+            for row in old: row['project']='second-look'
+            other=[dict(r,project='Elsewhere') for r in old]
+            path.write_text(json.dumps(old+other))
+            history=HistoryStore(str(path))
+            cube=history.update([],store,collect.session_cube)
+            self.assertEqual({r['project'] for r in cube},{store.project_for(member),'Elsewhere'})
+            self.assertEqual(sum(r['sessions'] for r in cube),4)
+            self.assertEqual({r['project'] for r in history.data['legacy']},{'second-look','Elsewhere'})
 
     def test_cli_three_year_history_is_repeatable(self):
         with tempfile.TemporaryDirectory() as home:

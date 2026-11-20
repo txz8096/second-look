@@ -1,61 +1,134 @@
-# Project filter
+# Project filter and available history
 
-Status: implemented and verified on 2026-11-13; shipping as v0.5.0. Ships before Your views
-(`your-views-spec-2026-11-13.md`), which can then save a project in a view's filter.
+Status: revised decisions approved by Melissa on 2026-11-13. Implemented in v0.6.0 (`8a68d30`,
+2026-11-15): non-Git folders in Claude Code, Codex and Cursor, automatic grouping with separate,
+merge and rename, source-preserving backfill and All history. Fixed 2026-11-19: folders an app names
+with a random ID (for example `~/.pencil/documents/<uuid>`) are Unknown, and history rows saved before
+project IDs join the project with the same name. Still open: native project membership in apps and
+cloud exports, which no adapter reads yet. The previous Git-only release record is retained below.
+Your views (`your-views-spec-2026-11-13.md`) uses the same project identities and time controls.
 
 ## Goal
 
-Let every user filter the report by project, next to Time, App and Work. This is a standard
-report filter for all users, not a customization feature.
+Follow the user's existing project organization across apps, without requiring Git or GitHub.
+Automatically combine matching projects and let users correct exceptions. Let users explore all
+available history, including more than 12 months.
 
 ## How a session gets its project
 
-Claude Code and Codex record each session's working folder as `cwd` (checked in one log from
-each, 2026-11-13). Cursor and Antigravity haven't been checked. The collector now reads `cwd` for Claude Code and Codex. Other apps remain
-under "Unknown" until their folder metadata is verified.
+Use explicit app project membership first, then a user-selected workspace/project folder. A plain
+folder qualifies without Git. When only a working directory is recorded, resolve a verified workspace
+root or repository root where possible; subfolders are not automatically separate projects. Worktrees
+map to their main repository. Do not infer project membership from conversation topics.
 
-A folder name alone isn't a reliable project. Some apps create a new folder for every chat
-(Codex desktop uses dated scratch folders), and many people keep a general-purpose folder for
-unrelated work. Rule:
+Known generated scratch folders, general home directories and sessions without usable project
+metadata appear under **Unknown**. This means Second Look could not identify the project, not that
+the user never assigned one. Unknown remains the final dropdown option.
 
-- **Inside a git repository:** the repository's top-level folder name. Worktrees map to their
-  main repository.
-- **Anywhere else** (home folder, scratch folders, plain folders): "Unknown".
-- **Apps or exports with no folder** (claude.ai, ChatGPT, Gemini): "Unknown".
-- Only the name is kept, never the full path.
+Claude Code and Codex currently supply `cwd` to the collector. Inspect real, consented fixtures for
+native project IDs/names and workspace roots in each supported app and export before implementing its
+adapter. The presence of Projects in an app does not prove its exports include membership. Missing
+metadata remains Unknown; do not claim an app cannot supply projects without verifying it.
 
-Why git repositories: a repository is the clearest sign that a folder is a project. Using every
-folder name would fill the list with one-off chat folders. The cost: sessions about a project
-that ran outside its repository don't count toward it. The measurement below shows how big that
-cost is.
+Project and employer names may appear in private reports. Full filesystem paths must not appear in
+reports; public samples use fictional names.
 
-**Measure before shipping:** run the collector on real logs and report, per app, the share of
-sessions with no project. If an app's sessions mostly have none, the docs say the filter works
-best for that app's sessions run inside a repository.
+## Automatic grouping and corrections
 
-## Data
+Automatically combine matching project names across apps without a confirmation prompt. As the
+initial deterministic matching rule, normalize case, surrounding/repeated whitespace, and hyphens
+versus spaces: `Second Look`, `second-look` and `second look` form one project. Keep the original
+labels and source membership internally. Do not use fuzzy/topic similarity to merge different names.
+This normalization is an implementation proposal to verify with fixtures, not a separately approved
+user decision.
 
-Weekly cube rows use `project` as a key next to `week`, `source` and `category`, with the same
-additive `days` totals. Older rows in `history.json` have no project. They stay as they are,
-count under "Unknown", and are never split or guessed.
+A name is a display label, not the durable identity. Keep stable source IDs when available and a
+persistent local mapping from source identities to a canonical project ID. Names alone must not erase
+source distinctions: users need to be able to undo an automatic grouping without losing history.
 
-## Report
+- Matching names combine by default, including coincidentally matching names. If the user says two
+  are unrelated, persist a separation override and add an app or short workspace label as needed.
+- Explicit user merge/separation/rename mappings take priority over automatic name matching on every run.
+- A native project rename with the same source ID preserves history and saved views.
+- Folder moves/renames preserve identity when verified. If continuity cannot be established, offer
+  “Same project?” rather than silently reassigning history based on a guess.
+- Different names can be combined through a user instruction; remember the aliases.
+- Saved views use canonical IDs, so changing a display name does not break them. Merges retain redirects
+  from old IDs. If a user splits a project, ask which resulting group a saved view should track; until
+  resolved, show an explanation instead of choosing silently.
 
-A Project dropdown joins Time, App and Work and follows the approved filter rules: counts, charts
-and share tables use one selection; Clear resets to All projects; filtered-empty copy
-names the outside count. Named projects are ordered by session count; Unknown stays last as a separate option.
-Melissa approved the concise Unknown label and this placement on 2026-11-13.
+The exact mapping schema and location are implementation work. Preserve enough source-level history
+to recompute groups after a correction; storing only combined totals would make separation impossible.
 
-## Acceptance criteria
+## Data and backfill
 
-1. Picking a project changes the counts, charts and share tables together and keeps the Time,
-   App and Work choices.
-2. Clear resets to All projects.
-3. Older history rows without a project count under "Unknown" and are never dropped.
-4. Two worktrees of one repository show as one project.
-5. No full path appears anywhere in the report.
+Weekly cube rows retain project alongside week, source and category, with additive daily totals.
+Backfill means rereading available older raw sessions to recover their recorded project metadata;
+it does not mean inventing older data or extending the time window by itself.
 
-## Local implementation choices
+Replace corresponding aggregate rows when rebuilding from raw sessions; never add the rebuilt rows
+on top of existing totals. Preserve older aggregate history whose raw sessions are no longer available.
+Rows whose project cannot be recovered remain Unknown. Repeated backfills must not change totals or
+duplicate sessions. Project resolution should use stored mappings when the original folder is gone;
+without sufficient evidence it remains Unknown.
+
+## Time filter: all available history
+
+Remove the fixed 12-month/52-week ceiling throughout collection, history merging, report embedding,
+chart indexing, date bounds and validation. Keep the existing 4-week, 3-month, 6-month and 12-month
+presets, and add **All history**. Custom From/To dates can span the earliest available history through
+the latest eligible date. Keep the existing 12-month default and complete-week boundary for now;
+12 months is a default view, not a retention limit.
+
+Never truncate stored history solely because it is older than a year. Reuse saved aggregates and
+incrementally collect new data; historical recovery can reread available raw logs. Do not change the
+host app's raw-log retention settings automatically. Missing periods remain unmeasured, never fabricated
+zeros. Show the actual available date range. With no history, show an empty state.
+
+Project options come from available report history, not imaginary or deleted data. A selected time
+range with no matching sessions shows an empty state without discarding the project selection.
+Saved views remain visible with an explanation when their project has no data in the report.
+
+## Report scope
+
+Time, App, Work and Project filter Habits & usage counts, charts and share tables together. They do
+not filter report-wide findings or fixes. Place and explain the controls so their scope is clear.
+Clear resets Project to All projects and retains the report's documented reset behavior for other
+controls. Named projects sort by session count; Unknown stays last and appears only when represented.
+No lossy “Other projects” bucket.
+
+Your views uses the same all-history time controls, with each view's saved App/Work/Project selection.
+
+## Acceptance criteria for the revision
+
+1. Explicit native projects and verified user-selected non-Git folders can identify sessions.
+2. Temporary/unresolved locations appear as Unknown; full paths never appear in reports.
+3. Matching names across apps automatically form one project; separation overrides survive reruns.
+4. Verified renames preserve history and saved views; two worktrees map to their main project.
+5. Backfill recovers available historical metadata without duplicating totals; unavailable metadata
+   stays Unknown and existing aggregate history is preserved.
+6. A synthetic dataset spanning at least three years remains intact across collect/merge/render/check.
+   All history and a custom range older than 12 months show the correct values.
+7. Existing presets, exact-date filtering, reset behavior and minimum sample rules still work.
+8. Filtering changes counts, charts and share tables together, without filtering findings or fixes.
+9. A saved project missing from current data produces an explanation, not a fatal report error.
+10. Test empty, sparse and long histories, same-name collisions, cross-app matching, rename, split,
+    merge, missing raw logs and deleted folders. Measure real per-app Unknown coverage, project sample
+    sizes, report size and render time; do not set an arbitrary coverage cutoff.
+
+## Implementation and surface checklist
+
+- Collector: verify adapters, implement persistent identities/overrides and source-preserving backfill.
+- History: remove truncation, replace rebuilt aggregates safely, preserve provenance needed for splits.
+- Template/checker/tests: dynamic history bounds, All history, project IDs and missing-data states.
+- Wonder: preview one existing canvas with the extended Time menu before applying matching screens.
+- Skill/design guidance, README, glossary and relevant website copy: update only when behavior ships.
+  Current Git-only and 12-month descriptions remain descriptions of the existing product until then.
+- Release zip: a new skill release is needed when implementation lands. Retake the landing preview
+  only if Overview changes. Check plugin descriptions and GitHub About for affected promises; ask
+  before changing the public About box.
+
+## Previous Git-only implementation record (2026-11-13)
 
 - Desktop order: Time, App, Work, Project, Clear, count, matching the launched canvas.
   App is now a single-select dropdown like Work. The existing shared filter row moves with

@@ -30,6 +30,18 @@ def label(value):
     return re.sub(r"[\x00-\x1f/\\]", " ", str(value)).strip()[:120]
 
 
+GENERATED_ID = re.compile(r"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", re.I)
+
+
+def generated_id(name):
+    """Apps name per-document folders with random IDs (e.g. ~/.pencil/documents/<uuid>); nobody names a project that way."""
+    return bool(GENERATED_ID.fullmatch(name or ""))
+
+
+def in_generated_folder(path):
+    return isinstance(path, str) and any(generated_id(part) for part in Path(os.path.realpath(path)).parts)
+
+
 def lock_state(directory):
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)
@@ -62,7 +74,7 @@ def folder_identity(cwd, roots=None, home=None):
     cwd = os.path.realpath(cwd)
     generic = {home, os.path.dirname(home), "/", "/tmp", "/private/tmp", "/workspace"}
     generic.update(os.path.join(home, d) for d in ("Desktop", "Documents", "Downloads"))
-    generated = bool(re.search(r"/(?:\.codex/(?:scratch|worktrees)|\.claude/(?:scratch|worktrees))/", cwd)) or (not cwd.startswith(home + os.sep) and bool(re.search(r"/(?:T/|tmp/|private/tmp/)", cwd)))
+    generated = bool(re.search(r"/(?:\.codex/(?:scratch|worktrees)|\.claude/(?:scratch|worktrees))/", cwd)) or (not cwd.startswith(home + os.sep) and bool(re.search(r"/(?:T/|tmp/|private/tmp/)", cwd))) or in_generated_folder(cwd)
     candidates = [os.path.realpath(r) for r in roots or [] if isinstance(r, str) and os.path.isabs(r)]
     candidates = [r for r in candidates if cwd == r or cwd.startswith(r + os.sep)]
     root = min(candidates, key=len) if candidates else cwd
@@ -107,6 +119,22 @@ class ProjectStore:
             if data.get("version") != 1 or any(not isinstance(data.get(k), dict) for k in self.data if k != "version"):
                 raise ValueError("Invalid projects.json; left unchanged")
             self.data = data
+        self.forget_generated()
+
+    def forget_generated(self):
+        """Drop ID-named folder projects saved before they were treated as generated, unless the user renamed or merged them."""
+        def kept(member):
+            project = self.data["projects"].get(self.project_for(member), {})
+            return project.get("renamed") or not generated_id(project.get("label"))
+        stale = {m for m, v in self.data["members"].items() if generated_id(v.get("name")) and not kept(m)}
+        for member in stale:
+            del self.data["members"][member]
+        for table in ("paths", "files"):
+            self.data[table] = {k: v for k, v in self.data[table].items() if v not in stale}
+        used = {self.resolve(v["project"]) for v in self.data["members"].values()} | set(self.data["redirects"].values())
+        for project, value in list(self.data["projects"].items()):
+            if project not in used and project not in self.data["redirects"] and generated_id(value.get("label")) and not value.get("renamed"):
+                del self.data["projects"][project]
 
     def resolve(self, project):
         seen = set()
@@ -142,7 +170,8 @@ class ProjectStore:
         known = self.data["paths"].get(path_key)
         identity = folder_identity(cwd, roots, home)
         if not identity:
-            return known or ""
+            # A deleted folder keeps its saved project; a generated one never had one.
+            return "" if in_generated_folder(cwd) else known or ""
         file_key = source + ":" + identity["file_key"]
         root_key = source + ":" + identity["path_key"]
         member = known or self.data["paths"].get(root_key) or self.data["files"].get(file_key)
@@ -159,6 +188,13 @@ class ProjectStore:
 
     def project_for(self, member):
         return self.resolve(self.data["members"][member]["project"]) if member in self.data["members"] else ""
+
+    def project_named(self, name):
+        """The one project whose folders or label carry this name; rows saved before project IDs used names."""
+        wanted = normalize(name)
+        found = {self.project_for(m) for m, v in self.data["members"].items() if normalize(v.get("name", "")) == wanted}
+        found |= {p for p, v in self.data["projects"].items() if p not in self.data["redirects"] and normalize(v.get("label", "")) == wanted}
+        return found.pop() if len(found) == 1 else None
 
     def labels(self):
         return {k: v["label"] for k, v in self.data["projects"].items() if k not in self.data["redirects"]}

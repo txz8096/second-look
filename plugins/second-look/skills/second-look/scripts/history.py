@@ -92,7 +92,9 @@ class HistoryStore:
             fields = {k for r in old for k, v in r.items() if isinstance(v, (int, float))}
             complete = new and all(abs(sum(r.get(k, 0) for r in old) - sum(r.get(k, 0) for r in new)) < 1e-6 for k in fields)
             if not complete:
-                fresh_groups[key] = old
+                # Keep the saved rows as they are, but show a name key under its project so it isn't listed twice.
+                fresh_groups[key] = aggregate([dict(r, project=projects.project_named(r["project"]) or r["project"])
+                                               if r.get("project") and r["project"] not in projects.data["projects"] else r for r in old])
                 retained.extend(old)
                 self.notes.append({"week": key[0], "source": key[1], "reason": "Kept legacy totals: original session coverage could not be verified."})
         self.data["legacy"] = retained

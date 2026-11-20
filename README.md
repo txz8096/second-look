@@ -278,6 +278,7 @@ offers to keep a year. claude.ai, ChatGPT and Gemini cover sessions present in t
 weekly totals with daily breakdowns, so weeks your apps later delete stay in the trend. Custom date ranges use those daily totals; older weekly-only history supports complete weeks.
 In Habits & usage, Time, App, Work and Project filter charts and share tables, not findings or fixes.
 The collector recognizes local folders in Claude Code, Codex and Cursor without requiring Git.
+Folders an app creates for each document or chat, named with a random ID, count as “Unknown”.
 Matching names combine across apps; ask your assistant to separate, merge or rename a group.
 Saved project identities survive verified folder renames and previously recorded folder deletion.
 Full paths are not saved. Missing or unverified project metadata appears under “Unknown”. Native
