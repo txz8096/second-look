@@ -60,6 +60,8 @@ Ask for **“a Second Look”** or type `/second-look` in Claude Code. The first
 review starts with four short setup questions. You can narrow the scope by
 asking for “just my Cursor sessions” or “since Oct 1.” Reviews use your existing AI quota.
 
+Before each report, Second Look checks for an available skill update. When it finds one, it explains what changed and asks whether to use it for this review. Scheduled reviews keep running with the installed version when you’re away.
+
 After your first report, you can opt into a review every two weeks or choose
 another cadence. [Scheduling options](#faq) depend on where you run the skill.
 
@@ -141,6 +143,7 @@ To file one by hand instead, put `conversations.json` in `~/.second-look/exports
 ## Privacy
 
 - **Local collection with zero network requests.** The Python scripts read logs and exports on your computer and local reviews save reports in `~/.second-look/`. Your assistant processes the review through your model provider under your existing account settings.
+- **Update checks.** The installer and ZIP editions request public version information from GitHub. The check sends no session content.
 - **Automatic redaction.** Pattern matching removes common secrets such as API keys, tokens, and passwords before quoting sessions. Read the report before sharing it.
 - **No extra account or infrastructure.** Second Look uses the assistant you already have and has no server of its own.
 

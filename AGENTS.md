@@ -37,6 +37,8 @@ When Melissa says "ship it", list the files this ship commits before you decide 
 - **Nothing in that folder changed** (landing page UI, `public/` images, README, site styling, docs): commit, push to `main` and let the Pages deploy run. Don't bump the version, rebuild `second-look.zip` or create a GitHub Release.
 - **Anything in that folder changed** (`SKILL.md`, scripts, `report-template.html`, `references/`, the logo): commit, then ask before tagging or publishing: "Skill/report files changed — should I cut a new release and rebuild `second-look.zip`, or just push to `main`?" Do what she picks. If she picks just push, report the release zip as behind.
 
+When shipping changed skill contents, increment the integer in the skill’s `revision.json` and describe a concrete user benefit. This manifest lets reviews detect changes on main even between tagged releases.
+
 Pushing `report-template.html` updates the live sample report even without a release. A push that touches none of the paths in `.github/workflows/deploy-pages.yml` (a README-only change, for example) runs no deploy, which is expected. When you report a ship, say whether that folder still differs from the latest release tag (`git diff --name-only <tag> HEAD -- plugins/second-look/skills/second-look/`), so a release skipped earlier isn't forgotten.
 
 ## Data visualization design practice
