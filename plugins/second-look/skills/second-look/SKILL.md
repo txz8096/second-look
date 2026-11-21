@@ -73,7 +73,7 @@ message, so quote only what a finding needs.
 | File | What it holds |
 |---|---|
 | `profile.md` | Name, what they build, focus areas, where their context file and skills live |
-| `log.md` | One entry per review: snapshot, findings, the fixes they picked and how each will be judged |
+| `log.md` | One entry per review: snapshot, findings, the fixes they picked and how each will be judged, and goals worth retrying with the model each was last tried on |
 | `history.json` | Weekly habit rows with daily totals, kept longer than the apps keep their own logs |
 | `exports/claude/conversations.json`, `exports/chatgpt/conversations.json`, `exports/gemini/MyActivity.json` | Data exports for historical trends |
 | `reports/` | Saved reports, when they aren't published as artifacts |
@@ -268,6 +268,8 @@ and still works on current models.
    Cursor changelog and the Antigravity release notes. Use practitioner posts only to
    confirm details. Keep an item only if it changes one of their skills or their process,
    and name the skill, the exact edit, and the source with its date. "Nothing relevant" is a fine result.
+   Also note every new model released in the window that an app they use now offers, with its
+   date and source, for "Goals worth retrying on a new model" in "3. Repeat work".
 4. **Health check.** The description says when to trigger, in the user's words. SKILL.md is
    lean, with long material in references. Deterministic steps are scripts.
 5. **Tests.** If a skill has evals, rerun them when a model changed since the last review
@@ -406,7 +408,8 @@ Repeats are matched by shared words, so open each one before you cite it. Drop a
 the openers ask for different things that happen to share words, when an app wrote the
 request for them (a review-feedback handoff, a health check like "What is 2+2?"), or when the
 work is the same kind but the content always changes (a new essay each time is ordinary
-writing work). Say how many you dropped.
+writing work). Say how many you dropped. A dropped group that chases one improvement goal may
+still belong under "Goals worth retrying on a new model" below.
 
 For each repeat you keep, pick one fix. Ask in this order:
 
@@ -422,6 +425,27 @@ they say yes first.
 
 A repeat that came back 4 or more times in the last 4 weeks and cost real time is also a
 P1 habit: give it a card in "How you brief AI and set up your apps" so its fix gets a fix panel.
+
+**Goals worth retrying on a new model.** Some work comes back as the same goal in different
+words: making a page load faster, cutting a prompt's cost, tightening a layout, raising a test
+pass rate. A stronger model may get further on it. The recurring review is the schedule for
+this: every review checks for it, so never propose a separate task that watches for releases.
+
+1. Find goals. Look in the repeat groups you dropped and the prompt samples. Keep a goal when 3 or more sessions across at least 2 weeks worked toward
+   the same measurable result in one project, in any kind of work. Open the sessions to
+   confirm. Drop goals they marked done, and one-off fixes that happened to share words.
+2. Check the release scan. Keep a goal only when a model came out after its latest session and
+   an app where they pursued it now offers that model. Skip a goal already logged as tried on
+   that model.
+3. Give each goal you keep a card (see "The report"), biggest first by sessions spent, and at
+   most three.
+4. The fix prompt runs in the app where they pursued the goal, on the new model. It restates
+   the goal in their words, asks the AI to read what was tried before (the project, its notes,
+   recent changes), then to propose a plan of 3–5 experiments, each with what it changes and how
+   to measure it, and to change nothing until they pick one. Name the model and how to switch to
+   it in that app.
+5. Log each goal with the model it was last tried on, so the next review only brings it back
+   for a newer model. With no new model, log the goals and give them no card.
 
 ## 4. The report
 
@@ -602,6 +626,13 @@ something else could explain it. Hunch, thin evidence.
 - **Repeat work.** A P1 repeat from "3. Repeat work" gets a card whose fix panel sets up the
   schedule, hook or skill. In the fix line, say what it does ("runs on its own
   every Monday"), not the mechanism ("Stop hook").
+- **Retry on a new model.** A goal from "Goals worth retrying on a new model" gets a card
+  titled with the goal and the new model ("A new model could push your page speed further").
+  The evidence names the sessions spent on it with their window, the best result so far when a
+  session states one, and the model's release date with its source. The saving is in words
+  ("A fresh try at work you've spent 7 sessions on"), since the gain isn't known yet. The
+  fix panel's `.try-do` says the app proposes a plan of experiments and changes nothing until
+  they pick one. These cards go after the cards with a measured saving.
 
 Keep each fix's bet, metric and
 keep-it-if rule in the log.

@@ -1019,7 +1019,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   <section class="explore" aria-labelledby="explore-h">
     <h2 id="explore-h">Explore your report</h2>
     <div class="dests">
-      <a class="dest" href="#part-2"><span class="dest-text"><span class="dest-t">Briefs &amp; setup</span><span class="dest-d">Five fixes for your rules, prototype starts, final checks, long sessions and model choice.</span></span><span class="dest-go">View fixes<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
+      <a class="dest" href="#part-2"><span class="dest-text"><span class="dest-t">Briefs &amp; setup</span><span class="dest-d">Six fixes, led by your rules, prototype starts and final checks, plus three more.</span></span><span class="dest-go">View fixes<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
       <a class="dest" href="#part-3"><span class="dest-text"><span class="dest-t">Skills</span><span class="dest-d">Three of your seven skills give wrong information today.</span></span><span class="dest-go">Review skills<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
       <a class="dest" href="#part-1"><span class="dest-text"><span class="dest-t">Habits &amp; usage</span><span class="dest-d">How you brief, check, refine and use your apps over time.</span></span><span class="dest-go">View trends<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span></a>
     </div>
@@ -1030,7 +1030,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 <div class="part page" id="part-2" data-findings-state="available">
   <div class="part-head">
     <h2>How you brief AI and set up your apps</h2>
-    <p class="headline">Vague prototype starts take the most time. Syncing your rules is the quickest fix, so it comes first. Five fixes below.</p>
+    <p class="headline">Vague prototype starts take the most time. Syncing your rules is the quickest fix, so it comes first. Six fixes below.</p>
   </div>
 
 
@@ -1192,6 +1192,34 @@ First read ~/.claude/settings.json and my helper agent files, and tell me what's
 - Effort: leave it at the default, since it already adjusts to each step.
 
 Show me each change and the file it goes in, and wait for my yes before changing anything. Then read back what changed. If I correct a cheaper model twice, I'll move up a level.</pre></div></div></details>
+      <p class="fix-status" role="status" aria-live="polite"></p>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+    </section>
+  </article>
+
+  <article id="p-retry" class="icard">
+    <div class="ic-head"><span class="rank">6</span><h3>A new model could push your page speed further</h3>
+      <p class="ic-tags">Claude Code <span class="conf sugg">Likely</span></p></div>
+    <p class="ic-summary">You worked on load time for the portfolio site in 6 sessions, each with a different request. A new Opus model came out after your last attempt, so the same goal may go further with a fresh plan.</p>
+    <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
+      <div class="body"><dl class="ic-grid">
+        <div><dt>Evidence</dt><dd>In the last 4 weeks, 6 Claude Code sessions asked to make the portfolio site load faster, the latest on Oct 21. The best result a session stated was 2.4 seconds to first view. The new Opus model came out on Oct 22, per Anthropic’s release notes.</dd></div>
+        <div><dt>Why it matters</dt><dd>Each attempt started from scratch. A plan that builds on what you tried can test the new model on work you already care about.</dd></div>
+      </dl></div>
+    </details>
+    <section class="try" id="try-retry" aria-labelledby="try-retry-h" data-app="claude-desktop" data-app-name="Claude Code">
+      <h4 id="try-retry-h">Ask Claude Code, on the new Opus model, to plan your next round of page-speed experiments.</h4>
+      <p class="try-saves">A fresh try at work you’ve spent 6 sessions on<span class="saves-how">The gain isn’t known until you run an experiment.</span></p>
+      <p class="try-do">Approve opens Claude Code with this prompt. Claude Code proposes a plan of experiments and changes nothing until you pick one.</p>
+      <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+        <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>First switch this session to the newest Opus model with /model opus.
+
+Goal: make my portfolio site load faster. My best result so far is about 2.4 seconds to first view.
+
+Read the project, its notes and recent changes to see what I already tried and what worked. Then propose a plan of 3–5 experiments I haven't tried. For each one, say what it changes, how we'll measure it, and what result would make it worth keeping.
+
+Don't change any files yet. End by asking which experiment to run first.</pre></div></div></details>
       <p class="fix-status" role="status" aria-live="polite"></p>
       <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>

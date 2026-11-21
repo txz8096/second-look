@@ -74,6 +74,10 @@ _Avoid_: Retry, abandoned session
 An opening request that matches 3 or more earlier ones and was still typed by hand: no skill ran and no schedule started it. A candidate for a skill, a hook or a scheduled task.
 _Avoid_: Duplicate, restart
 
+**Goal worth retrying**:
+A measurable result that 3 or more sessions across at least 2 weeks worked toward in one project, with different requests each time. A review proposes a retry only after a newer model comes out in an app the person used for it.
+_Avoid_: Retry, repeat request
+
 **Unattended run**:
 A session that a scheduled task, a loop or a headless run (`claude -p`, `codex exec`) started, with nobody typing the first message.
 _Avoid_: Background session, bot run

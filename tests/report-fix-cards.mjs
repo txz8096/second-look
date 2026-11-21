@@ -33,7 +33,7 @@ try {
     await page.goto(url + '#part-2');
     await page.evaluate(mode => { document.documentElement.dataset.mode = mode; }, theme);
     const cards = page.locator('#part-2 > .icard');
-    assert.equal(await cards.count(), 5);
+    assert.equal(await cards.count(), 6);
     assert.equal(await page.getByText('What happens', {exact: true}).count(), 0);
     for (const card of await cards.all()) {
       const summary = card.locator(':scope > .ic-summary');

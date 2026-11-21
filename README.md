@@ -20,6 +20,7 @@ Second Look reviews your AI sessions across your apps, finds recurring problems,
 - **“I’ve explained this before.”** Spot instructions you keep repeating and decide which belong in a standing rule, a skill, or a hook.
 - **“What should I hand off?”** Look at where you step in, what you check, and which recurring tasks you could give to AI.
 - **“Where did all that usage go?”** See how much usage comes from long chats that carry history across tasks. In the fictional sample report, **14 of 72 Claude Code and Codex sessions accounted for 61% of their estimated usage over four weeks.**
+- **“Would a new model do better?”** When a new model comes out, see the goals you keep working on, like making a site load faster, with a prompt that asks the new model to plan your next experiments.
 - **“Are my skills still current?”** Find stale instructions in files like `CLAUDE.md`, `AGENTS.md`, and `.cursor/rules`, along with broken or duplicate skills.
 
 Each finding points to evidence from your sessions and gives you a change to try. The next review checks how it held up.
