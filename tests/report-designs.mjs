@@ -142,9 +142,14 @@ const main = fixture('sample', source);
   await page.setViewportSize({width:1440,height:1000});
   await page.goto(fixture('no-findings',source.replace('data-findings-state="available"','data-findings-state="none"'))+'#part-2');
   assert.equal(await page.locator('.briefs-empty').isVisible(),true);
+  assert.equal(await page.locator('#part-2 h2').innerText(),'Recommendations based on your AI sessions');
   await page.locator('#part-2').screenshot({path:path.join(output,'no-findings.png')});
   await page.goto(main);assert.equal(await page.locator('#work-mix .work-mix-week').count(),13);
-  assert.deepEqual(await page.locator('.explore .dest-t').allTextContents(),['Briefs & setup','Skills','Habits & usage']);
+  assert.deepEqual(await page.locator('.explore .dest-t').allTextContents(),['Recommendations','Skills','Habits & usage']);
+  assert.equal(await page.locator('#side a[data-page="part-2"]').innerText(),'Recommendations');
+  await page.locator('.explore a[href="#part-2"]').click();
+  assert.equal(new URL(page.url()).hash,'#part-2');
+  assert.equal(await page.getByRole('heading',{name:'Recommendations based on your AI sessions',exact:true}).isVisible(),true);
   assert.deepEqual(errors,[]);await page.close();
   console.log('PASS conditional skill discovery, no findings, Overview summary/chart/destinations. Evidence: '+output);
  } finally {await browser.close();}

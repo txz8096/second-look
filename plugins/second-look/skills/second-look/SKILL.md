@@ -424,7 +424,7 @@ Never set up a schedule, hook or skill during the review. Propose it with paste-
 they say yes first.
 
 A repeat that came back 4 or more times in the last 4 weeks and cost real time is also a
-P1 habit: give it a card in "How you brief AI and set up your apps" so its recommendation gets a recommendation panel.
+P1 habit: give it a card in "Recommendations based on your AI sessions" so its recommendation gets a recommendation panel.
 
 **Goals worth retrying on a new model.** Some work comes back as the same goal in different
 words: making a page load faster, cutting a prompt's cost, tightening a layout, raising a test
@@ -449,7 +449,7 @@ this: every review checks for it, so never propose a separate task that watches 
 
 ## 4. The report
 
-One HTML file with report pages (Overview, Briefs & setup, Skills, Habits & usage) and a Settings page, built from `report-template.html` and named "Second Look · <start> – <end>".
+One HTML file with report pages (Overview, Recommendations, Skills, Habits & usage) and a Settings page, built from `report-template.html` and named "Second Look · <start> – <end>".
 Lead with the answer, then the evidence.
 
 **One comparison window.** Every habit number that shows a change compares the last 4 weeks with
@@ -568,9 +568,9 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 
 **App bar and sidebar.** Set the review's date in `.report-date`. Locally, once the report is saved in `~/.second-look/reports/` as `<end-date>.html`, run `python3 scripts/report_menu.py <report.html>`. It fills the menu in every saved report, so they can all reach each other, and shows a plain label when there's only one. On claude.ai, replace everything between the `report-menu` comments with `<p class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25<span class="report-year">, 2026</span></span></p>`, because an artifact has no folder of saved reports. Keep the Feedback link (`#report-issue`, https://github.com/txz8096/second-look/issues/new) and the light and dark switch (`#theme-btn`) as they are. Keep sidebar labels free of counts or badges. On desktop keep the sidebar pinned below the app bar and sized to the viewport, with its method, Guidance and references, and About links at the viewport bottom. Scroll long reference lists inside the sidebar, so the report never has to be scrolled to reach About. On phones it remains a viewport-height drawer with the same pinned footer.
 
-**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with its link to Data coverage in Settings), then "Following up on your last review" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the recommendations in a short sentence ("Five recommendations for your rules, prototype starts, final checks, long sessions and model choice."), with the real count in words; past five, name the three biggest and say how many more. Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
+**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with its link to Data coverage in Settings), then "Following up on your last review" if there's an earlier review, then "Explore your report": keep its three rows and their links. Recommendations names the recommendations in a short sentence ("Five recommendations for your rules, prototype starts, final checks, long sessions and model choice."), with the real count in words; past five, name the three biggest and say how many more. Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
 
-**How you brief AI and set up your apps** (`#part-2`). A headline with the biggest finding and how many recommendations
+**Recommendations based on your AI sessions** (`#part-2`). A headline with the biggest finding and how many recommendations
 follow. If a much quicker recommendation goes first, the headline says so. "Following up on your last review" (`#last-cycle`) sits on the Overview, only when an
 earlier review logged recommendations (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Try more" (Revise) or "You can stop these" (Drop), without heading icons. Delete a group with no recommendations, and let the rest fill the row. Each recommendation is a `details.last-fix`: its name, one short result with the number when there is one ("You used it more: 11% to 18%", "Too soon to tell, 2 weeks in", "Not tried yet. Now only for long prototypes"). Put what changed, with its window, in the fold. Name what a percentage measures and which apps it covers in the result or its expanded explanation. All recommendations start collapsed. The verdict cites the outcome the recommendation was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the recommendation is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
 biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a recommendation last, so a card's number is its recommendation's number. Each card: a title that states the finding; the apps as
@@ -691,7 +691,7 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
   reviews also compare with the last one. Never compare with other people or a fixed number.
 - **Show a usage finding only when** there is a change they can make, the next review can check
   it, and the thing involved is at least a tenth of their usage. Otherwise leave it out.
-- **Long sessions** (How you brief AI and set up your apps). Sessions past `long_line` (150k tokens,
+- **Long sessions** (Recommendations based on your AI sessions). Sessions past `long_line` (150k tokens,
   a line we chose); on the page, call them "very long sessions". Give the
   share of usage they took, how a message there compares with a typical message, and the
   biggest sessions. The recommendation: start fresh when a phase ends.
@@ -888,7 +888,7 @@ change findings or recommendations merely because a chart filter changes. Filter
 count and offers Clear filters. It does not imply missing coverage or no activity elsewhere.
 
 An updated export creates a new report snapshot. Recompute its review summary and activity
-chart from included evidence and retain the standard Briefs & setup, Skills, Habits & usage
+chart from included evidence and retain the standard Recommendations, Skills, Habits & usage
 Overview destinations. Omit the duplicate history-update confirmation card. Changed source
 coverage alone does not establish changed habits. Keep a supported current rate when a
 comparison is ineligible, without an Up/Down claim. Unsupported measures and absent fields

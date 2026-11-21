@@ -21,7 +21,7 @@ export function Opportunities() {
   return (
     <FeatureSection
       id="opportunities"
-      kicker="Briefs & setup"
+      kicker="Recommendations"
       title="Too much back-and-forth with AI?"
       description="You repeat the same instructions, clarify what you meant halfway through, or catch mistakes right before sharing. Second Look reviews your sessions for recurring patterns and suggests what to change in your briefs, saved instructions, or final checks."
     >

@@ -13,7 +13,7 @@ REPORT_FONTS = ("Inter", "Manrope", "JetBrains Mono")
 REQUIRED_IDS = ["overview", "side", "part-1", "part-2", "part-3", "trends", "report-issue"]
 SECTION_ORDER = ["overview", "part-2", "part-3", "part-1"]
 REQUIRED_TEXT = [
-    "How you brief AI and set up your apps",
+    "Recommendations based on your AI sessions",
     "Keep your skills current",
     "How your habits are changing",
     "Report an issue",
@@ -274,10 +274,10 @@ def main():
     for t in REQUIRED_TEXT:
         if t not in html:
             problems.append(f'missing "{t}"')
-    # overview, then prompts, then skills, then habits last
+    # overview, then recommendations, then skills, then habits last
     order = [html.find(f'id="{i}"') for i in SECTION_ORDER]
     if -1 not in order and order != sorted(order):
-        problems.append("pages out of order: overview, briefs and setup, skills, then habits")
+        problems.append("pages out of order: overview, recommendations, skills, then habits")
     markup = re.sub(r"<style>.*?</style>", "", html, flags=re.S)
     for needle, why in FORBIDDEN.items():
         if needle in markup:
