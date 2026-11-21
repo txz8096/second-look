@@ -19,9 +19,8 @@ export function Coverage() {
   return (
     <FeatureSection
       id="coverage"
-      kicker="Data coverage"
-      title="What about my other AI tools?"
-      description="Your sessions are spread across Claude Code, Codex, Cursor, ChatGPT and more, and no single app sees all of them. Second Look reviews them together and shows exactly which apps and dates each review covers."
+      title="Which of your AI chats made it into the review?"
+      description="Second Look finds patterns across all your AI apps."
       link={
         <a href={`${links.github}#supported-apps`} className="inline-flex min-h-11 items-center gap-2 self-start text-accent underline-offset-4 hover:underline">
           Coverage details on GitHub <ArrowUpRight size={18} aria-hidden="true" />

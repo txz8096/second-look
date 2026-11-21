@@ -1,4 +1,4 @@
 {
-  "revision": 4,
-  "benefit": "Find suggestions from your AI sessions under Recommendations in both the sidebar and the report overview."
+  "revision": 5,
+  "benefit": "The sample report's new-model retry example now names Fable, matching the landing page."
 }

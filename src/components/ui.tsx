@@ -14,27 +14,10 @@ export function Container({
   );
 }
 
-// Sections without a SectionHeading render their kicker as the h2, so the outline still has one per section.
-export function Kicker({
-  children,
-  className = "",
-  as: Tag = "p",
-}: {
-  children: ReactNode;
-  className?: string;
-  as?: "p" | "h2";
-}) {
-  return (
-    <Tag className={`font-body text-[13px] font-normal tracking-[1.2px] text-accent uppercase ${className}`}>
-      {children}
-    </Tag>
-  );
-}
-
 const headingSizes = {
   default: "text-[28px] leading-[1.08] tracking-[-0.9px] md:text-[32px] md:tracking-[-1.1px]",
   small: "text-[28px] leading-[1.08] tracking-[-0.7px] md:text-[32px] md:tracking-[-0.8px]",
-  feature: "text-[32px] leading-[1.12] tracking-tight md:text-section md:tracking-[-1.4px]",
+  feature: "text-[32px] leading-[1.12] tracking-tight md:tracking-[-1.4px]",
 };
 
 export function SectionHeading({ children, className = "", size = "default" }: { children: ReactNode; className?: string; size?: keyof typeof headingSizes }) {

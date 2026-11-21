@@ -105,17 +105,15 @@ export function Approach() {
     <>
       <FeatureSection
         id="approach"
-        kicker="Habits & usage"
-        title="Long sessions drift and eat your usage."
-        description="Chats keep growing as you move from one task to the next. Second Look shows how much of your Claude Code and Codex usage goes to very long sessions, and when starting fresh could help."
+        title="Why do a few chats eat up so much usage?"
+        description="Second Look finds what makes you hit your usage limits."
       >
         <UsageExample />
       </FeatureSection>
       <FeatureSection
         id="skills"
-        kicker="Skills"
-        title="Three of your seven skills give wrong information."
-        description="Skills go stale when nobody checks them. Second Look reviews the skill instructions it can read, flags stale information it finds, and suggests fixes."
+        title="Are your skills current?"
+        description="Second Look checks each skill for wrong facts and broken behavior."
       >
         <SkillsExample />
       </FeatureSection>

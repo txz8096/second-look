@@ -7,6 +7,7 @@ import { Install } from "@/components/Install";
 import { Nav } from "@/components/Nav";
 import { Opportunities } from "@/components/Opportunities";
 import { Privacy } from "@/components/Privacy";
+import { Retry } from "@/components/Retry";
 import { RevealOnScroll } from "@/components/RevealOnScroll";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
+        <Retry />
         <Opportunities />
         <Approach />
         <Coverage />

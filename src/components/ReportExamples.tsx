@@ -1,9 +1,8 @@
 import type { ReactNode } from "react";
-import { Container, Kicker, SectionHeading } from "./ui";
+import { Container, SectionHeading } from "./ui";
 
-export function FeatureSection({ id, kicker, title, description, link, children }: {
+export function FeatureSection({ id, title, description, link, children }: {
   id: string;
-  kicker: string;
   title: string;
   description: string;
   link?: ReactNode;
@@ -13,7 +12,6 @@ export function FeatureSection({ id, kicker, title, description, link, children 
     <section id={id} className="bg-paper">
       <Container className="grid items-center gap-8 py-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-12 xl:grid-cols-[480px_minmax(0,1fr)] xl:gap-16 xl:py-16">
         <div className="feature-copy flex min-w-0 flex-col gap-5" data-reveal="entrance">
-          <Kicker>{kicker}</Kicker>
           <SectionHeading size="feature">{title}</SectionHeading>
           <p className="font-body text-base leading-[1.55] text-text-2">{description}</p>
           {link}

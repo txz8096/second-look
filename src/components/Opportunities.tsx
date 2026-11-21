@@ -21,13 +21,12 @@ export function Opportunities() {
   return (
     <FeatureSection
       id="opportunities"
-      kicker="Recommendations"
-      title="Too much back-and-forth with AI?"
-      description="You repeat the same instructions, clarify what you meant halfway through, or catch mistakes right before sharing. Second Look reviews your sessions for recurring patterns and suggests what to change in your briefs, saved instructions, or final checks."
+      title="Typing the same instructions again?"
+      description="Second Look finds what you keep retyping and helps you save it as rules."
     >
-      <div className="grid gap-6 lg:min-h-[576px] lg:content-between">
-        {recommendations.map(({ anchor, title, suggestion, benefit }) => (
-          <ReportExcerpt key={anchor} title="Recommendation" className="w-full max-w-[456px] last:justify-self-end">
+      <div className="flex flex-col gap-6 lg:gap-0">
+        {recommendations.map(({ anchor, title, suggestion, benefit }, index) => (
+          <ReportExcerpt key={anchor} title="Recommendation" className={`w-full max-w-[456px] ${index > 0 ? "lg:relative lg:-mt-3 lg:ml-64" : ""}`}>
             <div className="flex flex-col items-start gap-3 px-4 py-5 sm:px-6">
               <h4 className="font-display text-lg leading-snug font-bold">{title}</h4>
               <p className="text-sm leading-relaxed text-text-2">{suggestion}</p>
