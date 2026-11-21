@@ -24,10 +24,18 @@ const main = fixture('sample', source);
    await page.locator('#f-range').waitFor({state:'visible'});
    assert.equal(await page.locator('#f-reset').isDisabled(),true);
    const initial = await page.locator('#f-sum').innerText();
-   const countBounds=await page.locator('#f-sum').boundingBox(),timeBounds=await page.locator('#f-range').boundingBox();
-   assert.ok(Math.abs(countBounds.y+countBounds.height/2-timeBounds.y-timeBounds.height/2)<6,'Time/count share a row');
-   if(width===1440) for(const id of ['f-source','f-cat','f-project','f-reset']){
-    const r=await page.locator('#'+id).boundingBox(); assert.ok(Math.abs(r.y+r.height/2-timeBounds.y-timeBounds.height/2)<6,id+' stays on desktop row');
+   const centerY = async id => {
+    const bounds = await page.locator(id).boundingBox();
+    return bounds.y + bounds.height / 2;
+   };
+   const countY = await centerY('#f-sum');
+   const resetY = await centerY('#f-reset');
+   assert.ok(Math.abs(countY - resetY) < 6, 'Clear and the count share a row');
+   const filterRows = await Promise.all(['#f-range','#f-source','#f-cat','#f-project','#f-reset'].map(centerY));
+   if (width === 1440) {
+    assert.ok(filterRows.every(y => Math.abs(y - resetY) < 6), 'Filters share a row on desktop');
+   } else {
+    assert.ok(filterRows.every((y, index) => index === 0 || y > filterRows[index - 1] + 6), 'Filters stack above Clear on mobile');
    }
    await page.locator('#f-range').focus(); await page.keyboard.press('Enter');
    await page.locator('#f-range-menu').waitFor({state:'visible'});

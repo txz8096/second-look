@@ -4,6 +4,12 @@ import { links } from "@/lib/site";
 import { GithubIcon } from "./Icons";
 import { Container, Kicker, PrimaryButton, SecondaryButton } from "./ui";
 
+const sampleFindings = [
+  { value: "27", label: "times the same rules were retyped in 4 weeks" },
+  { value: "61%", label: "of Claude Code and Codex usage went to 14 very long sessions" },
+  { value: "3 of 7", label: "skills gave wrong information" },
+];
+
 export function Hero() {
   return (
     <section id="top" className="overflow-x-clip bg-paper">
@@ -20,8 +26,17 @@ export function Hero() {
           </h1>
           <p className="hero-in pt-1 font-body text-base leading-[1.55] text-text-2" style={{ "--hero-delay": "160ms" } as CSSProperties}>
             Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try.
+            <span className="block">For example, from the sample report:</span>
           </p>
-          <div className="hero-in flex flex-wrap items-center gap-3 pt-3" style={{ "--hero-delay": "240ms" } as CSSProperties}>
+          <ul className="hero-in border-t border-rule" style={{ "--hero-delay": "240ms" } as CSSProperties}>
+            {sampleFindings.map(({ value, label }) => (
+              <li key={value} className="flex items-baseline gap-4 border-b border-rule py-3 last:border-b-0">
+                <span className="w-20 shrink-0 font-display text-[28px] leading-[1.2] font-bold tracking-tight text-accent sm:w-24">{value}</span>
+                <span className="text-base text-text-2">{label}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="hero-in flex flex-wrap items-center gap-3 pt-3" style={{ "--hero-delay": "320ms" } as CSSProperties}>
             <PrimaryButton href={links.sampleReport}>
               Sample report
             </PrimaryButton>

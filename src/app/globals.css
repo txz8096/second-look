@@ -90,6 +90,10 @@ body {
   from {
     opacity: 0;
     transform: translateY(16px);
+  }
+}
+@keyframes unblur-in {
+  from {
     filter: blur(8px);
   }
 }
@@ -101,28 +105,44 @@ body {
 }
 @media (prefers-reduced-motion: no-preference) {
   .hero-in {
-    animation: rise-in 900ms var(--ease-out-strong) var(--hero-delay, 0ms) both;
+    animation-name: rise-in, unblur-in;
+    animation-duration: 900ms;
+    animation-timing-function: var(--ease-out-strong);
+    animation-delay: var(--hero-delay, 0ms);
+    animation-fill-mode: both;
   }
   .hero-stage {
     perspective: 2000px;
   }
-  .hero-shot {
+  .hero-shot,
+  [data-reveal="entrance"][data-revealed]:not([data-reveal-instant]) > .feature-shot {
     transform-origin: 50% 0;
-    animation: shot-in 1400ms var(--ease-out-strong) 300ms both;
+    animation: shot-in 1400ms var(--ease-out-strong) var(--shot-delay, 300ms) var(--shot-fill, both);
+  }
+  .feature-shot {
+    --shot-delay: 80ms;
+    --shot-fill: backwards;
+  }
+  .feature-copy[data-revealed]:not([data-reveal-instant]) {
+    animation: rise-in 900ms var(--ease-out-strong) backwards;
   }
 }
 /* Hidden until RevealOnScroll marks them; without scripting they simply show. */
 @media (scripting: enabled) and (prefers-reduced-motion: no-preference) {
-  [data-reveal] {
+  [data-reveal=""] {
     transition:
       opacity 800ms var(--ease-out-strong),
       transform 800ms var(--ease-out-strong),
       filter 800ms var(--ease-out-strong);
     transition-delay: var(--reveal-delay, 0ms);
   }
-  [data-reveal]:not([data-revealed]) {
+  [data-reveal=""]:not([data-revealed]) {
     opacity: 0;
     transform: translateY(24px);
     filter: blur(6px);
+  }
+  .feature-copy:not([data-revealed]),
+  [data-reveal="entrance"]:not([data-revealed]) > .feature-shot {
+    opacity: 0;
   }
 }

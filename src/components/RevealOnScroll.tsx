@@ -16,8 +16,20 @@ export function RevealOnScroll() {
       },
       { rootMargin: "0px 0px -10% 0px" },
     );
-    targets.forEach((target) => observer.observe(target));
-    return () => observer.disconnect();
+    const revealOnFocus = (event: FocusEvent) => {
+      const target = event.currentTarget as HTMLElement;
+      target.setAttribute("data-reveal-instant", "");
+      target.setAttribute("data-revealed", "");
+      observer.unobserve(target);
+    };
+    targets.forEach((target) => {
+      observer.observe(target);
+      if (target.dataset.reveal === "entrance") target.addEventListener("focusin", revealOnFocus);
+    });
+    return () => {
+      observer.disconnect();
+      targets.forEach((target) => target.removeEventListener("focusin", revealOnFocus));
+    };
   }, []);
 
   return null;

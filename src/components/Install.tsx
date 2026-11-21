@@ -31,7 +31,7 @@ function CodeBlock({ text }: { text: string }) {
 export function Install() {
   return (
     <section id="install" className="bg-dark">
-      <Container className="grid gap-10 py-20 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:gap-20">
+      <Container className="grid gap-10 py-16 lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:gap-20 xl:grid-cols-[480px_minmax(0,1fr)] xl:gap-16">
         <div className="flex flex-col items-start gap-6" data-reveal>
           <SectionHeading>Try it on your own sessions.</SectionHeading>
           <p className="font-body text-base leading-[1.55] text-text-2">Start from Claude Code, Codex or Cursor.</p>

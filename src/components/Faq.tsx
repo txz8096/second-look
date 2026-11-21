@@ -20,7 +20,7 @@ const faqs = [
 export function Faq() {
   return (
     <section id="faq" className="bg-paper">
-      <Container className="flex flex-col gap-8 py-16">
+      <Container className="flex flex-col gap-4 py-16">
         <div className="flex flex-wrap items-center justify-between gap-6" data-reveal>
           <SectionHeading size="small">FAQ</SectionHeading>
           <a href={`${links.github}#faq`} className="inline-flex min-h-11 items-center gap-2 font-body text-base text-accent underline-offset-4 hover:underline">

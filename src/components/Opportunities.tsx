@@ -1,40 +1,47 @@
-import { ArrowRight } from "lucide-react";
-import type { CSSProperties } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { links } from "@/lib/site";
-import { Container, PrimaryButton, SectionHeading } from "./ui";
+import { FeatureSection, ReportExcerpt } from "./ReportExamples";
 
-const benefits = [
-  { title: "I’ve explained this before.", body: "You repeat the same instructions or corrections whenever a task comes up." },
-  { title: "What should I hand off?", body: "You’re unsure what AI should do and what you need to check." },
-  { title: "Where did all that usage go?", body: "Your sessions keep growing as you move from one task to the next." },
-  { title: "Are my skills still current?", body: "You haven’t checked their instructions or updates lately." },
+const fixes = [
+  {
+    anchor: "p-rules",
+    title: "You retype the same rules across your apps",
+    suggestion: "Ask Codex to fill gaps in your saved rules across the AI apps you use.",
+    benefit: "Saves retyping and waiting for extra replies",
+  },
+  {
+    anchor: "p-brief",
+    title: "Prototype sessions start vague, then restart",
+    suggestion: "Ask Codex to set up a rule that starts substantial prototype work with an approved brief.",
+    benefit: "Estimated savings of about 30 minutes a week",
+  },
 ];
 
 export function Opportunities() {
   return (
-    <section id="opportunities" className="bg-paper">
-      <Container className="grid gap-10 py-[68px] lg:grid-cols-[minmax(0,440px)_minmax(0,1fr)] lg:gap-20">
-        <div className="flex flex-col items-start gap-6" data-reveal>
-          <SectionHeading>Spend less time on the same problems</SectionHeading>
-          <p className="font-body text-base leading-[1.55] text-text-2">Use AI for recurring work? See if any of these sound familiar.</p>
-          <PrimaryButton href={links.sampleReport} className="py-4">
-            Sample report <ArrowRight size={18} aria-hidden="true" />
-          </PrimaryButton>
-        </div>
-        <ul className="min-w-0">
-          {benefits.map((benefit, i) => (
-            <li
-              key={benefit.title}
-              className="flex flex-col gap-2 border-b border-rule py-5 first:pt-0 last:border-b-0"
-              data-reveal
-              style={{ "--reveal-delay": `${i * 80}ms` } as CSSProperties}
-            >
-              <h3 className="font-display text-[22px] leading-[1.2] font-semibold tracking-[-0.5px] text-ink">{benefit.title}</h3>
-              <p className="font-body text-base leading-normal text-text-2">{benefit.body}</p>
-            </li>
-          ))}
-        </ul>
-      </Container>
-    </section>
+    <FeatureSection
+      id="opportunities"
+      kicker="Briefs & setup"
+      title="Too much back-and-forth with AI?"
+      description="You repeat the same instructions, clarify what you meant halfway through, or catch mistakes right before sharing. Second Look reviews your sessions for recurring patterns and suggests what to change in your briefs, saved instructions, or final checks."
+    >
+      <div className="grid gap-6 lg:min-h-[576px] lg:content-between">
+        {fixes.map(({ anchor, title, suggestion, benefit }) => (
+          <ReportExcerpt key={anchor} title="Suggested fix" className="w-full max-w-[456px] last:justify-self-end">
+            <div className="flex flex-col items-start gap-3 px-4 py-5 sm:px-6">
+              <h4 className="font-display text-lg leading-snug font-bold">{title}</h4>
+              <p className="text-sm leading-relaxed text-text-2">{suggestion}</p>
+              <p className="text-sm font-medium text-accent">{benefit}</p>
+              <a
+                href={`${links.sampleReport}#${anchor}`}
+                className="inline-flex min-h-11 items-center gap-2 rounded-md bg-accent px-3 text-sm font-medium text-on-accent hover:bg-accent/90"
+              >
+                View sample fix <ArrowUpRight size={16} aria-hidden="true" />
+              </a>
+            </div>
+          </ReportExcerpt>
+        ))}
+      </div>
+    </FeatureSection>
   );
 }
