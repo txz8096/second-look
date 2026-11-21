@@ -37,7 +37,7 @@ export function Coverage() {
             </div>
             <span>Coverage</span>
           </div>
-          <ul className="border-y border-rule">
+          <ul className="border-t border-rule">
             {sampleCoverage.map(({ app, status, spans, outside, after }) => (
               <li key={app} className="grid grid-cols-2 items-center gap-x-2 gap-y-1 border-b border-rule py-2 text-sm last:border-b-0 sm:grid-cols-[100px_minmax(0,1fr)_112px]">
                 <span className="font-medium text-ink">{app}</span>
