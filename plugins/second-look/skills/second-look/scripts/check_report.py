@@ -19,7 +19,7 @@ REQUIRED_TEXT = [
     "Report an issue",
     "github.com/txz8096/second-look/issues/new",
 ]
-# how sure, for patterns, fixes and skill findings alike
+# how sure, for patterns, recommendations and skill findings alike
 CHIPS = {"Sure", "Likely", "Hunch"}
 PILLS = {
     "Stale", "Review", "Minor", "Current", "Behind", "Broken", "Duplicate", "Not checked",
@@ -37,13 +37,13 @@ FORBIDDEN = {
     'id="expand-all"': "Expand all / Collapse all was removed",
     'class="sample"': "no sample-data chips on real reports",
     "Part 1 of 3": "no part numbers",
-    'class="last-list"': "fixes from the last review now sit in .last-group cards",
+    'class="last-list"': "recommendations from the last review now sit in .last-group cards",
     'id="glance"': "the at-a-glance table was removed; the numbers live in the charts",
     'id="start-here"': "the Start here line was removed; the headline says where to start",
     'id="toc"': "the floating contents menu was replaced by the sidebar",
-    "Compare the fixes": "removed; each fix is its Try block",
+    "Compare the fixes": "removed; each recommendation is its Try block",
     "review will check</span>": "the separate next-review fold was removed",
-    'class="plan': "the plan was removed; each fix lives in its Try block",
+    'class="plan': "the plan was removed; each recommendation lives in its Try block",
     'class="diff"': "skill fixes are prompts they can paste into their AI app, not diffs",
     "Geist": "old font",
     '"Inter"': "old font",
@@ -255,9 +255,9 @@ def main():
     if tries != saves:
         problems.append(f'each Try this block needs one <p class="try-saves"> line saying what it saves (found {saves} of {tries})')
     for panel in re.findall(r'<section class="try".*?</section>', html, re.S):
-        pid = (re.search(r'id="([^"]+)"', panel) or [None, "a fix panel"])[1]
+        pid = (re.search(r'id="([^"]+)"', panel) or [None, "a recommendation panel"])[1]
         if not re.search(r'data-app="(codex|claude-desktop|copy)"', panel) or 'data-app-name="' not in panel:
-            problems.append(f'{pid}: set data-app (codex, claude-desktop or copy) and data-app-name on the fix panel')
+            problems.append(f'{pid}: set data-app (codex, claude-desktop or copy) and data-app-name on the recommendation panel')
         if 'class="fix-approve"' not in panel or 'class="fix-decline"' not in panel:
             problems.append(f'{pid}: keep the Approve and Decline buttons from the template')
         prompt = re.search(r'<details class="nested try-prompt">.*?<pre>(.*?)</pre>', panel, re.S)

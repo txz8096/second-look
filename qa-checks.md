@@ -5,7 +5,7 @@
 - [ ] All five `#part-2 .try` sections contain one platform-specific `.try-do` instruction and one `.field pre` with a working Copy control; their prompt text matches the approved canvas design.
 - [ ] `#try-rules .try-saves` says "Saves retyping and waiting for extra replies" and explains that total time saved isn't measured.
 - [ ] `#plan .plan-saves` for `#try-rules` says "Retyping and waiting for extra replies"; the report contains no "5 minutes a week" or "under a minute each" savings claim.
-- [ ] At 1440, 1280, 720, 375 and 320px in dark and light, the savings line, explanation and plan row wrap inside their containers; the Copy control and plan-to-fix navigation still work.
+- [ ] At 1440, 1280, 720, 375 and 320px in dark and light, the savings line, explanation and plan row wrap inside their containers; the Copy control and plan-to-recommendation navigation still work.
 - [ ] On production, follow the landing page's report link, open Briefs & setup, and check both savings locations and the explanation. Served HTML matches the committed template; no uncaught browser errors occur.
 
 ## 2026-11-13 — App and Project filters

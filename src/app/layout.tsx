@@ -19,7 +19,7 @@ const jetbrainsMono = JetBrains_Mono({
 
 const title = "Second Look";
 const description =
-  "Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try.";
+  "Second Look reviews your AI sessions across your apps, finds recurring patterns, and makes recommendations to try.";
 
 // Link previews in Slack, iMessage and LinkedIn read these; there is no share image yet.
 export const metadata: Metadata = {

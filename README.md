@@ -2,7 +2,7 @@
 
 **Performance review for how you work with AI.**
 
-Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try.
+Second Look reviews your AI sessions across your apps, finds recurring patterns, and makes recommendations to try.
 
 > **Early access.** You can try Second Look today. Setup and reports may change as the skill evolves. If something breaks or a recommendation misses the mark, [open an issue](https://github.com/txz8096/second-look/issues/new).
 
@@ -238,8 +238,8 @@ your standing rules live, and where your skills are. Your answers become a profi
 <details>
 <summary><b>How often should I run it?</b></summary>
 
-Every two weeks works well. Each review checks the fixes from your last review, then gives a
-fix for every new pattern. You can also ask for a review any time; it covers everything since the last
+Every two weeks works well. Each review checks the recommendations from your last review, then makes a
+recommendation for every new pattern. You can also ask for a review any time; it covers everything since the last
 one. Name a narrower scope, like "my Cursor sessions", if that's all you want.
 </details>
 
@@ -280,7 +280,7 @@ session logs are.
 As far as your logs do. Claude Code keeps 30 days by default, which is why the installer
 offers to keep a year. claude.ai, ChatGPT and Gemini cover sessions present in the supplied exports. Each run saves
 weekly totals with daily breakdowns, so weeks your apps later delete stay in the trend. Custom date ranges use those daily totals; older weekly-only history supports complete weeks.
-In Habits & usage, Time, App, Work and Project filter charts and share tables, not findings or fixes.
+In Habits & usage, Time, App, Work and Project filter charts and share tables, not findings or recommendations.
 The collector recognizes local folders in Claude Code, Codex and Cursor without requiring Git.
 Folders an app creates for each document or chat, named with a random ID, count as “Unknown”.
 Matching names combine across apps; ask your assistant to separate, merge or rename a group.

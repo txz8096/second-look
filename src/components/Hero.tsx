@@ -25,7 +25,7 @@ export function Hero() {
             Performance review for your AI workflow
           </h1>
           <p className="hero-in pt-1 font-body text-base leading-[1.55] text-text-2" style={{ "--hero-delay": "160ms" } as CSSProperties}>
-            Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try.
+            Second Look reviews your AI sessions across your apps, finds recurring patterns, and makes recommendations to try.
             <span className="block">For example, from the sample report:</span>
           </p>
           <ul className="hero-in border-t border-rule" style={{ "--hero-delay": "240ms" } as CSSProperties}>

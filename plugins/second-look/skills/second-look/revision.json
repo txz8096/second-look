@@ -1,4 +1,4 @@
 {
-  "revision": 2,
-  "benefit": "When a new model comes out, your review shows the goals you keep working on and gives you a prompt to plan fresh experiments with it."
+  "revision": 3,
+  "benefit": "Your review now calls its suggestions recommendations, since many of them automate something that already works rather than fix a problem."
 }

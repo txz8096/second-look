@@ -83,12 +83,12 @@ A session that a scheduled task, a loop or a headless run (`claude -p`, `codex e
 _Avoid_: Background session, bot run
 
 **Habit**:
-A pattern that recurs across review periods. Only habits get paired with a fix to try.
+A pattern that recurs across review periods. Only habits get paired with a recommendation to try.
 _Avoid_: Incident, behavior
 
-**Fix**:
-A change Second Look suggests for a habit: a saved rule, a skill, hook or schedule, a settings change, or a one-time prompt. **Approve** opens the user's app with the fix's prompt typed in; the app shows the change and waits for their yes. **Decline** sets the fix aside in that browser.
-_Avoid_: Automation (for every fix), auto-fix, apply
+**Recommendation**:
+A change Second Look suggests for a habit: a saved rule, a skill, hook or schedule, a settings change, or a one-time prompt. Many habits aren't problems, so a recommendation often automates something that already works. **Approve** opens the user's app with the recommendation's prompt typed in; the app shows the change and waits for their yes. **Decline** sets the recommendation aside in that browser.
+_Avoid_: Fix (for a habit; "fix" stays only for skills with wrong information, as in "Skills to fix"), problem (for a habit), automation (for every recommendation), auto-fix, apply
 
 ## Work categories
 

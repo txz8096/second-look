@@ -1,6 +1,6 @@
 ---
 name: second-look
-description: "Second Look reviews your AI sessions across your apps, finds recurring problems, and recommends fixes to try."
+description: "Second Look reviews your AI sessions across your apps, finds recurring patterns, and makes recommendations to try."
 ---
 
 # Second Look
@@ -16,7 +16,7 @@ A review runs in four steps, then the report:
 2. **Habit evidence.** What do their sessions show about briefing, correcting, checking,
    handing off and usage?
 3. **Repeat work.** Which requests keep coming back by hand, and what runs without them?
-4. **The report.** One file, built from the template, with an overview and three pages, including fixes they can try.
+4. **The report.** One file, built from the template, with an overview and three pages, including recommendations they can try.
 
 ## Where you're running
 
@@ -73,7 +73,7 @@ message, so quote only what a finding needs.
 | File | What it holds |
 |---|---|
 | `profile.md` | Name, what they build, focus areas, where their context file and skills live |
-| `log.md` | One entry per review: snapshot, findings, the fixes they picked and how each will be judged, and goals worth retrying with the model each was last tried on |
+| `log.md` | One entry per review: snapshot, findings, the recommendations they picked and how each will be judged, and goals worth retrying with the model each was last tried on |
 | `history.json` | Weekly habit rows with daily totals, kept longer than the apps keep their own logs |
 | `exports/claude/conversations.json`, `exports/chatgpt/conversations.json`, `exports/gemini/MyActivity.json` | Data exports for historical trends |
 | `reports/` | Saved reports, when they aren't published as artifacts |
@@ -152,7 +152,7 @@ for a review, run `python3 scripts/schedule.py status`. If `unopened_report` has
 "Your <Month D> review is ready. Want to go through it, or run a new one?"
 
 If they want to go through it, run `python3 scripts/open_report.py <path>`, offer the walkthrough
-(below) and close with which fixes they want to try. Don't collect anything or run `reviewed`, so
+(below) and close with which recommendations they want to try. Don't collect anything or run `reviewed`, so
 the schedule doesn't move. If they want a new one, carry on with a full review.
 
 Skip this check when they name a scope, when they already asked for a new review, and on scheduled
@@ -169,7 +169,7 @@ they named and mark the log entry `(scoped)`.
 | Window | Since `last_review` from `schedule.py status`, or the last 14 days | What they name. Ask once if the scope is unclear and costly to guess |
 | Skill check | Full | Only if asked, or the last check is over 14 days old |
 | Report | Full | Same layout, scoped to the window |
-| Afterwards | Offer a 30-minute walkthrough (below), then set up the schedule on the first review | Close with one question: which fix they want to try |
+| Afterwards | Offer a 30-minute walkthrough (below), then set up the schedule on the first review | Close with one question: which recommendation they want to try |
 | Log | New dated entry, then run `python3 scripts/schedule.py reviewed` | Entry marked `(scoped)`. Don't run `reviewed`; the schedule doesn't move |
 
 ## Recurring reviews
@@ -208,7 +208,7 @@ it up.
 profile questions and wait. Build and check the report, save it to ~/.second-look/reports/,
 write the log entry, run `python3 ~/.agents/skills/second-look/scripts/schedule.py reviewed`,
 open the report with `python3 ~/.agents/skills/second-look/scripts/open_report.py <report.html>`,
-then end with one question: which fixes they want to try before the next review."
+then end with one question: which recommendations they want to try before the next review."
 
 **Claude desktop scheduled tasks.** Check `list_scheduled_tasks` first and update an existing
 Second Look task instead of adding a second one. Cron can't count days, so map the cadence:
@@ -232,10 +232,10 @@ Confirm in one line what changed and the next due date.
 
 | Block | Time | What happens |
 |---|---|---|
-| Check-in | 0–2 min | The fixes from the last review: done or not? One sentence each |
+| Check-in | 0–2 min | The recommendations from the last review: done or not? One sentence each |
 | Coaching | 2–15 min | Skill P1s first, then habit P1s, then P2s as time allows. Tie one habit to a measured trend |
 | Questions | 15–28 min | They ask anything. Answer from evidence and say when you don't know |
-| Close | 28–30 min | Confirm which fixes they'll try: every fix in the report. Log them |
+| Close | 28–30 min | Confirm which recommendations they'll try: every recommendation in the report. Log them |
 
 Open with a question. Then show the evidence. The report holds every finding; the call
 covers what fits.
@@ -326,7 +326,7 @@ and still works on current models.
    "add my <app> export". Gemini's export has no session IDs, so the collector
    groups prompts less than 30 minutes apart into one session: call its session-based
    numbers (restarts, briefed starts) estimates.
-5. Read `~/.second-look/log.md` for the fixes from the last review.
+5. Read `~/.second-look/log.md` for the recommendations from the last review.
 
 **claude.ai:**
 
@@ -348,13 +348,13 @@ Drop findings with weak evidence.
 ## Saving time and usage
 
 People use this review to get more back for what they put in, so look for savings on purpose.
-Rank findings and fixes by what they save, and give every fix a saving. A much quicker fix may go
+Rank findings and recommendations by what they save, and give every recommendation a saving. A much quicker recommendation may go
 first if the part's headline says so.
 
 - **Time.** Count the repeated work, including time spent typing instructions and waiting for
   unnecessary AI responses. Use supported durations or clearly stated assumptions when estimating
   minutes; don't treat typing time as the whole saving. When durations aren't supported, name what
-  the fix saves and say total time saved isn't measured. Compare it with what the fix takes.
+  the recommendation saves and say total time saved isn't measured. Compare it with what the recommendation takes.
 - **Usage.** Take it from `usage`: long sessions, what loads at the start, lookups in the main
   session, and the model mix below.
 - **How to write it.** "About 30 minutes a week", "About a tenth of your Claude Code usage". Always "about". With
@@ -377,8 +377,8 @@ leaves more room in their limit. Use the models they have today, at these levels
 | Middle | Everyday building, edits, first drafts | Decisions that are expensive to undo |
 | Strongest | Hard bugs, big design decisions, work others rely on | Routine work |
 
-No app picks a model per task on its own, so make the fix a settings change, not a rule that
-asks the strongest model to judge each task. In Claude Code, the fix prompt asks the fixer to
+No app picks a model per task on its own, so make the recommendation a settings change, not a rule that
+asks the strongest model to judge each task. In Claude Code, the recommendation prompt asks the agent to
 read `~/.claude/settings.json` and the helper agent files first, then propose: a middle default
 model for new sessions, switching up with `/model` for hard work (or `opusplan`, which plans on
 Opus and builds on Sonnet, for someone who plans first); `model:` on helper agents and skills that
@@ -411,9 +411,9 @@ work is the same kind but the content always changes (a new essay each time is o
 writing work). Say how many you dropped. A dropped group that chases one improvement goal may
 still belong under "Goals worth retrying on a new model" below.
 
-For each repeat you keep, pick one fix. Ask in this order:
+For each repeat you keep, pick one recommendation. Ask in this order:
 
-| If the request… | The fix | Example |
+| If the request… | The recommendation | Example |
 |---|---|---|
 | Should run whether or not they remember, on a rhythm (a `weekday`, or "check", "summarize what changed", "status") | A scheduled task: Claude desktop or Codex app scheduled task, `/schedule`, or `/loop` while a session is open | "Make it a scheduled task every Monday" |
 | Follows every edit, commit or session end | A hook (`Stop`, `PostToolUse`, a pre-commit hook) | "Make it run on its own after every edit" |
@@ -424,7 +424,7 @@ Never set up a schedule, hook or skill during the review. Propose it with paste-
 they say yes first.
 
 A repeat that came back 4 or more times in the last 4 weeks and cost real time is also a
-P1 habit: give it a card in "How you brief AI and set up your apps" so its fix gets a fix panel.
+P1 habit: give it a card in "How you brief AI and set up your apps" so its recommendation gets a recommendation panel.
 
 **Goals worth retrying on a new model.** Some work comes back as the same goal in different
 words: making a page load faster, cutting a prompt's cost, tightening a layout, raising a test
@@ -439,7 +439,7 @@ this: every review checks for it, so never propose a separate task that watches 
    that model.
 3. Give each goal you keep a card (see "The report"), biggest first by sessions spent, and at
    most three.
-4. The fix prompt runs in the app where they pursued the goal, on the new model. It restates
+4. The recommendation prompt runs in the app where they pursued the goal, on the new model. It restates
    the goal in their words, asks the AI to read what was tried before (the project, its notes,
    recent changes), then to propose a plan of 3–5 experiments, each with what it changes and how
    to measure it, and to change nothing until they pick one. Name the model and how to switch to
@@ -469,7 +469,7 @@ prose, tables and chart text: tokens, context (say "what the AI has read"), comp
 app), edge case (say what could break). Commands they type (`/clear`) and anything inside a copy
 block are fine. One word per thing: session (never chat or conversation), the AI (never the
 agent), rules (never standing preferences), helper agent, usage and usage limit, brief, checking,
-fix, Second Look (never "the coach" or "I"). Each fix keeps one name everywhere. Cut a line that
+recommendation, Second Look (never "the coach" or "I"). Each recommendation keeps one name everywhere. Cut a line that
 only restates a heading, a column or a term card. An action they can't do by hand gets a prompt
 to paste into their AI app, and says which app. Every next step, in any table or list, says where
 to go or gives the line to paste ("In Claude Code, paste: “Reinstall mermaid-diagrams.”"), so nothing
@@ -490,7 +490,7 @@ someone else's report, add their number or cut it. The chip carries the doubt: a
 card only when it would change what they do. Write the card title the way you'd say it to them in
 one breath. The caps below apply to your text even where the template's sample looks longer.
 
-**Caps.** One card for every pattern with a fix, biggest first, with no limit on how many. Card title: a finding, ten
+**Caps.** One card for every pattern with a recommendation, biggest first, with no limit on how many. Card title: a finding, ten
 words or fewer. Summary: two sentences that add concrete detail beyond the title, without repeating it. Evidence: up to three facts, each with its window.
 Why it matters: one sentence about their work. Skills to fix: one row per skill that needs a change, with installed skills
 that are only Behind sharing one row. What you could automate next: every repeat kept. Worth a look: five rows.
@@ -514,7 +514,7 @@ explains its tokens, type, radii, structure and the parts removed on purpose.
     totals. Never merge the same rows again or discard old history. Keep older rows: the Time
     menu's All history option shows every saved week.
   - `SCOPE`: the collector's `scope` (see "Data scope"), including `through` and measured `latest_session` dates. Never infer a session date from a file timestamp.
-  - `MILESTONES`: dated changes to mark on every chart, like a fix they started from
+  - `MILESTONES`: dated changes to mark on every chart, like a recommendation they started from
     `log.md`, as `[{"week": "YYYY-MM-DD", "label": "..."}]`. Labels stay under 25 characters, in
     plain words. Use `[]` when there are none.
 - Locally, run `python3 scripts/prerender.py <report.html>` once the data is in. It opens the
@@ -568,73 +568,73 @@ model, test, ship and skill, in a `p` or `dd`. See "Habit terms" in the design s
 
 **App bar and sidebar.** Set the review's date in `.report-date`. Locally, once the report is saved in `~/.second-look/reports/` as `<end-date>.html`, run `python3 scripts/report_menu.py <report.html>`. It fills the menu in every saved report, so they can all reach each other, and shows a plain label when there's only one. On claude.ai, replace everything between the `report-menu` comments with `<p class="report-pick"><span class="report-pick-t">Latest report</span> <span class="report-date">Oct 25<span class="report-year">, 2026</span></span></p>`, because an artifact has no folder of saved reports. Keep the Feedback link (`#report-issue`, https://github.com/txz8096/second-look/issues/new) and the light and dark switch (`#theme-btn`) as they are. Keep sidebar labels free of counts or badges. On desktop keep the sidebar pinned below the app bar and sized to the viewport, with its method, Guidance and references, and About links at the viewport bottom. Scroll long reference lists inside the sidebar, so the report never has to be scrolled to reach About. On phones it remains a viewport-height drawer with the same pinned footer.
 
-**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with its link to Data coverage in Settings), then "Following up on your last review" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the fixes in a short sentence ("Five fixes for your rules, prototype starts, final checks, long sessions and model choice."), with the real count in words; past five, name the three biggest and say how many more. Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
+**Overview** (`#overview`). The `h1` stays "Your latest review". Then the summary, then “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with its link to Data coverage in Settings), then "Following up on your last review" if there's an earlier review, then "Explore your report": keep its three rows and their links. Briefs & setup names the recommendations in a short sentence ("Five recommendations for your rules, prototype starts, final checks, long sessions and model choice."), with the real count in words; past five, name the three biggest and say how many more. Skills repeats the Skills page's headline. Habits & usage says what the charts cover and over how long.
 
-**How you brief AI and set up your apps** (`#part-2`). A headline with the biggest finding and how many fixes
-follow. If a much quicker fix goes first, the headline says so. "Following up on your last review" (`#last-cycle`) sits on the Overview, only when an
-earlier review logged fixes (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Try more" (Revise) or "You can stop these" (Drop), without heading icons. Delete a group with no fixes, and let the rest fill the row. Each fix is a `details.last-fix`: its name, one short result with the number when there is one ("You used it more: 11% to 18%", "Too soon to tell, 2 weeks in", "Not tried yet. Now only for long prototypes"). Put what changed, with its window, in the fold. Name what a percentage measures and which apps it covers in the result or its expanded explanation. All fixes start collapsed. The verdict cites the outcome the fix was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the fix is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
-biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a fix last, so a card's number is its fix's number. Each card: a title that states the finding; the apps as
+**How you brief AI and set up your apps** (`#part-2`). A headline with the biggest finding and how many recommendations
+follow. If a much quicker recommendation goes first, the headline says so. "Following up on your last review" (`#last-cycle`) sits on the Overview, only when an
+earlier review logged recommendations (delete it on a first review): one card per decision (`.last-group`), headed "Keep doing these" (Keep), "Try more" (Revise) or "You can stop these" (Drop), without heading icons. Delete a group with no recommendations, and let the rest fill the row. Each recommendation is a `details.last-fix`: its name, one short result with the number when there is one ("You used it more: 11% to 18%", "Too soon to tell, 2 weeks in", "Not tried yet. Now only for long prototypes"). Put what changed, with its window, in the fold. Name what a percentage measures and which apps it covers in the result or its expanded explanation. All recommendations start collapsed. The verdict cites the outcome the recommendation was meant to move, as well as whether they used it. Add a second only when something else more likely explains it, or the recommendation is younger than the window. Then one card per briefing, context, memory or repeat-work pattern,
+biggest first (time and usage saved). Number the cards from 1 in the `.rank` circle, and put any card without a recommendation last, so a card's number is its recommendation's number. Each card: a title that states the finding; the apps as
 plain text, including every app its evidence names, and one how-sure chip (Sure, Likely, Hunch); a full-width, left-aligned `.ic-summary` paragraph directly below the heading, with no "What happens" label. Explain the behavior and what the title leaves out in two sentences; add detail without restating the title. Put Evidence and Why it matters inside one native `details.ic-evidence`, collapsed by default and labelled "Evidence and why it matters". Keep the evidence's windows, limits and supporting quotes there. When the same standing rule
 applies to two or more apps the person uses, put a separate collapsed `details.ic-rule-comparison`
 labelled "Which apps have which rules" directly below evidence in `.ic-disclosures`. Show only the apps
 the rule applies to. Distinguish rules known to be missing from settings you could not check. Omit the
-comparison for a one-app fix or a finding without shared rules. Keep both disclosures available in print. Then the fix in the same
-card: the fix panel (`section.try`). Its `h4` says in one sentence what the app will set up ("Ask
-Codex to set up a rule that offers a handoff when you switch projects."); the fix's name stays the
+comparison for a one-app recommendation or a finding without shared rules. Keep both disclosures available in print. Then the recommendation in the same
+card: the recommendation panel (`section.try`). Its `h4` says in one sentence what the app will set up ("Ask
+Codex to set up a rule that offers a handoff when you switch projects."); the recommendation's name stays the
 same in the log and on the Overview. Then a `.try-saves` line with what it saves (see "Saving time
 and usage"), and a `.try-do` line: "Approve opens <app> with this prompt. <App> shows the rule and
 saves nothing until you say yes." (the skill, each change, as fits). The prompt sits in a collapsed
 `details.try-prompt` labelled "View prompt", then Approve and Decline. Set `data-app` and
-`data-app-name` on the panel. Use the app the fix is for; for a fix across apps, use whichever of
+`data-app-name` on the panel. Use the app the recommendation is for; for a recommendation across apps, use whichever of
 Codex and Claude Code has more of their sessions in the window: `codex` for Codex, `claude-desktop`
 for Claude Code in the Claude desktop app, `copy` for Claude Code only in a terminal (long links
 fail there), claude.ai, or any other app. Approve opens a new session in that app with the prompt
 typed in but not sent, and copies the prompt in case no app opens; `copy` shows "Copy prompt"
-instead. Decline is remembered in that browser only, so the next review judges a fix from the logs,
+instead. Decline is remembered in that browser only, so the next review judges a recommendation from the logs,
 never from a Decline. Keep every prompt under 1,800 characters, so it fits in the link.
-Pick the form that fits the fix, and don't force every fix into one: a saved rule when the AI
+Pick the form that fits the recommendation, and don't force every recommendation into one: a saved rule when the AI
 should act differently every time; a skill, hook or schedule for steps that repeat; a settings
 change when the app already has a setting for it (default model, a helper agent's or skill's
 `model:`, a skill's `disable-model-invocation`); a one-time prompt or a habit when only the user
-can do it, such as briefing or opening a fresh session. A settings prompt asks the fixer to read
+can do it, such as briefing or opening a fresh session. A settings prompt asks the agent to read
 the current settings first, skip what's already set, show the exact change and the file it goes
 in, and wait for the user's yes before changing anything; after the change, it reads back what
 changed. Choose one app the user uses and can act from. For a rule shared across apps, the copyable prompt
 must name every relevant destination and the scope of the rule in each. Include the exact rule text.
-Ask the fixer to apply it in each app's supported format where it is missing, keep equivalent rules,
+Ask the agent to apply it in each app's supported format where it is missing, keep equivalent rules,
 preserve other instructions and flag conflicts before editing. Ask for an outcome for each app: read
 back what changed or was already set, and give the user the exact text to paste and where to put it
-for any app the fixer cannot update. Have the fixer say which apps still need a fresh-session check
-to confirm the rule takes effect. A one-app fix targets that app alone. Never promise access or
-automatic model switching. A handoff prompt still tells the user to start a fresh session. Every pattern with a fix gets one.
+for any app the agent cannot update. Have the agent say which apps still need a fresh-session check
+to confirm the rule takes effect. A one-app recommendation targets that app alone. Never promise access or
+automatic model switching. A handoff prompt still tells the user to start a fresh session. Every pattern with a recommendation gets one.
 How-sure chips mean: Sure, seen repeatedly or checked in their files. Likely, repeated, but
 something else could explain it. Hunch, thin evidence.
 
 - **Over-trust.** If they ship what they build with AI, include an over-trust pattern when the
   evidence supports it. Build it from both sides: checks they asked for (Output checking) and
   checks the AI ran (Tested by the AI, Untested changes shipped). Name which side is weak, since the
-  fixes differ: asking better questions, or a saved rule that runs the check before anything
+  recommendations differ: asking better questions, or a saved rule that runs the check before anything
   ships. The logs can't see checks they did themselves in a browser or in their head, so say
   "no check in the session", never "you didn't check".
 - **Long sessions.** When long sessions take a large share of usage, fold that into a
   long-session card (see "Usage").
 - **Delegation.** When "Sessions crowded with lookups" take a tenth of usage or more, add a
-  delegation card: the fix hands wide reading to a helper agent that returns a short answer,
+  delegation card: the recommendation hands wide reading to a helper agent that returns a short answer,
   and hands checks to a fresh helper agent that gets the claim and where to verify it, never
   the reasoning behind it. Keep building, taste and anything that needs their own facts in the
   main session.
-- **Repeat work.** A P1 repeat from "3. Repeat work" gets a card whose fix panel sets up the
-  schedule, hook or skill. In the fix line, say what it does ("runs on its own
+- **Repeat work.** A P1 repeat from "3. Repeat work" gets a card whose recommendation panel sets up the
+  schedule, hook or skill. In the recommendation line, say what it does ("runs on its own
   every Monday"), not the mechanism ("Stop hook").
 - **Retry on a new model.** A goal from "Goals worth retrying on a new model" gets a card
   titled with the goal and the new model ("A new model could push your page speed further").
   The evidence names the sessions spent on it with their window, the best result so far when a
   session states one, and the model's release date with its source. The saving is in words
   ("A fresh try at work you've spent 7 sessions on"), since the gain isn't known yet. The
-  fix panel's `.try-do` says the app proposes a plan of experiments and changes nothing until
+  recommendation panel's `.try-do` says the app proposes a plan of experiments and changes nothing until
   they pick one. These cards go after the cards with a measured saving.
 
-Keep each fix's bet, metric and
+Keep each recommendation's bet, metric and
 keep-it-if rule in the log.
 
 **Keep your skills current** (`#part-3`). A one-sentence headline with how many skills are
@@ -671,7 +671,7 @@ go in the sidebar's "References" list.
   automation group's charts. One row per repeat you kept from "3. Repeat work", most repeated
   first: the request in curly quotes, trimmed to its ask; the count as
   "<n> times in <span>" from `last_4_weeks` (or `times` with the span from `first` to `last`);
-  the fix as one line to paste, naming the app ("Tell Claude Code: “Every Monday, …”"). Delete the block when there are no repeats, and on claude.ai.
+  the recommendation as one line to paste, naming the app ("Tell Claude Code: “Every Monday, …”"). Delete the block when there are no repeats, and on claude.ai.
 - **Activity since your last review** (with its dates; on a first review, "Activity, <dates>"): the
   usage-limit line, then the visible "By app" and "Skills and commands" tables, counted over the same dates.
 
@@ -694,13 +694,13 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
 - **Long sessions** (How you brief AI and set up your apps). Sessions past `long_line` (150k tokens,
   a line we chose); on the page, call them "very long sessions". Give the
   share of usage they took, how a message there compares with a typical message, and the
-  biggest sessions. The fix: start fresh when a phase ends.
+  biggest sessions. The recommendation: start fresh when a phase ends.
 - **Starting context** (Keep your skills current, "Worth a look"; the chart calls it "Loaded
   before you type" and shows it in words, tokens × 0.75). What loads before the first message.
   In the row: "14 unused skills load into every session / They take a tenth of your usage /
   Likely / Turn them off from loading on their own". Name the skills and plugins not run in
   `unused_days`, their share of usage (skip the row when it's under a tenth), and any
-  instruction file that copies another. The fix for their own skills is
+  instruction file that copies another. The recommendation for their own skills is
   `disable-model-invocation: true` in the frontmatter, given in a copy block: the skill stays
   installed and `/skill-name` still runs it, but it stops loading on its own. For plugins, turn
   them off in `/plugin`. Never suggest deleting or moving skills. When `log_days` is shorter than
@@ -740,9 +740,9 @@ steps to add the data. Write none of this by hand.
   If files were not included, say “No saved skills were included in this review.” If unreadable,
   say “This review couldn’t read the saved skills.” Explain how to include them or check access
   in their assistant; neither state proves absence. Keep available session findings.
-- **No actionable findings.** When adequate evidence reveals nothing worth fixing, set
+- **No actionable findings.** When adequate evidence reveals nothing worth recommending, set
   `#part-2` to `data-findings-state="none"`. Keep its heading, verified scope and built-in
-  `.briefs-empty` result. Delete the sample cards, fix panels and their links elsewhere;
+  `.briefs-empty` result. Delete the sample cards, recommendation panels and their links elsewhere;
   do not invent recommendations. If evidence is sparse instead, explain that limit, retain
   supported observations and charts, and omit weak claims. These are different outcomes.
 - **First review.** Same report, no extra sections. "Following up on your last review" is deleted, and each chart shows whatever
@@ -829,13 +829,13 @@ Snapshot (last 4 weeks): 41 sessions a week · 52% briefed · 1.2 corrections/10
 Repeats: 3 kept (job tracker summary ×6, voice rewrite ×5, report checker ×4) · 2 dropped
 Report: <link or path>
 Findings: P1 <one-liners> · P2 <count> · P3 <count>
-Fixes: [ ] <fix> · [ ] <fix> · [ ] <fix>
-Bets: <fix>: track <metric>; keep if <rule>; check <date>   (one line per fix)
+Recommendations: [ ] <recommendation> · [ ] <recommendation> · [ ] <recommendation>
+Bets: <recommendation>: track <metric>; keep if <rule>; check <date>   (one line per recommendation)
 ```
 
 The next review reads the open boxes. If a finding shows up in three reviews running, say
-so and suggest a structural fix (a hook, a skill, a template) in place of more advice. When a
-repeat from the log stops appearing after its fix, say so in "Following up on your last review".
+so and recommend a structural change (a hook, a skill, a template) in place of more advice. When a
+repeat from the log stops appearing after its recommendation, say so in "Following up on your last review".
 
 ## Rules
 
@@ -884,7 +884,7 @@ list` to resolve IDs, then `merge TARGET OTHER...`, `separate MEMBER LABEL`, `re
 or `assign-folder APP ABSOLUTE_FOLDER PROJECT`. These operations honor the user's instruction; do not
 ask again when the requested grouping is clear. Regenerate with the all-history collector afterward.
 When a folder move cannot be verified, ask whether it is the same project before assigning it. Never
-change findings or fixes merely because a chart filter changes. Filtered-empty copy says no included sessions match, names the verified outside
+change findings or recommendations merely because a chart filter changes. Filtered-empty copy says no included sessions match, names the verified outside
 count and offers Clear filters. It does not imply missing coverage or no activity elsewhere.
 
 An updated export creates a new report snapshot. Recompute its review summary and activity
