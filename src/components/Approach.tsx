@@ -18,14 +18,6 @@ const weeklyShare = [
   { date: "Oct 19", percent: 61, tick: true },
 ];
 
-const appActivity = [
-  { app: "claude.ai", sessions: 36, messages: 204 },
-  { app: "Claude Code", sessions: 31, messages: 249 },
-  { app: "Codex", sessions: 6, messages: 54 },
-  { app: "Cursor", sessions: 6, messages: 54 },
-  { app: "ChatGPT", sessions: 3, messages: 15 },
-];
-
 const skillPrompt = 'Update my pr-review skill. Its tool table names the wrong agent. Change the two column headings to "Claude desktop (built-in browser)" and "Claude Code, Codex, Cursor and others".\nThen tell me in plain words what changed before you save it.';
 
 const skillFindings = [
@@ -36,68 +28,38 @@ const skillFindings = [
 
 function UsageExample() {
   return (
-    <ReportExcerpt title="Where does my usage go?">
-      <div className="flex flex-col gap-4 p-4 sm:p-6">
-        <figure className="flex flex-col gap-3 rounded-lg border border-rule p-4">
-          <figcaption className="flex flex-wrap items-center gap-x-4 gap-y-1">
-            <span className="font-display text-3xl font-bold text-accent">{weeklyShare.at(-1)?.percent}%</span>
+    <ReportExcerpt title="Where does my usage go?" tone="report">
+      <div className="p-4 sm:p-6">
+        <figure className="flex flex-col gap-2 rounded-lg border border-white/10 p-4">
+          <figcaption className="flex items-center gap-3">
+            <span className="font-display text-[32px] leading-none font-bold text-accent">{weeklyShare.at(-1)?.percent}%</span>
             <div>
-              <h4 className="font-medium text-ink">Long-session share</h4>
-              <p className="text-sm text-text-3">Of Claude Code and Codex usage, rolling 4 weeks</p>
+              <h4 className="text-sm font-semibold text-neutral-50">Long-session share</h4>
+              <p className="text-xs text-neutral-400">of Claude Code and Codex usage in the last 4 weeks</p>
             </div>
           </figcaption>
-          <div className="flex gap-2">
-            <div className="flex h-24 flex-col justify-between text-xs text-text-3" aria-hidden="true">
+          <div className="grid h-24 grid-cols-[2rem_minmax(0,1fr)] gap-2">
+            <div className="flex flex-col justify-between text-xs text-neutral-400" aria-hidden="true">
               <span>70%</span>
               <span>0%</span>
             </div>
-            <div className="min-w-0 flex-1">
-              <ul aria-label="Weekly long-session share" className="flex h-24 items-end gap-1 border-b border-rule sm:gap-2">
-                {weeklyShare.map(({ date, percent }) => (
-                  <li
-                    key={date}
-                    className="min-w-0 flex-1 rounded-t-xs bg-accent/50 nth-last-[-n+4]:bg-accent"
-                    style={{ height: `${percent / 70 * 100}%` }}
-                    title={`Week of ${date}: ${percent}%`}
-                  >
-                    <span className="sr-only">Week of {date}: {percent}%</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-2 flex justify-between gap-1 text-xs text-text-3" aria-hidden="true">
-                {weeklyShare.filter(({ tick }) => tick).map(({ date }) => <span key={date}>{date}</span>)}
-              </div>
-            </div>
+            <ul aria-label="Weekly long-session share" className="flex items-end gap-1 border-b border-white/15 sm:gap-2">
+              {weeklyShare.map(({ date, percent }) => (
+                <li
+                  key={date}
+                  className="min-w-0 flex-1 rounded-t-sm bg-accent/45 nth-last-[-n+4]:bg-accent"
+                  style={{ height: `${percent / 70 * 100}%` }}
+                  title={`Week of ${date}: ${percent}%`}
+                >
+                  <span className="sr-only">Week of {date}: {percent}%</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="flex justify-between gap-1 text-xs text-neutral-400" aria-hidden="true">
+            {weeklyShare.filter(({ tick }) => tick).map(({ date }) => <span key={date}>{date}</span>)}
           </div>
         </figure>
-        <div className="rounded-lg border border-rule p-4">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
-            <div>
-              <h4 className="font-medium text-ink">Activity since the last review</h4>
-              <p className="text-sm text-text-3">Oct 12–25</p>
-            </div>
-            <p className="text-sm text-accent">1 usage limit reached</p>
-          </div>
-          <table className="w-full text-sm">
-            <caption className="sr-only">Sample activity by app</caption>
-            <thead className="text-text-3">
-              <tr>
-                <th scope="col" className="pb-2 text-left font-medium">App</th>
-                <th scope="col" className="pb-2 text-right font-medium">Sessions</th>
-                <th scope="col" className="pb-2 text-right font-medium">Messages</th>
-              </tr>
-            </thead>
-            <tbody className="text-text-2">
-              {appActivity.map(({ app, sessions, messages }) => (
-                <tr key={app} className="border-t border-rule">
-                  <th scope="row" className="py-2 text-left font-normal">{app}</th>
-                  <td className="py-2 text-right tabular-nums">{sessions}</td>
-                  <td className="py-2 text-right tabular-nums">{messages}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
       </div>
     </ReportExcerpt>
   );

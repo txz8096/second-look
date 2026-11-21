@@ -26,15 +26,22 @@ export function FeatureSection({ id, kicker, title, description, link, children 
   );
 }
 
-export function ReportExcerpt({ title, description, className = "", children }: {
+const excerptTones = {
+  site: { frame: "rounded-xl border-accent/25 bg-dark", header: "border-rule bg-accent/10" },
+  report: { frame: "rounded-[14px] border-accent/28 bg-neutral-900", header: "border-white/10 bg-accent/8" },
+};
+
+export function ReportExcerpt({ title, description, className = "", tone = "site", children }: {
   title: string;
   description?: string;
   className?: string;
+  tone?: keyof typeof excerptTones;
   children: ReactNode;
 }) {
+  const colors = excerptTones[tone];
   return (
-    <article className={`min-w-0 overflow-hidden rounded-xl border border-accent/25 bg-dark shadow-xl shadow-black/30 ${className}`}>
-      <header className="border-b border-rule bg-accent/10 px-4 py-4 sm:px-6">
+    <article className={`min-w-0 overflow-hidden border shadow-xl shadow-black/30 ${colors.frame} ${className}`}>
+      <header className={`border-b px-4 py-4 sm:px-6 ${colors.header}`}>
         <h3 className="font-display text-base leading-snug font-bold text-accent">{title}</h3>
         {description && <p className="mt-1 text-sm text-text-3">{description}</p>}
       </header>
