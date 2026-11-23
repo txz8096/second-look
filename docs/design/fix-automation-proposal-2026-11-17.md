@@ -4,7 +4,7 @@ Status: approved 2026-11-17 and built in `report-template.html`, `SKILL.md`, `re
 
 ## What changes
 
-Each fix on Briefs & setup becomes a proposal to set up a saved rule or a skill once, so the user stops having to remember a prompt. The card follows the approved Wonder pattern, [Briefs And Setup Dark Matched](https://app.wonder.so/melissa-tang/files/01a1a83e-7866-73b5-bbba-494e6ae1cb06/branches/main/pages/01a1bef0-8041-7008-9cc4-cb755cd1295f?nodeId=c1f9b01e-653b-50fd-bd27-e9c96cbf8573): one line saying what the app will set up, the saving, a collapsed **View prompt**, and **Approve** / **Decline**.
+Each fix on Briefs & setup becomes a proposal to set up a saved rule or a skill once, so the user stops having to remember a prompt. The card follows the approved Wonder pattern, Briefs And Setup Dark Matched: one line saying what the app will set up, the saving, a collapsed **View prompt**, and **Approve** / **Decline**.
 
 - **Approve** opens a new session in Codex or Claude Code, with the prompt already typed in. Second Look picks whichever of the two apps has more of the user's sessions in the review window. The user reads it and presses send. The AI then shows the exact rule or skill and where it would save it in each app. It waits for the user's yes before saving anything. So the user approves twice: once on the report, then again on the actual change.
 - **Decline** marks the card as declined. At the next review, that fix shows as "You declined this" rather than "Not tried yet".

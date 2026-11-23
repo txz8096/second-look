@@ -85,4 +85,4 @@ No keyboard, clipboard, destination-link, screen-reader, mobile, printing, colle
 
 ## Files and scope
 
-Changed only `docs/design/` in `/Users/zhouyou/Documents/GitHub/second-look`. No production or canvas changes.
+Changed only `docs/design/`. No production or canvas changes.

@@ -11,22 +11,22 @@ The launch pass identified 25 primary cases and five additional checks. The inde
 
 | Canvas design | Cases represented | Result and next step |
 | --- | --- | --- |
-| [Sparse Review Overview](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=b9762742-a7a5-5651-a80b-f70a7539530b) | 2–3; sparse evidence | Preserve activity and individual examples. Explain each unavailable measure locally. Skills remain independently reviewable only if actually available. |
-| [No Sessions Preflight](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=3830ee11-701e-539b-a1e2-17298a871fd4) | 1, 7–9; selected period empty | Proposed preflight with explicit period and source outcomes. No completed report is claimed. Missing or inaccessible sources remain unknown. |
-| [Report Coverage Manager](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=a3509a1f-a67d-524d-aefe-7acc580721ca) | 6–9, 14–16, 25 | One row per app, source-specific action, latest included session dates, honest retention limits. |
-| [Add History Instructions](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=df74ed30-83f1-56e2-9ee8-2b86e76174c3) | 6, 8–9, 14; recoverable missing exports | Explain the assistant handoff, show a copyable request, generate another snapshot. |
-| [Updated Report Snapshot](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=c5360824-36ab-5af0-a2f9-bf4a53003225) | 13; overlapping-history check | Describe verified coverage changes without claiming improved habits or unsupported deduplication counts. Existing weekly overlap-replacement rules still apply. |
-| [Reading Issues Review](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=80c63561-3015-51c8-9975-5fc160005049) | 10–12 | Proposed verified read/parse diagnostics. Keep readable evidence, unknown failure volume, source-specific help and a visible copy request. |
-| [Metric Availability Review](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=22cf59c8-d945-599c-9675-5a8577912acb) | 17–18, 21, 24 | Distinguish missing fields, no qualifying work, and estimated session counts. More data cannot repair unsupported fields. |
-| [Comparison Eligibility Review](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=df15e06a-c904-5f53-8f68-abf8122909a7) | 3–5, 13, 16, 22–23 | Retain an eligible current value, withhold unsupported change, separate incomplete weeks, and explain comparable scope. |
-| [Filtered Sessions Empty](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=0f271f29-0304-5b1c-8f25-51d429e9701e) | 19–20 | Show applied filters and an explicit return to all included dates/apps/work types. |
-| [No Saved Skills](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=000e3783-4a41-584b-a376-47dce3e93988) | No saved skills | Verified absence only; explain a skill and preserve available session findings. Separate not-included/unreadable copy remains in the interaction spec. |
-| [No Strong Findings](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=9f38745d-ce53-5e41-baf1-7b634fd00f3a) | No strong findings | Omit weak recommendations while keeping supported evidence available. |
-| [No Actionable Issues](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=80808961-d81b-5ed6-9fd9-3ff979a34cc3) | Adequate evidence, no actionable issues | A neutral valid result with no request for more information. |
+| Sparse Review Overview | 2–3; sparse evidence | Preserve activity and individual examples. Explain each unavailable measure locally. Skills remain independently reviewable only if actually available. |
+| No Sessions Preflight | 1, 7–9; selected period empty | Proposed preflight with explicit period and source outcomes. No completed report is claimed. Missing or inaccessible sources remain unknown. |
+| Report Coverage Manager | 6–9, 14–16, 25 | One row per app, source-specific action, latest included session dates, honest retention limits. |
+| Add History Instructions | 6, 8–9, 14; recoverable missing exports | Explain the assistant handoff, show a copyable request, generate another snapshot. |
+| Updated Report Snapshot | 13; overlapping-history check | Describe verified coverage changes without claiming improved habits or unsupported deduplication counts. Existing weekly overlap-replacement rules still apply. |
+| Reading Issues Review | 10–12 | Proposed verified read/parse diagnostics. Keep readable evidence, unknown failure volume, source-specific help and a visible copy request. |
+| Metric Availability Review | 17–18, 21, 24 | Distinguish missing fields, no qualifying work, and estimated session counts. More data cannot repair unsupported fields. |
+| Comparison Eligibility Review | 3–5, 13, 16, 22–23 | Retain an eligible current value, withhold unsupported change, separate incomplete weeks, and explain comparable scope. |
+| Filtered Sessions Empty | 19–20 | Show applied filters and an explicit return to all included dates/apps/work types. |
+| No Saved Skills | No saved skills | Verified absence only; explain a skill and preserve available session findings. Separate not-included/unreadable copy remains in the interaction spec. |
+| No Strong Findings | No strong findings | Omit weak recommendations while keeping supported evidence available. |
+| No Actionable Issues | Adequate evidence, no actionable issues | A neutral valid result with no request for more information. |
 
 First-report-with-history is a cross-cutting rule: existing historical data may already support a comparison. Sample contamination is also cross-cutting: each full screen labels example data in its main content and sidebar. Supplementary states carry their own example label.
 
-Start from [Report Edge Cases Caption](https://app.wonder.so/melissa-tang/files/01a18e27-aa7e-75c0-b8aa-aa84e1463d5b/branches/main/pages/01a18e27-aa80-733d-a3df-27cf3c2a8f2c?nodeId=fd437140-0f18-50ec-8273-71e1988e6f7e) on the same second look canvas page. Original landing/report designs were preserved.
+Start from Report Edge Cases Caption on the same second look canvas page. Original landing/report designs were preserved.
 
 ## Recovery flow and behavior contracts
 
@@ -81,7 +81,7 @@ Reviewed screenshots after final edits for all eight full screens and four inlin
 
 No application code, product skill, report template, public sample, README, metadata, listings or release artifact was changed. Their behavior has not changed; richer proposed states remain explicitly unshipped. No build or runtime tests were run for this canvas/document-only exploration.
 
-Changed repository folder: `/Users/zhouyou/Documents/GitHub/second-look/docs/design/`. Canvas additions are in the existing **second look** file.
+Changed repository folder: `docs/design/`. Canvas additions are in the existing **second look** file.
 
 ## 2026-11-11 · Selected edge-case visualization update
 
@@ -89,16 +89,16 @@ Applied the approved minimal-color, pink-first rule to the 22 areas Melissa sele
 
 Four existing screens required changes:
 
-- [Updated Coverage Settings](https://app.wonder.so/melissa-tang/files/01a1a83e-7866-73b5-bbba-494e6ae1cb06/branches/main/pages/01a1bef0-8041-7008-9cc4-cb755cd1295f?nodeId=01a1cd17-012f-774d-8435-bf37afed1601)
-- [Updated Unsupported Measures](https://app.wonder.so/melissa-tang/files/01a1a83e-7866-73b5-bbba-494e6ae1cb06/branches/main/pages/01a1bef0-8041-7008-9cc4-cb755cd1295f?nodeId=01a1cd17-0130-766e-8a00-6f47b0ab4b08)
-- [Updated Comparison Not Ready](https://app.wonder.so/melissa-tang/files/01a1a83e-7866-73b5-bbba-494e6ae1cb06/branches/main/pages/01a1bef0-8041-7008-9cc4-cb755cd1295f?nodeId=01a1cd17-0131-7108-8c20-c0764bfb348a)
-- [Updated Unreadable Sources](https://app.wonder.so/melissa-tang/files/01a1a83e-7866-73b5-bbba-494e6ae1cb06/branches/main/pages/01a1bef0-8041-7008-9cc4-cb755cd1295f?nodeId=01a1cd17-0132-762b-b705-d0cb96bc8207)
+- Updated Coverage Settings
+- Updated Unsupported Measures
+- Updated Comparison Not Ready
+- Updated Unreadable Sources
 
 Updated 14 chart/legend marks from the pale brand pink (`--brand-pink`, #f2a7b8) to the existing chart pink (`--candidate-chart-pink`, #e6308a): five independently labeled work/app bars, five coverage data segments, two matching Data swatches, and the comparison line/endpoint. Brand, navigation and action colors remain unchanged. No extra hues, outlines, patterns or underlays were added.
 
 The comparison-not-ready fixture had an unsupported “Up: more sessions opened with a brief” caption despite explicitly lacking a valid comparison. Replaced it with the existing measured result: “6 of the last 10 Codex sessions opened with a brief (60%).” Preserved the 60% endpoint, earlier-window limitation, source scope and incomplete-week explanation. Missing or unreadable data stays neutral and unknown; unsupported measures are not rendered as zero. The 18 other selected areas had no relevant color mismatch and were left untouched.
 
-Verification: read all 22 selected subtrees before and after. Every subtree exactly matches its original plus the 14 color substitutions and one caption edit. Reviewed final screenshots of all four changed screens and finished them. Scenario captions, row arrangement, controls, labels, sample values, supported evidence and recovery instructions were preserved. This targeted review was performed by the canvas editor; it was not an independent broad scenario audit. No new scenarios, artboards, product behavior, runtime tests, build, commit, push or release were added for this pass. Changed repository folder: `/Users/zhouyou/Documents/GitHub/second-look/docs/design/`.
+Verification: read all 22 selected subtrees before and after. Every subtree exactly matches its original plus the 14 color substitutions and one caption edit. Reviewed final screenshots of all four changed screens and finished them. Scenario captions, row arrangement, controls, labels, sample values, supported evidence and recovery instructions were preserved. This targeted review was performed by the canvas editor; it was not an independent broad scenario audit. No new scenarios, artboards, product behavior, runtime tests, build, commit, push or release were added for this pass. Changed repository folder: `docs/design/`.
 
 ## 2026-11-11 — Import confirmation simplified (one preview, under review)
 

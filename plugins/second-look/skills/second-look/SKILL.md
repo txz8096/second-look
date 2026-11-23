@@ -558,7 +558,7 @@ words: "you've been checking prototypes less and starting over more often", neve
 20 points". Say only what the charts and cards show, and leave out a guess about why. If a data source starting or changing could explain a change,
 don't claim the change: compare only apps present in both windows, or leave it out. App coverage
 goes in the data coverage card, not here. A scoped review says its scope in the summary ("This covers your
-MAT study sessions since Sep 28"). If the year's trend and the recent one differ, say which is which in words ("Over the past year… Lately…"). With no history, say that plainly: on a first review, say it's
+Streak sessions since Sep 28"). If the year's trend and the recent one differ, say which is which in words ("Over the past year… Lately…"). With no history, say that plainly: on a first review, say it's
 the first and what it covers ("It covers the 26 days your apps kept").
 
 **Habit terms.** Wrap the first mention of each habit once inside a card body, even when the prose

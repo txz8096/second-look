@@ -2,7 +2,7 @@
 
 Melissa approved this hierarchy on November 12 and asked to ship it on November 14 in the current Wonder conversation. Conversation ID and transcript URL are unavailable; these are date-only references to visible messages.
 
-Source design: [Briefs And Setup Dark Matched](https://app.wonder.so/melissa-tang/files/01a1a83e-7866-73b5-bbba-494e6ae1cb06/branches/main/pages/01a1bef0-8041-7008-9cc4-cb755cd1295f?nodeId=c1f9b01e-653b-50fd-bd27-e9c96cbf8573). Tracking: [MEL-47](https://linear.app/melissat/issue/MEL-47/ship-the-approved-fix-card-summaries-and-collapsible-evidence).
+Source design: Briefs And Setup Dark Matched. Tracking: MEL-47.
 
 ## Shipping scope
 

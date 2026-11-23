@@ -31,7 +31,7 @@ All replacements reuse the existing `candidate-chart/pink` token (`#e6308a`) for
 - Pink contrasts 4.40:1 against dark cards (`#171717`), 3.71:1 against dark tracks (`#262626`) and 4.07:1 against white. It is used for chart marks here; text colors were preserved. Existing stacked-palette limitations from the prior accessibility audit still apply; this is not a full-site WCAG certification.
 - Updated AGENTS.md and design-system guidance to record the approved direction. Existing uncommitted wording edits are preserved and excluded from the shipment. Canvas verification is separate from the implementation checks below.
 
-[Habits Clear Dark Matched](https://app.wonder.so/melissa-tang/files/01a1a83e-7866-73b5-bbba-494e6ae1cb06/branches/main/pages/01a1bef0-8041-7008-9cc4-cb755cd1295f?nodeId=54616f80-b307-5d77-85f6-e20606797790)
+Habits Clear Dark Matched
 
 ## Implementation shipment
 

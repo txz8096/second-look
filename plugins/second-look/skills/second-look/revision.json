@@ -1,4 +1,4 @@
 {
-  "revision": 5,
-  "benefit": "The sample report's new-model retry example now names Fable, matching the landing page."
+  "revision": 6,
+  "benefit": "The review instructions now use the sample report's project name as their example, so no outside project name can carry into your summary."
 }

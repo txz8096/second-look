@@ -22,4 +22,4 @@ Pink remains the shared series color for independent trends, separately labeled 
 - Earlier unrelated wording edits are preserved in the working tree. The isolated shipment has identical styles/scripts and excludes those edits. Hero screenshots are generated separately for the working and isolated templates.
 - GitHub's normal and force-cancel endpoints refused the stale runs with a state conflict. A fresh deployment will be requested for this checked commit; final live-site verification is required before claiming the public update is complete.
 
-Changed folder: `/Users/zhouyou/Documents/GitHub/second-look`.
+Changed folder: the repository root.

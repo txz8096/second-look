@@ -57,8 +57,8 @@ class ProjectHistoryTests(unittest.TestCase):
 
     def test_app_generated_id_folders_are_unknown_and_old_mappings_are_dropped(self):
         with tempfile.TemporaryDirectory() as home:
-            doc = Path(home)/'.pencil/documents/607a66f8-ee87-48be-b4af-1b641b85205b'; doc.mkdir(parents=True)
-            plain = Path(home)/'MAT study'; plain.mkdir()
+            doc = Path(home)/'.pencil/documents/00000000-0000-4000-8000-000000000001'; doc.mkdir(parents=True)
+            plain = Path(home)/'Streak'; plain.mkdir()
             self.assertIsNone(folder_identity(str(doc),home=home))
             self.assertIsNone(folder_identity(str(doc/'assets'),home=home))
             self.assertTrue(folder_identity(str(plain),home=home))
@@ -69,14 +69,14 @@ class ProjectHistoryTests(unittest.TestCase):
             old = ProjectStore()
             stale = old.register('claude_code','folder:a',doc.name)
             kept = old.folder('claude_code',str(plain),home=home)
-            renamed = old.register('claude_code','folder:b','1df991d6-d708-4f53-aaf8-64098f9f9f8c')
+            renamed = old.register('claude_code','folder:b','00000000-0000-4000-8000-000000000002')
             old.data['projects'][old.project_for(renamed)].update(label='Pencil drafts',renamed=True)
             old.data['paths']['claude_code:x'] = stale
             path = Path(home)/'projects.json'; path.write_text(json.dumps(old.data))
             store = ProjectStore(str(path))
             self.assertEqual(store.project_for(stale),'')
             self.assertNotIn(stale,store.data['paths'].values())
-            self.assertEqual(sorted(store.labels().values()),['MAT study','Pencil drafts'])
+            self.assertEqual(sorted(store.labels().values()),['Pencil drafts','Streak'])
             self.assertEqual(store.project_for(kept),old.project_for(kept))
             self.assertEqual(store.folder('claude_code',str(doc),home=home),'')
 
