@@ -1,0 +1,32 @@
+name: A recommendation missed the mark
+description: A finding was wrong, obvious, or not worth trying
+labels: [feedback]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This feedback helps most. Please don't paste report text or session quotes here, since this issue is public. Describe the finding in your own words.
+  - type: textarea
+    id: finding
+    attributes:
+      label: Which finding or recommendation?
+      placeholder: "The one saying I repeat my testing instructions and should make a standing rule."
+    validations:
+      required: true
+  - type: dropdown
+    id: verdict
+    attributes:
+      label: What was wrong with it?
+      options:
+        - The pattern isn't real
+        - The pattern is real, but I already knew it
+        - The recommendation doesn't fit how I work
+        - I tried it and it didn't help
+        - Something else
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Tell me more
+      description: What would have been more useful?

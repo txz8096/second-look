@@ -2,7 +2,7 @@
   "name": "second-look",
   "description": "Second Look reviews your AI sessions across your apps, finds recurring patterns, and makes recommendations to try.",
   "version": "0.9.0",
-  "author": { "name": "Melissa Tang" },
+  "author": { "name": "txz8096" },
   "homepage": "https://github.com/txz8096/second-look",
   "license": "MIT"
 }

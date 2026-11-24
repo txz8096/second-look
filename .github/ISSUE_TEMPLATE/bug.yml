@@ -1,0 +1,46 @@
+name: Something broke
+description: Install failed, a review errored, or the report looks wrong
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for trying Second Look. Please don't paste report text or session logs here, since this issue is public. Describe what happened instead, or attach a screenshot you've checked for anything private.
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install it?
+      options:
+        - Pasted the install prompt (Claude Code, Codex or Cursor)
+        - Uploaded the zip to claude.ai
+        - Claude Code plugin (/plugin install)
+        - Ran install.sh myself
+    validations:
+      required: true
+  - type: dropdown
+    id: app
+    attributes:
+      label: Which app did you start the review from?
+      options:
+        - Claude Code (terminal)
+        - Claude desktop app
+        - Codex
+        - Cursor
+        - claude.ai
+        - I didn't get that far
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: macOS 15, Ubuntu 24.04, …
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you asked for, what you expected, and what you got. Paste any error message.
+    validations:
+      required: true

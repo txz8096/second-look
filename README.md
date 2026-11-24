@@ -36,6 +36,8 @@ Each finding points to evidence from your sessions and gives you a change to try
 
 ### Claude Code, Codex, and Cursor
 
+Needs macOS or Linux and Python 3. Windows isn't supported yet; the [claude.ai version](#claudeai) works from any computer.
+
 Open Claude Code, Codex, or Cursor and paste this prompt.
 
 > Install Second Look from [github.com/txz8096/second-look](https://github.com/txz8096/second-look)
