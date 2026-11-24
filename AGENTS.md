@@ -4,7 +4,7 @@ This repo holds two things. The skill lives in `plugins/second-look/skills/secon
 
 ## Asking Melissa questions
 
-Ask one question per message. When several decisions are open, ask the one that blocks the most work, wait for the answer, then ask the next. Don't end a reply with a numbered list of questions. Give a recommended answer with the question when you have one.
+Ask one question per message. When several decisions are open, ask the one that blocks the most work, wait for the answer, then ask the next. Don't end a reply with a numbered list of questions. Give a recommended answer with the question when you have one. When the answer is a number she may not know offhand, give a typical range and say where it comes from, measured or estimated.
 
 ## Keep every surface in step
 
