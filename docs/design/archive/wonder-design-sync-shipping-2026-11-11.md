@@ -1,6 +1,6 @@
 # Wonder design sync after v0.3.9
 
-Melissa requested implementation and shipment of the Wonder changes since commit `2333c96` (v0.3.9). This supersedes the design-only status of the approved changes below. Source: **second look sample report**, main branch, launched page. The page already holds these designs; no new artboards or canvas edits were needed.
+The author requested implementation and shipment of the Wonder changes since commit `2333c96` (v0.3.9). This supersedes the design-only status of the approved changes below. Source: **second look sample report**, main branch, launched page. The page already holds these designs; no new artboards or canvas edits were needed.
 
 ## Implemented changes
 
@@ -15,7 +15,7 @@ Melissa requested implementation and shipment of the Wonder changes since commit
 | Unsupported Measures / Comparison Not Ready | Existing unavailable-field states remain. Comparisons now also withhold change when participating source scope differs between windows. Current facts remain; no unsupported Up/Down claim. Custom comparisons require eight complete weeks and qualifying denominators. |
 | No Actionable Issues | Built-in `.briefs-empty` state, using `data-findings-state="none"`, preserves trends and omits invented fixes. Generation guidance removes sample cards, plan and stale links. The checker accepts a missing plan for this explicit state. |
 
-The two no-skills candidates share verified-absence semantics. The later resource-rich candidate that Melissa edited supplies the implemented discovery content.
+The two no-skills candidates share verified-absence semantics. The later resource-rich candidate that the author edited supplies the implemented discovery content.
 
 ## Data and component mapping
 

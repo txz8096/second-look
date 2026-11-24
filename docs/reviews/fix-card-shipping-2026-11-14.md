@@ -1,6 +1,6 @@
 # Fix-card shipment — November 14, 2026
 
-Melissa approved this hierarchy on November 12 and asked to ship it on November 14 in the current Wonder conversation. Conversation ID and transcript URL are unavailable; these are date-only references to visible messages.
+The author approved this hierarchy on November 12 and asked to ship it on November 14 in the current Wonder conversation. Conversation ID and transcript URL are unavailable; these are date-only references to visible messages.
 
 Source design: Briefs And Setup Dark Matched. Tracking: MEL-47.
 
@@ -36,6 +36,6 @@ Pre-existing findings reported, outside this shipment:
 - At 320px, the hidden `#def-skill-part2` glossary tooltip extends the document to 330px. Reproduced in the captured pre-change template and after this change. Visible summary, evidence and action boxes fit; this suite does not claim zero document overflow.
 - The committed skill frontmatter description predates the canonical one-line description; the separate local project/history work changes it. That unrelated hunk is excluded here.
 
-Before publication, follow AGENTS.md: commit these files, then ask Melissa whether to rebuild the release ZIP or push only. The latest release at verification time is v0.5.0. Even before this ship, the skill directory differs from that tag in the template, design guidance and collector. No release/version/tag changes are authorized until she chooses.
+Before publication, follow AGENTS.md: commit these files, then ask the author whether to rebuild the release ZIP or push only. The latest release at verification time is v0.5.0. Even before this ship, the skill directory differs from that tag in the template, design guidance and collector. No release/version/tag changes are authorized until she chooses.
 
 After publication, confirm the Pages deployment, follow the landing page's actual report link, test production disclosures and compare served HTML with the committed template. Record the final deploy/release evidence in MEL-47 and HANDOFF.md.

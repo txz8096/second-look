@@ -1,6 +1,6 @@
 # Project filter and available history
 
-Status: revised decisions approved by Melissa on 2026-11-13. Implemented in v0.6.0 (`8a68d30`,
+Status: revised decisions approved by the author on 2026-11-13. Implemented in v0.6.0 (`8a68d30`,
 2026-11-15): non-Git folders in Claude Code, Codex and Cursor, automatic grouping with separate,
 merge and rename, source-preserving backfill and All history. Fixed 2026-11-19: folders an app names
 with a random ID (for example `~/.pencil/documents/<uuid>`) are Unknown, and history rows saved before
@@ -171,5 +171,5 @@ installed skills are not changed by this shipment.
 The landing screenshot stays unchanged because Overview's totals and visuals are unchanged.
 Install commands, plugin listings, metadata and FAQ make no filter-specific promise and remain
 unchanged. The v0.5.0 release zip is prepared from the committed skill; installed skills and old private
-reports need an explicit update or regeneration. Melissa requested commit, push and deployment
+reports need an explicit update or regeneration. The author requested commit, push and deployment
 with “ship it” after approving Unknown as the label.

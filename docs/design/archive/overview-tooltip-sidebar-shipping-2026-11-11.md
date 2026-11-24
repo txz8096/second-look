@@ -1,6 +1,6 @@
 # Overview details and pinned navigation
 
-Melissa approved the existing Overview tooltip preview and then the sidebar footer preview. This shipment replaces the Overview's visible “View chart data” disclosure with weekly detail tooltips and keeps navigation information at the viewport bottom.
+The author approved the existing Overview tooltip preview and then the sidebar footer preview. This shipment replaces the Overview's visible “View chart data” disclosure with weekly detail tooltips and keeps navigation information at the viewport bottom.
 
 ## Implementation
 

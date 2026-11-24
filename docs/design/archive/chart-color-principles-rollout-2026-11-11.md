@@ -1,6 +1,6 @@
 # Pink-first chart color practice — canvas rollout
 
-Melissa approved applying the single-preview direction to every matching screen on the launched page of **second look sample report**. Updated the existing screens in place; no artboards were created or moved. The canvas rollout came first; the subsequent “ship it” request authorizes implementing and publishing this same direction in the report. Public metadata is outside this chart change.
+The author approved applying the single-preview direction to every matching screen on the launched page of **second look sample report**. Updated the existing screens in place; no artboards were created or moved. The canvas rollout came first; the subsequent “ship it” request authorizes implementing and publishing this same direction in the report. Public metadata is outside this chart change.
 
 Use as few colors as the information needs within a chart and across a chart group. Independently labeled single-series charts and labeled bars in separate rows use pink first. Use multiple hues when stacked or overlapping categories need differentiation, with clear legends or direct labels. Do not introduce outlines, hatching, shadows or line underlays.
 

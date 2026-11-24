@@ -5,7 +5,7 @@
 
 Design review, 2026-11-08. Based on `report-edge-cases-scenarios.md`, the interaction handoff, and three representative canvas screens. These are design proposals, not claims that new diagnostics or report states already exist. No personal session logs were read.
 
-Final direction selected by Melissa: source check before report generation; today's source statuses for the first implementation; separate sample report. The primary agent recorded final screenshot checks and applied revisions in `report-edge-cases-design.md`. Rich diagnostics remain deferred. This does not constitute independent runtime verification of the revised concepts.
+Final direction selected by the author: source check before report generation; today's source statuses for the first implementation; separate sample report. The primary agent recorded final screenshot checks and applied revisions in `report-edge-cases-design.md`. Rich diagnostics remain deferred. This does not constitute independent runtime verification of the revised concepts.
 
 ## Eight design risks to resolve
 

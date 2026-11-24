@@ -1,6 +1,6 @@
 # Remove default chart-data links
 
-Melissa approved removing the persistent “View chart data” access from every visualization. Add separate data access only when a clear user need calls for it. The canvas already reflects this rule: 57 disclosures were removed from 15 Habits artboards, with exact before/after checks, screenshots and a page-wide search confirming none remain.
+The author approved removing the persistent “View chart data” access from every visualization. Add separate data access only when a clear user need calls for it. The canvas already reflects this rule: 57 disclosures were removed from 15 Habits artboards, with exact before/after checks, screenshots and a page-wide search confirming none remain.
 
 This shipment reuses `chartData()` to provide equivalent labeled tables without visible disclosures across Overview, trend cards and the helper-agent breakdown. Values remain available to screen readers and appear in print. Existing chart labels and point tooltips remain. Removed unused disclosure markup, styles and the extra screen-layout row; all graphs retain their original geometry and colors. Ordinary report tables are unchanged.
 

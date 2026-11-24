@@ -2,9 +2,9 @@
 
 This repo holds two things. The skill lives in `plugins/second-look/skills/second-look/`, starting from `SKILL.md`, and `install.sh` installs it. The website lives in `src/`, built with Next.js and deployed to GitHub Pages. The Next.js notes below apply only to `src/`.
 
-## Asking Melissa questions
+## Asking the author questions
 
-Ask one question per message. When several decisions are open, ask the one that blocks the most work, wait for the answer, then ask the next. Don't end a reply with a numbered list of questions. Give a recommended answer with the question when you have one. When the answer is a number she may not know offhand, give a typical range and say where it comes from, measured or estimated.
+Ask one question per message. When several decisions are open, ask the one that blocks the most work, wait for the answer, then ask the next. Don't end a reply with a numbered list of questions. Give a recommended answer with the question when you have one. When the answer is a number the author may not know offhand, give a typical range and say where it comes from, measured or estimated.
 
 ## Keep every surface in step
 
@@ -40,7 +40,7 @@ These must match everywhere they appear:
 
 When shipping changed skill contents, increment the integer in the skill’s `revision.json` and describe a concrete user benefit. This manifest lets reviews detect changes on main even between tagged releases.
 
-Pushing `report-template.html` updates the live sample report even without a release. A push that touches none of the paths in `.github/workflows/deploy-pages.yml` (a README-only change, for example) runs no deploy, which is expected. When you report a ship, state in one line, as a fact and without asking, whether that folder differs from the latest release tag (`git diff --name-only <tag> HEAD -- plugins/second-look/skills/second-look/`), so Melissa can see what the next release will carry.
+Pushing `report-template.html` updates the live sample report even without a release. A push that touches none of the paths in `.github/workflows/deploy-pages.yml` (a README-only change, for example) runs no deploy, which is expected. When you report a ship, state in one line, as a fact and without asking, whether that folder differs from the latest release tag (`git diff --name-only <tag> HEAD -- plugins/second-look/skills/second-look/`), so the author can see what the next release will carry.
 
 ## Data visualization design practice
 
@@ -48,7 +48,7 @@ Use as few colors as the information needs, within one chart and across a group 
 
 Do not add a persistent “View chart data” link or disclosure to every visualization by default. Add separate data access only when a clear user need calls for it. Keep essential values accessible through direct labels, accessible tooltips or equivalent screen-reader data. This applies across chart types and screens.
 
-Show one existing canvas preview for a proposed visual change, then apply it to all matching screens after Melissa approves. The pink-first direction is approved and applied across the launched canvas page. The report source uses the same pink-first rule; keep the canvas, template, design guidance and release zip in step when changing it.
+Show one existing canvas preview for a proposed visual change, then apply it to all matching screens after the author approves. The pink-first direction is approved and applied across the launched canvas page. The report source uses the same pink-first rule; keep the canvas, template, design guidance and release zip in step when changing it.
 
 <!-- BEGIN:nextjs-agent-rules -->
 

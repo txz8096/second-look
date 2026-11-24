@@ -1,6 +1,6 @@
 # Navigation and chart shipping check
 
-Melissa clarified that the edge cases are still under review. This shipment includes the earlier approved navigation and chart work only. Edge-case screens, diagnostic concepts and draft notes remain outside it.
+The author clarified that the edge cases are still under review. This shipment includes the earlier approved navigation and chart work only. Edge-case screens, diagnostic concepts and draft notes remain outside it.
 
 ## Why the public site lagged
 

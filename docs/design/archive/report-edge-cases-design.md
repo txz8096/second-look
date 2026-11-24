@@ -59,7 +59,7 @@ See [scenario research](report-edge-cases-scenarios.md), [interaction specificat
 
 ## Selected direction
 
-Melissa selected all three choices in this review:
+The author selected all three choices in this review:
 
 - No usable sessions produces a source check before a report, rather than a saved diagnostic report.
 - The first implementation uses today's source statuses. Richer permission and parsing diagnostics remain future concepts and are excluded from that implementation scope.
@@ -85,7 +85,7 @@ Changed repository folder: `docs/design/`. Canvas additions are in the existing 
 
 ## 2026-11-11 · Selected edge-case visualization update
 
-Applied the approved minimal-color, pink-first rule to the 22 areas Melissa selected on the launched page of **second look sample report**. This is a canvas-only follow-up to the chart palette work; it does not implement the proposed edge-case behaviors or publish a new release.
+Applied the approved minimal-color, pink-first rule to the 22 areas the author selected on the launched page of **second look sample report**. This is a canvas-only follow-up to the chart palette work; it does not implement the proposed edge-case behaviors or publish a new release.
 
 Four existing screens required changes:
 
@@ -102,24 +102,24 @@ Verification: read all 22 selected subtrees before and after. Every subtree exac
 
 ## 2026-11-11 — Import confirmation simplified (one preview, under review)
 
-Melissa questioned the value of Coverage Change Group in Updated Report With New Export. Replaced only that group in the existing screen with a compact, non-interactive confirmation: “More ChatGPT history included” and “Latest included session: Nov 6. Previously: Oct 12.” Reused the dates already in this fixture, existing card/text/font tokens and full column width. Removed the generic comparison advice, earlier-report reminder, pencil header and chevrons that implied actions. Existing Explore links still provide access to findings, trends and coverage; the rest of the screen is preserved exactly. This reduces the interruption to a factual acknowledgement instead of asking users to interpret source-mix changes. No new metric, automatic comparison or runtime capability is claimed.
+The author questioned the value of Coverage Change Group in Updated Report With New Export. Replaced only that group in the existing screen with a compact, non-interactive confirmation: “More ChatGPT history included” and “Latest included session: Nov 6. Previously: Oct 12.” Reused the dates already in this fixture, existing card/text/font tokens and full column width. Removed the generic comparison advice, earlier-report reminder, pencil header and chevrons that implied actions. Existing Explore links still provide access to findings, trends and coverage; the rest of the screen is preserved exactly. This reduces the interruption to a factual acknowledgement instead of asking users to interpret source-mix changes. No new metric, automatic comparison or runtime capability is claimed.
 
 Read back the full screen: outside the selected group, JSX matches the before state exactly. Reviewed final full-screen screenshot for hierarchy, fit and preserved destinations. This is one design-only preview on the launched page; the edge-case flow remains under review, unimplemented and unshipped. No production files, commit or release changed.
 
 
 ## 2026-11-11 — Skills-check section is conditional
 
-Melissa clarified that Skills Still Section must appear only when saved skills exist. The Updated No Sessions Check preview does not establish usable saved skills, so its skills-check section and action were removed. Its scenario caption now explicitly states no saved skill files are included and records the conditional visibility rule. The rest of the screen, including source statuses, recovery actions and navigation, is unchanged. Read-back comparison confirms only the selected subtree was removed; reviewed final screen and caption screenshots. Interaction specification records the available/none/not-included/unreadable distinction. This remains design-only and unshipped; no runtime behavior, commit, build or release changed.
+The author clarified that Skills Still Section must appear only when saved skills exist. The Updated No Sessions Check preview does not establish usable saved skills, so its skills-check section and action were removed. Its scenario caption now explicitly states no saved skill files are included and records the conditional visibility rule. The rest of the screen, including source statuses, recovery actions and navigation, is unchanged. Read-back comparison confirms only the selected subtree was removed; reviewed final screen and caption screenshots. Interaction specification records the available/none/not-included/unreadable distinction. This remains design-only and unshipped; no runtime behavior, commit, build or release changed.
 
 ## 2026-11-11 — Restore the normal Overview after adding history
 
-This supersedes the compact import-confirmation proposal above. Melissa rejected the notice as duplicate information and asked to retain the summary and activity visualization. Updated only Updated Report With New Export in place: removed History Update Confirmation, restored the standard sample review summary, and duplicated the existing approved dark Overview “What you use AI for” chart into the same screen before Explore your report. Its category colors, legend, 13 weeks, 65 mark heights and coverage link are preserved; no “View chart data” link was added. The chart is in its resting state; the copied hover-preview overlay was removed. Sidebar, app bar and Explore content match the pre-edit screen exactly. No extra artboard was created.
+This supersedes the compact import-confirmation proposal above. The author rejected the notice as duplicate information and asked to retain the summary and activity visualization. Updated only Updated Report With New Export in place: removed History Update Confirmation, restored the standard sample review summary, and duplicated the existing approved dark Overview “What you use AI for” chart into the same screen before Explore your report. Its category colors, legend, 13 weeks, 65 mark heights and coverage link are preserved; no “View chart data” link was added. The chart is in its resting state; the copied hover-preview overlay was removed. Sidebar, app bar and Explore content match the pre-edit screen exactly. No extra artboard was created.
 
 The chart caption says “Illustrative data” and the scenario caption states that both summary and chart use the existing sample: actual regeneration must use the newly included export. No updated metrics or newly calculated findings were invented. This is a design-only preview of the retained Overview structure, not evidence of new import results. Reviewed the full screen and scenario-caption screenshots; no clipping was observed. Production implementation, build, tests, commit and deployment are outside this request.
 
 ## 2026-11-11 — Time filter dropdown (one desktop preview)
 
-Melissa requested a dropdown for Time with 4 weeks, 3 months, 6 months, 12 months and a custom From/To range, preserving the other filters and fitting Clear filters on the row when possible. Updated the existing Habits No Matching Sessions Matched screen in place, with the time menu open for review. Time, existing App chips, existing Work select and Clear filters fit one desktop row without shrinking the existing controls. The session count is on the same filter row at the far right, with right-aligned text; only the coverage link sits below. App and Work subtree JSX is identical; full-screen comparison confirms every element outside the selected filter area is unchanged. No additional artboard was created.
+The author requested a dropdown for Time with 4 weeks, 3 months, 6 months, 12 months and a custom From/To range, preserving the other filters and fitting Clear filters on the row when possible. Updated the existing Habits No Matching Sessions Matched screen in place, with the time menu open for review. Time, existing App chips, existing Work select and Clear filters fit one desktop row without shrinking the existing controls. The session count is on the same filter row at the far right, with right-aligned text; only the coverage link sits below. App and Work subtree JSX is identical; full-screen comparison confirms every element outside the selected filter area is unchanged. No additional artboard was created.
 
 Menu: four divided preset rows, check beside the currently selected 12 months, then a Custom range form with labeled From/To fields, calendar icons and Apply range. Dates are blank in this preview, so Apply range is shown disabled. File tokens and Lucide icons were reused. Screenshot review confirms the row fits and the open menu has no clipping; it overlays the report as a popover. This is design-only: runtime custom-date filtering is new proposed behavior and is not implemented, tested, committed or shipped. Other screens remain unchanged until approval.
 
@@ -127,7 +127,7 @@ Interaction contract for implementation: presets apply immediately and close the
 
 ## 2026-11-11 — Explore destinations match the standard Overview
 
-Melissa identified that Updated Report With New Export still omitted Skills. The earlier import-focused mockup had substituted Data coverage, and the summary/chart restoration had preserved that drift. Corrected only Explore Section in place: Briefs & setup → Skills → Habits & usage, with the same existing sample descriptions and View fixes / Review skills / View trends actions as the standard Overview and report template. Reused the existing row and arrow artwork, restored the two surrounding descriptions and preserved row dividers/container border. Coverage remains accessible through the chart and Settings. The seven-skills/three-findings sample is reused from the standard fixture, not a newly calculated import result.
+The author identified that Updated Report With New Export still omitted Skills. The earlier import-focused mockup had substituted Data coverage, and the summary/chart restoration had preserved that drift. Corrected only Explore Section in place: Briefs & setup → Skills → Habits & usage, with the same existing sample descriptions and View fixes / Review skills / View trends actions as the standard Overview and report template. Reused the existing row and arrow artwork, restored the two surrounding descriptions and preserved row dividers/container border. Coverage remains accessible through the chart and Settings. The seven-skills/three-findings sample is reused from the standard fixture, not a newly calculated import result.
 
 Read-back confirms all content outside Explore Section is unchanged. Reviewed final full-screen screenshot for order, copy, layout and dividers. This remains an unshipped canvas review; no production change, commit or release.
 
@@ -148,7 +148,7 @@ The linked destinations were opened and their purpose verified. This is a static
 
 ### 2026-11-11 — Session count alignment refinement
 
-Melissa requested the count on the same line as the controls, aligned to the right. Moved the existing count to the end of the desktop filter row with an automatic left margin and right-aligned text. The coverage link remains below. Exact comparison excluding the moved count confirms every other node is unchanged; reviewed the full screenshot and confirmed the count fits without wrapping or overlapping controls. Existing Time-menu preview remains open. One existing artboard only; design-only and unshipped.
+The author requested the count on the same line as the controls, aligned to the right. Moved the existing count to the end of the desktop filter row with an automatic left margin and right-aligned text. The coverage link remains below. Exact comparison excluding the moved count confirms every other node is unchanged; reviewed the full screenshot and confirmed the count fits without wrapping or overlapping controls. Existing Time-menu preview remains open. One existing artboard only; design-only and unshipped.
 
 ### 2026-11-11 — Platform-neutral skill benefit
 
@@ -156,7 +156,7 @@ Changed only the selected benefit’s two text nodes in No Saved Skills With Res
 
 ## 2026-11-11 — Approved filter structure applied across the page
 
-Melissa approved the Time dropdown structure and requested all matching screens. Inventoried the pinned launched page: 18 filter areas across 16 Habits artboards plus Updated Comparison Not Ready and Updated Filtered Sessions Empty. Updated 17 additional areas in place; the approved Habits No Matching Sessions preview remains byte-identical. No artboards or unrelated pages were added or changed.
+The author approved the Time dropdown structure and requested all matching screens. Inventoried the pinned launched page: 18 filter areas across 16 Habits artboards plus Updated Comparison Not Ready and Updated Filtered Sessions Empty. Updated 17 additional areas in place; the approved Habits No Matching Sessions preview remains byte-identical. No artboards or unrelated pages were added or changed.
 
 - Desktop: Time dropdown, original App choices, original Work control where present, Clear filters and a session count at the far right. The coverage link remains directly below. The comparison-limited fixture did not have Work, so none was invented.
 - Phones: Time and right-aligned count share the first row. Existing App chips wrap within the available width with their original touch target sizes. Work and Clear filters share the following row; coverage follows. Time/Clear targets are 44px tall.
