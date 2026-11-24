@@ -36,6 +36,8 @@ These must match everywhere they appear:
 
 ## Shipping
 
+Ship changes to `plugins/second-look/skills/second-look/` or `README.md` through a pull request against `main`, never a direct push. List the changed files in the description, and merge only when the author says to. Before pushing anything else straight to `main`, say which files will go.
+
 `second-look.zip` packs everything under `plugins/second-look/skills/second-look/`. Only changes in that folder can make the release zip out of date.
 
 When shipping changed skill contents, increment the integer in the skill’s `revision.json` and describe a concrete user benefit. This manifest lets reviews detect changes on main even between tagged releases.
