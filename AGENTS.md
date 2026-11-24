@@ -2,6 +2,10 @@
 
 This repo holds two things. The skill lives in `plugins/second-look/skills/second-look/`, starting from `SKILL.md`, and `install.sh` installs it. The website lives in `src/`, built with Next.js and deployed to GitHub Pages. The Next.js notes below apply only to `src/`.
 
+## Asking Melissa questions
+
+Ask one question per message. When several decisions are open, ask the one that blocks the most work, wait for the answer, then ask the next. Don't end a reply with a numbered list of questions. Give a recommended answer with the question when you have one.
+
 ## Keep every surface in step
 
 A change that affects what Second Look does, says or looks like is finished only when every surface below agrees with it. Before you report work as done, check each surface the change touches, update the ones that drifted, and name any you left and why. In the same pass, fix or report any other drift you see on those surfaces.
