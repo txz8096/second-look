@@ -4,8 +4,9 @@
 Usage: python3 prerender.py REPORT.html
 
 Runs the report once in headless Chrome (or Chromium, Edge, Brave), takes the rendered
-"How your habits are changing" charts (with the data coverage card in their filter row) and
-the phone-ready tables, and writes them back into the file, with the charts marked data-static.
+"How your habits are changing" charts (with the data coverage card in their filter row), the
+5-hour limits and the phone-ready tables, and writes them back into the file, with the charts
+marked data-static.
 In a normal browser the script clears the marker and redraws with working filters.
 Without a browser it changes nothing, says so and exits 0: the charts then draw only when
 scripts run. When the browser runs but the report's own script draws nothing, it says so and
@@ -107,10 +108,10 @@ def main():
     static = LEAD_PLOT.sub(lambda m: m.group(1) + ' tabindex="0"', static)
     # outside the charts, the script's phone tables, so they stack with scripts off too
     outside = lambda text: TABLE.findall(SECTION.sub("", text))
-    activity = element_by_id(run.stdout, "work-mix")
-    original_activity = element_by_id(html, "work-mix")
-    if activity and original_activity:
-        html = html[:original_activity[0]] + run.stdout[activity[0]:activity[1]] + html[original_activity[1]:]
+    for drawn_id in ("work-mix", "limits-body"):
+        filled, empty = element_by_id(run.stdout, drawn_id), element_by_id(html, drawn_id)
+        if filled and empty:
+            html = html[:empty[0]] + run.stdout[filled[0]:filled[1]] + html[empty[1]:]
     written, stacked = outside(html), outside(run.stdout)
     if len(written) == len(stacked):
         it = iter(stacked)

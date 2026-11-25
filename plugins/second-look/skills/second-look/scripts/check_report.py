@@ -10,7 +10,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_TEMPLATE = os.path.join(os.path.dirname(HERE), "report-template.html")
 
 REPORT_FONTS = ("Inter", "Manrope", "JetBrains Mono")
-REQUIRED_IDS = ["overview", "side", "part-1", "part-2", "part-3", "trends", "report-issue"]
+REQUIRED_IDS = ["overview", "side", "part-1", "part-2", "part-3", "trends", "limits", "report-issue"]
 SECTION_ORDER = ["overview", "part-2", "part-3", "part-1"]
 REQUIRED_TEXT = [
     "Recommendations based on your AI sessions",
@@ -52,6 +52,7 @@ FORBIDDEN = {
 # left over from the template's sample; the template itself is exempt
 SAMPLE = {
     "CUBE = sampleCube()": "the charts still use the template's sample data; replace sampleCube() with the collector's cube",
+    "LIMITS = sampleLimits()": "the 5-hour limits still use the template's sample data; replace sampleLimits() with the collector's limits, or null",
     "Streak redesign starts": "MILESTONES still holds the template's sample milestones; use the person's own, or []",
     "This is a sample report": "the sidebar note still says this is a sample report",
     "report-opt-sample": "the report menu still holds the template's sample dates; run report_menu.py, or on claude.ai use a plain label",
@@ -143,6 +144,45 @@ def cube_problems(cube, end):
     return problems
 
 
+def limit_problems(html, end):
+    """LIMITS is the collector's own output, for the same week as END, and its links go to cards on the page."""
+    m = re.search(r"const LIMITS = ", html)
+    if not m:
+        return ["the trends script has no LIMITS; keep the template's data slot"]
+    problems = []
+    recs = re.search(r"const LIMIT_RECS = (\{.*?\});\n", html, re.S)
+    try:
+        links = json.loads(recs.group(1)) if recs else {}
+        for app, rows in links.items():
+            for card, covers in rows:
+                if f'id="{card}"' not in html:
+                    problems.append(f'LIMIT_RECS links {app} to "{card}", which is not a card in this report')
+    except (ValueError, AttributeError, TypeError):
+        problems.append('LIMIT_RECS must read {"claude_code": [["card-id", "what it covers"]], "codex": []}')
+    if html[m.end():].startswith(("null", "sampleLimits()")):
+        return problems
+    try:
+        limits, _ = json.JSONDecoder().raw_decode(html, m.end())
+    except ValueError:
+        return problems + ["LIMITS isn't the collector's limits object, or null"]
+    if not isinstance(limits, dict) or not isinstance(limits.get("apps"), list):
+        return problems + ["LIMITS isn't the collector's limits object, or null"]
+    if end and limits["apps"] and limits.get("from") != (end - dt.timedelta(days=end.weekday())).isoformat():
+        problems.append(f"LIMITS covers the week of {limits.get('from')} but END is {end}; take both from the same collector run")
+    for a in limits["apps"]:
+        if not isinstance(a, dict) or a.get("id") not in ("claude_code", "codex"):
+            problems.append(f"LIMITS has an app the script can't draw: {a.get('id') if isinstance(a, dict) else a}")
+            continue
+        if not all(isinstance(h, dict) and h.get("day") in range(7) and h.get("slot") in range(6) for h in a.get("hits") or []):
+            problems.append(f"LIMITS {a['id']} hits need a day from 0 to 6 and a slot from 0 to 5")
+        cells = a.get("cells")
+        if cells is None:   # the week's logs are gone, so the script draws no map
+            continue
+        if not isinstance(cells, list) or len(cells) != 7 or any(not isinstance(row, list) or len(row) != 6 for row in cells):
+            problems.append(f"LIMITS {a['id']} cells need 7 days of 6 times")
+    return problems
+
+
 def summary_problems(html):
     """The summary is plain words: what happened, with the numbers left to the charts."""
     m = re.search(r'<p class="summary">(.*?)</p>', html, re.S)
@@ -175,6 +215,7 @@ def script_problems(html):
         unknown = sorted(set(ids) - SOURCES)
         if unknown:
             problems.append(f"SCOPE has sources the script can't draw: {', '.join(unknown)}")
+    problems += limit_problems(html, end)
     at = html.find("const CUBE = ")
     if at == -1:
         problems.append("the trends script has no CUBE; keep the template's data slot")

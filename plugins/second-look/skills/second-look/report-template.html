@@ -722,6 +722,29 @@ button.brow:hover { background: var(--surface-2); box-shadow: -6px 0 0 var(--sur
 .brow.dim .bname, .brow.dim .bval, .brow.dim .bval b { color: var(--muted); }
 .brow.dim .btrack span { opacity: 1; }
 .insight { font-size: 14px; line-height: 20px; }
+/* 5-hour limits in the last week: one heat map per app, on the usage question's page only */
+.limits:has(> #limits-body:empty), .limits.off { display: none; }
+#limits-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+#limits-body .panel { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+#limits-body .panel h4 { font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.5; }
+.heat-scroll { position: relative; overflow-x: auto; padding: 4px; margin: -4px; }
+table.heat { width: calc(100% + 8px); min-width: 640px; border-collapse: separate; border-spacing: 4px; margin: -4px; table-layout: fixed; }
+table.heat th, table.heat td { padding: 0; border: 0; background: none; text-align: left; vertical-align: middle; font-size: 13px; line-height: 1.2; font-weight: 400; }
+table.heat thead th { padding: 0 8px 4px; white-space: nowrap; color: var(--muted); }
+table.heat tbody th { color: var(--fg); }
+table.heat tr > :first-child { position: sticky; left: 0; width: 48px; background: var(--surface); }
+.heat-cell { display: flex; justify-content: space-between; align-items: center; gap: 4px; height: 40px; box-sizing: border-box; padding: 0 8px; border-radius: var(--r-6);
+  background: var(--surface-2); color: var(--fg); font-variant-numeric: tabular-nums; }
+.heat-cell[style], .heat-swatch[style] { background: color-mix(in srgb, var(--series) var(--heat), var(--surface-2)); }
+.limit-tag { padding: 4px 8px; border-radius: var(--r-pill); background: var(--fg); color: var(--bg); font-size: 12px; font-weight: 500; line-height: 1.3; }
+.heat-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; padding-left: 52px; color: var(--muted); font-size: 12px; line-height: 1.3; }
+.heat-legend > span { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.heat-swatch { width: 24px; height: 12px; border-radius: var(--r-4); background: var(--surface-2); }
+#limits-body .brow { grid-template-columns: 160px minmax(0, 1fr) 48px; box-sizing: border-box; }
+.limit-recs { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13px; }
+.vh { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.sec-head + .activity-group { margin-top: 16px; }
+@media print { .heat-cell, .heat-swatch, .limit-tag { print-color-adjust: exact; -webkit-print-color-adjust: exact; } table.heat { min-width: 0; } }
 /* data scope timeline */
 .tl-row, .tl-axis { display: grid; grid-template-columns: 112px minmax(0, 1fr) 190px; gap: 16px; }
 .tl-row { align-items: center; padding: 11px 0; border-top: 1px solid var(--line); }
@@ -847,6 +870,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .rank { width: 32px; height: 32px; font-size: 16px; }
   .icard { padding: 16px; }
   .side-nav .side-sub a { min-height: 44px; }
+  .heat-legend { padding-left: 0; }
   .tl-row, .tl-axis { grid-template-columns: 1fr; gap: 6px; }
   .tl-status { text-align: left; }
   .tl-status .term[data-align="end"] .term-card { left: 0; right: auto; }
@@ -865,7 +889,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .chart svg text { font-size: 12px; }
   .term { text-underline-offset: 5px; }
   /* type floor: nothing under 13px, secondary text 14px */
-  .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval, .work-mix-week, .work-mix-week:hover, .work-mix-week:active { font-size: 13px; }
+  .heat-legend, .limit-tag, .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval, .work-mix-week, .work-mix-week:hover, .work-mix-week:active { font-size: 13px; }
   .def, .sum-meta, .part-meta, .fsum, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
     .side-about, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
   .tl-name, .ic-summary, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
@@ -887,7 +911,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .work-mix-week:last-child > span:last-child { justify-self: end; }
   .work-mix-week:not(:nth-child(3n+1)) > span:last-child { visibility: hidden; }
   /* share bars: room for a two-word name on one line */
-  .brow { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 44px; }
+  .brow, #limits-body .brow { grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) 44px; }
   /* a habits table with one value per row puts it on the name's line */
   #part-1 table.stack:not(.unlabeled) tr:has(> td:nth-child(2):last-child) > td:nth-child(2) { grid-column: 2; grid-row: 1; display: block; padding: 0; text-align: right; }
   #part-1 table.stack:not(.unlabeled) tr:has(> td:nth-child(2):last-child) > td:nth-child(2)::before { margin-right: 8px; }
@@ -1403,9 +1427,10 @@ Then tell me in plain words what changed before you save it.</pre></div>
   <p class="def">Savings are estimates: your counts × a typical time, or your share of usage × what a recommendation could cut. Each line is a 4-week running value, so one odd week can’t swing it. Each review, Second Look spot-checks a dozen sessions, and you can correct a label at the next review.</p>
 </section>
 
+  <section class="limits" id="limits"><div id="limits-body"></div></section>
+
   <section class="usage">
     <div class="sec-head"><h3>Activity since your last review</h3><span class="muted">Oct 12–25</span></div>
-    <p>You hit 1 usage limit.</p>
     <div class="activity-group">
       <h4>By app</h4>
       <div class="tbl"><table>
@@ -1540,7 +1565,7 @@ stackTables();
   const BUILD = new Set(["coding", "design", "writing", "research"]);
   const name = (list, id) => list.find(x => x[0] === id)[1];
 
-  // ---- report data: a real report replaces these four values with the collector's output ----
+  // ---- report data: a real report replaces these values with the collector's output ----
   // END: the Monday of the last complete week, "YYYY-MM-DD" (the collector's last_complete_week). The charts retain all available weeks up to it.
   const END = "2026-10-19";
   // CUBE: the collector's "cube" array, pasted as is: [{"week": "YYYY-MM-DD", "source": "claude_code", "category": "coding", "project": "Atlas", "sessions": 3, ...}, ...]
@@ -1555,6 +1580,11 @@ stackTables();
     {"id": "chatgpt", "state": "export", "to": "2026-10-12", "latest_session": "2026-10-12"}, {"id": "gemini_web", "state": "missing"}]};
   // MILESTONES: dated changes the person made, drawn as lines on every chart: [{"week": "YYYY-MM-DD", "label": "..."}], or [] for none
   const MILESTONES = [{"week": "2026-03-09", "label": "First skill"}, {"week": "2026-07-13", "label": "Saved global rules"}, {"week": "2026-09-28", "label": "Streak redesign starts"}];
+
+  // LIMITS: the collector's "limits" object, pasted as is, or null on claude.ai
+  const LIMITS = sampleLimits();
+  // LIMIT_RECS: the cards that act on each app's limits, with what each covers: {"claude_code": [["p-long", "long sessions"]], "codex": []}
+  const LIMIT_RECS = {"claude_code": [["p-long", "long sessions"], ["p-model", "model choice"]], "codex": [["p-long", "long sessions"]]};
 
   // All available Mondays ending at END, with a 52-week minimum for existing presets.
   const monday = d => new Date(d.getFullYear(), d.getMonth(), d.getDate() - (d.getDay() + 6) % 7);
@@ -1766,6 +1796,17 @@ stackTables();
     }
     return {...row, days};
   });
+  }
+
+  // the template's sample limits, in the collector's shape; a real report doesn't call it
+  function sampleLimits() {
+    const share = [[1, 3, 4, 5, 2, 1], [1, 3, 5, 9, 3, 1], [0, 3, 7, 10, 3, 1], [1, 3, 4, 8, 2, 1], [0, 2, 3, 4, 1, 0], [0, 1, 1, 2, 1, 1], [0, 0, 1, 1, 1, 0]];
+    const hit = (day, slot) => ({day, slot, long: true, model: "Opus"}), n = null;
+    return {from: "2026-10-19", to: "2026-10-25", review_from: "2026-10-12", apps: [
+      {id: "claude_code", hits: [hit(1, 3), hit(2, 2), hit(2, 3), hit(3, 3)], since_review: 4, split: {work: 48, reread: 41, redo: 11},
+        cells: share.map(day => day.map(v => v / 100))},
+      {id: "codex", hits: [{day: 2, slot: 3, long: false, model: n}], since_review: 1, split: {work: 57, reread: 36, redo: 7}, peak: 100, next: {percent: 63, day: 3, slot: 4},
+        cells: [[n, 12, 28, n, n, n], [n, n, n, 46, n, n], [n, n, 71, 100, n, n], [n, 18, n, 54, 63, n], [n, n, n, n, n, n], [n, n, 9, n, n, n], [n, n, n, n, n, n]]}]};
   }
 
   const METERED = new Set(["claude_code", "codex"]);
@@ -2063,7 +2104,103 @@ stackTables();
       panel.querySelector(".more-charts").addEventListener("click", e => { state.allCharts.add(g.id); grid.classList.add("all"); const first = grid.querySelector(".chart.extra"); e.target.remove(); if (first) { first.tabIndex = -1; first.focus({preventScroll: true}); } });
     } else if (extra) grid.classList.add("all");
   }
+  // ---- 5-hour limits in the last week. An app's heat map shows only in a week its limit filled up ----
+  function drawLimits() {
+    const body = document.getElementById("limits-body");
+    if (!body) return;
+    body.innerHTML = "";
+    if (!LIMITS || !LIMITS.apps.length) return;
+    const DAYS = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+    const SLOTS = ["Before 9am", "9am–12pm", "12–3pm", "3–6pm", "6–9pm", "After 9pm"];
+    const FROM = ["12am", "9am", "12pm", "3pm", "6pm", "9pm"], TO = ["9am", "12pm", "3pm", "6pm", "9pm", "12am"];
+    const PART = ["morning", "morning", "afternoon", "afternoon", "evening", "evening"];
+    const times = n => n === 1 ? "once" : n === 2 ? "twice" : n + " times";
+    const same = list => new Set(list).size === 1;
+    const span = (a, b) => a === b ? SLOTS[a].replace(/^[BA]/, c => c.toLowerCase()) : FROM[a].slice(-2) === TO[b].slice(-2) ? FROM[a].slice(0, -2) + "–" + TO[b] : FROM[a] + "–" + TO[b];
+    const within = slot => slot === 0 ? "before 9am" : slot === 5 ? "after 9pm" : `between ${FROM[slot].slice(-2) === TO[slot].slice(-2) ? FROM[slot].slice(0, -2) : FROM[slot]} and ${TO[slot]}`;
+    const small = v => v > 0 && v < 0.005 ? "&lt;1%" : pct(v);
+    const app = id => LIMITS.apps.find(a => a.id === id), cc = app("claude_code"), cx = app("codex");
+    const filled = LIMITS.apps.filter(a => a.hits.length);
+
+    // the answer first: how often each app's limit filled up
+    const when = hits => {
+      const days = hits.map(h => h.day), parts = hits.map(h => PART[h.slot]);
+      const weekday = days.every(d => d < 5), weekend = days.every(d => d > 4);
+      if (hits.length === 1) return `, on ${DAYS[days[0]]} ${parts[0]}`;
+      const all = hits.length === 2 ? "both" : "all";
+      if (same(days)) return `, ${all} on ${DAYS[days[0]]}`;
+      if (same(parts)) return weekday || weekend ? `, ${all} on ${weekday ? "weekday" : "weekend"} ${parts[0]}s` : `, ${all} in the ${parts[0]}`;
+      return weekday ? `, ${all} on weekdays` : weekend ? `, ${all} on the weekend` : "";
+    };
+    const said = [];
+    if (filled.length) {
+      if (cc) said.push(cc.hits.length ? `You hit the Claude Code 5-hour limit ${times(cc.hits.length)}${when(cc.hits)}.` : "You didn’t hit the Claude Code 5-hour limit.");
+      if (cx && cx.hits.length) said.push(`Codex reached 100% of its 5-hour limit ${times(cx.hits.length)}.`);
+      else if (cx && cx.peak != null) said.push(`Codex peaked at ${cx.peak}% of its 5-hour limit.`);
+    } else {
+      said.push("No 5-hour limits last week.");
+      const before = [cc && cc.since_review ? `you hit the Claude Code limit ${times(cc.since_review)}` : "", cx && cx.since_review ? `Codex reached 100% of its limit ${times(cx.since_review)}` : ""].filter(Boolean);
+      if (before.length) said.push(`${LIMITS.review_from ? "Since your last review" : "In the last 2 weeks"}, ${listed(before)}.`);
+    }
+
+    const mapped = filled.filter(a => a.cells), unmapped = filled.filter(a => !a.cells).map(a => a.id === "codex" ? "Codex" : "Claude Code");
+    if (unmapped.length) said.push(`Some ${listed(unmapped)} logs from that week are gone, so ${unmapped.length > 1 ? "their heat maps aren’t" : "its heat map isn’t"} shown.`);
+
+    const heat = (id, label, cells, hits, value, strength, tag, empty) => {
+      const rowsHtml = cells.map((line, d) => `<tr><th scope="row">${DAYS[d].slice(0, 3)}</th>${line.map((v, k) => {
+        const hit = hits.some(h => h.day === d && h.slot === k), shade = v ? ` style="--heat:${Math.round(10 + 75 * strength(v))}%"` : "";
+        return `<td><span class="heat-cell"${shade}>${v == null ? `<span class="vh">${empty}</span>` : `<span>${value(v)}</span>`}${hit ? `<span class="limit-tag">${tag}</span>` : ""}</span></td>`;
+      }).join("")}</tr>`).join("");
+      return `<div class="heat-scroll" role="region" tabindex="0" aria-label="${label}"><table class="heat" data-app="${id}"><thead><tr><td></td>${SLOTS.map(t => `<th scope="col">${t}</th>`).join("")}</tr></thead><tbody>${rowsHtml}</tbody></table></div>`;
+    };
+    const legend = (less, more, tag, meaning, empty) => `<div class="heat-legend" aria-hidden="true"><span>${less}${[18, 40, 63, 85].map(h => `<i class="heat-swatch" style="--heat:${h}%"></i>`).join("")}${more}</span><span><b class="limit-tag">${tag}</b>${meaning}</span>${empty ? `<span><i class="heat-swatch"></i>${empty}</span>` : ""}</div>`;
+
+    // the block of days and times that holds every hit, when it is small enough to mean something
+    const claudeRead = a => {
+      const days = a.hits.map(h => h.day), slots = a.hits.map(h => h.slot);
+      const d0 = Math.min(...days), d1 = Math.max(...days), s0 = Math.min(...slots), s1 = Math.max(...slots);
+      const n = a.hits.length, cells = a.cells.flatMap((line, d) => line.map((v, k) => ({v, d, k})));
+      const out = [];
+      let each = "Each limit";
+      if (n > 1 && (d1 - d0 + 1) * (s1 - s0 + 1) <= 14) {
+        const took = cells.filter(c => c.d >= d0 && c.d <= d1 && c.k >= s0 && c.k <= s1).reduce((t, c) => t + c.v, 0);
+        out.push(`${d0 === d1 ? DAYS[d0] : `${DAYS[d0]} to ${DAYS[d1]}`}, ${span(s0, s1)} took ${small(took)} of your Claude Code usage, and ${n === 2 ? "both limits" : `all ${n} limits`} hit then.`);
+        each = "Each";
+      } else {
+        const top = cells.reduce((a, b) => b.v > a.v ? b : a);
+        if (top.v) out.push(`Your busiest time was ${DAYS[top.d]}, ${span(top.k, top.k)}, with ${small(top.v)} of your Claude Code usage.`);
+      }
+      if (a.hits.every(h => h.long)) {
+        const model = same(a.hits.map(h => h.model)) && a.hits[0].model;
+        out.push(`${n === 1 ? "The limit" : each} came in a very long ${model ? model + " " : ""}session.`);
+      }
+      return out.join(" ");
+    };
+    const codexRead = a => {
+      const h = a.hits[0];
+      return `Codex reached 100% ${times(a.hits.length)}${a.hits.length === 1 ? `, on ${DAYS[h.day]} ${within(h.slot)}` : ""}.` +
+        (a.next ? ` Your next fullest 5-hour window reached ${a.next.percent}%, on ${DAYS[a.next.day]} ${PART[a.next.slot]}.` : "");
+    };
+    const CARDS = {
+      claude_code: a => { const top = Math.max(...a.cells.flat()) || 1;
+        return {title: "Claude Code 5-hour limit",
+          map: heat(a.id, "Share of your Claude Code usage by day and time, in your time zone", a.cells, a.hits, small, v => v / top, "Limit", "") + legend("Less usage", "More usage", "Limit", "5-hour limit hit", ""), read: claudeRead(a)}; },
+      codex: a => ({title: "Codex 5-hour limit",
+        map: heat(a.id, "The fullest your Codex limit got by day and time, in your time zone", a.cells, a.hits, v => v + "%", v => v / 100, "Full", "No Codex reading") + legend("Less full", "More full", "Full", "5-hour limit at 100%", "No Codex reading"), read: codexRead(a)}),
+    };
+    const SPLITS = {claude_code: "Claude Code usage before each limit", codex: "Codex usage before it reached 100%"};
+    const maps = mapped.map(a => { const c = CARDS[a.id](a); return `<div class="panel"><h4>${c.title}</h4>${c.map}<p class="insight">${c.read}</p></div>`; }).join("");
+    const bar = ([label, v]) => `<div class="brow"><span class="bname">${label}</span><span class="btrack"><span style="width:${v}%"></span></span><span class="bval"><b>${v}%</b></span></div>`;
+    const recs = id => (LIMIT_RECS[id] || []).map(([card, covers]) => { const n = document.querySelector(`#${CSS.escape(card)} .rank`)?.textContent.trim();
+      return n ? `<a href="#${esc(card)}">Recommendation ${esc(n)} covers ${esc(covers)}</a>` : ""; }).join("");
+    const splits = filled.filter(a => a.split).map(a => { const links = recs(a.id);
+      return `<div class="panel"><h4>${SPLITS[a.id]}</h4><div class="bars">${[["Doing the work", a.split.work], ["Re-reading long sessions", a.split.reread], ["Redoing work", a.split.redo]].map(bar).join("")}</div>${links ? `<p class="limit-recs">${links}</p>` : ""}</div>`; }).join("");
+    const [y0, y1] = [LIMITS.from, LIMITS.to].map(dayLabel), dates = y0.split(" ")[0] === y1.split(" ")[0] ? `${y0}–${y1.split(" ")[1]}` : `${y0} – ${y1}`;
+    body.innerHTML = `<div class="sec-head"><h3>5-hour limits in the last week</h3><span class="muted">${dates}</span></div><p>${said.join(" ")}</p>${maps}${splits ? `<div class="split">${splits}</div>` : ""}`;
+  }
+
   function showGroup(id) {
+    document.getElementById("limits")?.classList.toggle("off", id !== "usage");
     GROUPS.forEach(g => {
       const panel = document.getElementById("grp-" + g.id), link = questionsEl.querySelector(`[data-g="${g.id}"]`);
       if (panel) panel.classList.toggle("off", g.id !== id);
@@ -2571,6 +2708,7 @@ stackTables();
       : `brief least in ${low(weakBrief)} (${pct(weakBrief.briefed)}).`);
     stackTables(trendsEl);
   }
+  drawLimits();
   render();
   // the lead chart's width and the milestone rows depend on the screen
   [ "(max-width: 680px)", TWO_COLUMNS ].forEach(q => matchMedia(q).addEventListener("change", render));
