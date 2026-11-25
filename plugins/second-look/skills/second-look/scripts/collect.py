@@ -511,7 +511,23 @@ WEIGHTS = {"claude_code": {"input": 1, "write_5m": 1.25, "write_1h": 2, "read": 
 LIGHT_PROMPTS = 5     # a session this short with no code edits is light work a cheaper model can usually do. A chosen line
 LONG_LINE = 150_000   # a session is long once its context passes this. A chosen line, not a measured limit
 UNUSED_DAYS = 60      # a skill counts as unused after this many days without a run
-LIMIT_HIT = re.compile(r"usage limit|rate.?limit|limit reached|5-hour limit|weekly limit", re.I)
+
+
+def claude_usage(u):
+    """What the AI read for one Claude Code reply, and its weighted usage."""
+    w = WEIGHTS["claude_code"]
+    write = u.get("cache_creation_input_tokens", 0)
+    write_1h = (u.get("cache_creation") or {}).get("ephemeral_1h_input_tokens", 0)
+    ctx = u.get("input_tokens", 0) + write + u.get("cache_read_input_tokens", 0)
+    return ctx, (u.get("input_tokens", 0) * w["input"] + (write - write_1h) * w["write_5m"] + write_1h * w["write_1h"]
+                 + u.get("cache_read_input_tokens", 0) * w["read"] + u.get("output_tokens", 0) * w["output"])
+
+
+def codex_usage(u):
+    """What the AI read for one Codex reply, and its weighted usage."""
+    w = WEIGHTS["codex"]
+    inp, cached = u.get("input_tokens", 0), u.get("cached_input_tokens", 0)
+    return inp, (inp - cached) * w["input"] + cached * w["read"] + u.get("output_tokens", 0) * w["output"]
 
 
 def _turn(source, ctx, usage, out_rows):
@@ -522,18 +538,16 @@ def _turn(source, ctx, usage, out_rows):
 
 def usage_by_session(home, since):
     """Per-session usage from the token counts Claude Code and Codex log. Other tools don't record tokens."""
-    out, limit_hits, used_model = {}, 0, {}
+    out, used_model = {}, {}
     for path in glob.glob(os.path.join(home, ".claude/projects/*/*.jsonl")):
         if os.path.getmtime(path) < since.timestamp():
             continue
-        turns, seen, w = [], set(), WEIGHTS["claude_code"]
+        turns, seen = [], set()
         models = collections.Counter()
         for e in iter_jsonl(path):
             ts = parse_ts(e.get("timestamp"))
             if ts and ts < since:
                 continue
-            if e.get("isApiErrorMessage") and LIMIT_HIT.search(json.dumps(e.get("message"))[:2000]):
-                limit_hits += 1
             msg = e.get("message") or {}
             u = msg.get("usage") if e.get("type") == "assistant" and not e.get("isSidechain") else None
             if not u or msg.get("id") in seen:
@@ -541,19 +555,14 @@ def usage_by_session(home, since):
             seen.add(msg.get("id"))
             if msg.get("model") and not str(msg["model"]).startswith("<"):
                 models[msg["model"]] += 1
-            write = u.get("cache_creation_input_tokens", 0)
-            write_1h = (u.get("cache_creation") or {}).get("ephemeral_1h_input_tokens", 0)
-            ctx = u.get("input_tokens", 0) + write + u.get("cache_read_input_tokens", 0)
-            cost = (u.get("input_tokens", 0) * w["input"] + (write - write_1h) * w["write_5m"] + write_1h * w["write_1h"]
-                    + u.get("cache_read_input_tokens", 0) * w["read"] + u.get("output_tokens", 0) * w["output"])
-            _turn("claude_code", ctx, cost, turns)
+            _turn("claude_code", *claude_usage(u), turns)
         if turns:
             out[("claude_code", os.path.basename(path)[:-6])] = turns
             used_model[("claude_code", os.path.basename(path)[:-6])] = models.most_common(1)[0][0] if models else None
     for path in glob.glob(os.path.join(home, ".codex/sessions/**/*.jsonl"), recursive=True):
         if os.path.getmtime(path) < since.timestamp():
             continue
-        turns, last, w, model = [], None, WEIGHTS["codex"], None
+        turns, last, model = [], None, None
         for e in iter_jsonl(path):
             p = e.get("payload") if isinstance(e.get("payload"), dict) else {}
             model = p.get("model") or model
@@ -563,14 +572,298 @@ def usage_by_session(home, since):
             if not total or total == last:
                 continue
             last = total
-            inp, cached, out_t = u.get("input_tokens", 0), u.get("cached_input_tokens", 0), u.get("output_tokens", 0)
-            _turn("codex", inp, (inp - cached) * w["input"] + cached * w["read"] + out_t * w["output"], turns)
+            _turn("codex", *codex_usage(u), turns)
         if turns:
             out[("codex", os.path.basename(path)[:-6])] = turns
             used_model[("codex", os.path.basename(path)[:-6])] = model
     sessions = {k: {"usage": sum(t[1] for t in v), "reread": sum(t[2] for t in v), "turns": len(v),
                     "peak": max(t[0] for t in v), "start_tokens": v[0][0], "model": used_model.get(k)} for k, v in out.items()}
-    return sessions, limit_hits
+    return sessions
+
+
+# 5-hour limits. Claude Code logs the moment it refused a request; Codex logs how full the limit is on every reply.
+LIMIT_WINDOW = 5 * 3600
+SAME_WINDOW = 30 * 60   # two resets this close together are one window: Codex's reset time drifts by seconds
+SLOT_STARTS = (0, 9, 12, 15, 18, 21)   # the local hour each column of the report's heat maps starts at
+REVIEW_DAYS = 14        # what a first review covers
+# older Claude Code logs say it only in words. A spend limit, spent credits or a brief rate error isn't a usage limit
+LIMIT_TEXT = re.compile(r"hit your (session|5-hour|weekly) limit|\b(usage|5-hour|weekly) limit reached(?:\|(\d{10}))?", re.I)
+LIMIT_RESET = re.compile(r"resets (\d{1,2})(?::(\d{2}))?\s*(am|pm)\b", re.I)
+
+
+def claude_limit_hit(e):
+    """The usage limit this Claude Code log entry reports, or None."""
+    at = parse_ts(e.get("timestamp"))
+    if not e.get("isApiErrorMessage") or not at:
+        return None
+    params = e.get("apiErrorParams")
+    info = e.get("quotaLimits") or (params.get("rate_limit_info") if isinstance(params, dict) else None)
+    if isinstance(info, dict) and info.get("rateLimitType"):
+        if info.get("status") != "rejected":
+            return None
+        kind, reset = {"seven_day": "weekly"}.get(info["rateLimitType"], info["rateLimitType"]), info.get("resetsAt")
+    else:
+        text = text_of((e.get("message") or {}).get("content"))
+        m = LIMIT_TEXT.search(text)
+        if not m:
+            return None
+        kind = "weekly" if "weekly" in (m.group(1) or m.group(2)).lower() else "five_hour"
+        reset, clock = int(m.group(3)) if m.group(3) else None, LIMIT_RESET.search(text)
+        if clock and kind == "five_hour":
+            # a clock time with no date: the next time the local clock reads it
+            local = at.astimezone()
+            hour = int(clock.group(1)) % 12 + (12 if clock.group(3).lower() == "pm" else 0)
+            due = local.replace(hour=hour, minute=int(clock.group(2) or 0), second=0, microsecond=0)
+            reset = int((due if due > local else due + dt.timedelta(days=1)).timestamp())
+    return {"app": "claude_code", "kind": kind, "at": int(at.timestamp()),
+            "reset": int(reset) if isinstance(reset, (int, float)) else None, "session": e.get("sessionId")}
+
+
+def _lines_with(path, needle):
+    """Parsed log entries whose raw line mentions needle. Most lines don't, so most are never parsed."""
+    try:
+        with open(path, encoding="utf-8", errors="ignore") as f:
+            for line in f:
+                if needle in line:
+                    try:
+                        e = json.loads(line)
+                    except Exception:
+                        continue
+                    if isinstance(e, dict):
+                        yield e
+    except OSError:
+        return
+
+
+def claude_limit_hits(home, since):
+    """Every limit Claude Code logged, helper agents' logs included: they draw on the same limit."""
+    hits = []
+    for path in glob.glob(os.path.join(home, ".claude/projects/**/*.jsonl"), recursive=True):
+        if os.path.getmtime(path) >= since.timestamp():
+            found = [h for h in map(claude_limit_hit, _lines_with(path, "isApiErrorMessage")) if h and h["at"] >= since.timestamp()]
+            hits += [{**h, "session": h["session"] or os.path.basename(path)[:-6]} for h in found]
+    return hits
+
+
+def codex_limit_readings(home, since):
+    """How full Codex said its 5-hour and weekly limits were, on every reply that recorded it."""
+    out = []
+    for path in glob.glob(os.path.join(home, ".codex/sessions/**/*.jsonl"), recursive=True):
+        if os.path.getmtime(path) < since.timestamp():
+            continue
+        for e in _lines_with(path, '"rate_limits"'):
+            p = e.get("payload") if isinstance(e.get("payload"), dict) else {}
+            limits, at = p.get("rate_limits"), parse_ts(e.get("timestamp"))
+            if p.get("type") != "token_count" or not isinstance(limits, dict) or not at or at < since:
+                continue
+            # a model with a limit of its own reports under another id: evidence, but not the limit the heat map draws
+            own = "" if limits.get("limit_id") in (None, "codex") else f"{limits['limit_id']}:"
+            for w in (limits.get("primary"), limits.get("secondary")):
+                if not isinstance(w, dict) or not isinstance(w.get("used_percent"), (int, float)):
+                    continue
+                minutes = w.get("window_minutes") or 0
+                kind = "five_hour" if abs(minutes - 300) <= 10 else "weekly" if abs(minutes - 10080) <= 60 else None
+                reset = w.get("resets_at")
+                if reset is None and isinstance(w.get("resets_in_seconds"), (int, float)):
+                    reset = at.timestamp() + w["resets_in_seconds"]
+                # a reading from before the reset says nothing about the window that follows
+                if kind and isinstance(reset, (int, float)) and reset > at.timestamp():
+                    out.append({"kind": own + kind, "at": int(at.timestamp()), "reset": int(reset), "percent": w["used_percent"],
+                                "session": os.path.basename(path)[:-6]})
+    return sorted(out, key=lambda r: r["at"])
+
+
+def codex_windows(readings):
+    """Readings grouped by the window they belong to."""
+    windows = []
+    for r in readings:
+        w = next((w for w in windows if w[0]["kind"] == r["kind"] and abs(w[0]["reset"] - r["reset"]) < SAME_WINDOW), None)
+        if w:
+            w.append(r)
+        else:
+            windows.append([r])
+    return windows
+
+
+def codex_limit_hits(windows):
+    """One per window that filled up, at the first reply that said 100%."""
+    full = (next((r for r in w if r["percent"] >= 100), None) for w in windows)
+    return [{"app": "codex", **{k: r[k] for k in ("kind", "at", "reset", "session")}} for r in full if r]
+
+
+def merge_limits(hits):
+    """One entry per limit. A limit is often logged several times, and saved reviews log it again."""
+    def same(a, b):
+        if a["app"] != b["app"] or a["kind"] != b["kind"]:
+            return False
+        if a.get("reset") and b.get("reset"):
+            return abs(a["reset"] - b["reset"]) < SAME_WINDOW
+        length = LIMIT_WINDOW if a["kind"].endswith("five_hour") else 7 * 86400
+        if a.get("reset") or b.get("reset"):
+            # one reset is known, so the other belongs to that window only if it happened inside it
+            known, other = (a, b) if a.get("reset") else (b, a)
+            return known["reset"] - length <= other["at"] < known["reset"]
+        return abs(a["at"] - b["at"]) < length
+    out = []
+    for h in sorted(hits, key=lambda h: h["at"]):
+        if not any(same(h, o) for o in out):
+            out.append(h)
+    return out
+
+
+def claude_turns(home, since):
+    """Claude Code replies with their usage, helper agents' included. `redo` marks a reply the user corrected next."""
+    out, seen = [], set()
+    for path in sorted(glob.glob(os.path.join(home, ".claude/projects/**/*.jsonl"), recursive=True)):
+        if os.path.getmtime(path) < since.timestamp():
+            continue
+        replies, name = [], os.path.basename(path)[:-6]
+        for e in iter_jsonl(path):
+            msg = e.get("message") if isinstance(e.get("message"), dict) else {}
+            content, side = msg.get("content"), bool(e.get("isSidechain"))
+            if e.get("type") == "user" and not e.get("isMeta") and not side:
+                results = isinstance(content, list) and any(isinstance(c, dict) and c.get("type") == "tool_result" for c in content)
+                text = "" if results else text_of(content).strip()
+                if text and not NOISE.match(text):
+                    for t in replies if CORRECTION.search(text) else ():
+                        t["redo"] = True
+                    replies = []
+                continue
+            u, at = msg.get("usage") if e.get("type") == "assistant" else None, parse_ts(e.get("timestamp"))
+            if not u or not at or (msg.get("id") and msg["id"] in seen):
+                continue
+            seen.add(msg.get("id"))
+            ctx, usage = claude_usage(u)
+            rows = []
+            _turn("claude_code", ctx, usage, rows)
+            t = {"at": at.timestamp(), "session": e.get("sessionId") or name, "main": not side, "ctx": ctx, "usage": usage,
+                 "reread": rows[0][2], "redo": False, "model": msg.get("model")}
+            out.append(t)
+            if not side:
+                replies.append(t)
+    return out
+
+
+def codex_turns(home, since):
+    """Codex replies with their usage."""
+    out = []
+    for path in glob.glob(os.path.join(home, ".codex/sessions/**/*.jsonl"), recursive=True):
+        if os.path.getmtime(path) < since.timestamp():
+            continue
+        replies, last, model = [], None, None
+        for e in iter_jsonl(path):
+            p = e.get("payload") if isinstance(e.get("payload"), dict) else {}
+            model = p.get("model") or model
+            if p.get("type") == "user_message":
+                for t in replies if CORRECTION.search(str(p.get("message") or "")) else ():
+                    t["redo"] = True
+                replies = []
+            at = parse_ts(e.get("timestamp"))
+            if p.get("type") != "token_count" or not p.get("info") or not at:
+                continue
+            total, u = p["info"].get("total_token_usage"), p["info"].get("last_token_usage") or {}
+            if not total or total == last:
+                continue
+            last = total
+            ctx, usage = codex_usage(u)
+            rows = []
+            _turn("codex", ctx, usage, rows)
+            t = {"at": at.timestamp(), "session": os.path.basename(path)[:-6], "main": True, "ctx": ctx, "usage": usage,
+                 "reread": rows[0][2], "redo": False, "model": model}
+            out.append(t)
+            replies.append(t)
+    return out
+
+
+def limit_split(turns, hits):
+    """What usage went to in the 5-hour windows that filled up, up to the moment each did. Whole percents that add to 100."""
+    if not all(h.get("session") for h in hits):
+        return None   # a saved hit whose logs are gone: what's left would be part of the answer
+    # hits are kept to the second, so the reply that filled the window falls within that second
+    spans = [((h["reset"] or h["at"]) - LIMIT_WINDOW, h["at"] + 1) for h in hits]
+    parts = {"work": 0, "reread": 0, "redo": 0}
+    for t in turns:
+        if any(a <= t["at"] < b for a, b in spans):
+            parts["reread"] += t["reread"]
+            parts["redo" if t["redo"] else "work"] += t["usage"] - t["reread"]
+    total = sum(parts.values())
+    if not total:
+        return None
+    out = {k: int(v * 100 / total) for k, v in parts.items()}
+    for k in sorted(parts, key=lambda k: out[k] - parts[k] * 100 / total)[:100 - sum(out.values())]:
+        out[k] += 1
+    return out
+
+
+def limit_report(home, week, hits, readings, review_from=None, now=None):
+    """The report's LIMITS: each app's 5-hour limit over the Monday-to-Sunday week that starts on `week`."""
+    monday = dt.date.fromisoformat(week)
+    start = dt.datetime.combine(monday, dt.time()).astimezone()
+    end = dt.datetime.combine(monday + dt.timedelta(days=7), dt.time()).astimezone()
+    def cell(at):
+        local = dt.datetime.fromtimestamp(at).astimezone()
+        return (local.date() - monday).days, sum(local.hour >= h for h in SLOT_STARTS) - 1
+    def inside(at):
+        return start.timestamp() <= at < end.timestamp()
+    first_day = dt.date.fromisoformat(review_from) if review_from else (now or dt.datetime.now()).date() - dt.timedelta(days=REVIEW_DAYS)
+    five = [h for h in hits if h["kind"] == "five_hour"]
+    reach = start - dt.timedelta(seconds=LIMIT_WINDOW)   # a window that filled on Monday morning may have opened on Sunday
+    apps = []
+    for app, read in (("claude_code", claude_turns), ("codex", codex_turns)):
+        mine = [h for h in five if h["app"] == app]
+        week_hits = [h for h in mine if inside(h["at"])]
+        turns = read(home, reach)
+        since_review = sum(dt.datetime.fromtimestamp(h["at"]).date() >= first_day for h in mine)
+        row = {"id": app, "hits": [], "since_review": since_review, "split": limit_split(turns, week_hits)}
+        for h in week_hits:
+            day, slot = cell(h["at"])
+            before = [t for t in turns if t["main"] and t["session"] == h.get("session") and t["at"] < h["at"] + 1]
+            model = max(before, key=lambda t: t["at"])["model"] if before else None
+            family = re.search(r"opus|sonnet|haiku|fable", str(model or ""), re.I)
+            row["hits"].append({"day": day, "slot": slot, "long": any(t["ctx"] > LONG_LINE for t in before),
+                                "model": family.group(0).title() if family and app == "claude_code" else None})
+        if app == "claude_code":
+            used = [t for t in turns if inside(t["at"])]
+            total = sum(t["usage"] for t in used)
+            row["cells"] = [[0] * len(SLOT_STARTS) for _ in range(7)]
+            for t in used:
+                day, slot = cell(t["at"])
+                row["cells"][day][slot] += t["usage"]
+            seen = bool(total)
+            # no map when a hit's own logs are gone: shares of what's left would read as the whole week
+            whole = seen and all(h.get("session") for h in week_hits)
+            row["cells"] = [[round(v / total, 4) for v in line] for line in row["cells"]] if whole else None
+        else:
+            row["cells"] = [[None] * len(SLOT_STARTS) for _ in range(7)]
+            shown = [r for r in readings if r["kind"] == "five_hour" and inside(r["at"])]
+            for r in shown:
+                day, slot = cell(r["at"])
+                row["cells"][day][slot] = max(row["cells"][day][slot] or 0, min(100, int(r["percent"])))
+            peaks = []
+            for w in codex_windows(shown):
+                top = max(w, key=lambda r: r["percent"])
+                day, slot = cell(top["at"])
+                peaks.append({"percent": min(100, int(top["percent"])), "day": day, "slot": slot})
+            row["peak"] = max((p["percent"] for p in peaks), default=None)
+            row["next"] = max((p for p in peaks if p["percent"] < 100), key=lambda p: p["percent"], default=None)
+            seen = bool(shown)
+            for h in week_hits:   # known to be full, whether or not its reading is still in the logs
+                day, slot = cell(h["at"])
+                row["cells"][day][slot] = 100
+            if not seen:
+                row["cells"] = None
+        if seen or week_hits or since_review:
+            apps.append(row)
+    return {"from": week, "to": (monday + dt.timedelta(days=6)).isoformat(), "review_from": review_from, "apps": apps}
+
+
+def limit_counts(hits, since):
+    """Distinct limits in the window, by app and kind."""
+    out = collections.defaultdict(collections.Counter)
+    for h in hits:
+        if h["at"] >= since.timestamp():
+            out[h["app"]][h["kind"] if h["kind"] in ("five_hour", "weekly") else "other"] += 1
+    return {app: dict(kinds) for app, kinds in out.items()}
 
 
 def starting_context(home, metered):
@@ -657,7 +950,7 @@ def model_mix(rows, total):
             for m, u in usage.most_common()]
 
 
-def usage_summary(sessions, metered, limit_hits, home):
+def usage_summary(sessions, metered, home):
     """The numbers usage findings need: where usage went, compared only with the user's own typical session."""
     rows = [r for r in sessions if r.get("usage")]
     if not rows:
@@ -682,7 +975,6 @@ def usage_summary(sessions, metered, limit_hits, home):
         "reread_share_of_long": round(sum(r["reread"] for r in long_) / long_usage, 3) if long_usage else None,
         "biggest": [{"source": r["source"], "date": r["start"].astimezone().strftime("%b %-d"), "share": round(r["usage"] / total, 3),
                      "prompts": r["prompts"], "peak": r["peak"], "first": clean(r["first"], 120)} for r in biggest],
-        "limit_hits": limit_hits,
         "models": model_mix(rows, total),
         "starting_context": start,
     }
@@ -1170,6 +1462,8 @@ def main():
     ap.add_argument("--state-dir", help="persist project mappings and session metrics here; normally ~/.second-look")
     ap.add_argument("--trend", action="store_true",
                     help="add weekly and daily totals; use --all-history for historical recovery")
+    ap.add_argument("--review-from", metavar="YYYY-MM-DD", type=lambda s: dt.date.fromisoformat(s).isoformat(),
+                    help="the first day since the last review; leave it out on a first review")
     ap.add_argument("--claude-export", help="path to claude.ai export conversations.json")
     ap.add_argument("--chatgpt-export", help="path to ChatGPT export conversations.json")
     ap.add_argument("--gemini-export", help="path to Google Takeout My Activity/Gemini Apps/MyActivity.json")
@@ -1206,7 +1500,7 @@ def main():
         "to": dt.datetime.now().astimezone().date().isoformat(),
         "available_skill_files": len(skills),
     }
-    metered, limit_hits = usage_by_session(args.home, since)
+    metered = usage_by_session(args.home, since)
     # Full available sessions are required when updating persisted history: a date slice can
     # otherwise replace a complete session with its last few prompts.
     if args.state_dir and (not args.all_history or not args.trend):
@@ -1225,18 +1519,29 @@ def main():
     result["projects"] = projects.labels()
     result["project_coverage"] = {a.name: {"sessions": sum(r["source"] == a.name for r in sessions),
         "unknown": sum(r["source"] == a.name and not r["project"] for r in sessions)} for a in aggs}
-    result["usage"] = usage_summary([r for r in sessions if r["start"] >= since], metered, limit_hits, args.home)
+    result["usage"] = usage_summary([r for r in sessions if r["start"] >= since], metered, args.home)
     result["agent_checks"] = checks_summary([r for r in sessions if r["start"] >= since])
     result["delegation"] = delegation_summary([r for r in sessions if r["start"] >= since])
     result["automation"] = automation_summary(sessions, since)
     result["label_samples"] = label_samples(sessions)
     result["scope"] = data_scope(args.home, aggs, {"claude": args.claude_export, "chatgpt": args.chatgpt_export,
                                                    "gemini": args.gemini_export})
+    now = dt.datetime.now(dt.timezone.utc)
+    # limits are read back far enough for the week shown and the review window, whatever --days says
+    limits_since = min(since, now - dt.timedelta(days=REVIEW_DAYS + 7))
+    if args.review_from:
+        limits_since = min(limits_since, dt.datetime.combine(dt.date.fromisoformat(args.review_from), dt.time()).astimezone())
+    readings = codex_limit_readings(args.home, limits_since)
+    hits = merge_limits(claude_limit_hits(args.home, limits_since) + codex_limit_hits(codex_windows(readings)))
+    week = last_complete_week([{"week": week_of(s["start"]), "sessions": 1} for s in sessions], week_of(now))
     if args.trend:
         if args.state_dir:
             history = HistoryStore(os.path.join(os.path.expanduser(args.state_dir), "history.json"))
             result["cube"] = history.update(sessions, projects, session_cube)
             result["history_notes"] = history.notes
+            # this run's entries come first, so a saved copy never hides which session one happened in
+            hits = merge_limits(hits + history.data.get("limits", []))
+            history.data["limits"] = [{k: h.get(k) for k in ("app", "kind", "at", "reset")} for h in hits]
             projects.save()
             history.save()
         else:
@@ -1245,8 +1550,11 @@ def main():
             if row.get("project") in result["projects"]:
                 row["project_label"] = result["projects"][row["project"]]
         # the week in progress would read as a quiet full week, so the report's charts stop before it
-        result["last_complete_week"] = last_complete_week(result["cube"], week_of(dt.datetime.now(dt.timezone.utc)))
+        result["last_complete_week"] = week = last_complete_week(result["cube"], week_of(now))
         result["last_4_weeks"] = last_4_weeks(result["cube"], result["last_complete_week"])
+    result["limits"] = limit_report(args.home, week, hits, readings, args.review_from)
+    if result["usage"]:
+        result["usage"]["limit_hits"] = limit_counts(hits, since)
     text = json.dumps(result, indent=2, default=str)
     if args.out:
         with open(args.out, "w") as f:

@@ -291,7 +291,7 @@ Full paths are not saved. Missing or unverified project metadata appears under â
 project membership in cloud exports has not yet been verified.
 
 The collector can retain all available history with `--all-history --trend --state-dir ~/.second-look`.
-It keeps per-session metrics without prompt text and preserves older totals when original logs are
+It keeps per-session metrics without prompt text, and when each usage limit filled up, and preserves older totals when original logs are
 missing. Existing aggregate-only history is replaced only when a reread reproduces its totals.
 The report's Time menu adds All history to show every saved week; it still opens on 12 months or less.
 No host retention setting is changed by historical collection.
@@ -304,8 +304,8 @@ For Claude Code and Codex, the only apps that log tokens. The charts track how m
 usage came from very long sessions, where every request re-reads a long history. The skills
 check names what loads into every session before you type, like skills you haven't run in 60
 days, and how much you'd save by having them run only when you ask. Numbers compare you with
-your own typical session, never with other people. A full breakdown appears only if you keep
-hitting usage limits. Usage is weighted by public list prices, so treat it as an estimate.
+your own typical session, never with other people. When a 5-hour limit filled up in the last
+week, the report shows which days and times, and what your usage went to before it did. Usage is weighted by public list prices, so treat it as an estimate.
 </details>
 
 <details>

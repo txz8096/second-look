@@ -1,4 +1,4 @@
 {
-  "revision": 6,
-  "benefit": "The review instructions now use the sample report's project name as their example, so no outside project name can carry into your summary."
+  "revision": 7,
+  "benefit": "When a Claude Code or Codex 5-hour limit fills up, the report now shows which days and times it happened and what your usage went to before it did."
 }

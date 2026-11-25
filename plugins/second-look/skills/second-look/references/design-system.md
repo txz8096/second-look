@@ -78,7 +78,8 @@ An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs
    (“How your habits are changing” with scripts off), then `#trends`: the open group shows its summary (12px above and below),
    the filters and its charts (see "Chart groups"). Under the filters, hovering or focusing View data coverage opens a
    360px card, "Data coverage" over one plain line of which apps and weeks the charts count; Escape dismisses it,
-   and the link goes to Data coverage in Settings. Then comes "Activity since your last review". `scripts/prerender.py` saves the drawn charts, bars and tables into
+   and the link goes to Data coverage in Settings. On the usage question's page, "5-hour limits in the last week" follows (see "5-hour limits").
+   Then comes "Activity since your last review". `scripts/prerender.py` saves the drawn charts, bars and tables into
    the file and marks the section `data-static`, which hides the filters and shows a note.
    The script clears the mark, sets `data-live` and redraws with live filters. With neither
    mark (scripts off, nothing prerendered), the section shows one line, "Open this file in a
@@ -132,6 +133,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   one row per repeated request, most repeated first, with the request in quotes, the count in
   plain text ("6 times in 4 weeks") and the recommendation as one line to paste. The script moves the block into
   that group. Delete it when there are no repeats.
+- "Where does my usage go?" is followed by "5-hour limits in the last week" (`#limits`). See "5-hour limits".
 - Without scripts (prerendered), every group shows in turn with its question as a heading.
 - Phones: the questions sit in the sidebar drawer with the rest of the navigation.
 
@@ -141,6 +143,28 @@ no reason to pick one and showed nothing new on opening); every chart visible in
 order with a jump bar (still a long scroll, and some charts fit more than one stage); counts
 of slipping, improving and steady charts on the tiles, and the value and change on each chart
 and summary row (too much to read before the first chart).
+
+## 5-hour limits
+
+Decided Nov 24, 2026. A section of its own with its own title and dates, because one week suits it and the review period suits the
+tables below. No filters: the ones above don't change it, and a second set would compete with them. Its title is level with "Activity
+since your last review", and the script draws it from `LIMITS` on the usage question's page only.
+
+- One sentence answers first: how often each app's 5-hour limit filled up, and when if the hits share a day or part of the day.
+- One card per app whose limit filled up that week: title, a heat map (7 days by 6 times), a legend, one line of what it
+  shows. No definition lines (the author removed them Nov 24, 2026): the legend
+  and the line under it say what the cells mean, and the table's label says it for screen readers. It's a real table with day and time headers. Each value is printed in its cell, and one pink scale mixes `--series` into
+  `--surface-2` from 10% to 85%, so the text keeps 4.5:1 in both themes. Cells are 40px tall with 4px gaps.
+- Claude Code cells are shares of its usage, shaded against the week's busiest cell; an ink tag, "Limit", marks a hit. Codex cells are
+  how full the limit got, shaded against 100%; the tag is "Full". An empty Codex cell means no reading, which
+  isn't proof Codex was unused, so the legend says "No Codex reading".
+- Under them, one breakdown card per app (share bars), side by side where two fit, with a link to each recommendation that covers it.
+- When a hit is saved but its logs are gone, the sentence still counts it and says the heat map isn't shown. Missing data never draws as 0%.
+- A week when neither limit filled up is one sentence with no heat map. With no Claude Code or Codex, the section hides.
+- Phones: the heat map scrolls sideways in its card, keeping the day labels in view; the keyboard can reach it.
+
+Rejected: a filter for the section; one combined heat map (each app has its own limit); a 3-hit minimum (a week can have one hit worth
+seeing); showing it on all five question pages.
 
 ## Pattern card
 

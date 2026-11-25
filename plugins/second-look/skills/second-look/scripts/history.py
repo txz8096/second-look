@@ -45,7 +45,7 @@ class HistoryStore:
     def __init__(self, path):
         self.path = path
         self.notes = []
-        self.data = {"version": 2, "sessions": {}, "legacy": [], "cube": []}
+        self.data = {"version": 2, "sessions": {}, "legacy": [], "cube": [], "limits": []}
         if Path(path).exists():
             old = json.loads(Path(path).read_text())
             if isinstance(old, dict) and old.get("version") == 2:

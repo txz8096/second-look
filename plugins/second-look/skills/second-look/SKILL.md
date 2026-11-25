@@ -74,7 +74,7 @@ message, so quote only what a finding needs.
 |---|---|
 | `profile.md` | Name, what they build, focus areas, where their context file and skills live |
 | `log.md` | One entry per review: snapshot, findings, the recommendations they picked and how each will be judged, and goals worth retrying with the model each was last tried on |
-| `history.json` | Weekly habit rows with daily totals, kept longer than the apps keep their own logs |
+| `history.json` | Weekly habit rows with daily totals, and when each usage limit filled up, kept longer than the apps keep their own logs |
 | `exports/claude/conversations.json`, `exports/chatgpt/conversations.json`, `exports/gemini/MyActivity.json` | Data exports for historical trends |
 | `reports/` | Saved reports, when they aren't published as artifacts |
 | `schedule.json` | Recurring review setting: on or off, days between reviews, how they run, date of the last review, date of the last report they opened |
@@ -288,8 +288,8 @@ and still works on current models.
    briefed starts, restarts, rules retyped, skill runs, and trimmed prompt samples with
    secrets removed. Blocks that cover Claude Code and Codex only, the apps that log tokens
    and tool calls:
-   - `usage`: long-session share, typical request, the biggest sessions, usage-limit hits,
-     and `starting_context` (what loads before the first message, unused skills and plugins,
+   - `usage`: long-session share, typical request, the biggest sessions, how often each usage limit
+     filled up (`limit_hits`, by app and kind), and `starting_context` (what loads before the first message, unused skills and plugins,
      copied instruction files, and the gain from trimming them).
    - `agent_checks`: sessions where the agent edited code, how many ran a test, build, lint,
      browser check or verifying subagent after the last edit, and `unchecked_ships` (a commit,
@@ -309,10 +309,12 @@ and still works on current models.
    `~/.codex/AGENTS.md`, Cursor rules and `~/.gemini/GEMINI.md` (Antigravity). Note which rules
    each app is missing.
 4. **Available history.** Run `python3 scripts/collect.py --all-history --trend --state-dir ~/.second-look`, adding
+   `--review-from YYYY-MM-DD` (the window's first day; leave it out on a first review), and
    `--claude-export ~/.second-look/exports/claude/conversations.json` and
    `--chatgpt-export ~/.second-look/exports/chatgpt/conversations.json` and
    `--gemini-export ~/.second-look/exports/gemini/MyActivity.json` when those files
-   exist. It returns `cube` (weekly rows by source, kind of work and project, each with additive daily `days` totals), `coverage`,
+   exist. It returns `cube` (weekly rows by source, kind of work and project, each with additive daily `days` totals), `limits`
+   (see "5-hour limits in the last week"), `coverage`,
    `label_samples` and an `automation` block matched across available raw history. Spot-check the
    labels against the samples before trusting a number.
    The collector saves prompt-free per-session metrics in `~/.second-look/history.json` and
@@ -672,8 +674,18 @@ go in the sidebar's "References" list.
   first: the request in curly quotes, trimmed to its ask; the count as
   "<n> times in <span>" from `last_4_weeks` (or `times` with the span from `first` to `last`);
   the recommendation as one line to paste, naming the app ("Tell Claude Code: “Every Monday, …”"). Delete the block when there are no repeats, and on claude.ai.
-- **Activity since your last review** (with its dates; on a first review, "Activity, <dates>"): the
-  usage-limit line, then the visible "By app" and "Skills and commands" tables, counted over the same dates.
+- **5-hour limits in the last week** (`#limits`), on the usage question's page only. Copy `limits` from the
+  all-history run into `LIMITS`, unchanged; it covers the same Monday-to-Sunday week as `END`, and the filters
+  don't change it. The script writes the section: one sentence on how often each app's limit filled up, then, for
+  each app whose limit filled up that week, a heat map by day and time and what its usage went to. Claude Code cells
+  show the share of its usage, with "Limit" where a limit hit; Codex cells show the fullest the limit got, with
+  "Full" where it reached 100%. Codex logs how full its limit is and Claude Code logs only the refusal, so never say
+  Codex blocked anything. When a hit's logs are gone it keeps the count, drops that app's map and says so; don't fill in `cells` yourself.
+  In a week when neither filled up, it's one sentence with the count since the last review. Fill `LIMIT_RECS`
+  with the cards that act on each app's limits, by card id and what each covers (`["p-long", "long sessions"]`), or
+  leave an app's list empty. On claude.ai, set `LIMITS` to `null` and the section hides.
+- **Activity since your last review** (with its dates; on a first review, "Activity, <dates>"): the visible
+  "By app" and "Skills and commands" tables, counted over the same dates. It carries no usage-limit line.
 
 **Sidebar note** (`#side-about`, at the bottom of the sidebar). Replace the sample sentences with the method in one short sentence ("Read from your AI logs and exports, with secrets removed."), and list what you actually used under "Guidance and references", one per line, each linked to its original source (`<a href="…" target="_blank" rel="noopener noreferrer">`; this list lives here, not under tables). Link the page itself, never a search or a secondhand summary; leave an item unlinked only when it has no public page, such as the user's own files. On claude.ai, add the profile and the Log entry after that list.
 
@@ -706,8 +718,13 @@ Say "usage", never "cost" or "spend": most people are on a plan, not paying per 
   them off in `/plugin`. Never suggest deleting or moving skills. When `log_days` is shorter than
   `unused_days`, say "since <date>, when your logs begin" and that some may simply not have come
   up yet.
-- **Usage breakdown.** Doing the work, re-reading long sessions, redoing work. Show it in
-  "Activity since your last review" only when `limit_hits` is 3 or more; otherwise keep the one-line note.
+- **Usage breakdown.** Doing the work, re-reading long sessions, redoing work. The script shows it under "5-hour limits in
+  the last week", for each app whose limit filled up that week, over the 5-hour windows that filled, up to the moment each did.
+  Like the heat map, it counts helper agents, since they draw on the same limit, so it can differ slightly from the
+  main-session usage numbers elsewhere. A limit counts once, however many times the app repeated the message. Brief rate errors, spend
+  limits and spent credits don't count. Weekly and model limits are in `limit_hits` as evidence for a card; they
+  have no heat map. An app's limit can also be used outside these logs (claude.ai, another computer), so
+  say what the logs show took that usage, never that it caused the limit.
 - Cursor, Antigravity, claude.ai, ChatGPT and Gemini don't record usage. Say so once.
 
 ## Data scope

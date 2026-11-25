@@ -53,8 +53,12 @@ The share of a person's usage that came from sessions past the long-session line
 _Avoid_: Bloat rate, overhead share
 
 **Usage breakdown**:
-The split of all usage into doing the work, re-reading long sessions and redoing work. Shown only when usage limits are a real constraint for the person.
+The split of usage into doing the work, re-reading long sessions and redoing work. Shown for an app in a week its 5-hour limit filled up, over the windows that filled.
 _Avoid_: Ledger, token ledger
+
+**5-hour limit**:
+How much an app lets a person use in a 5-hour window. Claude Code logs when it refuses a request, so a report says the person hit the limit. Codex logs how full the limit is, so a report says it reached 100%. Each window counts once.
+_Avoid_: Quota, rate limit, session limit, blocked (for Codex)
 
 **Redoing work**:
 Usage on replies the person corrected in their next message.
