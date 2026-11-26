@@ -559,6 +559,16 @@ button.copy { position: absolute; top: 6px; right: 6px; z-index: 1; display: inl
 button.copy::before { content: ""; width: 14px; height: 14px; background: var(--muted); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='14' height='14' x='8' y='8' rx='2'/%3E%3Cpath d='M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='14' height='14' x='8' y='8' rx='2'/%3E%3Cpath d='M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2'/%3E%3C/svg%3E") center / contain no-repeat; }
 pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: var(--r-8); padding: 12px 84px 12px 12px;
   font-size: 13px; line-height: 20px; white-space: pre-wrap; word-break: break-word; }
+/* with scripts, a recommendation's prompt is a text box: Copy and Approve send what's in it. Print keeps the plain prompt */
+textarea.prompt-edit { display: block; width: 100%; box-sizing: border-box; min-height: 120px; margin: 0; resize: vertical; field-sizing: content;
+  color: var(--fg); background: var(--code-bg); border: 1px solid var(--line); border-radius: var(--r-8); padding: 12px 84px 12px 12px; font: 13px/20px var(--mono); }
+textarea.prompt-edit:hover { border-color: var(--line-strong); }
+textarea.prompt-edit:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.field:has(> textarea.prompt-edit) > pre { display: none; }
+.prompt-note { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 8px; font-size: 13px; line-height: 18px; color: var(--muted); }
+button.prompt-reset { height: auto; padding: 0; border: 0; background: none; color: var(--accent); font-size: 13px; text-decoration: underline; text-underline-offset: 2px; }
+button.prompt-reset:hover { background: none; }
+@media print { textarea.prompt-edit, .prompt-note { display: none; } .field:has(> textarea.prompt-edit) > pre { display: block; } }
 
 .flash { animation: flash 1.6s ease-out; }
 @keyframes flash { 0%, 30% { background: var(--accent-soft-2); } }
@@ -884,7 +894,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .filters > .coverage-hint { order: 2; }
   .range-dates input { min-height: 44px; font-size: 16px; }
   .skill-benefits { grid-template-columns: 1fr; }
-  pre { padding: 40px 12px 12px; }
+  pre, textarea.prompt-edit { padding: 40px 12px 12px; }
   select { font-size: 16px; }
   .chart svg text { font-size: 12px; }
   .term { text-underline-offset: 5px; }
@@ -1503,13 +1513,43 @@ document.addEventListener('click', e => {
   const btn = e.target.closest('button.copy');
   if (!btn) return;
   e.preventDefault();
-  const pre = btn.closest('.field').querySelector('pre');
+  const field = btn.closest('.field'), pre = field.querySelector('pre'), box = field.querySelector('textarea.prompt-edit');
   const done = () => { btn.textContent = 'Copied'; setTimeout(() => btn.textContent = 'Copy', 1500); };
-  (navigator.clipboard ? navigator.clipboard.writeText(pre.innerText) : Promise.reject()).then(done).catch(() => {
+  (navigator.clipboard ? navigator.clipboard.writeText(box ? box.value : pre.innerText) : Promise.reject()).then(done).catch(() => {
+    if (box) { box.focus(); box.select(); btn.textContent = 'Selected'; setTimeout(() => btn.textContent = 'Copy', 1500); return; }
     const r = document.createRange(); r.selectNodeContents(pre);
     const s = getSelection(); s.removeAllRanges(); s.addRange(r); btn.textContent = 'Selected'; setTimeout(() => btn.textContent = 'Copy', 1500);
   });
 });
+
+// A recommendation's prompt can be edited before Copy or Approve; both send the edited text.
+// Edits are kept in this browser only, and Reset brings back Second Look's version
+(() => {
+  const key = sec => "second-look-prompt:" + document.title + ":" + sec.id;
+  const fits = CSS.supports && CSS.supports("field-sizing", "content");
+  document.querySelectorAll("section.try .try-prompt pre").forEach(pre => {
+    const sec = pre.closest("section.try"), original = pre.textContent;
+    const box = document.createElement("textarea");
+    box.className = "prompt-edit"; box.spellcheck = true; box.value = original;
+    box.setAttribute("aria-label", "Prompt. You can edit it before you copy or approve it.");
+    const note = document.createElement("p"); note.className = "prompt-note";
+    pre.after(box); pre.closest(".field").after(note);
+    const fit = () => { if (fits || !box.offsetParent) return; box.style.height = "auto"; box.style.height = box.scrollHeight + 2 + "px"; };
+    const sync = save => {
+      const edited = box.value !== original;
+      pre.textContent = box.value;
+      if (save) { try { edited ? localStorage.setItem(key(sec), box.value) : localStorage.removeItem(key(sec)); } catch (e) { /* storage can be blocked */ } }
+      note.innerHTML = edited ? 'Edited. Copy and Approve use your version. <button type="button" class="prompt-reset">Reset</button>' : "You can edit this prompt before you copy or approve it.";
+      fit();
+    };
+    let saved = null; try { saved = localStorage.getItem(key(sec)); } catch (e) { /* storage can be blocked */ }
+    if (saved !== null) box.value = saved;
+    sync(false);
+    box.addEventListener("input", () => sync(true));
+    note.addEventListener("click", e => { if (!e.target.closest(".prompt-reset")) return; box.value = original; sync(true); box.focus(); });
+    pre.closest("details").addEventListener("toggle", fit);
+  });
+})();
 
 // Approve sends the recommendation’s prompt to the app named on the card and copies it in case no app opens.
 // Decline is remembered in this browser only; the next review judges from the logs
@@ -1539,7 +1579,8 @@ document.addEventListener('click', e => {
     if (!sec) return;
     if (btn.classList.contains("fix-decline")) { remember(sec, "declined"); show(sec, "declined"); return; }
     if (btn.classList.contains("fix-undo")) { remember(sec, null); show(sec, null); return; }
-    const text = sec.querySelector(".try-prompt pre").textContent, link = links[sec.dataset.app];
+    const box = sec.querySelector(".try-prompt textarea.prompt-edit");
+    const text = box ? box.value : sec.querySelector(".try-prompt pre").textContent, link = links[sec.dataset.app];
     copyText(text).then(() => true, () => false).then(copied => show(sec, "approved", !!link, copied));
     if (link) location.href = link(text);
   });
