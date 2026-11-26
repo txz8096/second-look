@@ -1547,7 +1547,7 @@ document.addEventListener('click', e => {
       sec.dataset.long = long ? "1" : "";
       note.classList.toggle("long", long);
       note.innerHTML = !edited ? "You can edit this prompt before you copy or approve it."
-        : (long ? "Your version is " + box.value.length.toLocaleString("en-US") + " characters, over the " + LIMIT.toLocaleString("en-US") + " that fit in the link to " + esc(app) + ". Copy prompt copies it for you to paste into a new " + esc(app) + " session, or shorten it to open " + esc(app) + " directly."
+        : (long ? (box.value.length - LIMIT).toLocaleString("en-US") + " characters too long to open in " + esc(app) + ". Shorten it, or use Copy prompt and paste it into a new " + esc(app) + " session."
           : "Edited. Copy and Approve use your version.") + ' <button type="button" class="prompt-reset">Reset</button>';
       if (long !== was) sec.dispatchEvent(new Event("prompt-length"));
       fit();
