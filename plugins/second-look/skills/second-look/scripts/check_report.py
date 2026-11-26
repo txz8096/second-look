@@ -292,10 +292,11 @@ def main():
     for i in REQUIRED_IDS:
         if f'id="{i}"' not in html:
             problems.append(f'missing section id="{i}"')
+    # skill fixes (class="try skill-fix") use the same panel but have no saving to show
     tries, saves = html.count('<section class="try"'), html.count('class="try-saves"')
     if tries != saves:
         problems.append(f'each Try this block needs one <p class="try-saves"> line saying what it saves (found {saves} of {tries})')
-    for panel in re.findall(r'<section class="try".*?</section>', html, re.S):
+    for panel in re.findall(r'<section class="try[" ].*?</section>', html, re.S):
         pid = (re.search(r'id="([^"]+)"', panel) or [None, "a recommendation panel"])[1]
         if not re.search(r'data-app="(codex|claude-desktop|copy)"', panel) or 'data-app-name="' not in panel:
             problems.append(f'{pid}: set data-app (codex, claude-desktop or copy) and data-app-name on the recommendation panel')

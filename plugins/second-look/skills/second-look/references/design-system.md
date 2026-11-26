@@ -72,7 +72,7 @@ An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs
 3. Overview (`#overview`): "Your latest review" as the `h1`, the summary paragraph (20px, plain words, no numbers), “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with a link to Data coverage in Settings; under 600px the 13 bars fit the card and every third week keeps its date, ending on the latest), "Following up on your last review" (`#last-cycle`, one card per decision, one folded row per recommendation; only after a review with logged recommendations), then "Explore your report", one row per page.
 4. Recommendations based on your AI sessions (`#part-2`): headline, then pattern cards
    (`article.icard`), each ending in its recommendation panel with Approve and Decline.
-5. Keep your skills current (`#part-3`): headline, scan line, "Skills to fix" (`#fix-first`, with paste-to-your-AI blocks in `.fix-block`), "Worth a look",
+5. Keep your skills current (`#part-3`): headline, scan line, "Skills to fix" (`#fix-first`, with skill fix panels in `section.try.skill-fix`: the recommendation panel without the saves line), "Worth a look",
    collapsed "Skills you wrote", collapsed installed skills.
 6. How your habits are changing (`#part-1`, last despite its id): the page title is the open question
    (“How your habits are changing” with scripts off), then `#trends`: the open group shows its summary (12px above and below),

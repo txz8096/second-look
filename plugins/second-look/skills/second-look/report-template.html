@@ -541,6 +541,7 @@ blockquote { margin: 0; padding-left: 12px; border-left: 2px solid var(--line); 
 blockquote + .def { margin-top: -16px; padding: 6px 0 0 12px; border-left: 2px solid var(--line); font-size: 13px; line-height: 18px; }
 
 /* the recommendation in each pattern: a pink panel */
+.skill-fix { margin-top: 12px; }
 .try { display: grid; gap: 12px; padding: 16px; background: var(--accent-soft); border: 1px solid var(--accent-soft-2); border-radius: var(--r-10); scroll-margin-top: 24px; }
 .try h4 { font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.5; }
 .try-saves { font-size: 14px; font-weight: 600; line-height: 20px; color: var(--accent); }
@@ -633,7 +634,6 @@ td.best { color: var(--accent); font-weight: 600; }
 .skill-resources .dest { padding: 16px 20px; }
 
 /* habits over time */
-.fix-block { display: grid; gap: 8px; margin-top: 8px; scroll-margin-top: 24px; }
 .filters { display: none; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
 .fgroup { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .flabel { margin-right: 4px; }
@@ -1265,24 +1265,32 @@ Don't change any files yet. End by asking which experiment to run first.</pre></
     <div class="tbl"><table>
       <thead><tr><th>Issue</th><th>Fix</th></tr></thead>
       <tbody>
-        <tr><td><b>pr-review</b> names a tool that doesn’t exist, so the visual check can get skipped<span class="def">Fix 3, checking beta work before it ships, works better with it.</span></td><td><a href="#fix-pr-review" data-jump="fix-pr-review">Paste the fix</a> (5 min)</td></tr>
-        <tr><td><b>release-notes</b> still lists last quarter’s pricing tiers<span class="def">Its output goes into every changelog.</span></td><td><a href="#fix-release-notes" data-jump="fix-release-notes">Paste the fix</a> (5 min)</td></tr>
+        <tr><td><b>pr-review</b> names a tool that doesn’t exist, so the visual check can get skipped<span class="def">Recommendation 3, checking beta work before it ships, works better with it.</span></td><td><a href="#fix-pr-review" data-jump="fix-pr-review">See the fix</a> (5 min)</td></tr>
+        <tr><td><b>release-notes</b> still lists last quarter’s pricing tiers<span class="def">Its output goes into every changelog.</span></td><td><a href="#fix-release-notes" data-jump="fix-release-notes">See the fix</a> (5 min)</td></tr>
         <tr><td><b>beta-feedback-synth</b> says the team has 4 engineers; your notes say 6</td><td>In claude.ai, paste: “Change the team size in my beta-feedback-synth skill from 4 to 6.” (1 min)</td></tr>
         <tr><td><b>api-docs</b> is installed twice, and the claude.ai copy is older<span class="def">Two versions give different advice.</span></td><td>In claude.ai, paste: “Help me delete the older copy of my api-docs skill.”</td></tr>
         <tr><td><b>mermaid-diagrams</b> is missing its main file, so it never loads</td><td>In Claude Code, paste: “Reinstall mermaid-diagrams.”</td></tr>
       </tbody></table></div>
-    <div class="fix-block" id="fix-pr-review">
-      <p class="def">pr-review: paste this into a new Claude Code session.</p>
-      <div class="field"><button type="button" class="copy" hidden>Copy</button>
+    <section class="try skill-fix" id="fix-pr-review" aria-labelledby="fix-pr-review-h" data-app="claude-desktop" data-app-name="Claude Code">
+      <h4 id="fix-pr-review-h">Ask Claude Code to correct the tool names in your pr-review skill.</h4>
+      <p class="try-do">Approve opens Claude Code with this prompt. Claude Code shows the change and saves nothing until you say yes.</p>
+      <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+        <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Update my pr-review skill. Its tool table names the wrong agent. Change the two column headings to "Claude desktop (built-in browser)" and "Claude Code, Codex, Cursor and others".
-Then tell me in plain words what changed before you save it.</pre></div>
-    </div>
-    <div class="fix-block" id="fix-release-notes">
-      <p class="def">release-notes: paste this into a new claude.ai session.</p>
-      <div class="field"><button type="button" class="copy" hidden>Copy</button>
+Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
+      <p class="fix-status" role="status" aria-live="polite"></p>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+    </section>
+    <section class="try skill-fix" id="fix-release-notes" aria-labelledby="fix-release-notes-h" data-app="copy" data-app-name="claude.ai">
+      <h4 id="fix-release-notes-h">Ask claude.ai to replace the old pricing table in your release-notes skill.</h4>
+      <p class="try-do">Copy prompt copies this prompt for a new claude.ai session. claude.ai shows the change and saves nothing until you say yes.</p>
+      <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+        <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Update my release-notes skill. Delete the pricing table and put this line in its place: "Read prices from docs/pricing.md. Never keep a copy here."
-Then tell me in plain words what changed before you save it.</pre></div>
-    </div>
+Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
+      <p class="fix-status" role="status" aria-live="polite"></p>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+    </section>
   </section>
 
   <section>

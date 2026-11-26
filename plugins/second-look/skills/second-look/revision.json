@@ -1,4 +1,4 @@
 {
-  "revision": 7,
-  "benefit": "When a Claude Code or Codex 5-hour limit fills up, the report now shows which days and times it happened and what your usage went to before it did."
+  "revision": 8,
+  "benefit": "Skill fixes in the report now work like recommendations: Approve opens the app with the fix ready to send, and the app waits for your yes before saving."
 }
