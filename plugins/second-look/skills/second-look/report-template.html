@@ -615,6 +615,12 @@ details.ic-rule-comparison { min-width: 0; border-bottom: 0; }
 details.ic-rule-comparison > .body { padding-bottom: 0; }
 .try details.nested { border-block: 0; border-top: 1px solid var(--accent-soft-2); }
 .try details.nested > summary { padding-bottom: 0; }
+/* a short recommendation inside a table row: the same prompt, edit and Approve/Decline, without the pink panel */
+.try.try-inline { gap: 8px; padding: 0; background: none; border: 0; border-radius: 0; }
+.try-inline .try-line { margin: 0; }
+.try.try-inline details.nested { border-top: 0; }
+.try-inline details.nested > summary { min-height: 32px; padding-top: 0; }
+.try-inline .fix-actions button { height: 32px; }
 
 /* tables */
 .tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-14); overscroll-behavior-x: contain; }
@@ -1312,7 +1318,14 @@ Then tell me in plain words what changed, and wait for my yes before you save it
         <tr><td>Your team details are copied into beta-feedback-synth, ui-review and metrics-check</td><td>The copies already disagree</td><td><span class="conf strong">Sure</span></td><td>In claude.ai, paste: “Move my team details out of those three skills and into one shared file.”</td></tr>
         <tr><td>Your skills are set up for Claude, with none for Codex. Cursor’s folder couldn’t be read.</td><td>Codex and Cursor can run the same files</td><td><span class="conf sugg">Likely</span></td><td>In Claude Code, paste: “Copy my skills to Codex, then check my Cursor skills folder.”</td></tr>
         <tr><td>ui-review doesn’t know about Claude Design, and loads all three platform guides every time</td><td>It misses a current app and loads more than it needs</td><td><span class="conf sugg">Likely</span></td><td>In claude.ai, paste: “Add Claude Design to my ui-review skill and have it load one platform guide at a time.”</td></tr>
-        <tr><td>No skill has a test</td><td>A model update could change how a skill behaves without you noticing</td><td><span class="conf val">Hunch</span></td><td>In claude.ai, paste: “Write 3 test prompts for my release-notes and ui-review skills.”</td></tr>
+        <tr><td>No skill has a test</td><td>A model update could change how a skill behaves without you noticing</td><td><span class="conf val">Hunch</span></td><td><section class="try try-inline" id="try-skill-tests" aria-label="Next step: skill tests" data-app="copy" data-app-name="claude.ai">
+          <p class="try-line">Ask claude.ai to write 3 test prompts each for your release-notes and ui-review skills.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Write 3 test prompts for my release-notes skill and 3 for my ui-review skill, each with what a good answer should include. Show them to me and wait for my yes before you save anything.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
         <tr><td>commit-message and pdf-tools are behind their source.</td><td>You may be missing fixes</td><td><span class="conf strong">Sure</span></td><td>In Claude Code, paste: “Show me what changed in commit-message and pdf-tools since I installed them.”</td></tr>
       </tbody></table></div>
   </section>
