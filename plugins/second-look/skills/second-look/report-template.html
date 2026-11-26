@@ -565,6 +565,7 @@ textarea.prompt-edit { display: block; width: 100%; box-sizing: border-box; min-
 textarea.prompt-edit:hover { border-color: var(--line-strong); }
 textarea.prompt-edit:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .field:has(> textarea.prompt-edit) > pre { display: none; }
+.prompt-note.long { color: var(--fg); }
 .prompt-note { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 8px; font-size: 13px; line-height: 18px; color: var(--muted); }
 button.prompt-reset { height: auto; padding: 0; border: 0; background: none; color: var(--accent); font-size: 13px; text-decoration: underline; text-underline-offset: 2px; }
 button.prompt-reset:hover { background: none; }
@@ -1526,20 +1527,29 @@ document.addEventListener('click', e => {
 // Edits are kept in this browser only, and Reset brings back Second Look's version
 (() => {
   const key = sec => "second-look-prompt:" + document.title + ":" + sec.id;
+  const LIMIT = 1800, esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;");
   const fits = CSS.supports && CSS.supports("field-sizing", "content");
   document.querySelectorAll("section.try .try-prompt pre").forEach(pre => {
     const sec = pre.closest("section.try"), original = pre.textContent;
     const box = document.createElement("textarea");
     box.className = "prompt-edit"; box.spellcheck = true; box.value = original;
     box.setAttribute("aria-label", "Prompt. You can edit it before you copy or approve it.");
-    const note = document.createElement("p"); note.className = "prompt-note";
+    const note = document.createElement("p"); note.className = "prompt-note"; note.setAttribute("aria-live", "polite");
+    const linked = sec.dataset.app === "codex" || sec.dataset.app === "claude-desktop", app = sec.dataset.appName;
     pre.after(box); pre.closest(".field").after(note);
     const fit = () => { if (fits || !box.offsetParent) return; box.style.height = "auto"; box.style.height = box.scrollHeight + 2 + "px"; };
     const sync = save => {
       const edited = box.value !== original;
       pre.textContent = box.value;
       if (save) { try { edited ? localStorage.setItem(key(sec), box.value) : localStorage.removeItem(key(sec)); } catch (e) { /* storage can be blocked */ } }
-      note.innerHTML = edited ? 'Edited. Copy and Approve use your version. <button type="button" class="prompt-reset">Reset</button>' : "You can edit this prompt before you copy or approve it.";
+      // past 1,800 characters the app link may fail, so Approve only copies the prompt
+      const long = linked && box.value.length > LIMIT, was = sec.dataset.long === "1";
+      sec.dataset.long = long ? "1" : "";
+      note.classList.toggle("long", long);
+      note.innerHTML = !edited ? "You can edit this prompt before you copy or approve it."
+        : (long ? "Your version is " + box.value.length.toLocaleString("en-US") + " characters, over the " + LIMIT.toLocaleString("en-US") + " that fit in the link to " + esc(app) + ". Copy prompt copies it for you to paste into a new " + esc(app) + " session, or shorten it to open " + esc(app) + " directly."
+          : "Edited. Copy and Approve use your version.") + ' <button type="button" class="prompt-reset">Reset</button>';
+      if (long !== was) sec.dispatchEvent(new Event("prompt-length"));
       fit();
     };
     let saved = null; try { saved = localStorage.getItem(key(sec)); } catch (e) { /* storage can be blocked */ }
@@ -1563,7 +1573,7 @@ document.addEventListener('click', e => {
     const approve = sec.querySelector(".fix-approve"), decline = sec.querySelector(".fix-decline"), undo = sec.querySelector(".fix-undo");
     sec.dataset.state = state || "";
     approve.hidden = state === "declined"; decline.hidden = !!state; undo.hidden = state !== "declined";
-    approve.textContent = links[sec.dataset.app] ? (state === "approved" ? "Open " + app + " again" : "Approve") : "Copy prompt";
+    approve.textContent = links[sec.dataset.app] && !sec.dataset.long ? (state === "approved" ? "Open " + app + " again" : "Approve") : "Copy prompt";
     status.textContent = state === "declined" ? "You declined this."
       : state === "approved" ? (opened ? "Sent to " + app + ". " : "") + (copied
         ? (opened ? "The prompt is copied too: if " + app + " didn't open, paste it into a new " + app + " session." : "Prompt copied. Paste it into a new " + app + " session.")
@@ -1573,6 +1583,8 @@ document.addEventListener('click', e => {
     sec.querySelector(".fix-actions").hidden = false;
     let saved = null; try { saved = localStorage.getItem(key(sec)); } catch (e) { /* storage can be blocked */ }
     show(sec, saved === "declined" ? "declined" : null);
+    // crossing the length limit switches Approve between opening the app and copying; an earlier "Sent" no longer applies
+    sec.addEventListener("prompt-length", () => show(sec, sec.dataset.state === "declined" ? "declined" : null));
   });
   document.addEventListener("click", e => {
     const btn = e.target.closest(".fix-approve, .fix-decline, .fix-undo"), sec = btn && btn.closest("section.try");
@@ -1580,7 +1592,7 @@ document.addEventListener('click', e => {
     if (btn.classList.contains("fix-decline")) { remember(sec, "declined"); show(sec, "declined"); return; }
     if (btn.classList.contains("fix-undo")) { remember(sec, null); show(sec, null); return; }
     const box = sec.querySelector(".try-prompt textarea.prompt-edit");
-    const text = box ? box.value : sec.querySelector(".try-prompt pre").textContent, link = links[sec.dataset.app];
+    const text = box ? box.value : sec.querySelector(".try-prompt pre").textContent, link = !sec.dataset.long && links[sec.dataset.app];
     copyText(text).then(() => true, () => false).then(copied => show(sec, "approved", !!link, copied));
     if (link) location.href = link(text);
   });
