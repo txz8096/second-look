@@ -592,7 +592,10 @@ Codex and Claude Code has more of their sessions in the window: `codex` for Code
 for Claude Code in the Claude desktop app, `copy` for Claude Code only in a terminal (long links
 fail there), claude.ai, or any other app. Approve opens a new session in that app with the prompt
 typed in but not sent, and copies the prompt in case no app opens; `copy` shows "Copy prompt"
-instead. Decline is remembered in that browser only, so the next review judges a recommendation from the logs,
+instead. The report turns the prompt into a text box the user can edit; Copy and Approve send their
+version, the edit is kept in that browser, and Reset restores yours. If their version passes 1,800
+characters, the report warns them and Approve becomes "Copy prompt", which copies without opening
+the app. Write the prompt in the `<pre>` as usual. Decline is remembered in that browser only, so the next review judges a recommendation from the logs,
 never from a Decline. Keep every prompt under 1,800 characters, so it fits in the link.
 Pick the form that fits the recommendation, and don't force every recommendation into one: a saved rule when the AI
 should act differently every time; a skill, hook or schedule for steps that repeat; a settings

@@ -1,4 +1,4 @@
 {
-  "revision": 7,
-  "benefit": "When a Claude Code or Codex 5-hour limit fills up, the report now shows which days and times it happened and what your usage went to before it did."
+  "revision": 8,
+  "benefit": "You can now edit a recommendation's prompt in the report before you copy it or approve it, so your app gets your version."
 }
