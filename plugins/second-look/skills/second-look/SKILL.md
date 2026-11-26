@@ -592,7 +592,10 @@ Codex and Claude Code has more of their sessions in the window: `codex` for Code
 for Claude Code in the Claude desktop app, `copy` for Claude Code only in a terminal (long links
 fail there), claude.ai, or any other app. Approve opens a new session in that app with the prompt
 typed in but not sent, and copies the prompt in case no app opens; `copy` shows "Copy prompt"
-instead. Decline is remembered in that browser only, so the next review judges a recommendation from the logs,
+instead. The report turns the prompt into a text box the user can edit; Copy and Approve send their
+version, the edit is kept in that browser, and Reset restores yours. If their version passes 1,800
+characters, the report warns them and Approve becomes "Copy prompt", which copies without opening
+the app. Write the prompt in the `<pre>` as usual. Decline is remembered in that browser only, so the next review judges a recommendation from the logs,
 never from a Decline. Keep every prompt under 1,800 characters, so it fits in the link.
 Pick the form that fits the recommendation, and don't force every recommendation into one: a saved rule when the AI
 should act differently every time; a skill, hook or schedule for steps that repeat; a settings
@@ -643,7 +646,7 @@ keep-it-if rule in the log.
 wrong today (count every skill marked Stale, and a wrong fact is Stale); the scan date and anything
 you couldn't read, named as a place ("your Cursor skills folder"), with what that means for the
 counts. "Skills to fix" (`#fix-first`; issue, fix), blockers first, then biggest impact. Installed skills that are only Behind their source share one row ("23 installed skills have updates", fix: update them from source), with the list in "Skills you installed from others"; an installed skill gets its own row only when it's broken. Every fix cell reads "In [app], paste: “…”", or "In any AI chat, paste: “…”" when the app doesn't matter; a cell that links to a skill fix panel reads "See the fix (5 min)". A sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
-goes low. The big ones get a skill fix panel: the recommendation panel (`section.try skill-fix`) without a `.try-saves` line, with an id the table can link to (`fix-pr-review`). Its `h4` says in one sentence what the app will change ("Ask Claude Code to correct the tool names in your pr-review skill."), then the `.try-do` line, the prompt in the collapsed "View prompt" fold, and Approve and Decline. Pick `data-app` by the same rule as recommendations, from the app the skill lives in. The prompt's last line is always "Then tell me in plain words what changed, and wait for my yes before you save it." Never show a diff.
+goes low. The big ones get a skill fix panel: the recommendation panel (`section.try skill-fix`) without a `.try-saves` line, with an id the table can link to (`fix-pr-review`). Its `h4` says in one sentence what the app will change ("Ask Claude Code to correct the tool names in your pr-review skill."), then the `.try-do` line, the prompt in the collapsed "View prompt" fold, and Approve and Decline. The prompt is editable and kept under 1,800 characters, as on a recommendation. Pick `data-app` by the same rule as recommendations, from the app the skill lives in. The prompt's last line is always "Then tell me in plain words what changed, and wait for my yes before you save it." Never show a diff.
 "Worth a look" (issue, why it matters, how sure, next step), including the
 starting-context row from "Usage" when it applies. Next steps are something they can do, or a line to paste in the same "In [app], paste: “…”" form. Collapsed "Skills you wrote" (a status table, with the counts in its summary line);
 collapsed "Skills you installed from others". Counts agree across all of it. Keep the tap
