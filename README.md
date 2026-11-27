@@ -193,7 +193,9 @@ Yes, if you start it from Claude Code (terminal or desktop app), Codex or Cursor
 computer where you use them. One run reads their logs and Antigravity's, plus claude.ai,
 ChatGPT and Gemini if you add their data exports. A review started in claude.ai
 covers your claude.ai chats. Local coding sessions need a review on the computer
-where their logs are saved.
+where their logs are saved. Claude Code and Codex cloud sessions, including ones started
+from a phone, run on remote machines and aren't included. A Claude Code session you drive
+from your phone with Remote Control runs on your computer, so it is.
 </details>
 
 <details>
