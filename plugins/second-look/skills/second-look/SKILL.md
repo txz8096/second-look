@@ -747,6 +747,11 @@ steps to add the data. Write none of this by hand.
   `oldest_claude_log`, set `cut` to the first of those weeks instead.
 - **On claude.ai,** mark Claude Code, Codex, Cursor and Antigravity `not_readable`, and
   claude.ai `export` only when they uploaded `conversations.json`.
+- Cloud sessions (Claude Code or Codex in the cloud, including ones started from a phone) and
+  sessions on another computer or SSH host leave no logs here. The Data coverage text already
+  says so; keep that sentence. If someone says they mostly work in cloud sessions, tell them in
+  one line that those weeks may look quiet, and never read the gap as a habit. Remote Control
+  sessions run on this computer and are read like any other.
 - Keep "no sessions" apart from "can't see". An app they didn't use yet is an empty track with
   no card. Only data Second Look can't reach is dashed.
 - **Someone new.** Distinguish verified absence, files not included and unreadable files. Set
