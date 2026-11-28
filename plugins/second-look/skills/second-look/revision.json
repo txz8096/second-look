@@ -1,4 +1,4 @@
 {
-  "revision": 10,
-  "benefit": "Every prompt the report gives you, from skill fixes to Worth a look and What you could automate next, now works like a recommendation: edit it, then Approve opens the app with your version or copies it, and the app waits for your yes. Data coverage also says that Claude Code and Codex cloud sessions aren't included."
+  "revision": 11,
+  "benefit": "How-sure chips (Sure, Likely, Hunch) now share one style with their text centred, and each recommendation's chip sits first on its app line, so it's in the same place on every card."
 }
