@@ -1,6 +1,4 @@
 {
-  "revision": 10,
-  "benefit": "Recommendations now list the apps they apply to with commas, like \"Claude Code, Codex, claude.ai\", so the list reads as plain text instead of a row of separators."
-  "revision": 11,
-  "benefit": "How-sure chips (Sure, Likely, Hunch) now share one style with their text centred, and each recommendation's chip sits first on its app line, so it's in the same place on every card."
+  "revision": 12,
+  "benefit": "Recommendation cards show one how-sure chip followed by the apps, listed with commas, and the report's parts no longer spill into each other: Skills and the other parts show only their own content again."
 }
