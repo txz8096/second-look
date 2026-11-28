@@ -92,7 +92,7 @@ _Avoid_: Incident, behavior
 
 **Recommendation**:
 A change Second Look suggests for a habit: a saved rule, a skill, hook or schedule, a settings change, or a one-time prompt. Many habits aren't problems, so a recommendation often automates something that already works. The user can edit the prompt first. **Open in <app>** ("Open in Codex", "Open in Claude Code") opens the user's app with the recommendation's prompt typed in, including their edits; the app shows the change and waits for their yes. **Decline** sets the recommendation aside in that browser.
-_Avoid_: Fix (for a habit; "fix" stays only for skills with wrong information, as in "Skills to fix"), problem (for a habit), automation (for every recommendation), auto-fix, apply
+_Avoid_: Fix (for a habit; "fix" stays only for skills with wrong information, as in "Skills to fix"), problem (for a habit), automation (for every recommendation), auto-fix, apply, Approve (for the open button: the yes happens in the app)
 
 ## Work categories
 

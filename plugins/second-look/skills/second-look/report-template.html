@@ -545,7 +545,7 @@ blockquote + .def { margin-top: -16px; padding: 6px 0 0 12px; border-left: 2px s
 .try { display: grid; gap: 12px; padding: 16px; background: var(--accent-soft); border: 1px solid var(--accent-soft-2); border-radius: var(--r-10); scroll-margin-top: 24px; }
 .try h4 { font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.5; }
 .try-saves { font-size: 14px; font-weight: 600; line-height: 20px; color: var(--accent); }
-/* approve sends the prompt to the user's app; decline is remembered in this browser */
+/* Open in <app> sends the prompt to the user's app; decline is remembered in this browser */
 .fix-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 button.fix-approve { background: var(--primary); color: var(--on-primary); border-color: var(--primary); padding: 0 16px; }
 button.fix-approve:hover { background: var(--primary); border-color: var(--primary); opacity: .9; }
@@ -558,7 +558,7 @@ button.copy { position: absolute; top: 6px; right: 6px; z-index: 1; display: inl
 button.copy::before { content: ""; width: 14px; height: 14px; background: var(--muted); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='14' height='14' x='8' y='8' rx='2'/%3E%3Cpath d='M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='14' height='14' x='8' y='8' rx='2'/%3E%3Cpath d='M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2'/%3E%3C/svg%3E") center / contain no-repeat; }
 pre { margin: 0; background: var(--code-bg); border: 1px solid var(--line); border-radius: var(--r-8); padding: 12px 84px 12px 12px;
   font-size: 13px; line-height: 20px; white-space: pre-wrap; word-break: break-word; }
-/* with scripts, a recommendation's prompt is a text box: Copy and Approve send what's in it. Print keeps the plain prompt */
+/* with scripts, a recommendation's prompt is a text box: Copy and Open in <app> send what's in it. Print keeps the plain prompt */
 textarea.prompt-edit { display: block; width: 100%; box-sizing: border-box; min-height: 120px; margin: 0; resize: vertical; field-sizing: content;
   color: var(--fg); background: var(--code-bg); border: 1px solid var(--line); border-radius: var(--r-8); padding: 12px 84px 12px 12px; font: 13px/20px var(--mono); }
 textarea.prompt-edit:hover { border-color: var(--line-strong); }
@@ -611,7 +611,7 @@ details.ic-rule-comparison { min-width: 0; border-bottom: 0; }
 details.ic-rule-comparison > .body { padding-bottom: 0; }
 .try details.nested { border-block: 0; border-top: 1px solid var(--accent-soft-2); }
 .try details.nested > summary { padding-bottom: 0; }
-/* a short recommendation inside a table row: the same prompt, edit and Approve/Decline, without the pink panel */
+/* a short recommendation inside a table row: the same prompt, edit and Open in <app>/Decline, without the pink panel */
 .try.try-inline { gap: 8px; padding: 0; background: none; border: 0; border-radius: 0; }
 .try-inline .try-line { margin: 0; }
 .try.try-inline details.nested { border-top: 0; }
@@ -1105,7 +1105,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 
 Show me each rule and where it goes in each app, and wait for my yes before saving anything. Then read back the saved rules and tell me what changed or was already set in each app. If you can’t update an app, tell me where to paste the exact missing text and give it to me to copy. Tell me which apps I should check in a fresh session to confirm the rules work.</pre></div></div></details>
       <p class="fix-status" role="status" aria-live="polite"></p>
-      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Codex</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -1132,7 +1132,7 @@ Before building a prototype that will take more than a few messages, check my fi
 
 Before saving, check for an equivalent rule and keep my other instructions. Show me the exact text and where it goes in each app, and wait for my yes. After saving, read it back. For any app you can’t update, give me the text and where to paste it. Tell me which apps to test in a fresh session.</pre></div></div></details>
       <p class="fix-status" role="status" aria-live="polite"></p>
-      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Codex</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -1163,7 +1163,7 @@ When it runs:
 
 Before saving, check whether I already have a skill or rule that does this. Show me the full skill and where you’ll save it in each app, and wait for my yes. After saving, read back what changed. For any app you can’t update, give me the exact text and where to paste it. Tell me which apps to test in a fresh session.</pre></div></div></details>
       <p class="fix-status" role="status" aria-live="polite"></p>
-      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Codex</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -1188,7 +1188,7 @@ When I finish a piece of work or move to a different project in the same session
 
 Before saving, check for an equivalent rule and keep my other instructions. Show me the exact text and where it goes in each app, and wait for my yes. After saving, read it back. For any app you can’t update, give me the text and where to paste it. Tell me which apps to test in a fresh session.</pre></div></div></details>
       <p class="fix-status" role="status" aria-live="polite"></p>
-      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Codex</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -1224,7 +1224,7 @@ First read ~/.claude/settings.json and my helper agent files, and tell me what's
 
 Show me each change and the file it goes in, and wait for my yes before changing anything. Then read back what changed. If I correct a cheaper model twice, I'll move up a level.</pre></div></div></details>
       <p class="fix-status" role="status" aria-live="polite"></p>
-      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Claude Code</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -1251,7 +1251,7 @@ Read the project, its notes and recent changes to see what I already tried and w
 
 Don't change any files yet. End by asking which experiment to run first.</pre></div></div></details>
       <p class="fix-status" role="status" aria-live="polite"></p>
-      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Claude Code</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </article>
 
@@ -1280,7 +1280,7 @@ Don't change any files yet. End by asking which experiment to run first.</pre></
 <pre>Update my beta-feedback-synth skill. Change the team size from 4 engineers to 6.
 Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Copy prompt</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></td></tr>
         <tr><td><b>api-docs</b> is installed twice, and the claude.ai copy is older<span class="def">Two versions give different advice.</span></td><td><section class="try try-inline" id="fix-api-docs" aria-label="Fix: api-docs" data-app="copy" data-app-name="claude.ai">
           <p class="try-line">Ask claude.ai to help you delete the older copy of your api-docs skill.</p>
@@ -1289,7 +1289,7 @@ Then tell me in plain words what changed, and wait for my yes before you save it
 <pre>My api-docs skill is installed twice, and the claude.ai copy is older. Help me delete the older copy and keep the newer one.
 Tell me which copy you’ll delete, and wait for my yes before you delete it.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Copy prompt</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></td></tr>
         <tr><td><b>mermaid-diagrams</b> is missing its main file, so it never loads</td><td><section class="try try-inline" id="fix-mermaid-diagrams" aria-label="Fix: mermaid-diagrams" data-app="claude-desktop" data-app-name="Claude Code">
           <p class="try-line">Ask Claude Code to reinstall your mermaid-diagrams skill.</p>
@@ -1298,7 +1298,7 @@ Tell me which copy you’ll delete, and wait for my yes before you delete it.</p
 <pre>Reinstall my mermaid-diagrams skill. It’s missing its main file, so it never loads.
 Tell me where you’ll install it from, and wait for my yes before you change anything. Then check that it loads.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Claude Code</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></td></tr>
       </tbody></table></div>
     <section class="try skill-fix" id="fix-pr-review" aria-labelledby="fix-pr-review-h" data-app="claude-desktop" data-app-name="Claude Code">
@@ -1308,7 +1308,7 @@ Tell me where you’ll install it from, and wait for my yes before you change an
 <pre>Update my pr-review skill. Its tool table names the wrong agent. Change the two column headings to "Claude desktop (built-in browser)" and "Claude Code, Codex, Cursor and others".
 Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
       <p class="fix-status" role="status" aria-live="polite"></p>
-      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Claude Code</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
     <section class="try skill-fix" id="fix-release-notes" aria-labelledby="fix-release-notes-h" data-app="copy" data-app-name="claude.ai">
       <h4 id="fix-release-notes-h">Ask claude.ai to replace the old pricing table in your release-notes skill.</h4>
@@ -1317,7 +1317,7 @@ Then tell me in plain words what changed, and wait for my yes before you save it
 <pre>Update my release-notes skill. Delete the pricing table and put this line in its place: "Read prices from docs/pricing.md. Never keep a copy here."
 Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
       <p class="fix-status" role="status" aria-live="polite"></p>
-      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Copy prompt</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
     </section>
   </section>
 
@@ -1333,7 +1333,7 @@ Then tell me in plain words what changed, and wait for my yes before you save it
 <pre>My team details are copied into my beta-feedback-synth, ui-review and metrics-check skills, and the copies disagree. Move them into one shared file and have each skill read it.
 Show me the shared file and each change, and wait for my yes before you save anything.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Copy prompt</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></td></tr>
         <tr><td>Your skills are set up for Claude, with none for Codex. Cursor’s folder couldn’t be read.</td><td>Codex and Cursor can run the same files</td><td><span class="conf sugg">Likely</span></td><td><section class="try try-inline" id="try-skills-codex" aria-label="Next step: skills for Codex and Cursor" data-app="claude-desktop" data-app-name="Claude Code">
           <p class="try-line">Ask Claude Code to copy your skills to Codex and check your Cursor skills folder.</p>
@@ -1342,7 +1342,7 @@ Show me the shared file and each change, and wait for my yes before you save any
 <pre>Copy my skills to Codex, then check my Cursor skills folder. Second Look couldn’t read it.
 Show me what you’ll copy and where, and wait for my yes before you save anything. Then tell me what’s in the Cursor folder.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Claude Code</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></td></tr>
         <tr><td>ui-review doesn’t know about Claude Design, and loads all three platform guides every time</td><td>It misses a current app and loads more than it needs</td><td><span class="conf sugg">Likely</span></td><td><section class="try try-inline" id="try-ui-review" aria-label="Next step: ui-review" data-app="copy" data-app-name="claude.ai">
           <p class="try-line">Ask claude.ai to add Claude Design to your ui-review skill and have it load one platform guide at a time.</p>
@@ -1351,7 +1351,7 @@ Show me what you’ll copy and where, and wait for my yes before you save anythi
 <pre>Update my ui-review skill. Add Claude Design to the apps it knows, and have it load one platform guide at a time instead of all three.
 Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Copy prompt</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></td></tr>
         <tr><td>No skill has a test</td><td>A model update could change how a skill behaves without you noticing</td><td><span class="conf val">Hunch</span></td><td><section class="try try-inline" id="try-skill-tests" aria-label="Next step: skill tests" data-app="copy" data-app-name="claude.ai">
           <p class="try-line">Ask claude.ai to write 3 test prompts each for your release-notes and ui-review skills.</p>
@@ -1359,7 +1359,7 @@ Then tell me in plain words what changed, and wait for my yes before you save it
             <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Write 3 test prompts for my release-notes skill and 3 for my ui-review skill, each with what a good answer should include. Show them to me and wait for my yes before you save anything.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Copy prompt</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></td></tr>
         <tr><td>commit-message and pdf-tools are behind their source.</td><td>You may be missing fixes</td><td><span class="conf strong">Sure</span></td><td><section class="try try-inline" id="try-skill-updates" aria-label="Next step: skill updates" data-app="claude-desktop" data-app-name="Claude Code">
           <p class="try-line">Ask Claude Code what changed in commit-message and pdf-tools since you installed them.</p>
@@ -1368,7 +1368,7 @@ Then tell me in plain words what changed, and wait for my yes before you save it
 <pre>Show me what changed in my commit-message and pdf-tools skills since I installed them.
 Wait for my yes before you update either one.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Claude Code</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></td></tr>
       </tbody></table></div>
   </section>
@@ -1470,7 +1470,7 @@ Wait for my yes before you update either one.</pre></div></div></details>
 <pre>Every Monday, check the job tracker and summarize what changed. Set that up as a scheduled task.
 Show me the task and its schedule, and wait for my yes before you save it.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Claude Code</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></div>
     <div class="auto-row"><span class="ask">“Rewrite this in my voice, no em dashes”</span><span class="count">5 times in 4 weeks</span><section class="try try-inline" id="auto-voice" aria-label="Automate: rewrite in my voice" data-app="copy" data-app-name="AI chat">
           <p class="try-line">Ask your AI to save “rewrite this in my voice, no em dashes” as a skill.</p>
@@ -1479,7 +1479,7 @@ Show me the task and its schedule, and wait for my yes before you save it.</pre>
 <pre>Save ‘rewrite this in my voice, no em dashes’ as a skill.
 Show me the skill, and wait for my yes before you save it.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Copy prompt</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></div>
     <div class="auto-row"><span class="ask">“Run the report checker and fix what it flags”</span><span class="count">4 times in 4 weeks</span><section class="try try-inline" id="auto-report-checker" aria-label="Automate: report checker" data-app="claude-desktop" data-app-name="Claude Code">
           <p class="try-line">Ask Claude Code to run the report checker after every edit.</p>
@@ -1488,7 +1488,7 @@ Show me the skill, and wait for my yes before you save it.</pre></div></div></de
 <pre>After every edit, run the report checker and fix what it flags. Set that up to run on its own.
 Show me the setup and where it goes, and wait for my yes before you save it.</pre></div></div></details>
           <p class="fix-status" role="status" aria-live="polite"></p>
-          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Open in Claude Code</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></div>
   </div>
 
@@ -1611,7 +1611,7 @@ document.addEventListener('click', e => {
   });
 });
 
-// A recommendation's prompt can be edited before Copy or Approve; both send the edited text.
+// A recommendation's prompt can be edited before Copy or Open in <app>; both send the edited text.
 // Edits are kept in this browser only, and Reset brings back Second Look's version
 (() => {
   const key = sec => "second-look-prompt:" + document.title + ":" + sec.id;
@@ -1621,22 +1621,23 @@ document.addEventListener('click', e => {
     const sec = pre.closest("section.try"), original = pre.textContent;
     const box = document.createElement("textarea");
     box.className = "prompt-edit"; box.spellcheck = true; box.value = original;
-    box.setAttribute("aria-label", "Prompt. You can edit it before you copy or approve it.");
     const note = document.createElement("p"); note.className = "prompt-note"; note.setAttribute("aria-live", "polite");
     const linked = sec.dataset.app === "codex" || sec.dataset.app === "claude-desktop", app = sec.dataset.appName;
+    const before = linked ? "copy or open in " + app : "copy it";
+    box.setAttribute("aria-label", "Prompt. You can edit it before you " + before + ".");
     pre.after(box); pre.closest(".field").after(note);
     const fit = () => { if (fits || !box.offsetParent) return; box.style.height = "auto"; box.style.height = box.scrollHeight + 2 + "px"; };
     const sync = save => {
       const edited = box.value !== original;
       pre.textContent = box.value;
       if (save) { try { edited ? localStorage.setItem(key(sec), box.value) : localStorage.removeItem(key(sec)); } catch (e) { /* storage can be blocked */ } }
-      // past 1,800 characters the app link may fail, so Approve only copies the prompt
+      // past 1,800 characters the app link may fail, so the open button only copies the prompt
       const long = linked && box.value.length > LIMIT, was = sec.dataset.long === "1";
       sec.dataset.long = long ? "1" : "";
       note.classList.toggle("long", long);
-      note.innerHTML = !edited ? "You can edit this prompt before you copy or approve it."
+      note.innerHTML = !edited ? "You can edit this prompt before you " + esc(before) + "."
         : (long ? (box.value.length - LIMIT).toLocaleString("en-US") + " characters too long to open in " + esc(app) + ". Shorten it, or use Copy prompt and paste it into a new " + esc(app) + " session."
-          : "Edited. Copy and Approve use your version.") + ' <button type="button" class="prompt-reset">Reset</button>';
+          : linked ? "Edited. Copy and Open in " + esc(app) + " use your version." : "Edited. Copy uses your version.") + ' <button type="button" class="prompt-reset">Reset</button>';
       if (long !== was) sec.dispatchEvent(new Event("prompt-length"));
       fit();
     };
@@ -1649,7 +1650,7 @@ document.addEventListener('click', e => {
   });
 })();
 
-// Approve sends the recommendation’s prompt to the app named on the card and copies it in case no app opens.
+// Open in <app> sends the recommendation’s prompt to the app named on the card and copies it in case no app opens.
 // Decline is remembered in this browser only; the next review judges from the logs
 (() => {
   const links = { codex: t => "codex://new?prompt=" + encodeURIComponent(t), "claude-desktop": t => "claude://code/new?q=" + encodeURIComponent(t) };
@@ -1671,7 +1672,7 @@ document.addEventListener('click', e => {
     sec.querySelector(".fix-actions").hidden = false;
     let saved = null; try { saved = localStorage.getItem(key(sec)); } catch (e) { /* storage can be blocked */ }
     show(sec, saved === "declined" ? "declined" : null);
-    // crossing the length limit switches Approve between opening the app and copying; an earlier "Sent" no longer applies
+    // crossing the length limit switches the open button between opening the app and copying; an earlier "Sent" no longer applies
     sec.addEventListener("prompt-length", () => show(sec, sec.dataset.state === "declined" ? "declined" : null));
   });
   document.addEventListener("click", e => {

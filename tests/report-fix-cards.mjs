@@ -94,6 +94,9 @@ try {
       assert.equal((await panel.locator('.fix-approve').innerText()).trim(),
         app === 'copy' ? 'Copy prompt' : `Open in ${await panel.getAttribute('data-app-name')}`);
       assert.equal(await panel.locator('.try-do').count(), 0);
+      assert.equal((await panel.locator('.prompt-note').textContent()).trim(), app === 'copy'
+        ? 'You can edit this prompt before you copy it.'
+        : `You can edit this prompt before you copy or open in ${await panel.getAttribute('data-app-name')}.`);
       assert.equal(await panel.locator('.fix-decline').isVisible(), true);
     }
     const brief = page.locator('#p-brief > .ic-evidence');
@@ -126,7 +129,7 @@ try {
     await briefFix.locator('.fix-undo').click();
     assert.equal(await briefFix.locator('.fix-approve').isVisible(), true);
     assert.equal(await page.evaluate(() => Object.keys(localStorage).filter(k => k.startsWith('second-look-fix:')).length), 0);
-    // Approve on a copy-only panel copies the full prompt and says so
+    // the open button on a copy-only panel copies the full prompt and says so
     const model = page.locator('#try-model');
     await model.evaluate(node => { node.dataset.app = 'copy'; });
     await model.locator('.fix-approve').click();

@@ -1,4 +1,4 @@
 {
-  "revision": 13,
-  "benefit": "Each recommendation's main button now says where it takes you, like \"Open in Codex\" or \"Open in Claude Code\", and the panel is shorter: the saving and its working sit on one line, with no extra line explaining the button."
+  "revision": 14,
+  "benefit": "The note under each prompt now matches the button: \"You can edit this prompt before you copy or open in Codex\" (or \"before you copy it\" when the report can only copy), and nothing in the report still says Approve."
 }
