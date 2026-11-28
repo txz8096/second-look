@@ -545,8 +545,6 @@ blockquote + .def { margin-top: -16px; padding: 6px 0 0 12px; border-left: 2px s
 .try { display: grid; gap: 12px; padding: 16px; background: var(--accent-soft); border: 1px solid var(--accent-soft-2); border-radius: var(--r-10); scroll-margin-top: 24px; }
 .try h4 { font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.5; }
 .try-saves { font-size: 14px; font-weight: 600; line-height: 20px; color: var(--accent); }
-.saves-how { display: block; margin-top: 2px; font-size: 13px; line-height: 18px; font-weight: 400; color: var(--muted); }
-.try-do { font-size: 14px; line-height: 22px; }
 /* approve sends the prompt to the user's app; decline is remembered in this browser */
 .fix-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 button.fix-approve { background: var(--primary); color: var(--on-primary); border-color: var(--primary); padding: 0 16px; }
@@ -906,7 +904,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   .heat-legend, .limit-tag, .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval, .work-mix-week, .work-mix-week:hover, .work-mix-week:active { font-size: 13px; }
   .def, .sum-meta, .part-meta, .fsum, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
     .side-about, table, pre, details.nested > summary, .grp-read { font-size: 14px; }
-  .tl-name, .ic-summary, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
+  .tl-name, .ic-summary, .ic-grid dd, .grp-sum { font-size: 16px; }
   .fix-actions button { min-height: 44px; }
   /* tap targets */
   button:not(.brow):not(.menu-btn), select { min-height: 44px; }
@@ -1095,8 +1093,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
     </div>
     <section class="try" id="try-rules" aria-labelledby="try-rules-h" data-app="codex" data-app-name="Codex">
       <h4 id="try-rules-h">Ask Codex to fill gaps in your saved rules across the AI apps you use.</h4>
-      <p class="try-saves">Saves retyping and waiting for extra replies<span class="saves-how">About 7 repeated instructions a week. Avoiding them also avoids extra AI responses; total time saved isn't measured.</span></p>
-      <p class="try-do">Approve opens Codex with this prompt. Codex shows each rule and saves nothing until you say yes.</p>
+      <p class="try-saves">Saves retyping about 7 instructions a week, plus the extra AI replies each one triggers.<span class="saves-how"> Total time saved isn't measured.</span></p>
       <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
         <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Use the rules below as my standing preferences. In Codex and ChatGPT, save all four. In Cursor, add only the rules on showing changes and linking official docs. Keep equivalent rules in Claude Code and claude.ai. Use each app’s supported settings at the scope where I use these preferences. Preserve my other instructions and flag conflicts before editing.
@@ -1126,8 +1123,7 @@ Show me each rule and where it goes in each app, and wait for my yes before savi
     </details>
     <section class="try" id="try-brief" aria-labelledby="try-brief-h" data-app="codex" data-app-name="Codex">
       <h4 id="try-brief-h">Ask Codex to set up a rule that starts substantial prototype work with an approved brief.</h4>
-      <p class="try-saves">Saves about 30 minutes a week<span class="saves-how">About 2 restarts avoided a week × 15 minutes of repeated setup.</span></p>
-      <p class="try-do">Approve opens Codex with this prompt. Codex shows the rule and saves nothing until you say yes.</p>
+      <p class="try-saves">Saves about 30 minutes a week<span class="saves-how"> by avoiding about 2 restarts, each with 15 minutes of setup to repeat.</span></p>
       <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
         <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Add this rule to my saved rules in Codex, Claude Code, Cursor and claude.ai, at the scope where I start prototypes:
@@ -1152,8 +1148,7 @@ Before saving, check for an equivalent rule and keep my other instructions. Show
     </details>
     <section class="try" id="try-trust" aria-labelledby="try-trust-h" data-app="codex" data-app-name="Codex">
       <h4 id="try-trust-h">Ask Codex to set up a skill that checks beta work whenever you say “ship it”.</h4>
-      <p class="try-saves">Means fewer fixes after launch<span class="saves-how">Runs on its own in Codex and Claude Code, so you no longer paste a check before you share.</span></p>
-      <p class="try-do">Approve opens Codex with this prompt. Codex shows the skill and saves nothing until you say yes.</p>
+      <p class="try-saves">Means fewer fixes after launch<span class="saves-how">, because the check runs on its own in Codex and Claude Code before you share.</span></p>
       <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
         <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Set up a skill called ship-checks in Codex and Claude Code. It should run when I say “ship it”, “share this with beta” or ask whether work is ready for others.
@@ -1184,8 +1179,7 @@ Before saving, check whether I already have a skill or rule that does this. Show
     </details>
     <section class="try" id="try-long" aria-labelledby="try-long-h" data-app="codex" data-app-name="Codex">
       <h4 id="try-long-h">Ask Codex to set up a rule that offers a handoff and a fresh session when you switch projects.</h4>
-      <p class="try-saves">Saves about a tenth of your Claude Code and Codex usage<span class="saves-how">Very long sessions took 61% of that usage. Starting fresh could cut about a sixth of it.</span></p>
-      <p class="try-do">Approve opens Codex with this prompt. Codex shows the rule and saves nothing until you say yes.</p>
+      <p class="try-saves">Saves about a tenth of your Claude Code and Codex usage<span class="saves-how">: very long sessions took 61% of it, and starting fresh could cut about a sixth of that.</span></p>
       <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
         <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Add this rule to my saved rules in Codex and Claude Code:
@@ -1210,8 +1204,7 @@ Before saving, check for an equivalent rule and keep my other instructions. Show
     </details>
     <section class="try" id="try-model" aria-labelledby="try-model-h" data-app="claude-desktop" data-app-name="Claude Code">
       <h4 id="try-model-h">Ask Claude Code to change your model settings so simple work runs on a cheaper model.</h4>
-      <p class="try-saves">Saves about a tenth of your Claude Code usage<span class="saves-how">Short sessions took 14% of it × the price gap to a cheaper model.</span></p>
-      <p class="try-do">Approve opens Claude Code with this prompt. Claude Code reads your settings, shows each change and changes nothing until you say yes.</p>
+      <p class="try-saves">Saves about a tenth of your Claude Code usage<span class="saves-how"> by running short sessions, which took 14% of it, on a cheaper model.</span></p>
       <div class="tbl"><table class="unlabeled">
         <thead><tr><th>Use</th><th>For</th></tr></thead>
         <tbody>
@@ -1247,8 +1240,7 @@ Show me each change and the file it goes in, and wait for my yes before changing
     </details>
     <section class="try" id="try-retry" aria-labelledby="try-retry-h" data-app="claude-desktop" data-app-name="Claude Code">
       <h4 id="try-retry-h">Ask Claude Code, on the new Fable model, to plan your next round of page-speed experiments.</h4>
-      <p class="try-saves">A fresh try at work you’ve spent 6 sessions on<span class="saves-how">The gain isn’t known until you run an experiment.</span></p>
-      <p class="try-do">Approve opens Claude Code with this prompt. Claude Code proposes a plan of experiments and changes nothing until you pick one.</p>
+      <p class="try-saves">A fresh try at work you’ve spent 6 sessions on.<span class="saves-how"> The gain isn’t known until you run an experiment.</span></p>
       <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
         <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>First switch this session to the newest Fable model with /model fable.
@@ -1311,7 +1303,6 @@ Tell me where you’ll install it from, and wait for my yes before you change an
       </tbody></table></div>
     <section class="try skill-fix" id="fix-pr-review" aria-labelledby="fix-pr-review-h" data-app="claude-desktop" data-app-name="Claude Code">
       <h4 id="fix-pr-review-h">Ask Claude Code to correct the tool names in your pr-review skill.</h4>
-      <p class="try-do">Approve opens Claude Code with this prompt. Claude Code shows the change and saves nothing until you say yes.</p>
       <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
         <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Update my pr-review skill. Its tool table names the wrong agent. Change the two column headings to "Claude desktop (built-in browser)" and "Claude Code, Codex, Cursor and others".
@@ -1321,7 +1312,6 @@ Then tell me in plain words what changed, and wait for my yes before you save it
     </section>
     <section class="try skill-fix" id="fix-release-notes" aria-labelledby="fix-release-notes-h" data-app="copy" data-app-name="claude.ai">
       <h4 id="fix-release-notes-h">Ask claude.ai to replace the old pricing table in your release-notes skill.</h4>
-      <p class="try-do">Copy prompt copies this prompt for a new claude.ai session. claude.ai shows the change and saves nothing until you say yes.</p>
       <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
         <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Update my release-notes skill. Delete the pricing table and put this line in its place: "Read prices from docs/pricing.md. Never keep a copy here."
@@ -1671,7 +1661,7 @@ document.addEventListener('click', e => {
     const approve = sec.querySelector(".fix-approve"), decline = sec.querySelector(".fix-decline"), undo = sec.querySelector(".fix-undo");
     sec.dataset.state = state || "";
     approve.hidden = state === "declined"; decline.hidden = !!state; undo.hidden = state !== "declined";
-    approve.textContent = links[sec.dataset.app] && !sec.dataset.long ? (state === "approved" ? "Open " + app + " again" : "Approve") : "Copy prompt";
+    approve.textContent = links[sec.dataset.app] && !sec.dataset.long ? (state === "approved" ? "Open " + app + " again" : "Open in " + app) : "Copy prompt";
     status.textContent = state === "declined" ? "You declined this."
       : state === "approved" ? (opened ? "Sent to " + app + ". " : "") + (copied
         ? (opened ? "The prompt is copied too: if " + app + " didn't open, paste it into a new " + app + " session." : "Prompt copied. Paste it into a new " + app + " session.")

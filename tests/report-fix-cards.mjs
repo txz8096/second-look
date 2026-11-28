@@ -84,11 +84,16 @@ try {
     await page.locator('#try-rules button.copy').click();
     assert.equal(await page.evaluate(() => window.copiedFix), prompt);
     await viewPrompt.locator(':scope > summary').click();
-    // every fix panel: an app to open, a prompt under the link limit, Approve and Decline
-    for (const panel of await page.locator('#part-2 section.try').all()) {
-      assert.match(await panel.getAttribute('data-app'), /^(codex|claude-desktop|copy)$/);
+    // every fix panel: an app to open, a prompt under the link limit, Open in <app> and Decline
+    for (const panel of await page.locator('section.try[data-app]').all()) {
+      const app = await panel.getAttribute('data-app');
+      assert.match(app, /^(codex|claude-desktop|copy)$/);
       assert.ok((await panel.locator('.try-prompt pre').textContent()).length <= 1800);
+      if (!await panel.isVisible()) continue;
       assert.equal(await panel.locator('.fix-approve').isVisible(), true);
+      assert.equal((await panel.locator('.fix-approve').innerText()).trim(),
+        app === 'copy' ? 'Copy prompt' : `Open in ${await panel.getAttribute('data-app-name')}`);
+      assert.equal(await panel.locator('.try-do').count(), 0);
       assert.equal(await panel.locator('.fix-decline').isVisible(), true);
     }
     const brief = page.locator('#p-brief > .ic-evidence');
