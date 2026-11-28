@@ -1,4 +1,4 @@
 {
-  "revision": 9,
-  "benefit": "The report's Data coverage now says that Claude Code and Codex cloud sessions aren't included, so a quiet week from cloud work isn't mistaken for a habit."
+  "revision": 10,
+  "benefit": "Recommendations now list the apps they apply to with commas, like \"Claude Code, Codex, claude.ai\", so the list reads as plain text instead of a row of separators."
 }
