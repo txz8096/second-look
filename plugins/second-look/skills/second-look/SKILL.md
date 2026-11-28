@@ -361,8 +361,10 @@ first if the part's headline says so.
   session, and the model mix below.
 - **How to write it.** "About 30 minutes a week", "About a tenth of your Claude Code usage". Always "about". With
   no count behind it, name what it saves in words ("Fewer fixes after launch") and give no number.
-  Show the working for every number in a `.saves-how` line inside `.try-saves`: "About 2 restarts avoided
-  a week × 15 minutes of repeated setup." Use their real counts, and say what's assumed.
+  Show the working for every number in the same line, wrapped in a `.saves-how` span inside `.try-saves`
+  that continues the sentence or adds one more at the same level: "Saves about 30 minutes a week<span
+  class="saves-how"> by avoiding about 2 restarts, each with 15 minutes of setup to repeat.</span>" Use
+  their real counts, and say what's assumed.
   Never present a guess as measured. A usage saving names the apps it covers, since only Claude Code
   and Codex log usage.
 
@@ -584,17 +586,16 @@ comparison for a one-app recommendation or a finding without shared rules. Keep 
 card: the recommendation panel (`section.try`). Its `h4` says in one sentence what the app will set up ("Ask
 Codex to set up a rule that offers a handoff when you switch projects."); the recommendation's name stays the
 same in the log and on the Overview. Then a `.try-saves` line with what it saves (see "Saving time
-and usage"), and a `.try-do` line: "Approve opens <app> with this prompt. <App> shows the rule and
-saves nothing until you say yes." (the skill, each change, as fits). The prompt sits in a collapsed
-`details.try-prompt` labelled "View prompt", then Approve and Decline. Set `data-app` and
+and usage"). Don't add a line explaining what the open button does. The prompt sits in a collapsed
+`details.try-prompt` labelled "View prompt", then "Open in <app>" and Decline. Set `data-app` and
 `data-app-name` on the panel. Use the app the recommendation is for; for a recommendation across apps, use whichever of
 Codex and Claude Code has more of their sessions in the window: `codex` for Codex, `claude-desktop`
 for Claude Code in the Claude desktop app, `copy` for Claude Code only in a terminal (long links
-fail there), claude.ai, or any other app. Approve opens a new session in that app with the prompt
+fail there), claude.ai, or any other app. "Open in <app>" opens a new session in that app with the prompt
 typed in but not sent, and copies the prompt in case no app opens; `copy` shows "Copy prompt"
-instead. The report turns the prompt into a text box the user can edit; Copy and Approve send their
+instead. The report turns the prompt into a text box the user can edit; Copy and the open button send their
 version, the edit is kept in that browser, and Reset restores yours. If their version passes 1,800
-characters, the report warns them and Approve becomes "Copy prompt", which copies without opening
+characters, the report warns them and the open button becomes "Copy prompt", which copies without opening
 the app. Write the prompt in the `<pre>` as usual. Decline is remembered in that browser only, so the next review judges a recommendation from the logs,
 never from a Decline. Keep every prompt under 1,800 characters, so it fits in the link.
 Pick the form that fits the recommendation, and don't force every recommendation into one: a saved rule when the AI
@@ -635,9 +636,8 @@ something else could explain it. Hunch, thin evidence.
   titled with the goal and the new model ("A new model could push your page speed further").
   The evidence names the sessions spent on it with their window, the best result so far when a
   session states one, and the model's release date with its source. The saving is in words
-  ("A fresh try at work you've spent 7 sessions on"), since the gain isn't known yet. The
-  recommendation panel's `.try-do` says the app proposes a plan of experiments and changes nothing until
-  they pick one. These cards go after the cards with a measured saving.
+  ("A fresh try at work you've spent 7 sessions on"), since the gain isn't known yet. Its
+  prompt asks the app to propose a plan of experiments and change nothing until they pick one. These cards go after the cards with a measured saving.
 
 Keep each recommendation's bet, metric and
 keep-it-if rule in the log.
@@ -646,7 +646,7 @@ keep-it-if rule in the log.
 wrong today (count every skill marked Stale, and a wrong fact is Stale); the scan date and anything
 you couldn't read, named as a place ("your Cursor skills folder"), with what that means for the
 counts. "Skills to fix" (`#fix-first`; issue, fix), blockers first, then biggest impact. Installed skills that are only Behind their source share one row ("23 installed skills have updates", fix: update them from source), with the list in "Skills you installed from others"; an installed skill gets its own row only when it's broken. Every other fix cell is an inline recommendation (`section.try.try-inline`, inside the cell): one line saying what to ask which app ("Ask claude.ai to change the team size in your beta-feedback-synth skill from 4 to 6."), the prompt in the collapsed "View prompt" fold, and Approve and Decline, with `data-app`, `data-app-name` and a unique id as on a recommendation panel. No pink panel and no `.try-saves` line. The prompt is editable like every recommendation prompt, and asks the app to show the change and wait for a yes. For a skill change, the prompt ends "Then tell me in plain words what changed, and wait for my yes before you save it." A cell that links to a skill fix panel reads "See the fix (5 min)". A sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
-goes low. The big ones get a skill fix panel: the recommendation panel (`section.try skill-fix`) without a `.try-saves` line, with an id the table can link to (`fix-pr-review`). Its `h4` says in one sentence what the app will change ("Ask Claude Code to correct the tool names in your pr-review skill."), then the `.try-do` line, the prompt in the collapsed "View prompt" fold, and Approve and Decline. The prompt is editable and kept under 1,800 characters, as on a recommendation. Pick `data-app` by the same rule as recommendations, from the app the skill lives in. The prompt's last line is always "Then tell me in plain words what changed, and wait for my yes before you save it." Never show a diff.
+goes low. The big ones get a skill fix panel: the recommendation panel (`section.try skill-fix`) without a `.try-saves` line, with an id the table can link to (`fix-pr-review`). Its `h4` says in one sentence what the app will change ("Ask Claude Code to correct the tool names in your pr-review skill."), then the prompt in the collapsed "View prompt" fold, and "Open in <app>" and Decline, with no line explaining what the button does. The prompt is editable and kept under 1,800 characters, as on a recommendation. Pick `data-app` by the same rule as recommendations, from the app the skill lives in. The prompt's last line is always "Then tell me in plain words what changed, and wait for my yes before you save it." Never show a diff.
 "Worth a look" (issue, why it matters, how sure, next step), including the
 starting-context row from "Usage" when it applies. Next steps are something they can do, or an inline recommendation as in "Skills to fix". Collapsed "Skills you wrote" (a status table, with the counts in its summary line);
 collapsed "Skills you installed from others". Counts agree across all of it. Keep the tap

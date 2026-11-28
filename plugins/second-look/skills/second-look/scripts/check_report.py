@@ -303,7 +303,7 @@ def main():
         if not re.search(r'data-app="(codex|claude-desktop|copy)"', panel) or 'data-app-name="' not in panel:
             problems.append(f'{pid}: set data-app (codex, claude-desktop or copy) and data-app-name on the recommendation panel')
         if 'class="fix-approve"' not in panel or 'class="fix-decline"' not in panel:
-            problems.append(f'{pid}: keep the Approve and Decline buttons from the template')
+            problems.append(f'{pid}: keep the Open in <app> and Decline buttons from the template')
         prompt = re.search(r'<details class="nested try-prompt">.*?<pre>(.*?)</pre>', panel, re.S)
         if not prompt:
             problems.append(f'{pid}: put the prompt in the "View prompt" fold (details.try-prompt)')
@@ -311,7 +311,7 @@ def main():
             problems.append(f'{pid}: keep the prompt under 1,800 characters so it fits in the app link')
     for line in re.findall(r'<p class="try-saves">(.*?)</p>', html, re.S):
         if re.search(r"\babout\b", line, re.I) and 'class="saves-how"' not in line:
-            problems.append(f'this saving needs its working in a <span class="saves-how">: "{re.sub(r"<[^>]+>", "", line).strip()}"')
+            problems.append(f'this saving needs its working in the same line, in a <span class="saves-how">: "{re.sub(r"<[^>]+>", "", line).strip()}"')
     cards = re.findall(r'<article\b[^>]*class="icard[^"]*"[^>]*>\s*<div class="ic-head">(?:<span class="rank">(\d+)</span>)?', html)
     if cards != [str(i + 1) for i in range(len(cards))]:
         problems.append('number the pattern cards 1, 2, 3 in order: <span class="rank">1</span> first in each .ic-head')

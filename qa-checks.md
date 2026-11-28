@@ -1,9 +1,15 @@
 # Saved acceptance checks
 
+## 2026-11-28 — Open in <app> button
+
+- [ ] Every recommendation and skill fix panel's primary button reads "Open in Codex" or "Open in Claude Code" to match its `data-app-name`; `data-app="copy"` panels read "Copy prompt".
+- [ ] After a click the button reads "Open <app> again"; Decline and Undo still work.
+- [ ] No panel has a line explaining what the button does.
+
 ## 2026-11-15 — Rule savings include response waits
 
-- [ ] All five `#part-2 .try` sections contain one platform-specific `.try-do` instruction and one `.field pre` with a working Copy control; their prompt text matches the approved canvas design.
-- [ ] `#try-rules .try-saves` says "Saves retyping and waiting for extra replies" and explains that total time saved isn't measured.
+- [ ] All five `#part-2 .try` sections contain one `.field pre` with a working Copy control; their prompt text matches the approved canvas design.
+- [ ] `#try-rules .try-saves` says it saves retyping about 7 instructions a week plus the extra AI replies, and explains that total time saved isn't measured.
 - [ ] `#plan .plan-saves` for `#try-rules` says "Retyping and waiting for extra replies"; the report contains no "5 minutes a week" or "under a minute each" savings claim.
 - [ ] At 1440, 1280, 720, 375 and 320px in dark and light, the savings line, explanation and plan row wrap inside their containers; the Copy control and plan-to-recommendation navigation still work.
 - [ ] On production, follow the landing page's report link, open Recommendations, and check both savings locations and the explanation. Served HTML matches the committed template; no uncaught browser errors occur.

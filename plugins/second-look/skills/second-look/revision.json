@@ -1,4 +1,4 @@
 {
-  "revision": 12,
-  "benefit": "Recommendation cards show one how-sure chip followed by the apps, listed with commas, and the report's parts no longer spill into each other: Skills and the other parts show only their own content again."
+  "revision": 13,
+  "benefit": "Each recommendation's main button now says where it takes you, like \"Open in Codex\" or \"Open in Claude Code\", and the panel is shorter: the saving and its working sit on one line, with no extra line explaining the button."
 }
