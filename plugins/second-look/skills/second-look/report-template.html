@@ -575,12 +575,10 @@ button.prompt-reset:hover { background: none; }
 .flash { animation: flash 1.6s ease-out; }
 @keyframes flash { 0%, 30% { background: var(--accent-soft-2); } }
 
-/* chips: how sure (Sure, Likely, Hunch) and state pills. The text box hugs the capitals, so they sit centred; the 7px line height does the same where text-box isn't supported */
-.conf, .pill { display: inline-block; height: 18px; box-sizing: border-box; padding: 4px 8px; border: 1px solid transparent; border-radius: var(--r-pill); font-size: 12px; line-height: 7px; text-box: trim-both cap alphabetic; font-weight: 500; white-space: nowrap; }
-.conf { cursor: help; }
-.conf.strong { color: var(--on-primary); background: var(--primary); }
-.conf.sugg { color: var(--fg); background: var(--surface-2); }
-.conf.val { color: var(--muted); border-color: var(--term-quiet); }
+/* chips: how sure (Sure, Likely, Hunch) and state pills. A 20px flex box with a 1em line centres the text */
+.conf, .pill { display: inline-flex; align-items: center; height: 20px; box-sizing: border-box; padding: 0 8px; border: 1px solid transparent; border-radius: var(--r-pill); font-size: 12px; line-height: 1; font-weight: 500; white-space: nowrap; }
+/* every how-sure level looks the same; the word says how sure */
+.conf { cursor: help; color: var(--fg); background: var(--surface-2); }
 .p1 { color: var(--p1); border-color: var(--p1); } .p2 { color: var(--on-primary); background: var(--primary); }
 .p3 { color: var(--fg); background: var(--surface-2); } .ok { color: var(--fg); border-color: var(--line-strong); }
 .tip-pop { position: fixed; z-index: 60; max-width: 260px; padding: 8px 12px; border-radius: var(--r-6); background: var(--fg); color: var(--bg);
@@ -1076,7 +1074,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
 
   <article id="p-rules" class="icard">
     <div class="ic-head"><span class="rank">1</span><h3>You retype the same rules across your apps</h3>
-      <p class="ic-tags">Claude Code · Codex · Cursor · claude.ai · ChatGPT <span class="conf strong">Sure</span></p></div>
+      <p class="ic-tags"><span class="conf strong">Sure</span> Claude Code · Codex · Cursor · claude.ai · ChatGPT</p></div>
     <p class="ic-summary">Your preferences are saved in Claude Code and claude.ai, but Codex, Cursor and ChatGPT have gaps. You end up adding instructions about output format, documentation and prototype tools during the session instead of having them available from the start.</p>
     <div class="ic-disclosures">
       <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
@@ -1116,7 +1114,7 @@ Show me each rule and where it goes in each app, and wait for my yes before savi
 
   <article id="p-brief" class="icard">
     <div class="ic-head"><span class="rank">2</span><h3>Prototype sessions start vague, then restart</h3>
-      <p class="ic-tags">Claude Code · Codex · Cursor · claude.ai <span class="conf sugg">Likely</span></p></div>
+      <p class="ic-tags"><span class="conf sugg">Likely</span> Claude Code · Codex · Cursor · claude.ai</p></div>
     <p class="ic-summary">Your first message names a screen to build but leaves out who will use it, what success looks like or which tools to use. Those decisions arrive over the next few messages, so the assistant starts building before the brief is complete and some work starts over in a new session.</p>
     <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
       <div class="body"><dl class="ic-grid">
@@ -1144,7 +1142,7 @@ Before saving, check for an equivalent rule and keep my other instructions. Show
 
   <article id="p-trust" class="icard">
     <div class="ic-head"><span class="rank">3</span><h3>Prototypes often go out without a last check</h3>
-      <p class="ic-tags">Claude Code · Codex · claude.ai <span class="conf val">Hunch</span></p></div>
+      <p class="ic-tags"><span class="conf val">Hunch</span> Claude Code · Codex · claude.ai</p></div>
     <p class="ic-summary">Some Streak beta work is shared once the screen looks finished, without a critique or <span class="term" tabindex="0" aria-describedby="def-test-part2">test<span class="term-card" role="tooltip" id="def-test-part2">A check that the code really works, run by the AI or by you.</span></span> recorded in the session. There is no clear account of which behavior was checked or which assumptions still need review before other people use it.</p>
     <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
       <div class="body"><dl class="ic-grid">
@@ -1176,7 +1174,7 @@ Before saving, check whether I already have a skill or rule that does this. Show
 
   <article id="p-long" class="icard">
     <div class="ic-head"><span class="rank">4</span><h3>Long sessions drift across projects and eat your usage</h3>
-      <p class="ic-tags">Claude Code · Codex <span class="conf sugg">Likely</span></p></div>
+      <p class="ic-tags"><span class="conf sugg">Likely</span> Claude Code · Codex</p></div>
     <p class="ic-summary">Work on one project continues in the same session when you move to another. The next task carries the earlier messages and files with it, increasing the context the assistant has to process and leaving unrelated project details in the session.</p>
     <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
       <div class="body"><dl class="ic-grid">
@@ -1202,7 +1200,7 @@ Before saving, check for an equivalent rule and keep my other instructions. Show
 
   <article id="p-model" class="icard">
     <div class="ic-head"><span class="rank">5</span><h3>Your strongest model does your simplest work</h3>
-      <p class="ic-tags">Claude Code <span class="conf sugg">Likely</span></p></div>
+      <p class="ic-tags"><span class="conf sugg">Likely</span> Claude Code</p></div>
     <p class="ic-summary">Quick questions and lookups use Opus by default alongside harder coding tasks. The <span class="term" tabindex="0" aria-describedby="def-model-part2">model<span class="term-card" role="tooltip" id="def-model-part2">The version of the AI you’re talking to. Stronger ones use up your limit faster.</span></span> choice stays the same even for short sessions that change no code, so these smaller requests draw on the same usage allowance as more demanding work.</p>
     <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
       <div class="body"><dl class="ic-grid">
@@ -1239,7 +1237,7 @@ Show me each change and the file it goes in, and wait for my yes before changing
 
   <article id="p-retry" class="icard">
     <div class="ic-head"><span class="rank">6</span><h3>A new model could push your page speed further</h3>
-      <p class="ic-tags">Claude Code <span class="conf sugg">Likely</span></p></div>
+      <p class="ic-tags"><span class="conf sugg">Likely</span> Claude Code</p></div>
     <p class="ic-summary">You worked on load time for the portfolio site in 6 sessions, each with a different request. A new Fable model came out after your last attempt, so the same goal may go further with a fresh plan.</p>
     <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
       <div class="body"><dl class="ic-grid">
