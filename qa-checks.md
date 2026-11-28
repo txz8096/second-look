@@ -5,6 +5,7 @@
 - [ ] Every recommendation and skill fix panel's primary button reads "Open in Codex" or "Open in Claude Code" to match its `data-app-name`; `data-app="copy"` panels read "Copy prompt".
 - [ ] After a click the button reads "Open <app> again"; Decline and Undo still work.
 - [ ] No panel has a line explaining what the button does.
+- [ ] The prompt note reads "You can edit this prompt before you copy or open in <app>." ("…before you copy it." on copy-only panels); after an edit it reads "Edited. Copy and Open in <app> use your version." ("Edited. Copy uses your version.").
 
 ## 2026-11-15 — Rule savings include response waits
 
