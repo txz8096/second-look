@@ -541,6 +541,7 @@ blockquote { margin: 0; padding-left: 12px; border-left: 2px solid var(--line); 
 blockquote + .def { margin-top: -16px; padding: 6px 0 0 12px; border-left: 2px solid var(--line); font-size: 13px; line-height: 18px; }
 
 /* the recommendation in each pattern: a pink panel */
+.skill-fix { margin-top: 12px; }
 .try { display: grid; gap: 12px; padding: 16px; background: var(--accent-soft); border: 1px solid var(--accent-soft-2); border-radius: var(--r-10); scroll-margin-top: 24px; }
 .try h4 { font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.5; }
 .try-saves { font-size: 14px; font-weight: 600; line-height: 20px; color: var(--accent); }
@@ -574,12 +575,10 @@ button.prompt-reset:hover { background: none; }
 .flash { animation: flash 1.6s ease-out; }
 @keyframes flash { 0%, 30% { background: var(--accent-soft-2); } }
 
-/* chips: how sure (Sure, Likely, Hunch) and state pills. The text box hugs the capitals, so they sit centred; the 7px line height does the same where text-box isn't supported */
-.conf, .pill { display: inline-block; height: 18px; box-sizing: border-box; padding: 4px 8px; border: 1px solid transparent; border-radius: var(--r-pill); font-size: 12px; line-height: 7px; text-box: trim-both cap alphabetic; font-weight: 500; white-space: nowrap; }
-.conf { cursor: help; }
-.conf.strong { color: var(--on-primary); background: var(--primary); }
-.conf.sugg { color: var(--fg); background: var(--surface-2); }
-.conf.val { color: var(--muted); border-color: var(--term-quiet); }
+/* chips: how sure (Sure, Likely, Hunch) and state pills. A 20px flex box with a 1em line centres the text */
+.conf, .pill { display: inline-flex; align-items: center; height: 20px; box-sizing: border-box; padding: 0 8px; border: 1px solid transparent; border-radius: var(--r-pill); font-size: 12px; line-height: 1; font-weight: 500; white-space: nowrap; }
+/* every how-sure level looks the same; the word says how sure */
+.conf { cursor: help; color: var(--fg); background: var(--surface-2); }
 .p1 { color: var(--p1); border-color: var(--p1); } .p2 { color: var(--on-primary); background: var(--primary); }
 .p3 { color: var(--fg); background: var(--surface-2); } .ok { color: var(--fg); border-color: var(--line-strong); }
 .tip-pop { position: fixed; z-index: 60; max-width: 260px; padding: 8px 12px; border-radius: var(--r-6); background: var(--fg); color: var(--bg);
@@ -614,6 +613,12 @@ details.ic-rule-comparison { min-width: 0; border-bottom: 0; }
 details.ic-rule-comparison > .body { padding-bottom: 0; }
 .try details.nested { border-block: 0; border-top: 1px solid var(--accent-soft-2); }
 .try details.nested > summary { padding-bottom: 0; }
+/* a short recommendation inside a table row: the same prompt, edit and Approve/Decline, without the pink panel */
+.try.try-inline { gap: 8px; padding: 0; background: none; border: 0; border-radius: 0; }
+.try-inline .try-line { margin: 0; }
+.try.try-inline details.nested { border-top: 0; }
+.try-inline details.nested > summary { min-height: 32px; padding-top: 0; }
+.try-inline .fix-actions button { height: 32px; }
 
 /* tables */
 .tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-14); overscroll-behavior-x: contain; }
@@ -644,7 +649,6 @@ td.best { color: var(--accent); font-weight: 600; }
 .skill-resources .dest { padding: 16px 20px; }
 
 /* habits over time */
-.fix-block { display: grid; gap: 8px; margin-top: 8px; scroll-margin-top: 24px; }
 .filters { display: none; flex-wrap: wrap; align-items: center; gap: 10px 12px; }
 .fgroup { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
 .flabel { margin-right: 4px; }
@@ -716,7 +720,6 @@ button.more-charts { display: none; }
 .auto-next h3 { font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.5; margin-bottom: 8px; }
 .auto-row { display: grid; grid-template-columns: minmax(0, 1fr) 150px minmax(0, 1.3fr); gap: 16px; font-size: 14px; line-height: 20px; align-items: baseline; padding: 12px 0; border-top: 1px solid var(--line); }
 .auto-row .count { font: 400 13px/18px var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.auto-row .fix { font-size: 14px; color: var(--muted); }
 /* share bars */
 .split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 12px; }
 .panel { display: grid; gap: 8px; align-content: start; min-width: 0; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-14); }
@@ -902,7 +905,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   /* type floor: nothing under 13px, secondary text 14px */
   .heat-legend, .limit-tag, .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval, .work-mix-week, .work-mix-week:hover, .work-mix-week:active { font-size: 13px; }
   .def, .sum-meta, .part-meta, .fsum, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
-    .side-about, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
+    .side-about, table, pre, details.nested > summary, .grp-read { font-size: 14px; }
   .tl-name, .ic-summary, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
   .fix-actions button { min-height: 44px; }
   /* tap targets */
@@ -1072,6 +1075,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   <article id="p-rules" class="icard">
     <div class="ic-head"><span class="rank">1</span><h3>You retype the same rules across your apps</h3>
       <p class="ic-tags">Claude Code, Codex, Cursor, claude.ai, ChatGPT <span class="conf strong">Sure</span></p></div>
+      <p class="ic-tags"><span class="conf strong">Sure</span> Claude Code · Codex · Cursor · claude.ai · ChatGPT</p></div>
     <p class="ic-summary">Your preferences are saved in Claude Code and claude.ai, but Codex, Cursor and ChatGPT have gaps. You end up adding instructions about output format, documentation and prototype tools during the session instead of having them available from the start.</p>
     <div class="ic-disclosures">
       <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
@@ -1197,7 +1201,7 @@ Before saving, check for an equivalent rule and keep my other instructions. Show
 
   <article id="p-model" class="icard">
     <div class="ic-head"><span class="rank">5</span><h3>Your strongest model does your simplest work</h3>
-      <p class="ic-tags">Claude Code <span class="conf sugg">Likely</span></p></div>
+      <p class="ic-tags"><span class="conf sugg">Likely</span> Claude Code</p></div>
     <p class="ic-summary">Quick questions and lookups use Opus by default alongside harder coding tasks. The <span class="term" tabindex="0" aria-describedby="def-model-part2">model<span class="term-card" role="tooltip" id="def-model-part2">The version of the AI you’re talking to. Stronger ones use up your limit faster.</span></span> choice stays the same even for short sessions that change no code, so these smaller requests draw on the same usage allowance as more demanding work.</p>
     <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
       <div class="body"><dl class="ic-grid">
@@ -1234,7 +1238,7 @@ Show me each change and the file it goes in, and wait for my yes before changing
 
   <article id="p-retry" class="icard">
     <div class="ic-head"><span class="rank">6</span><h3>A new model could push your page speed further</h3>
-      <p class="ic-tags">Claude Code <span class="conf sugg">Likely</span></p></div>
+      <p class="ic-tags"><span class="conf sugg">Likely</span> Claude Code</p></div>
     <p class="ic-summary">You worked on load time for the portfolio site in 6 sessions, each with a different request. A new Fable model came out after your last attempt, so the same goal may go further with a fresh plan.</p>
     <details class="nested ic-evidence"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>Evidence and why it matters</span></summary>
       <div class="body"><dl class="ic-grid">
@@ -1276,24 +1280,56 @@ Don't change any files yet. End by asking which experiment to run first.</pre></
     <div class="tbl"><table>
       <thead><tr><th>Issue</th><th>Fix</th></tr></thead>
       <tbody>
-        <tr><td><b>pr-review</b> names a tool that doesn’t exist, so the visual check can get skipped<span class="def">Fix 3, checking beta work before it ships, works better with it.</span></td><td><a href="#fix-pr-review" data-jump="fix-pr-review">Paste the fix</a> (5 min)</td></tr>
-        <tr><td><b>release-notes</b> still lists last quarter’s pricing tiers<span class="def">Its output goes into every changelog.</span></td><td><a href="#fix-release-notes" data-jump="fix-release-notes">Paste the fix</a> (5 min)</td></tr>
-        <tr><td><b>beta-feedback-synth</b> says the team has 4 engineers; your notes say 6</td><td>In claude.ai, paste: “Change the team size in my beta-feedback-synth skill from 4 to 6.” (1 min)</td></tr>
-        <tr><td><b>api-docs</b> is installed twice, and the claude.ai copy is older<span class="def">Two versions give different advice.</span></td><td>In claude.ai, paste: “Help me delete the older copy of my api-docs skill.”</td></tr>
-        <tr><td><b>mermaid-diagrams</b> is missing its main file, so it never loads</td><td>In Claude Code, paste: “Reinstall mermaid-diagrams.”</td></tr>
+        <tr><td><b>pr-review</b> names a tool that doesn’t exist, so the visual check can get skipped<span class="def">Recommendation 3, checking beta work before it ships, works better with it.</span></td><td><a href="#fix-pr-review" data-jump="fix-pr-review">See the fix</a> (5 min)</td></tr>
+        <tr><td><b>release-notes</b> still lists last quarter’s pricing tiers<span class="def">Its output goes into every changelog.</span></td><td><a href="#fix-release-notes" data-jump="fix-release-notes">See the fix</a> (5 min)</td></tr>
+        <tr><td><b>beta-feedback-synth</b> says the team has 4 engineers; your notes say 6</td><td><section class="try try-inline" id="fix-beta-feedback-synth" aria-label="Fix: beta-feedback-synth" data-app="copy" data-app-name="claude.ai">
+          <p class="try-line">Ask claude.ai to change the team size in your beta-feedback-synth skill from 4 to 6 (1 min).</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Update my beta-feedback-synth skill. Change the team size from 4 engineers to 6.
+Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
+        <tr><td><b>api-docs</b> is installed twice, and the claude.ai copy is older<span class="def">Two versions give different advice.</span></td><td><section class="try try-inline" id="fix-api-docs" aria-label="Fix: api-docs" data-app="copy" data-app-name="claude.ai">
+          <p class="try-line">Ask claude.ai to help you delete the older copy of your api-docs skill.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>My api-docs skill is installed twice, and the claude.ai copy is older. Help me delete the older copy and keep the newer one.
+Tell me which copy you’ll delete, and wait for my yes before you delete it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
+        <tr><td><b>mermaid-diagrams</b> is missing its main file, so it never loads</td><td><section class="try try-inline" id="fix-mermaid-diagrams" aria-label="Fix: mermaid-diagrams" data-app="claude-desktop" data-app-name="Claude Code">
+          <p class="try-line">Ask Claude Code to reinstall your mermaid-diagrams skill.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Reinstall my mermaid-diagrams skill. It’s missing its main file, so it never loads.
+Tell me where you’ll install it from, and wait for my yes before you change anything. Then check that it loads.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
       </tbody></table></div>
-    <div class="fix-block" id="fix-pr-review">
-      <p class="def">pr-review: paste this into a new Claude Code session.</p>
-      <div class="field"><button type="button" class="copy" hidden>Copy</button>
+    <section class="try skill-fix" id="fix-pr-review" aria-labelledby="fix-pr-review-h" data-app="claude-desktop" data-app-name="Claude Code">
+      <h4 id="fix-pr-review-h">Ask Claude Code to correct the tool names in your pr-review skill.</h4>
+      <p class="try-do">Approve opens Claude Code with this prompt. Claude Code shows the change and saves nothing until you say yes.</p>
+      <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+        <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Update my pr-review skill. Its tool table names the wrong agent. Change the two column headings to "Claude desktop (built-in browser)" and "Claude Code, Codex, Cursor and others".
-Then tell me in plain words what changed before you save it.</pre></div>
-    </div>
-    <div class="fix-block" id="fix-release-notes">
-      <p class="def">release-notes: paste this into a new claude.ai session.</p>
-      <div class="field"><button type="button" class="copy" hidden>Copy</button>
+Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
+      <p class="fix-status" role="status" aria-live="polite"></p>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+    </section>
+    <section class="try skill-fix" id="fix-release-notes" aria-labelledby="fix-release-notes-h" data-app="copy" data-app-name="claude.ai">
+      <h4 id="fix-release-notes-h">Ask claude.ai to replace the old pricing table in your release-notes skill.</h4>
+      <p class="try-do">Copy prompt copies this prompt for a new claude.ai session. claude.ai shows the change and saves nothing until you say yes.</p>
+      <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+        <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
 <pre>Update my release-notes skill. Delete the pricing table and put this line in its place: "Read prices from docs/pricing.md. Never keep a copy here."
-Then tell me in plain words what changed before you save it.</pre></div>
-    </div>
+Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
+      <p class="fix-status" role="status" aria-live="polite"></p>
+      <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+    </section>
   </section>
 
   <section>
@@ -1301,11 +1337,50 @@ Then tell me in plain words what changed before you save it.</pre></div>
     <div class="tbl"><table>
       <thead><tr><th>Issue</th><th>Why it matters</th><th>How&nbsp;sure</th><th>Next step</th></tr></thead>
       <tbody>
-        <tr><td>Your team details are copied into beta-feedback-synth, ui-review and metrics-check</td><td>The copies already disagree</td><td><span class="conf strong">Sure</span></td><td>In claude.ai, paste: “Move my team details out of those three skills and into one shared file.”</td></tr>
-        <tr><td>Your skills are set up for Claude, with none for Codex. Cursor’s folder couldn’t be read.</td><td>Codex and Cursor can run the same files</td><td><span class="conf sugg">Likely</span></td><td>In Claude Code, paste: “Copy my skills to Codex, then check my Cursor skills folder.”</td></tr>
-        <tr><td>ui-review doesn’t know about Claude Design, and loads all three platform guides every time</td><td>It misses a current app and loads more than it needs</td><td><span class="conf sugg">Likely</span></td><td>In claude.ai, paste: “Add Claude Design to my ui-review skill and have it load one platform guide at a time.”</td></tr>
-        <tr><td>No skill has a test</td><td>A model update could change how a skill behaves without you noticing</td><td><span class="conf val">Hunch</span></td><td>In claude.ai, paste: “Write 3 test prompts for my release-notes and ui-review skills.”</td></tr>
-        <tr><td>commit-message and pdf-tools are behind their source.</td><td>You may be missing fixes</td><td><span class="conf strong">Sure</span></td><td>In Claude Code, paste: “Show me what changed in commit-message and pdf-tools since I installed them.”</td></tr>
+        <tr><td>Your team details are copied into beta-feedback-synth, ui-review and metrics-check</td><td>The copies already disagree</td><td><span class="conf strong">Sure</span></td><td><section class="try try-inline" id="try-team-details" aria-label="Next step: team details" data-app="copy" data-app-name="claude.ai">
+          <p class="try-line">Ask claude.ai to move your team details into one shared file.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>My team details are copied into my beta-feedback-synth, ui-review and metrics-check skills, and the copies disagree. Move them into one shared file and have each skill read it.
+Show me the shared file and each change, and wait for my yes before you save anything.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
+        <tr><td>Your skills are set up for Claude, with none for Codex. Cursor’s folder couldn’t be read.</td><td>Codex and Cursor can run the same files</td><td><span class="conf sugg">Likely</span></td><td><section class="try try-inline" id="try-skills-codex" aria-label="Next step: skills for Codex and Cursor" data-app="claude-desktop" data-app-name="Claude Code">
+          <p class="try-line">Ask Claude Code to copy your skills to Codex and check your Cursor skills folder.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Copy my skills to Codex, then check my Cursor skills folder. Second Look couldn’t read it.
+Show me what you’ll copy and where, and wait for my yes before you save anything. Then tell me what’s in the Cursor folder.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
+        <tr><td>ui-review doesn’t know about Claude Design, and loads all three platform guides every time</td><td>It misses a current app and loads more than it needs</td><td><span class="conf sugg">Likely</span></td><td><section class="try try-inline" id="try-ui-review" aria-label="Next step: ui-review" data-app="copy" data-app-name="claude.ai">
+          <p class="try-line">Ask claude.ai to add Claude Design to your ui-review skill and have it load one platform guide at a time.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Update my ui-review skill. Add Claude Design to the apps it knows, and have it load one platform guide at a time instead of all three.
+Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
+        <tr><td>No skill has a test</td><td>A model update could change how a skill behaves without you noticing</td><td><span class="conf val">Hunch</span></td><td><section class="try try-inline" id="try-skill-tests" aria-label="Next step: skill tests" data-app="copy" data-app-name="claude.ai">
+          <p class="try-line">Ask claude.ai to write 3 test prompts each for your release-notes and ui-review skills.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Write 3 test prompts for my release-notes skill and 3 for my ui-review skill, each with what a good answer should include. Show them to me and wait for my yes before you save anything.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
+        <tr><td>commit-message and pdf-tools are behind their source.</td><td>You may be missing fixes</td><td><span class="conf strong">Sure</span></td><td><section class="try try-inline" id="try-skill-updates" aria-label="Next step: skill updates" data-app="claude-desktop" data-app-name="Claude Code">
+          <p class="try-line">Ask Claude Code what changed in commit-message and pdf-tools since you installed them.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Show me what changed in my commit-message and pdf-tools skills since I installed them.
+Wait for my yes before you update either one.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
       </tbody></table></div>
   </section>
 
@@ -1399,9 +1474,33 @@ Then tell me in plain words what changed before you save it.</pre></div>
   <!-- What you could automate next: the script moves this into the "Am I automating repeat work?" group. Delete it when there are no repeats -->
   <div class="auto-next" id="automate-next">
     <h3>What you could automate next</h3>
-    <div class="auto-row"><span class="ask">“Check the job tracker and summarize what changed”</span><span class="count">6 times in 4 weeks</span><span class="fix">Tell Claude Code: “Every Monday, check the job tracker and summarize what changed. Set that up as a scheduled task.”</span></div>
-    <div class="auto-row"><span class="ask">“Rewrite this in my voice, no em dashes”</span><span class="count">5 times in 4 weeks</span><span class="fix">Tell your AI: “Save ‘rewrite this in my voice, no em dashes’ as a skill.”</span></div>
-    <div class="auto-row"><span class="ask">“Run the report checker and fix what it flags”</span><span class="count">4 times in 4 weeks</span><span class="fix">Tell Claude Code: “After every edit, run the report checker and fix what it flags. Set that up to run on its own.”</span></div>
+    <div class="auto-row"><span class="ask">“Check the job tracker and summarize what changed”</span><span class="count">6 times in 4 weeks</span><section class="try try-inline" id="auto-job-tracker" aria-label="Automate: job tracker summary" data-app="claude-desktop" data-app-name="Claude Code">
+          <p class="try-line">Ask Claude Code to check the job tracker every Monday as a scheduled task.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Every Monday, check the job tracker and summarize what changed. Set that up as a scheduled task.
+Show me the task and its schedule, and wait for my yes before you save it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></div>
+    <div class="auto-row"><span class="ask">“Rewrite this in my voice, no em dashes”</span><span class="count">5 times in 4 weeks</span><section class="try try-inline" id="auto-voice" aria-label="Automate: rewrite in my voice" data-app="copy" data-app-name="AI chat">
+          <p class="try-line">Ask your AI to save “rewrite this in my voice, no em dashes” as a skill.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Save ‘rewrite this in my voice, no em dashes’ as a skill.
+Show me the skill, and wait for my yes before you save it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></div>
+    <div class="auto-row"><span class="ask">“Run the report checker and fix what it flags”</span><span class="count">4 times in 4 weeks</span><section class="try try-inline" id="auto-report-checker" aria-label="Automate: report checker" data-app="claude-desktop" data-app-name="Claude Code">
+          <p class="try-line">Ask Claude Code to run the report checker after every edit.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>After every edit, run the report checker and fix what it flags. Set that up to run on its own.
+Show me the setup and where it goes, and wait for my yes before you save it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></div>
   </div>
 
   <div class="split">

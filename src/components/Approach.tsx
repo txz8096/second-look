@@ -18,12 +18,12 @@ const weeklyShare = [
   { date: "Oct 19", percent: 61, tick: true },
 ];
 
-const skillPrompt = 'Update my pr-review skill. Its tool table names the wrong agent. Change the two column headings to "Claude desktop (built-in browser)" and "Claude Code, Codex, Cursor and others".\nThen tell me in plain words what changed before you save it.';
+const skillPrompt = 'Update my pr-review skill. Its tool table names the wrong agent. Change the two column headings to "Claude desktop (built-in browser)" and "Claude Code, Codex, Cursor and others".\nThen tell me in plain words what changed, and wait for my yes before you save it.';
 
 const skillFindings = [
-  { name: "pr-review", issue: "Names a tool that doesn’t exist.", anchor: "fix-pr-review", action: "Paste the fix" },
-  { name: "release-notes", issue: "Still lists last quarter’s pricing tiers.", anchor: "fix-release-notes", action: "Paste the fix" },
-  { name: "beta-feedback-synth", issue: "Says the team has 4 engineers. Your notes say 6.", anchor: "fix-first", action: "See fix for claude.ai" },
+  { name: "pr-review", issue: "Names a tool that doesn’t exist.", anchor: "fix-pr-review", action: "See the fix" },
+  { name: "release-notes", issue: "Still lists last quarter’s pricing tiers.", anchor: "fix-release-notes", action: "See the fix" },
+  { name: "beta-feedback-synth", issue: "Says the team has 4 engineers. Your notes say 6.", anchor: "fix-beta-feedback-synth", action: "See the fix" },
 ];
 
 function UsageExample() {
@@ -87,8 +87,8 @@ function SkillsExample() {
             {index === 0 && (
               <div className="mt-2 flex items-center gap-4 rounded-md bg-surface p-4">
                 <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium">Paste into a new Claude Code session</p>
-                  <p className="mt-1 text-sm text-text-3">Update the tool table in the sample pr-review skill.</p>
+                  <p className="text-sm font-medium">Ask Claude Code to correct the tool names in your pr-review skill.</p>
+                  <p className="mt-1 text-sm text-text-3">Claude Code shows the change and saves nothing until you say yes.</p>
                 </div>
                 <CopyButton text={skillPrompt} label="Copy the sample pr-review fix" />
               </div>

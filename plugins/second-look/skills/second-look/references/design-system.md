@@ -17,9 +17,9 @@ The values below are the dark theme, which is the default. The app bar's switch 
 | `--bg` | `#0A0A0A` | Page background |
 | `--surface` / `--surface-2` | `#171717` / `#262626` | Cards, buttons, menus / neutral fills, tracks |
 | `--fg` | `#FAFAFA` | Text |
-| `--primary` / `--on-primary` | `#E5E5E5` / `#171717` | The firmest chip (Sure) |
+| `--primary` / `--on-primary` | `#E5E5E5` / `#171717` | Approve buttons, the Review, Behind and Duplicate pills |
 | `--muted` / `--faint` | `#A1A1A1` / `#8A8A8A` | Secondary text, labels |
-| `--term-quiet` | `#737373` | Dashed underline on chart titles, Hunch chip outline |
+| `--term-quiet` | `#737373` | Dashed underline on chart titles |
 | `--line` / `--line-strong` | white at 10% / 15% | Dividers, borders |
 | `--accent` | `#F2A7B8` (Proof Pink) | Links and action highlights |
 | `--accent-soft` / `--accent-soft-2` | pink at 8% / 28% | Pink panels and their borders |
@@ -74,7 +74,7 @@ An app bar, a sidebar and one page at a time, from the "Compact App Bar" designs
 3. Overview (`#overview`): "Your latest review" as the `h1`, the summary paragraph (20px, plain words, no numbers), “What you use AI for” (weekly session counts stacked by kind of work for the last 13 complete weeks, from the report cube, with a link to Data coverage in Settings; under 600px the 13 bars fit the card and every third week keeps its date, ending on the latest), "Following up on your last review" (`#last-cycle`, one card per decision, one folded row per recommendation; only after a review with logged recommendations), then "Explore your report", one row per page.
 4. Recommendations based on your AI sessions (`#part-2`): headline, then pattern cards
    (`article.icard`), each ending in its recommendation panel with Approve and Decline.
-5. Keep your skills current (`#part-3`): headline, scan line, "Skills to fix" (`#fix-first`, with paste-to-your-AI blocks in `.fix-block`), "Worth a look",
+5. Keep your skills current (`#part-3`): headline, scan line, "Skills to fix" (`#fix-first`, with skill fix panels in `section.try.skill-fix`: the recommendation panel without the saves line, with the same editable prompt), "Worth a look" (its other fixes and next steps as inline recommendations),
    collapsed "Skills you wrote", collapsed installed skills.
 6. How your habits are changing (`#part-1`, last despite its id): the page title is the open question
    (“How your habits are changing” with scripts off), then `#trends`: the open group shows its summary (12px above and below),
@@ -133,7 +133,7 @@ Decided Oct 30, 2026 from three prototypes. The automation group was added Nov 1
   only.", or "Output checking counts all your apps. The others count only Claude Code and Codex."), in muted text, never yellow.
 - "Am I automating repeat work?" ends with "What you could automate next" (`#automate-next`):
   one row per repeated request, most repeated first, with the request in quotes, the count in
-  plain text ("6 times in 4 weeks") and the recommendation as one line to paste. The script moves the block into
+  plain text ("6 times in 4 weeks") and the recommendation as an inline recommendation (see "Pattern card"). The script moves the block into
   that group. Delete it when there are no repeats.
 - "Where does my usage go?" is followed by "5-hour limits in the last week" (`#limits`). See "5-hour limits".
 - Without scripts (prerendered), every group shows in turn with its question as a heading.
@@ -171,9 +171,12 @@ seeing); showing it on all five question pages.
 ## Pattern card
 
 A number in a pink circle, the recommendation's number; title; the apps as plain muted text, separated by commas ("Claude Code, Codex, claude.ai"), and one how-sure chip; then a full-width, left-aligned `.ic-summary` paragraph, with no "What happens" label. Its two sentences explain the behavior in more detail than the title without restating it. A native `details.ic-evidence` row labelled "Evidence and why it matters" starts collapsed beneath the summary. Its top divider and chevron follow the existing folds; omit its bottom divider before the action panel. Inside, Evidence and Why it matters remain separate labelled groups with a divider between them. Keep supporting prompt quotes inside evidence. When a shared standing rule applies to at least two apps the person uses, add a separate collapsed `details.ic-rule-comparison` row immediately below evidence in `.ic-disclosures`. Use the same 44px minimum target and the divider between rows. Omit the comparison for one-app recommendations and findings without a shared rule. Its summary is a keyboard-operable target at least 44px tall, and printing includes the evidence and restores the reader's disclosure state afterward. Then the recommendation
+A number in a pink circle, the recommendation's number; title; one how-sure chip, then the apps as plain muted text on the same line, so the chip sits in the same place on every card; then a full-width, left-aligned `.ic-summary` paragraph, with no "What happens" label. Its two sentences explain the behavior in more detail than the title without restating it. A native `details.ic-evidence` row labelled "Evidence and why it matters" starts collapsed beneath the summary. Its top divider and chevron follow the existing folds; omit its bottom divider before the action panel. Inside, Evidence and Why it matters remain separate labelled groups with a divider between them. Keep supporting prompt quotes inside evidence. When a shared standing rule applies to at least two apps the person uses, add a separate collapsed `details.ic-rule-comparison` row immediately below evidence in `.ic-disclosures`. Use the same 44px minimum target and the divider between rows. Omit the comparison for one-app recommendations and findings without a shared rule. Its summary is a keyboard-operable target at least 44px tall, and printing includes the evidence and restores the reader's disclosure state afterward. Then the recommendation
 in a pink panel (`section.try`): one sentence saying what the app will set up, one pink line saying what it saves (`.try-saves`) with its working in a muted line under it (`.saves-how`), then "Approve opens <app> with this prompt…" (`.try-do`), the prompt in a collapsed "View prompt" fold with Copy in its corner. With scripts the prompt becomes an editable text box (`textarea.prompt-edit`, styled like `pre`) with a muted note under it: "You can edit this prompt before you copy or approve it.", or once changed "Edited. Copy and Approve use your version." with a Reset link. When an edit passes 1,800 characters on a panel that opens an app, the note turns `--fg` and says how many characters over it is and offers the paste fallback ("126 characters too long to open in Codex. Shorten it, or use Copy prompt and paste it into a new Codex session."), and Approve reads "Copy prompt" and copies without opening the app until the prompt is short enough again. Edits are kept in that browser; print shows the prompt as plain text. Then a status line (`.fix-status`, muted, hidden while empty) and the actions: Approve (primary fill) and Decline (outline), 36px tall, 44px on phones. States: approved shows "Sent to <app>…" and Approve reads "Open <app> again"; declined shows "You declined this." with Undo; `data-app="copy"` shows "Copy prompt" in place of Approve. Without scripts the actions stay hidden and the prompt stays read-only. Print opens the prompt and hides the actions. Keep one entry app per panel. For a shared rule, the prompt names the relevant destinations and scope, includes the exact rule, and asks for a verified outcome or a manual paste step for each app. Every prompt asks the app to show the change and wait for a yes. Preserve per-task
 steps such as starting a fresh session, and disclose any inaccessible settings or unverified model switch
 in the prompt. Folds inside cards all look the same: a row between hairlines with a chevron, pink on hover.
+
+An inline recommendation (`section.try.try-inline`) is the same panel for a short recommendation inside a table row or list row: no pink fill, border or padding, and no saves line. It holds one line saying what to ask which app ("Ask Claude Code to reinstall your mermaid-diagrams skill."), the "View prompt" fold with no top divider, the editable prompt, the status line and the actions at 32px (44px on phones). Use it for every prompt in "Skills to fix", "Worth a look" and "What you could automate next" that doesn't get its own panel.
 
 For rules saved instead of repeated, include both retyping and waiting for extra AI replies in the
 saving. Give a minute estimate only when the durations are supported or the assumptions are stated;
@@ -224,8 +227,8 @@ Chart titles carry their own cards, in `METRICS` in the template script.
   one-line meaning on hover or tap.
 - State pills: Stale · Review · Minor · Current · Behind · Broken · Duplicate · Not checked ·
   High · Medium · Low
-- Chip weights: Sure is filled, Likely is neutral, Hunch is outlined. Stale, Broken and High are red outlines.
-- Chip size: 18px tall, 12px text, with the text box trimmed to the capitals so they sit centred.
+- Chip weights: Sure, Likely and Hunch share one neutral fill (`--surface-2`, `--fg` text); the word says how sure. Stale, Broken and High are red outlines.
+- Chip size: 20px tall, 12px text, 8px side padding, the text centred by a flex box with a 1em line height.
 
 ## Removed on purpose (don't bring back)
 
