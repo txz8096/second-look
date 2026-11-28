@@ -32,6 +32,8 @@ FORBIDDEN = {
     "Change now": "slot labels were removed",
     'class="slot"': "slot labels were removed",
     "<dt>How sure</dt>": "the How sure row was removed from cards",
+    ", paste: “": "give a prompt as an inline recommendation (section.try.try-inline), not a line to paste",
+    '<span class="fix">Tell ': "give What you could automate next as an inline recommendation (section.try.try-inline)",
     "How we know this": "removed from cards",
     "How we'll know it worked": "removed from Try this blocks",
     'id="expand-all"': "Expand all / Collapse all was removed",

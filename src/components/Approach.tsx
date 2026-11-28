@@ -23,7 +23,7 @@ const skillPrompt = 'Update my pr-review skill. Its tool table names the wrong a
 const skillFindings = [
   { name: "pr-review", issue: "Names a tool that doesn’t exist.", anchor: "fix-pr-review", action: "See the fix" },
   { name: "release-notes", issue: "Still lists last quarter’s pricing tiers.", anchor: "fix-release-notes", action: "See the fix" },
-  { name: "beta-feedback-synth", issue: "Says the team has 4 engineers. Your notes say 6.", anchor: "fix-first", action: "See fix for claude.ai" },
+  { name: "beta-feedback-synth", issue: "Says the team has 4 engineers. Your notes say 6.", anchor: "fix-beta-feedback-synth", action: "See the fix" },
 ];
 
 function UsageExample() {

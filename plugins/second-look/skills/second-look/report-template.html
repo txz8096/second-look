@@ -722,7 +722,6 @@ button.more-charts { display: none; }
 .auto-next h3 { font-size: 16px; font-weight: 600; letter-spacing: 0; line-height: 1.5; margin-bottom: 8px; }
 .auto-row { display: grid; grid-template-columns: minmax(0, 1fr) 150px minmax(0, 1.3fr); gap: 16px; font-size: 14px; line-height: 20px; align-items: baseline; padding: 12px 0; border-top: 1px solid var(--line); }
 .auto-row .count { font: 400 13px/18px var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap; }
-.auto-row .fix { font-size: 14px; color: var(--muted); }
 /* share bars */
 .split { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 12px; }
 .panel { display: grid; gap: 8px; align-content: start; min-width: 0; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-14); }
@@ -908,7 +907,7 @@ th > .term > .term-card::before { top: calc(-1.3em - 8px); height: calc(1.3em + 
   /* type floor: nothing under 13px, secondary text 14px */
   .heat-legend, .limit-tag, .eyebrow, .flabel, th, .gapnote, .scope-at, .tl-axis, button.copy, .term-card code, .bval, .work-mix-week, .work-mix-week:hover, .work-mix-week:active { font-size: 13px; }
   .def, .sum-meta, .part-meta, .fsum, .tl-status, .tl-legend, .tip, .tip-pop, .term-card,
-    .side-about, table, pre, details.nested > summary, .grp-read, .auto-row .fix { font-size: 14px; }
+    .side-about, table, pre, details.nested > summary, .grp-read { font-size: 14px; }
   .tl-name, .ic-summary, .ic-grid dd, .try-do, .grp-sum { font-size: 16px; }
   .fix-actions button { min-height: 44px; }
   /* tap targets */
@@ -1284,9 +1283,33 @@ Don't change any files yet. End by asking which experiment to run first.</pre></
       <tbody>
         <tr><td><b>pr-review</b> names a tool that doesn’t exist, so the visual check can get skipped<span class="def">Recommendation 3, checking beta work before it ships, works better with it.</span></td><td><a href="#fix-pr-review" data-jump="fix-pr-review">See the fix</a> (5 min)</td></tr>
         <tr><td><b>release-notes</b> still lists last quarter’s pricing tiers<span class="def">Its output goes into every changelog.</span></td><td><a href="#fix-release-notes" data-jump="fix-release-notes">See the fix</a> (5 min)</td></tr>
-        <tr><td><b>beta-feedback-synth</b> says the team has 4 engineers; your notes say 6</td><td>In claude.ai, paste: “Change the team size in my beta-feedback-synth skill from 4 to 6.” (1 min)</td></tr>
-        <tr><td><b>api-docs</b> is installed twice, and the claude.ai copy is older<span class="def">Two versions give different advice.</span></td><td>In claude.ai, paste: “Help me delete the older copy of my api-docs skill.”</td></tr>
-        <tr><td><b>mermaid-diagrams</b> is missing its main file, so it never loads</td><td>In Claude Code, paste: “Reinstall mermaid-diagrams.”</td></tr>
+        <tr><td><b>beta-feedback-synth</b> says the team has 4 engineers; your notes say 6</td><td><section class="try try-inline" id="fix-beta-feedback-synth" aria-label="Fix: beta-feedback-synth" data-app="copy" data-app-name="claude.ai">
+          <p class="try-line">Ask claude.ai to change the team size in your beta-feedback-synth skill from 4 to 6 (1 min).</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Update my beta-feedback-synth skill. Change the team size from 4 engineers to 6.
+Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
+        <tr><td><b>api-docs</b> is installed twice, and the claude.ai copy is older<span class="def">Two versions give different advice.</span></td><td><section class="try try-inline" id="fix-api-docs" aria-label="Fix: api-docs" data-app="copy" data-app-name="claude.ai">
+          <p class="try-line">Ask claude.ai to help you delete the older copy of your api-docs skill.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>My api-docs skill is installed twice, and the claude.ai copy is older. Help me delete the older copy and keep the newer one.
+Tell me which copy you’ll delete, and wait for my yes before you delete it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
+        <tr><td><b>mermaid-diagrams</b> is missing its main file, so it never loads</td><td><section class="try try-inline" id="fix-mermaid-diagrams" aria-label="Fix: mermaid-diagrams" data-app="claude-desktop" data-app-name="Claude Code">
+          <p class="try-line">Ask Claude Code to reinstall your mermaid-diagrams skill.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Reinstall my mermaid-diagrams skill. It’s missing its main file, so it never loads.
+Tell me where you’ll install it from, and wait for my yes before you change anything. Then check that it loads.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
       </tbody></table></div>
     <section class="try skill-fix" id="fix-pr-review" aria-labelledby="fix-pr-review-h" data-app="claude-desktop" data-app-name="Claude Code">
       <h4 id="fix-pr-review-h">Ask Claude Code to correct the tool names in your pr-review skill.</h4>
@@ -1315,9 +1338,33 @@ Then tell me in plain words what changed, and wait for my yes before you save it
     <div class="tbl"><table>
       <thead><tr><th>Issue</th><th>Why it matters</th><th>How&nbsp;sure</th><th>Next step</th></tr></thead>
       <tbody>
-        <tr><td>Your team details are copied into beta-feedback-synth, ui-review and metrics-check</td><td>The copies already disagree</td><td><span class="conf strong">Sure</span></td><td>In claude.ai, paste: “Move my team details out of those three skills and into one shared file.”</td></tr>
-        <tr><td>Your skills are set up for Claude, with none for Codex. Cursor’s folder couldn’t be read.</td><td>Codex and Cursor can run the same files</td><td><span class="conf sugg">Likely</span></td><td>In Claude Code, paste: “Copy my skills to Codex, then check my Cursor skills folder.”</td></tr>
-        <tr><td>ui-review doesn’t know about Claude Design, and loads all three platform guides every time</td><td>It misses a current app and loads more than it needs</td><td><span class="conf sugg">Likely</span></td><td>In claude.ai, paste: “Add Claude Design to my ui-review skill and have it load one platform guide at a time.”</td></tr>
+        <tr><td>Your team details are copied into beta-feedback-synth, ui-review and metrics-check</td><td>The copies already disagree</td><td><span class="conf strong">Sure</span></td><td><section class="try try-inline" id="try-team-details" aria-label="Next step: team details" data-app="copy" data-app-name="claude.ai">
+          <p class="try-line">Ask claude.ai to move your team details into one shared file.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>My team details are copied into my beta-feedback-synth, ui-review and metrics-check skills, and the copies disagree. Move them into one shared file and have each skill read it.
+Show me the shared file and each change, and wait for my yes before you save anything.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
+        <tr><td>Your skills are set up for Claude, with none for Codex. Cursor’s folder couldn’t be read.</td><td>Codex and Cursor can run the same files</td><td><span class="conf sugg">Likely</span></td><td><section class="try try-inline" id="try-skills-codex" aria-label="Next step: skills for Codex and Cursor" data-app="claude-desktop" data-app-name="Claude Code">
+          <p class="try-line">Ask Claude Code to copy your skills to Codex and check your Cursor skills folder.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Copy my skills to Codex, then check my Cursor skills folder. Second Look couldn’t read it.
+Show me what you’ll copy and where, and wait for my yes before you save anything. Then tell me what’s in the Cursor folder.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
+        <tr><td>ui-review doesn’t know about Claude Design, and loads all three platform guides every time</td><td>It misses a current app and loads more than it needs</td><td><span class="conf sugg">Likely</span></td><td><section class="try try-inline" id="try-ui-review" aria-label="Next step: ui-review" data-app="copy" data-app-name="claude.ai">
+          <p class="try-line">Ask claude.ai to add Claude Design to your ui-review skill and have it load one platform guide at a time.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Update my ui-review skill. Add Claude Design to the apps it knows, and have it load one platform guide at a time instead of all three.
+Then tell me in plain words what changed, and wait for my yes before you save it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
         <tr><td>No skill has a test</td><td>A model update could change how a skill behaves without you noticing</td><td><span class="conf val">Hunch</span></td><td><section class="try try-inline" id="try-skill-tests" aria-label="Next step: skill tests" data-app="copy" data-app-name="claude.ai">
           <p class="try-line">Ask claude.ai to write 3 test prompts each for your release-notes and ui-review skills.</p>
           <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
@@ -1326,7 +1373,15 @@ Then tell me in plain words what changed, and wait for my yes before you save it
           <p class="fix-status" role="status" aria-live="polite"></p>
           <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
         </section></td></tr>
-        <tr><td>commit-message and pdf-tools are behind their source.</td><td>You may be missing fixes</td><td><span class="conf strong">Sure</span></td><td>In Claude Code, paste: “Show me what changed in commit-message and pdf-tools since I installed them.”</td></tr>
+        <tr><td>commit-message and pdf-tools are behind their source.</td><td>You may be missing fixes</td><td><span class="conf strong">Sure</span></td><td><section class="try try-inline" id="try-skill-updates" aria-label="Next step: skill updates" data-app="claude-desktop" data-app-name="Claude Code">
+          <p class="try-line">Ask Claude Code what changed in commit-message and pdf-tools since you installed them.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Show me what changed in my commit-message and pdf-tools skills since I installed them.
+Wait for my yes before you update either one.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></td></tr>
       </tbody></table></div>
   </section>
 
@@ -1420,9 +1475,33 @@ Then tell me in plain words what changed, and wait for my yes before you save it
   <!-- What you could automate next: the script moves this into the "Am I automating repeat work?" group. Delete it when there are no repeats -->
   <div class="auto-next" id="automate-next">
     <h3>What you could automate next</h3>
-    <div class="auto-row"><span class="ask">“Check the job tracker and summarize what changed”</span><span class="count">6 times in 4 weeks</span><span class="fix">Tell Claude Code: “Every Monday, check the job tracker and summarize what changed. Set that up as a scheduled task.”</span></div>
-    <div class="auto-row"><span class="ask">“Rewrite this in my voice, no em dashes”</span><span class="count">5 times in 4 weeks</span><span class="fix">Tell your AI: “Save ‘rewrite this in my voice, no em dashes’ as a skill.”</span></div>
-    <div class="auto-row"><span class="ask">“Run the report checker and fix what it flags”</span><span class="count">4 times in 4 weeks</span><span class="fix">Tell Claude Code: “After every edit, run the report checker and fix what it flags. Set that up to run on its own.”</span></div>
+    <div class="auto-row"><span class="ask">“Check the job tracker and summarize what changed”</span><span class="count">6 times in 4 weeks</span><section class="try try-inline" id="auto-job-tracker" aria-label="Automate: job tracker summary" data-app="claude-desktop" data-app-name="Claude Code">
+          <p class="try-line">Ask Claude Code to check the job tracker every Monday as a scheduled task.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Every Monday, check the job tracker and summarize what changed. Set that up as a scheduled task.
+Show me the task and its schedule, and wait for my yes before you save it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></div>
+    <div class="auto-row"><span class="ask">“Rewrite this in my voice, no em dashes”</span><span class="count">5 times in 4 weeks</span><section class="try try-inline" id="auto-voice" aria-label="Automate: rewrite in my voice" data-app="copy" data-app-name="AI chat">
+          <p class="try-line">Ask your AI to save “rewrite this in my voice, no em dashes” as a skill.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>Save ‘rewrite this in my voice, no em dashes’ as a skill.
+Show me the skill, and wait for my yes before you save it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></div>
+    <div class="auto-row"><span class="ask">“Run the report checker and fix what it flags”</span><span class="count">4 times in 4 weeks</span><section class="try try-inline" id="auto-report-checker" aria-label="Automate: report checker" data-app="claude-desktop" data-app-name="Claude Code">
+          <p class="try-line">Ask Claude Code to run the report checker after every edit.</p>
+          <details class="nested try-prompt"><summary><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg><span>View prompt</span></summary>
+            <div class="body"><div class="field"><button type="button" class="copy" hidden>Copy</button>
+<pre>After every edit, run the report checker and fix what it flags. Set that up to run on its own.
+Show me the setup and where it goes, and wait for my yes before you save it.</pre></div></div></details>
+          <p class="fix-status" role="status" aria-live="polite"></p>
+          <div class="fix-actions" hidden><button type="button" class="fix-approve">Approve</button><button type="button" class="fix-decline">Decline</button><button type="button" class="fix-undo" hidden>Undo</button></div>
+        </section></div>
   </div>
 
   <div class="split">
@@ -1519,7 +1598,7 @@ Then tell me in plain words what changed, and wait for my yes before you save it
       <a id="coverage-return" href="#overview" aria-label="Back to previous view" title="Back" hidden>←</a>
       <h3 id="coverage-title">Data coverage</h3>
     </div>
-    <p>One local review can read Codex, Claude Code, Cursor and Antigravity sessions on this computer. To include sessions from web apps in a local review, add an export.</p>
+    <p>One local review can read Codex, Claude Code, Cursor and Antigravity sessions on this computer. To include sessions from web apps in a local review, add an export. Claude Code and Codex cloud sessions, including ones started from a phone, run on remote machines and aren't included. A Claude Code session you drive from your phone with Remote Control runs on this computer, so it is.</p>
       <div class="tl" id="tl-sources"></div>
       <div class="tl-axis" id="tl-axis"></div>
       <div class="tl-legend"><span><i class="seg-data"></i>Data</span><span><i style="background:var(--seg-track)"></i>No sessions</span><span><i class="seg-out"></i>Outside what Second Look can see</span></div>

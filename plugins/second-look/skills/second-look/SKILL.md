@@ -473,9 +473,9 @@ block are fine. One word per thing: session (never chat or conversation), the AI
 agent), rules (never standing preferences), helper agent, usage and usage limit, brief, checking,
 recommendation, Second Look (never "the coach" or "I"). Each recommendation keeps one name everywhere. Cut a line that
 only restates a heading, a column or a term card. An action they can't do by hand gets a prompt
-to paste into their AI app, and says which app. Every next step, in any table or list, says where
-to go or gives the line to paste ("In Claude Code, paste: “Reinstall mermaid-diagrams.”"), so nothing
-ends on "update it" or "remove it" alone. Say what the logs show and nothing about why unless the
+for their AI app, and says which app. Every next step that hands the AI a prompt, in any table or list, is a recommendation
+panel or an inline recommendation (see "Keep your skills current"), so the person can edit it, approve it or decline it,
+and nothing ends on "update it" or "remove it" alone. Say what the logs show and nothing about why unless the
 evidence shows why: "no check in the session", never "you didn't check".
 
 Skill names, file names and project names stay as they are, even with a word from this list in
@@ -645,10 +645,10 @@ keep-it-if rule in the log.
 **Keep your skills current** (`#part-3`). A one-sentence headline with how many skills are
 wrong today (count every skill marked Stale, and a wrong fact is Stale); the scan date and anything
 you couldn't read, named as a place ("your Cursor skills folder"), with what that means for the
-counts. "Skills to fix" (`#fix-first`; issue, fix), blockers first, then biggest impact. Installed skills that are only Behind their source share one row ("23 installed skills have updates", fix: update them from source), with the list in "Skills you installed from others"; an installed skill gets its own row only when it's broken. Every fix cell reads "In [app], paste: “…”", or "In any AI chat, paste: “…”" when the app doesn't matter; a cell that links to a skill fix panel reads "See the fix (5 min)". A sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
+counts. "Skills to fix" (`#fix-first`; issue, fix), blockers first, then biggest impact. Installed skills that are only Behind their source share one row ("23 installed skills have updates", fix: update them from source), with the list in "Skills you installed from others"; an installed skill gets its own row only when it's broken. Every other fix cell is an inline recommendation (`section.try.try-inline`, inside the cell): one line saying what to ask which app ("Ask claude.ai to change the team size in your beta-feedback-synth skill from 4 to 6."), the prompt in the collapsed "View prompt" fold, and Approve and Decline, with `data-app`, `data-app-name` and a unique id as on a recommendation panel. No pink panel and no `.try-saves` line. The prompt is editable like every recommendation prompt, and asks the app to show the change and wait for a yes. For a skill change, the prompt ends "Then tell me in plain words what changed, and wait for my yes before you save it." A cell that links to a skill fix panel reads "See the fix (5 min)". A sentence on why goes under the issue as `.def`. Weigh impact by use: a skill with no runs
 goes low. The big ones get a skill fix panel: the recommendation panel (`section.try skill-fix`) without a `.try-saves` line, with an id the table can link to (`fix-pr-review`). Its `h4` says in one sentence what the app will change ("Ask Claude Code to correct the tool names in your pr-review skill."), then the `.try-do` line, the prompt in the collapsed "View prompt" fold, and Approve and Decline. The prompt is editable and kept under 1,800 characters, as on a recommendation. Pick `data-app` by the same rule as recommendations, from the app the skill lives in. The prompt's last line is always "Then tell me in plain words what changed, and wait for my yes before you save it." Never show a diff.
 "Worth a look" (issue, why it matters, how sure, next step), including the
-starting-context row from "Usage" when it applies. Next steps are something they can do, or a line to paste in the same "In [app], paste: “…”" form. Collapsed "Skills you wrote" (a status table, with the counts in its summary line);
+starting-context row from "Usage" when it applies. Next steps are something they can do, or an inline recommendation as in "Skills to fix". Collapsed "Skills you wrote" (a status table, with the counts in its summary line);
 collapsed "Skills you installed from others". Counts agree across all of it. Keep the tap
 definition on the first "skills" in the headline.
 When every row of a column says the same thing, drop the column and say it once. Dated sources
@@ -675,7 +675,7 @@ go in the sidebar's "References" list.
   automation group's charts. One row per repeat you kept from "3. Repeat work", most repeated
   first: the request in curly quotes, trimmed to its ask; the count as
   "<n> times in <span>" from `last_4_weeks` (or `times` with the span from `first` to `last`);
-  the recommendation as one line to paste, naming the app ("Tell Claude Code: “Every Monday, …”"). Delete the block when there are no repeats, and on claude.ai.
+  the recommendation as an inline recommendation in place of the third column ("Ask Claude Code to check the job tracker every Monday as a scheduled task."). For a request any app can do, use `data-app="copy"` and `data-app-name="AI chat"`. Delete the block when there are no repeats, and on claude.ai.
 - **5-hour limits in the last week** (`#limits`), on the usage question's page only. Copy `limits` from the
   all-history run into `LIMITS`, unchanged; it covers the same Monday-to-Sunday week as `END`, and the filters
   don't change it. The script writes the section: one sentence on how often each app's limit filled up, then, for
@@ -746,6 +746,11 @@ steps to add the data. Write none of this by hand.
   `oldest_claude_log`, set `cut` to the first of those weeks instead.
 - **On claude.ai,** mark Claude Code, Codex, Cursor and Antigravity `not_readable`, and
   claude.ai `export` only when they uploaded `conversations.json`.
+- Cloud sessions (Claude Code or Codex in the cloud, including ones started from a phone) and
+  sessions on another computer or SSH host leave no logs here. The Data coverage text already
+  says so; keep that sentence. If someone says they mostly work in cloud sessions, tell them in
+  one line that those weeks may look quiet, and never read the gap as a habit. Remote Control
+  sessions run on this computer and are read like any other.
 - Keep "no sessions" apart from "can't see". An app they didn't use yet is an empty track with
   no card. Only data Second Look can't reach is dashed.
 - **Someone new.** Distinguish verified absence, files not included and unreadable files. Set

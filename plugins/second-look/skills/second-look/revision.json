@@ -1,4 +1,4 @@
 {
-  "revision": 9,
-  "benefit": "Skill fixes in the report now work like recommendations: you can edit the prompt, then Approve opens the app with your version, and the app waits for your yes before saving."
+  "revision": 10,
+  "benefit": "Every prompt the report gives you, from skill fixes to Worth a look and What you could automate next, now works like a recommendation: edit it, then Approve opens the app with your version or copies it, and the app waits for your yes. Data coverage also says that Claude Code and Codex cloud sessions aren't included."
 }
